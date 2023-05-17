@@ -33,3 +33,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+node_modules
+
+secret.json
+/output
+token.txt
+/aws/**/*.js
+cdk.out
+cdk-outputs.json
+examples
+dist

@@ -1,0 +1,113 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Query {
+}
+
+type Mutation {
+}
+
+type Subscription {
+}
+
+type Recording {
+  recordingId: ID!
+  songTitle: String
+  formId: String
+  song: Song @connection(name: "SongRecording")
+  key: String
+  tabLinkUsed: String
+  rawTranspositionFromTab: String
+  transpositionFromTab: Int # Unfortunately some people dont put a just a number, they write "capo x" or "N/A"
+  fileExtension: String!
+  
+  prelabelTool: String
+  prelabelToolVersion: String
+  
+  labelTool: String
+  labelToolVersion: String
+  
+  labeller: User @connection(name: "LabelledRecording")
+  isLabelerRejected: Boolean!
+  labelerRejectionReason: String
+
+  singerName: String
+  singerEmail: AWSEmail
+  gender: gender
+
+  status: recordingStatus!
+  editHistory: [RecordingHistory]! @connection (name: "RecordingEditHistory")
+  comment: String
+
+  createDate: String # This date comes from Google Forms
+  updateDate: AWSDateTime
+  lastOULGenerateDate: AWSDateTime
+}
+
+enum recordingStatus { TOLABEL INAUDIT COMPLETE }
+enum gender { MALE, FEMALE }
+enum chordSheetPlatform { UG, OTHER }
+
+type Song {
+  id: ID!
+  title: String!
+  songAuthor: String!
+  beats: Int # 4/4 = 4, 6/8 = 6, 3/4 = 3, 2/4 = 2
+  isApproved: Boolean
+  isSpaceBarless: Boolean
+  olderSongVersion: Song @connection (name: "SongVersion")
+  newerSongVersion: Song @connection (name: "SongVersion")
+  songVersion: Int!
+
+  status: Int! # 0 is the first step - 2 is the last step
+  # completedSteps: [Boolean] # There are 3 steps right now. [false] should be the default
+
+  chordSheetRaw: String
+  isChordSheetRawChanged: Boolean
+  chordSheetRawKey: String
+  chordSheetPlatform: chordSheetPlatform 
+  chordSheetLink: String
+
+  intermediaryChordJson: String
+  isIntermediaryChordChanged: Boolean
+  intermediaryChordVersion: Int
+
+  oslynSongJson: String
+  oslynSongVersion: Int
+  creator: User! @connection (name: "SongSubmitter")
+  recordings: [Recording]! @connection (name: "SongRecording")
+}
+
+type RecordingHistory {
+  recordingHistoryId: ID!
+  recording: Recording! @connection (name: "RecordingEditHistory")
+  labeller: User! @connection (name: "UserEditHistory")
+  date: AWSDateTime!
+  actionColumn: String!
+  previousAction: String!
+  newAction: String!
+  comment: String
+}
+
+type User {
+  userId: ID!
+  username: String!
+
+  firstName: String
+  lastName: String
+  recieveUpdatesFromOslyn: Boolean
+  isActivated: Boolean
+  createDate: AWSDateTime
+
+  email: AWSEmail!
+  roles: [role]!
+  labelledRecording: [Recording]! @connection (name: "LabelledRecording")
+  songsCreated: [Song]! @connection (name: "SongSubmitter")
+  oslynTeacherEmail: AWSEmail!
+  editHistory: [RecordingHistory]! @connection (name: "UserEditHistory")
+}
+
+enum role { AE, AELEAD, ADMIN }
