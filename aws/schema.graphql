@@ -1,3 +1,4 @@
+# graphqlOperation
 schema {
   query: Query
   mutation: Mutation
@@ -5,19 +6,175 @@ schema {
 }
 
 type Query {
+  getSong(songId: ID!): Song! @aws_iam
+  listSongs(limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  
+  getUserById(userId: ID!): User! @aws_iam
+  getUserByEmail(email: AWSEmail): User! @aws_iam
+  listUsers(limit: Int, filter: String, nextToken: String): [User]! @aws_iam
+  
+  getBand(bandId: ID!, userId: ID!): Band! @aws_iam
+  listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
+
+  getSet(setListId: ID!, userId: ID!): SetList! @aws_iam
+  listSets(limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
+
+  getJamSong(jamSongId: ID!, userId: ID!): JamSong! @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID!): JamSession! @aws_iam
+  listJamSessions(bandId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
 type Mutation {
+  createUser(username: String!, email: String!, firstName: String, lastName: String): User! @aws_iam
+
+  createSong(title: String!, songAuthor: String!, userId: ID! ): Song! @aws_iam
+  updateSong(
+    songId: ID!
+    ownerId: ID
+    title: String
+    songAuthor: String
+    beat: _Beat
+    approved: Boolean
+
+    chordSheet: String
+    chordSheetKey: String
+    originalPlatorm: chordSheetPlatform 
+    originalLink: String
+  ): Song! @aws_iam
+
+  addRecordingToSong(songId: ID!, recordingId: ID!): Song! @aws_iam
+  removeRecordingFromSong(songId: ID!, recordingId: ID!): Song! @aws_iam
+
+  createBand(ownerId: ID!, name: String): Band! @aws_iam
+  addBandMembers(bandId: ID!, userIds: [ID]!): Band! @aws_iam
+  removeBandMembers(bandId: ID!, userIds: [ID]!): Band! @aws_iam
+  addSongsToBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
+  removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
+
+  createSet(creatorId: ID!, description: String): SetList! @aws_iam
+  addEditorToSet(setListId: ID!, userId: ID!): SetList! @aws_iam
+  removeEditorFromSet(setListId: ID!, userId: ID!): SetList! @aws_iam
+  addSongToSet(setListId: ID!, songId: ID!, key: String): SetList! @aws_iam
+  removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList! @aws_iam
+
+  startJamSession(setListId: ID!): JamSession! @aws_iam
+  endJamSession(jamSessionId: ID!): JamSession! @aws_iam
+  nextLine(hash: String!): JamSession @aws_iam
 }
 
 type Subscription {
+  onNextLine(hash: String!): JamSession @aws_subscribe(mutations: ["nextLine"])
+}
+
+enum recordingStatus { TOLABEL INAUDIT COMPLETE }
+enum gender { MALE, FEMALE }
+enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
+
+type Band {
+  bandId: ID!
+  songs: [Song]!
+  members: [User]!
+  owner: User!
+}
+
+type SetList {
+  setListId: ID!
+  description: String
+  songs: [JamSong]!
+  editors: [User]!
+  creator: User!
+  band: Band
+}
+
+type JamSession {
+  jamSessionId: ID!
+  setList: SetList!
+  admin: User!
+  members: [User]!
+
+  currentSong: JamSong
+  currentLine: Int
+
+  startDate: Int
+  endDate: Int
+}
+
+# Not a DB Item!
+type JamSong {
+  song: Song!
+  key: String!
+}
+  
+input _Beat {
+  count: Int!
+  note: Int!
+}
+
+type Beat {
+  count: Int!
+  note: Int!
+}
+
+type Song {
+  songId: ID!
+  title: String!
+  songAuthor: String!
+  beat: Beat
+  isApproved: Boolean!  
+  version: Int!
+
+  creator: User!
+  recordings: [Recording]!
+
+  chordSheet: String
+  chordSheetKey: String
+  originPlatorm: chordSheetPlatform 
+  originLink: String
+
+  # intermediaryChordJson: String
+  # isIntermediaryChordChanged: Boolean
+  # intermediaryChordVersion: Int
+
+  oslynJson: String
+  oslynVersion: Int
+}
+
+type User {
+  userId: ID!
+  username: String!
+
+  firstName: String
+  lastName: String
+  recieveUpdatesFromOslyn: Boolean
+  isActivated: Boolean
+  createDate: Int
+
+  email: AWSEmail!
+  roles: role!
+  labelledRecording: [Recording]!
+  songsCreated: [Song]!
+  editHistory: [RecordingHistory]! 
+  likedSongs: [JamSong]!
+}
+
+enum role { USER, ADMIN }
+
+type RecordingHistory {
+  recordingHistoryId: ID!
+  recording: Recording!
+  labeller: User! 
+  date: AWSDateTime!
+  actionColumn: String!
+  previousAction: String!
+  newAction: String!
+  comment: String
 }
 
 type Recording {
   recordingId: ID!
   songTitle: String
   formId: String
-  song: Song @connection(name: "SongRecording")
+  song: Song
   key: String
   tabLinkUsed: String
   rawTranspositionFromTab: String
@@ -39,75 +196,10 @@ type Recording {
   gender: gender
 
   status: recordingStatus!
-  editHistory: [RecordingHistory]! @connection (name: "RecordingEditHistory")
+  editHistory: [RecordingHistory]!
   comment: String
 
   createDate: String # This date comes from Google Forms
   updateDate: AWSDateTime
   lastOULGenerateDate: AWSDateTime
 }
-
-enum recordingStatus { TOLABEL INAUDIT COMPLETE }
-enum gender { MALE, FEMALE }
-enum chordSheetPlatform { UG, OTHER }
-
-type Song {
-  id: ID!
-  title: String!
-  songAuthor: String!
-  beats: Int # 4/4 = 4, 6/8 = 6, 3/4 = 3, 2/4 = 2
-  isApproved: Boolean
-  isSpaceBarless: Boolean
-  olderSongVersion: Song @connection (name: "SongVersion")
-  newerSongVersion: Song @connection (name: "SongVersion")
-  songVersion: Int!
-
-  status: Int! # 0 is the first step - 2 is the last step
-  # completedSteps: [Boolean] # There are 3 steps right now. [false] should be the default
-
-  chordSheetRaw: String
-  isChordSheetRawChanged: Boolean
-  chordSheetRawKey: String
-  chordSheetPlatform: chordSheetPlatform 
-  chordSheetLink: String
-
-  intermediaryChordJson: String
-  isIntermediaryChordChanged: Boolean
-  intermediaryChordVersion: Int
-
-  oslynSongJson: String
-  oslynSongVersion: Int
-  creator: User! @connection (name: "SongSubmitter")
-  recordings: [Recording]! @connection (name: "SongRecording")
-}
-
-type RecordingHistory {
-  recordingHistoryId: ID!
-  recording: Recording! @connection (name: "RecordingEditHistory")
-  labeller: User! @connection (name: "UserEditHistory")
-  date: AWSDateTime!
-  actionColumn: String!
-  previousAction: String!
-  newAction: String!
-  comment: String
-}
-
-type User {
-  userId: ID!
-  username: String!
-
-  firstName: String
-  lastName: String
-  recieveUpdatesFromOslyn: Boolean
-  isActivated: Boolean
-  createDate: AWSDateTime
-
-  email: AWSEmail!
-  roles: [role]!
-  labelledRecording: [Recording]! @connection (name: "LabelledRecording")
-  songsCreated: [Song]! @connection (name: "SongSubmitter")
-  oslynTeacherEmail: AWSEmail!
-  editHistory: [RecordingHistory]! @connection (name: "UserEditHistory")
-}
-
-enum role { AE, AELEAD, ADMIN }

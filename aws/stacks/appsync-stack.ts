@@ -2,7 +2,7 @@ import { App, CfnOutput, Duration, Expiration, Fn, Stack } from 'aws-cdk-lib'
 import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Runtime } from 'aws-cdk-lib/aws-lambda'
-import { NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
+import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
 import path, { join } from 'path'
 
 interface AppsyncProps {
@@ -13,10 +13,16 @@ export class AppsyncStack extends Stack {
   constructor(app: App, id: string, props: AppsyncProps) {
     super(app, id)
 
-    const userDynamoName = Fn.importValue(`${props.name}-UserTableName`)
-    const userDynamoArn = Fn.importValue(`${props.name}-UserTableArn`)
+    const userDynamoName = Fn.importValue(`${props.name}-UserTable-Name`)
+    const userDynamoArn = Fn.importValue(`${props.name}-UserTable-Arn`)
 
-    const api = new GraphqlApi(this, `${props.name}-Appsync`, {
+    const songDynamoName = Fn.importValue(`${props.name}-SongTable-Name`)
+    const songDynamoArn = Fn.importValue(`${props.name}-SongTable-Arn`)
+
+    const bandDynamoName = Fn.importValue(`${props.name}-BandTable-Name`)
+    const bandDynamoArn = Fn.importValue(`${props.name}-BandTable-Arn`)
+
+    const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
       name: `${props.name}`,
       schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
       authorizationConfig: {
@@ -31,13 +37,13 @@ export class AppsyncStack extends Stack {
       logConfig: { excludeVerboseContent: true, fieldLogLevel: FieldLogLevel.ALL }, // remove later
     })
 
-    new CfnOutput(this, "GraphQLAPIURL", { value: api.graphqlUrl })
-    new CfnOutput(this, "GraphQLAPIKey", { value: api.apiKey || '' })
+    new CfnOutput(this, "GraphQLAPIURL", { value: appsync.graphqlUrl })
+    new CfnOutput(this, "GraphQLAPIKey", { value: appsync.apiKey || '' })
     new CfnOutput(this, "Stack Region", { value: this.region })
-    new CfnOutput(this, `${props.name}-AppsyncId`, { value: api.apiId })
+    new CfnOutput(this, `${props.name}-AppsyncId`, { value: appsync.apiId })
 
     new CfnOutput(this, `${props.name}-AppsyncArn`, {
-      value: api.arn,
+      value: appsync.arn,
       exportName: `${props.name}-AppsyncArn`
     })
 
@@ -64,7 +70,7 @@ export class AppsyncStack extends Stack {
           }),
           new PolicyStatement({
             actions: [ "dynamodb:*" ],
-            resources: [ `${userDynamoArn}*` ]
+            resources: [ `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*` ]
           }),
           new PolicyStatement({
             actions: [ "lambda:InvokeFunction" ],
@@ -80,9 +86,59 @@ export class AppsyncStack extends Stack {
       depsLockFilePath: join(__dirname, '../lambdas', 'package-lock.json'),
       environment: { 
         USER_TABLE_NAME: userDynamoName,
+        BAND_TABLE_NAME: bandDynamoName,
+        SONG_TABLE_NAME: songDynamoName,
+        SETLIST_TABLE_NAME: ""
       },
       runtime: Runtime.NODEJS_16_X,
     }
 
+    const createUser = new NodejsFunction(this, `${props.name}-CreateUser`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'user', 'createUser.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateUserDS`, createUser)
+    .createResolver(`${props.name}-CreateUserResolver`, {
+      typeName: "Mutation",
+      fieldName: "createUser"
+    })
+
+    const createBand = new NodejsFunction(this, `${props.name}-CreateBand`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'band', 'createBand.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateBandDS`, createBand)
+    .createResolver(`${props.name}-CreateBandResolver`, {
+      typeName: "Mutation",
+      fieldName: "createBand"
+    })
+
+    const createSet = new NodejsFunction(this, `${props.name}-CreateSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'createSet.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateSetDS`, createSet)
+    .createResolver(`${props.name}-CreateSetResolver`, {
+      typeName: "Mutation",
+      fieldName: "createSet"
+    })
+
+    const addSongToSet = new NodejsFunction(this, `${props.name}-AddSongToSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'addSongToSet.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}AddSongToSetDS`, addSongToSet)
+    .createResolver(`${props.name}-AddSongToSetResolver`, {
+      typeName: "Mutation",
+      fieldName: "addSongToSet"
+    })
   }
 }

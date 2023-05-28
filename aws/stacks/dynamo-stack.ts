@@ -30,14 +30,14 @@ export class DynamoStack extends Stack {
       }
     })
 
-    new CfnOutput(this, `${props.name}-RecordingTableName`, {
+    new CfnOutput(this, `${props.name}-RecordingTable-Name`, {
       value: recordingTable.tableName,
-      exportName: `${props.name}-RecordingTableName`
+      exportName: `${props.name}-RecordingTable-Name`
     })
 
-    new CfnOutput(this, `${props.name}-RecordingTableArn`, {
+    new CfnOutput(this, `${props.name}-RecordingTable-Arn`, {
       value: recordingTable.tableArn,
-      exportName: `${props.name}-RecordingTableArn`
+      exportName: `${props.name}-RecordingTable-Arn`
     })
 
     const songTable = new Table(this, `${props.name}-SongTable`, {
@@ -59,14 +59,72 @@ export class DynamoStack extends Stack {
       }
     })
 
-    new CfnOutput(this, `${props.name}-SongTableName`, {
+    new CfnOutput(this, `${props.name}-SongTable-Name`, {
       value: songTable.tableName,
-      exportName: `${props.name}-SongTableName`
+      exportName: `${props.name}-SongTable-Name`
     })
 
-    new CfnOutput(this, `${props.name}-SongTableArn`, {
+    new CfnOutput(this, `${props.name}-SongTable-Arn`, {
       value: songTable.tableArn,
-      exportName: `${props.name}-SongTableArn`
+      exportName: `${props.name}-SongTable-Arn`
+    })
+
+    const userTable = new Table(this, `${props.name}-UserTable`, {
+      tableName: `${props.name}-UserTable`,
+      partitionKey: {
+        name: `userId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    userTable.addGlobalSecondaryIndex({
+      indexName: 'email',
+      partitionKey: {
+        name: 'email',
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-UserTable-Name`, {
+      value: userTable.tableName,
+      exportName: `${props.name}-UserTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-UserTable-Arn`, {
+      value: userTable.tableArn,
+      exportName: `${props.name}-UserTable-Arn`
+    })
+
+    const bandTable = new Table(this, `${props.name}-BandTable`, {
+      tableName: `${props.name}-BandTable`,
+      partitionKey: {
+        name: `bandId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    bandTable.addGlobalSecondaryIndex({
+      indexName: 'owner',
+      partitionKey: {
+        name: 'userId',
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-BandTable-Name`, {
+      value: bandTable.tableName,
+      exportName: `${props.name}-BandTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-BandTable-Arn`, {
+      value: bandTable.tableArn,
+      exportName: `${props.name}-BandTable-Arn`
     })
   }
 }
