@@ -126,5 +126,34 @@ export class DynamoStack extends Stack {
       value: bandTable.tableArn,
       exportName: `${props.name}-BandTable-Arn`
     })
+
+    const setListTable = new Table(this, `${props.name}-SetListTable`, {
+      tableName: `${props.name}-SetListTable`,
+      partitionKey: {
+        name: `setListId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    setListTable.addGlobalSecondaryIndex({
+      indexName: 'owner',
+      partitionKey: {
+        name: 'userId',
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-SetListTable-Name`, {
+      value: setListTable.tableName,
+      exportName: `${props.name}-SetListTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-SetListTable-Arn`, {
+      value: setListTable.tableArn,
+      exportName: `${props.name}-SetListTable-Arn`
+    })
   }
 }

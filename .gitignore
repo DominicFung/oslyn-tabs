@@ -44,3 +44,7 @@ cdk.out
 cdk-outputs.json
 examples
 dist
+/schema.graphql
+aws-exports.js
+
+.graphqlconfig.yml

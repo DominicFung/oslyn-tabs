@@ -22,6 +22,9 @@ export class AppsyncStack extends Stack {
     const bandDynamoName = Fn.importValue(`${props.name}-BandTable-Name`)
     const bandDynamoArn = Fn.importValue(`${props.name}-BandTable-Arn`)
 
+    const setListDynamoName = Fn.importValue(`${props.name}-SetListTable-Name`)
+    const setListDynamoArn = Fn.importValue(`${props.name}-SetListTable-Arn`)
+
     const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
       name: `${props.name}`,
       schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
@@ -70,7 +73,7 @@ export class AppsyncStack extends Stack {
           }),
           new PolicyStatement({
             actions: [ "dynamodb:*" ],
-            resources: [ `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*` ]
+            resources: [ `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, `${setListDynamoArn}*` ]
           }),
           new PolicyStatement({
             actions: [ "lambda:InvokeFunction" ],
@@ -88,7 +91,7 @@ export class AppsyncStack extends Stack {
         USER_TABLE_NAME: userDynamoName,
         BAND_TABLE_NAME: bandDynamoName,
         SONG_TABLE_NAME: songDynamoName,
-        SETLIST_TABLE_NAME: ""
+        SETLIST_TABLE_NAME: setListDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -103,6 +106,30 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-CreateUserResolver`, {
       typeName: "Mutation",
       fieldName: "createUser"
+    })
+
+    const createSong = new NodejsFunction(this, `${props.name}-CreateSong`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'createSong.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateSongDS`, createSong)
+    .createResolver(`${props.name}-CreateSongResolver`, {
+      typeName: "Mutation",
+      fieldName: "createSong"
+    })
+
+    const listSongs = new NodejsFunction(this, `${props.name}-ListSongs`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSongs.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListSongsDS`, listSongs)
+    .createResolver(`${props.name}-ListSongsResolver`, {
+      typeName: "Query",
+      fieldName: "listSongs"
     })
 
     const createBand = new NodejsFunction(this, `${props.name}-CreateBand`, {

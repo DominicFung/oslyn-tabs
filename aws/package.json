@@ -7,7 +7,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "cdk": "cdk",
-    "deploy": "tsc & cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never && cp -f cdk-outputs.json ../cdk-outputs.json && cd ../ && ./scripts/update-secret.sh"
+    "deploy": "../scripts/aws-deploy.sh",
+    "deploy:bak": "tsc & cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never && cp -f cdk-outputs.json ../cdk-outputs.json && cd ../ && ./scripts/update-secret.sh"
   },
   "author": "",
   "license": "ISC",

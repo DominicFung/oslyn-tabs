@@ -7,7 +7,7 @@ schema {
 
 type Query {
   getSong(songId: ID!): Song! @aws_iam
-  listSongs(limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   
   getUserById(userId: ID!): User! @aws_iam
   getUserByEmail(email: AWSEmail): User! @aws_iam
@@ -27,12 +27,22 @@ type Query {
 type Mutation {
   createUser(username: String!, email: String!, firstName: String, lastName: String): User! @aws_iam
 
-  createSong(title: String!, songAuthor: String!, userId: ID! ): Song! @aws_iam
+  createSong(
+    title: String!
+    userId: ID!
+    key: String!
+    rawTabs: String!
+    artist: String
+    album: String
+  ): Song! @aws_iam
+
   updateSong(
     songId: ID!
-    ownerId: ID
+    ownerId: ID!
     title: String
-    songAuthor: String
+    artist: String
+    album: String
+    albumCover: String
     beat: _Beat
     approved: Boolean
 
@@ -118,7 +128,9 @@ type Beat {
 type Song {
   songId: ID!
   title: String!
-  songAuthor: String!
+  artist: String
+  album: String
+  albumCover: String
   beat: Beat
   isApproved: Boolean!  
   version: Int!
@@ -150,7 +162,7 @@ type User {
   createDate: Int
 
   email: AWSEmail!
-  roles: role!
+  role: role!
   labelledRecording: [Recording]!
   songsCreated: [Song]!
   editHistory: [RecordingHistory]! 
@@ -176,10 +188,9 @@ type Recording {
   formId: String
   song: Song
   key: String
-  tabLinkUsed: String
-  rawTranspositionFromTab: String
-  transpositionFromTab: Int # Unfortunately some people dont put a just a number, they write "capo x" or "N/A"
-  fileExtension: String!
+
+  tabLink: String
+  rawTabs: String
   
   prelabelTool: String
   prelabelToolVersion: String
@@ -187,7 +198,7 @@ type Recording {
   labelTool: String
   labelToolVersion: String
   
-  labeller: User @connection(name: "LabelledRecording")
+  labeller: User
   isLabelerRejected: Boolean!
   labelerRejectionReason: String
 

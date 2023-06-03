@@ -1,4 +1,14 @@
 import Image from "next/image"
+import { headers } from 'next/headers'
+
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
+
+import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
+import { GraphQLResult } from "@aws-amplify/api"
+import awsConfig from '@/src/aws-exports'
+
+import * as q from '@/src/graphql/queries'
+import { Song } from '@/src/API'
 
 const _img = [
   "https://i.scdn.co/image/ab67616d0000485141e9614560815b11c1ca543d",
@@ -8,7 +18,32 @@ const _img = [
   "https://i.scdn.co/image/ab67616d00004851457163bec7e8e4decf8c6375"
 ]
 
-export default function Songs() {
+// TODO Remove
+const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
+
+Amplify.configure({...awsConfig, ssr: true })
+
+export default async function Songs() {
+
+  // https://docs.amplify.aws/lib/ssr/q/platform/js/#2-prepare-a-request-object-for-withssrcontext-to-perform-server-side-operations-that-require-authentication
+
+  const req = {
+    headers: {
+      cookie: headers().get('cookie'),
+    },
+  }
+  const SSR = withSSRContext({ req })
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.listSongs, { userId: _generalUserId }
+    )) as GraphQLResult<{ listSongs: Song[] }>
+
+    console.log(data)
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
   return <div>
     <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
@@ -41,10 +76,10 @@ export default function Songs() {
                     Key
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Date Added
+                    Album
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Duration
+                    Action
                 </th>
             </tr>
         </thead>
@@ -68,7 +103,9 @@ export default function Songs() {
                     $2999
                 </td>
                 <td className="px-6 py-4">
-                    <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                  <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                    Jam <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
+                  </button>
                 </td>
             </tr>)}
         </tbody>

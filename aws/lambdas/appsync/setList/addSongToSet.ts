@@ -60,12 +60,12 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "editors")) { 
     const keys = setList.editorIds.map((s: string) => { return {userId: s} as { [userId: string]: any } })
     const res2 = await dynamo.send(new BatchGetItemCommand({
-      RequestItems: {USER_TABLE_NAME: { Keys: keys }}
+      RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
     }))
     console.log(res2)
     if (!res2.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res2.$metadata}`); return  } 
 
-    const editors = res2.Responses![SONG_TABLE_NAME]
+    const editors = res2.Responses![USER_TABLE_NAME]
     setList.editors = editors
   }
   
