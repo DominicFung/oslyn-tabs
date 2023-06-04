@@ -120,6 +120,18 @@ export class AppsyncStack extends Stack {
       fieldName: "createSong"
     })
 
+    const getSong = new NodejsFunction(this, `${props.name}-GetSong`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'getSong.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetSongDS`, getSong)
+    .createResolver(`${props.name}-GetSongResolver`, {
+      typeName: "Query",
+      fieldName: "getSong"
+    })
+
     const listSongs = new NodejsFunction(this, `${props.name}-ListSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSongs.ts'),
       timeout: Duration.minutes(5),

@@ -3,7 +3,6 @@ import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord } from './t
 const chordRegexForTextBlock = "(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)"
 const chordRegex =  "^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$"
 const keyRegex = "^[A-Ga-g](##?|bb?)?$"
-//const sectionRegexForTextBlock = "\\[[^\n]*\\]"
 
 const KeyDistanceMap = [
   [ 'A',          'G##', 'Bbb' ],
@@ -84,10 +83,8 @@ const distanceFromKey = (chord: string, key: string): number|null => {
       
       while (p < 12) {
         if (KeyDistanceMap[index].includes(schord)) return p
-
         if (index + 1 < KeyDistanceMap.length ) index++
         else index = 0
-
         p++
       }
     }
@@ -97,14 +94,13 @@ const distanceFromKey = (chord: string, key: string): number|null => {
   return null
 }
 
-export const rawChordsheetToIntermediaryJson = (text: string): _Song => {
-  let intermediaryJson = { sections: [] } as _Song
+export const rawChordsheetToSectionJson = (text: string): _Song => {
+  let sectionJson = { sections: [] } as _Song
   let index = 0
   let currentSection = { name: "", chords: [] } as _Section
 
   let textArray = text.split("\n")
   //console.log(text)
-  //console.log(pTextArray)
 
   for (let i=0; i<textArray.length; i++) {
     let line = textArray[i]
@@ -117,7 +113,7 @@ export const rawChordsheetToIntermediaryJson = (text: string): _Song => {
 
       while ((matchArr = regex.exec(line)) !== null) {
         start = index + matchArr.index
-        end = start + matchArr[0].length
+        end = start + matchArr[0].length - 2
 
         //chrordStrategy regex matches \n at the beginning & end of line. string.trim() cuts them out
         if (matchArr.index === 0) start = start - 1
@@ -134,13 +130,13 @@ export const rawChordsheetToIntermediaryJson = (text: string): _Song => {
         currentSection.name = getSectionName(line)
       } else if (currentSection.chords.length === 0) {
         console.warn(`We've detected an empty section: ${currentSection.name}`)
-        intermediaryJson.sections.push(currentSection)
+        sectionJson.sections.push(currentSection)
         currentSection = { 
           name: getSectionName(line),
           chords: []
         } as _Section
       } else {
-        intermediaryJson.sections.push(currentSection)
+        sectionJson.sections.push(currentSection)
         currentSection = { 
           name: getSectionName(line),
           chords: []
@@ -151,18 +147,18 @@ export const rawChordsheetToIntermediaryJson = (text: string): _Song => {
     index = index + line.length + 1 // for \n ,, since that gets cut by trim(\n)
   }
 
-  intermediaryJson.sections.push(currentSection)
-  //console.log(JSON.stringify(intermediaryJson))
-  return intermediaryJson
+  sectionJson.sections.push(currentSection)
+  //console.log(JSON.stringify(sectionJson))
+  return sectionJson
 }
 
 /**
  * 
  * @param text            Mono format text! We should not need to recalculate - use directly from DB
- * @param intermediary    IntermediaryJson from Step1
+ * @param sectionJson    SectionJson from Step1
  * @param key             Key from Step0 submitted by user
  */
-export const convertOslynSong = (text: string, intermediary: _Song, key: string): OslynSong => {
+export const convertOslynSong = (text: string, sectionJson: _Song, key: string): OslynSong => {
   let textArray = text.split("\n")
   //let ptext = convertToProportionalFont(text)
   
@@ -172,7 +168,7 @@ export const convertOslynSong = (text: string, intermediary: _Song, key: string)
   } as OslynSong
 
   let p = 0 // currentPhraseNumber
-  let currentIntermediaryJasonSection = intermediary.sections[p] as _Section
+  let currentIntermediaryJasonSection = sectionJson.sections[p] as _Section
 
   let c = 0 // currentChord
 
@@ -198,7 +194,6 @@ export const convertOslynSong = (text: string, intermediary: _Song, key: string)
 
       let matchArr
       let regex = new RegExp(chordRegexForTextBlock, 'g')
-      let prevChordWidth = 0
       
       while ((matchArr = regex.exec(line)) !== null) {
 
@@ -215,11 +210,10 @@ export const convertOslynSong = (text: string, intermediary: _Song, key: string)
               start: currentIntermediaryJasonChord.start,
               end: currentIntermediaryJasonChord.end,
             },
-            position: lyricLine === "" ? matchArr.index : matchArr.index - prevChordWidth
+            position: matchArr.index
           } as OslynChord
 
           currentPhrase.chords.push(currentChord)
-          prevChordWidth = matchArr[0].trim().length
           c++
           //console.log(`${matchArr[0].trim()} c: ${c} `)
         } else { 
@@ -239,12 +233,12 @@ export const convertOslynSong = (text: string, intermediary: _Song, key: string)
 
       // skip the first section .. its already defined at the beginning of the function
       if (p!== 0 || (p === 0 && getSectionName(line) !== currentIntermediaryJasonSection.name)) { 
-        if (p+1 < intermediary.sections.length) {
-          if (getSectionName(line) === intermediary.sections[p+1].name) {
+        if (p+1 < sectionJson.sections.length) {
+          if (getSectionName(line) === sectionJson.sections[p+1].name) {
             //console.log(getSectionName(line))
-            currentIntermediaryJasonSection = intermediary.sections[p+1]
+            currentIntermediaryJasonSection = sectionJson.sections[p+1]
             p++; c=0
-          } else { throw `convertOslynSongJson(): the next section name missmatch! Raw: "${getSectionName(line)}", Intermediary Section: ${intermediary.sections[p+1].name}` }
+          } else { throw `convertOslynSongJson(): the next section name missmatch! Raw: "${getSectionName(line)}", Intermediary Section: ${sectionJson.sections[p+1].name}` }
         } else console.log("convertOslynSongJson(): This is the last section!")
       }
     }
@@ -256,7 +250,21 @@ export const convertOslynSong = (text: string, intermediary: _Song, key: string)
 
 export const chordSheetToOslynSong = (sheet: string, key: string, simplify: boolean) => {
   if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
-  let song = rawChordsheetToIntermediaryJson(sheet)
+  let song = rawChordsheetToSectionJson(sheet)
+  console.log(song)
   return convertOslynSong(sheet, song, key)
 }
 
+export const getChordByNumber = (chord: number, isMinor: boolean, key: string): string|null => {
+  if (!new RegExp(keyRegex, 'g').test(key)) return null
+  
+  for (let i=0; i<KeyDistanceMap.length; i++) {
+    if (KeyDistanceMap[i].includes(key)) {
+      let index = (i + chord) % KeyDistanceMap.length
+      return isMinor ? KeyDistanceMap[index][0]+'m' : KeyDistanceMap[index][0]
+    }
+  }
+
+  console.warn("getChordByNumber(): Could not find chord given chordInt. Returning null.")
+  return null
+}

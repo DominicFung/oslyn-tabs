@@ -53,8 +53,6 @@ export const getSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -119,8 +117,6 @@ export const listSongs = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -170,8 +166,6 @@ export const getUserById = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       editHistory {
         recordingHistoryId
@@ -233,8 +227,6 @@ export const getUserByEmail = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       editHistory {
         recordingHistoryId
@@ -296,8 +288,6 @@ export const listUsers = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       editHistory {
         recordingHistoryId
@@ -329,8 +319,6 @@ export const getBand = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -373,8 +361,6 @@ export const listBands = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -488,8 +474,6 @@ export const getJamSong = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       key
     }

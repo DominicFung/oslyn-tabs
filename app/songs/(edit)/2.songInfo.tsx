@@ -1,18 +1,18 @@
 "use client"
-import { TrashIcon, ArrowsUpDownIcon, UserGroupIcon } from '@heroicons/react/24/solid'
+import { TrashIcon, ArrowsUpDownIcon, SparklesIcon } from '@heroicons/react/24/solid'
 
 import { Fragment, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Listbox, Transition } from '@headlessui/react'
-import { SongRequest } from '@/app/api/song/create/route'
-import { chords } from './page'
+import { chords } from './create/page'
+import { Song } from '@/src/API'
 
-interface SongInfoProps {
-  songInfo: SongRequest
-  setSongInfo: (s: SongRequest) => void
+interface SongProps {
+  song: Song,
+  setSong: (s: Song) => void
 }
 
-export default function SongInfo(p: SongInfoProps) {
+export default function Song(p: SongProps) {
   const onDrop = useCallback((acceptedFiles: any) => {
     console.log(acceptedFiles)
   }, [])
@@ -27,7 +27,7 @@ export default function SongInfo(p: SongInfoProps) {
             <p>Drop the files here ...</p> :
             <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500'>
               <span>
-                <UserGroupIcon className='h-20 w-20' />
+                <SparklesIcon className='h-12 w-12 mx-auto mt-20' />
               </span>
             </div>
         }
@@ -36,14 +36,14 @@ export default function SongInfo(p: SongInfoProps) {
         <div className="flex flex-row">
           <div className='flex-1 mr-2'>
             <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-              value={p.songInfo.title}  placeholder="Title" onChange={(e) => p.setSongInfo({ ...p.songInfo, title: e.currentTarget.value })}/>
+              value={p.song.title}  placeholder="Title" onChange={(e) => p.setSong({ ...p.song, title: e.currentTarget.value })}/>
           </div>
           <div className='flex-0'>
-            <Listbox as="div" value={p.songInfo.key} onChange={(e) => p.setSongInfo({...p.songInfo, key: e})} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <Listbox as="div" value={p.song.chordSheetKey} onChange={(e) => p.setSong({...p.song, chordSheetKey: e})} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
             {({ open }) => (
               <>
               <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
-                <span className="p-1 px-4 text-sm truncate">{p.songInfo.key}</span>
+                <span className="p-1 px-4 text-sm truncate">{p.song.chordSheetKey}</span>
                 <span className="absolute flex items-center ml-3 pointer-events-none right-1">
                 <ArrowsUpDownIcon
                   className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
@@ -97,7 +97,7 @@ export default function SongInfo(p: SongInfoProps) {
         </div>
         <div className="relative w-full mt-2">
           <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            value={p.songInfo.artist}  placeholder="Artist" onChange={(e) => p.setSongInfo({ ...p.songInfo, artist: e.currentTarget.value })}/>
+            value={p.song.artist || ""}  placeholder="Artist" onChange={(e) => p.setSong({ ...p.song, artist: e.currentTarget.value })}/>
           <button type="submit" onClick={() => { }}
             className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
@@ -106,7 +106,7 @@ export default function SongInfo(p: SongInfoProps) {
         </div>
         <div className="relative w-full mt-2">
           <input className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            value={p.songInfo.album}  placeholder="Album" onChange={(e) => p.setSongInfo({ ...p.songInfo, album: e.currentTarget.value })}/>
+            value={p.song.album || ""}  placeholder="Album" onChange={(e) => p.setSong({ ...p.song, album: e.currentTarget.value })}/>
           <button type="submit" onClick={() => { }}
             className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >

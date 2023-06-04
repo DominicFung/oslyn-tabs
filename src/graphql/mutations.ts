@@ -58,8 +58,6 @@ export const createUser = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       editHistory {
         recordingHistoryId
@@ -140,8 +138,6 @@ export const createSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -222,8 +218,6 @@ export const updateSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -278,8 +272,6 @@ export const addRecordingToSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -334,8 +326,6 @@ export const removeRecordingFromSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
-      oslynJson
-      oslynVersion
     }
   }
 `;
@@ -355,8 +345,6 @@ export const createBand = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -399,8 +387,6 @@ export const addBandMembers = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -443,8 +429,6 @@ export const removeBandMembers = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -487,8 +471,6 @@ export const addSongsToBand = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId
@@ -531,8 +513,6 @@ export const removeSongsFromBand = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
-        oslynJson
-        oslynVersion
       }
       members {
         userId

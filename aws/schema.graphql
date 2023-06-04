@@ -30,10 +30,11 @@ type Mutation {
   createSong(
     title: String!
     userId: ID!
-    key: String!
-    rawTabs: String!
     artist: String
     album: String
+
+    chordSheet: String!
+    chordSheetKey: String!
   ): Song! @aws_iam
 
   updateSong(
@@ -147,8 +148,8 @@ type Song {
   # isIntermediaryChordChanged: Boolean
   # intermediaryChordVersion: Int
 
-  oslynJson: String
-  oslynVersion: Int
+  # oslynJson: String
+  # oslynVersion: Int
 }
 
 type User {

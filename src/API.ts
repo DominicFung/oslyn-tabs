@@ -68,8 +68,6 @@ export type Song = {
   chordSheetKey?: string | null,
   originPlatorm?: chordSheetPlatform | null,
   originLink?: string | null,
-  oslynJson?: string | null,
-  oslynVersion?: number | null,
 };
 
 export type Beat = {
@@ -206,8 +204,6 @@ export type CreateUserMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     editHistory:  Array< {
       __typename: "RecordingHistory",
@@ -288,8 +284,6 @@ export type CreateSongMutation = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   },
 };
 
@@ -362,8 +356,6 @@ export type UpdateSongMutation = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   },
 };
 
@@ -426,8 +418,6 @@ export type AddRecordingToSongMutation = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   },
 };
 
@@ -490,8 +480,6 @@ export type RemoveRecordingFromSongMutation = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   },
 };
 
@@ -517,8 +505,6 @@ export type CreateBandMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -569,8 +555,6 @@ export type AddBandMembersMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -621,8 +605,6 @@ export type RemoveBandMembersMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -673,8 +655,6 @@ export type AddSongsToBandMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -725,8 +705,6 @@ export type RemoveSongsFromBandMutation = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -1180,8 +1158,6 @@ export type GetSongQuery = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   },
 };
 
@@ -1246,8 +1222,6 @@ export type ListSongsQuery = {
     chordSheetKey?: string | null,
     originPlatorm?: chordSheetPlatform | null,
     originLink?: string | null,
-    oslynJson?: string | null,
-    oslynVersion?: number | null,
   } | null >,
 };
 
@@ -1303,8 +1277,6 @@ export type GetUserByIdQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     editHistory:  Array< {
       __typename: "RecordingHistory",
@@ -1374,8 +1346,6 @@ export type GetUserByEmailQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     editHistory:  Array< {
       __typename: "RecordingHistory",
@@ -1447,8 +1417,6 @@ export type ListUsersQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     editHistory:  Array< {
       __typename: "RecordingHistory",
@@ -1488,8 +1456,6 @@ export type GetBandQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -1541,8 +1507,6 @@ export type ListBandsQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     } | null >,
     members:  Array< {
       __typename: "User",
@@ -1683,8 +1647,6 @@ export type GetJamSongQuery = {
       chordSheetKey?: string | null,
       originPlatorm?: chordSheetPlatform | null,
       originLink?: string | null,
-      oslynJson?: string | null,
-      oslynVersion?: number | null,
     },
     key: string,
   },

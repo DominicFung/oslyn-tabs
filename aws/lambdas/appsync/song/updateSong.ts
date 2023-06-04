@@ -1,8 +1,6 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
 
-import { chordSheetToOslynSong } from '../../util/oslyn'
 import { updateDynamoUtil } from '../../util/dynamo'
 
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
@@ -45,9 +43,9 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
 
     let song = { ...res0.Item, ...updateSong, oslynSong: null as any }
-    let cs =  b.chordSheet || unmarshall(res0.Item).chordSheet
-    let key = b.chordSheetKey || unmarshall(res0.Item).chordSheetKey
-    if (cs && key) song.oslynSong = chordSheetToOslynSong(cs, key, true)
+    // let cs =  b.chordSheet || unmarshall(res0.Item).chordSheet
+    // let key = b.chordSheetKey || unmarshall(res0.Item).chordSheetKey
+    // if (cs && key) song.oslynSong = chordSheetToOslynSong(cs, key, true)
   
     return song
     

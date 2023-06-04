@@ -1,10 +1,11 @@
 "use client"
 import { useState } from 'react'
 
-import PasteTabs from "./1.PasteTabs"
-import SongInfo from './2.SongInfo'
+import PasteTabs from "../1.pasteTabs"
+import SongInfo from '../2.songInfo'
 import { SongRequest } from '@/app/api/song/create/route'
 import { Song } from '@/src/API'
+import { User } from '@/src/API'
 
 const _tabs = `[Intro]
 C
@@ -97,15 +98,21 @@ export default function CreateSong() {
   const [ step, setStep ] = useState(0)
 
   const [ songInfo, setSongInfo ] = useState({
-    title: "Perfect", key: chords[10], artist: "Ed Sheeran", album: "", rawTabs: _tabs
-  } as SongRequest)
+    songId: "", title: "Perfect", chordSheetKey: chords[10], 
+    artist: "Ed Sheeran", album: "", chordSheet: _tabs, isApproved: true,
+    version: 1, creator: {} as User, recordings: [] as any, 
+  } as Song)
 
   const createSong = async () => {
-    if (!songInfo.title || !songInfo.key) { console.error("title and key not available"); return }
+    if (!songInfo.title || !songInfo.chordSheetKey) { console.error("title and key not available"); return }
 
     const data = await (await fetch(`/api/song/create`, {
       method: "POST",
-      body: JSON.stringify({ ...songInfo } as SongRequest)
+      body: JSON.stringify({
+        title: songInfo.title, chordSheetKey: songInfo.chordSheetKey,
+        artist: songInfo.artist, album: songInfo.album, 
+        chordSheet: songInfo.chordSheet
+      } as SongRequest)
     })).json() as Song
     console.log(data)
   }
@@ -134,8 +141,8 @@ export default function CreateSong() {
         </li>
     </ol>
     <div className="p-4">
-      { step === 0 && <PasteTabs tabs={songInfo.rawTabs} setTabs={(t: string) => { setSongInfo({ ...songInfo, rawTabs: t }) }} /> }
-      { step === 1 && <SongInfo songInfo={songInfo} setSongInfo={setSongInfo}/>}
+      { step === 0 && <PasteTabs tabs={songInfo.chordSheet || ""} setTabs={(t: string) => { setSongInfo({ ...songInfo, chordSheet: t }) }} /> }
+      { step === 1 && <SongInfo song={songInfo} setSong={setSongInfo}/>}
     </div>
     <div id="toast-bottom-right" className="fixed flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
         <div className="text-sm font-normal">
@@ -149,7 +156,7 @@ export default function CreateSong() {
               <div className="mb-2 text-sm font-normal">Review the experience now!</div> 
               <div className="grid grid-cols-2 gap-2">
                   <div>
-                      <button disabled={songInfo.rawTabs === "" || songInfo.title === "" || songInfo.key === "" } onClick={createSong}
+                      <button disabled={songInfo.chordSheet === "" || songInfo.title === "" || songInfo.chordSheetKey === "" } onClick={createSong}
                         className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 disabled:bg-gray-600">
                           Submit
                       </button>

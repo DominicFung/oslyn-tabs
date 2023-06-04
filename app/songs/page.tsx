@@ -24,7 +24,6 @@ const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
 Amplify.configure({...awsConfig, ssr: true })
 
 export default async function Songs() {
-
   // https://docs.amplify.aws/lib/ssr/q/platform/js/#2-prepare-a-request-object-for-withssrcontext-to-perform-server-side-operations-that-require-authentication
 
   const req = {
@@ -33,6 +32,7 @@ export default async function Songs() {
     },
   }
   const SSR = withSSRContext({ req })
+  let d = [] as Song[]
 
   try {
     const { data } = await SSR.API.graphql(graphqlOperation(
@@ -40,6 +40,8 @@ export default async function Songs() {
     )) as GraphQLResult<{ listSongs: Song[] }>
 
     console.log(data)
+    if (data?.listSongs) d = data?.listSongs
+    else throw new Error("data.listSongs is empty.")
   } catch (e) {
     console.log(JSON.stringify(e, null, 2))
   }
@@ -84,28 +86,32 @@ export default async function Songs() {
             </tr>
         </thead>
         <tbody>
-            {_img.map((a, i) => <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+            {d.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                 <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i+1}</th>
                 <td className="px-6 py-4">
-                    <div className="flex flex-row">
-                      <Image src={a} alt={""} width={40} height={40} className="w-10 m-2"/>
+                  <a href={`/songs/edit/${a.songId}`}>                  
+                    <div className="flex flex-row hover:cursor-pointer">
+                      {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
                       <div className="m-2">
-                        <div className="text-white bold">Title of Song</div>
-                        <div>Artist Name</div>
+                        <div className="text-white bold">{a.title}</div>
+                        <div>{a.artist}</div>
                       </div>
                     </div>
-                    
+                  </a>
                 </td>
                 <td className="px-6 py-4">
-                    Laptop
+                    {a.chordSheetKey}
                 </td>
                 <td className="px-6 py-4">
-                    $2999
+                    {a.album}
                 </td>
                 <td className="px-6 py-4">
-                  <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                    Jam <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
-                  </button>
+                  <a href={`/jam/start/song/${a.songId}`}>
+                    <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                      Jam <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
+                    </button>
+                  </a>
+                  
                 </td>
             </tr>)}
         </tbody>
