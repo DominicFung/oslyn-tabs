@@ -8,7 +8,8 @@ const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  title: string, userId: string, key: string, rawTabs: string, artist?: string, album?: string
+  title: string, userId: string, chordSheetKey: string, chordSheet: string, 
+  artist?: string, album?: string, albumCover?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -16,8 +17,8 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   if (!b.title) { console.error(`b.title is empty`); return }
   if (!b.userId) { console.error(`b.userId is empty`); return }
-  if (!b.key) { console.error(`b.songAuthor is empty`); return }
-  if (!b.rawTabs) { console.error(`b.songAuthor is empty`); return }
+  if (!b.chordSheetKey) { console.error(`b.chordSheetKey is empty`); return }
+  if (!b.chordSheet) { console.error(`b.chordSheet is empty`); return }
 
   const dynamo = new DynamoDBClient({})
   const songId = uuidv4()
@@ -32,17 +33,18 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (res0.Item) {
     let song = {
       songId, title: b.title, 
-      chordSheetKey: b.key,
+      userId: b.userId,
+      chordSheetKey: b.chordSheetKey,
+      chordSheet: b.chordSheet,
 
       isApproved: true,
-      version: 1,
-  
-      userId: b.userId,
+      version: 1,    
       recordings: []
     } as any
 
     if (b.album) song.album = b.album
     if (b.artist) song.artist = b.artist
+    if (b.albumCover) song.albumCover = b.albumCover
 
     const res1 = await dynamo.send(
       new PutItemCommand({

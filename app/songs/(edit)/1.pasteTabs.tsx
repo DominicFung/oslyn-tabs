@@ -24,9 +24,7 @@ export default function PasteTabs(p: PasteTabsProps) {
 
   // used in first monaco load ..
   useEffect(() => {
-    if (monaco) {
-      console.log(monaco)
-    
+    if (monaco) {    
       monaco.editor.defineTheme("myTheme", theme)
       monaco.editor.setTheme("myTheme")
     }

@@ -224,10 +224,10 @@ export type CreateUserMutation = {
 export type CreateSongMutationVariables = {
   title: string,
   userId: string,
-  key: string,
-  rawTabs: string,
   artist?: string | null,
   album?: string | null,
+  chordSheet: string,
+  chordSheetKey: string,
 };
 
 export type CreateSongMutation = {

@@ -19,6 +19,13 @@ interface OslynSong {
   song: OslynPhrase[]
 }
 
+interface OslynSlide {
+  pages: { 
+    lines: OslynPhrase[],
+    extra: OslynPhrase | null
+  }[]
+}
+
 interface OslynPhrase {
   lyric: string,
   section: string,

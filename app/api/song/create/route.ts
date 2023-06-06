@@ -14,6 +14,7 @@ export interface SongRequest {
   title: string,
   artist?: string,
   album?: string,
+  albumCover?: string,
   chordSheet: string,
   chordSheetKey: string,
 }

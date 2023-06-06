@@ -1,4 +1,4 @@
-import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord } from './types'
+import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
 
 const chordRegexForTextBlock = "(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)"
 const chordRegex =  "^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$"
@@ -91,6 +91,19 @@ const distanceFromKey = (chord: string, key: string): number|null => {
   }
 
   console.log("distanceFromKey(): Could not find chord -> key distance, returning null ..")
+  return null
+}
+
+export const getChordByNumber = (chord: number, isMinor: boolean, key: string): string|null => {
+  if (!new RegExp(keyRegex, 'g').test(key)) return null
+  
+  for (let i=0; i<KeyDistanceMap.length; i++) {
+    if (KeyDistanceMap[i].includes(key)) {
+      let index = (i + chord) % KeyDistanceMap.length
+      return isMinor ? KeyDistanceMap[index][0]+'m' : KeyDistanceMap[index][0]
+    }
+  }
+  console.warn("getChordByNumber(): Could not find chord given chordInt. Returning null.")
   return null
 }
 
@@ -247,24 +260,71 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
   return oslynSongJson
 }
 
+export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number): OslynSlide => {
+  const pages = [] as { lines: OslynPhrase[], extra: OslynPhrase | null }[]
 
-export const chordSheetToOslynSong = (sheet: string, key: string, simplify: boolean) => {
+  const _minLines = 2
+  const _maxLines = 3
+  
+  /**
+   * 1. Find the number of lines in each SECTION
+   * 2. Break up the SECTION into equally sized lines (if possible)
+   * 3. if not - last line from the previous section + (max-1 lines) from the next section.
+   */
+
+  let currentSectionName = s.song[0].section
+  let currentSectionCache = [s.song[0]]
+
+  for (let i=1; i<s.song.length; i++) {
+    if (currentSectionName != s.song[i].section) {
+
+      currentSectionName = s.song[i].section
+      const r = findClosestDivisor(currentSectionCache.length, min || _minLines, max || _maxLines)
+      console.log(`The closest divisor of ${currentSectionCache.length} between ${min || _minLines} and ${max || _maxLines} is ${r}`)
+
+      let a = 0
+      while (currentSectionCache.length > 0) {
+        const c = currentSectionCache.shift() as OslynPhrase
+        if (a%r === 0) { 
+          pages.push({ lines: [c], extra: null }) 
+          if (pages.length-1 > 0) pages[pages.length-2].extra = c
+        }
+        else { pages[pages.length-1].lines.push(c) }
+        a++
+      }
+      console.log(pages)
+    }
+    currentSectionCache.push(s.song[i])
+  }
+  return { pages } as OslynSlide
+}
+
+const findClosestDivisor = (x: number, min: number, max: number): number => {
+  let closestDivisor: number = 1;
+  let smallestRemainder = Number.MAX_SAFE_INTEGER;
+
+  for (let divisor = max; divisor >= min; divisor--) {
+    const remainder = x % divisor
+    if (remainder < smallestRemainder) {
+      smallestRemainder = remainder
+      closestDivisor = divisor
+    }
+    if (smallestRemainder === 0) { break }
+  }
+  return closestDivisor
+}
+
+export const chordSheetToOslynSong = (sheet: string, key: string, simplify: boolean): OslynSong => {
   if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
-  let song = rawChordsheetToSectionJson(sheet)
+  const song = rawChordsheetToSectionJson(sheet)
   console.log(song)
   return convertOslynSong(sheet, song, key)
 }
 
-export const getChordByNumber = (chord: number, isMinor: boolean, key: string): string|null => {
-  if (!new RegExp(keyRegex, 'g').test(key)) return null
-  
-  for (let i=0; i<KeyDistanceMap.length; i++) {
-    if (KeyDistanceMap[i].includes(key)) {
-      let index = (i + chord) % KeyDistanceMap.length
-      return isMinor ? KeyDistanceMap[index][0]+'m' : KeyDistanceMap[index][0]
-    }
-  }
-
-  console.warn("getChordByNumber(): Could not find chord given chordInt. Returning null.")
-  return null
+export const chordSheetToSlides = (sheet: string, key: string, simplify: boolean): OslynSlide => {
+  if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
+  const song = rawChordsheetToSectionJson(sheet)
+  const oslynSong = convertOslynSong(sheet, song, key)
+  console.log(oslynSong)
+  return convertOslynSongToPages(oslynSong)
 }

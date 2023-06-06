@@ -77,18 +77,18 @@ export const createSong = /* GraphQL */ `
   mutation CreateSong(
     $title: String!
     $userId: ID!
-    $key: String!
-    $rawTabs: String!
     $artist: String
     $album: String
+    $chordSheet: String!
+    $chordSheetKey: String!
   ) {
     createSong(
       title: $title
       userId: $userId
-      key: $key
-      rawTabs: $rawTabs
       artist: $artist
       album: $album
+      chordSheet: $chordSheet
+      chordSheetKey: $chordSheetKey
     ) {
       songId
       title

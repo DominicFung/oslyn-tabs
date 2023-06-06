@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} p-4 sm:ml-64`}>
+      <body className={`${inter.className} px-4 sm:ml-64`}>
         {children}
         <Sidebar />
       </body>

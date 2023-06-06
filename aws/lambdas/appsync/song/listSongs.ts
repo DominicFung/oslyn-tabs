@@ -36,7 +36,12 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "creator")) {
     console.log("getting creator (user) ...")
 
-    const keys = songs.map((s) => { return { userId: { S: s.userId } } as { [userId: string]: any } })
+    const songUsers = songs.map((s) => { return s.userId as string })
+    const uniq = [...new Set(songUsers)]
+
+
+    const keys = uniq
+    .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
     console.log(keys)
 
     const res1 = await dynamo.send(new BatchGetItemCommand({
