@@ -34,8 +34,12 @@ export const handler = async (event: AppSyncResolverEvent<{
       })
     )
     if (!res1.Item) { console.error(`ERROR: user for userId not found: ${song.userId}`); return }
-    song.creator = unmarshall(res1.Item)
     
+    song.creator = unmarshall(res1.Item)
+    if (!song.creator.labelledRecording) song.creator.labelledRecording = []
+    if (!song.creator.songsCreated) song.creator.songsCreated = []
+    if (!song.creator.editHistory) song.creator.editHistory = []
+    if (!song.creator.likedSongs) song.creator.likedSongs = []
   }
 
   return song

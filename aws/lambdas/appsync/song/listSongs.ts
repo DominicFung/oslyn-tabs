@@ -1,7 +1,7 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { hasSubstring } from '../../util/dynamo'
+import { hasSubstring, merge } from '../../util/dynamo'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
@@ -50,28 +50,18 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
     
-    const users = res1.Responses![USER_TABLE_NAME].map((u) => unmarshall(u))
+    const users = res1.Responses![USER_TABLE_NAME].map((u) => {
+      let user = unmarshall(u)
+      if (!user.labelledRecording) user.labelledRecording = []
+      if (!user.songsCreated) user.songsCreated = []
+      if (!user.editHistory) user.editHistory = []
+      if (!user.likedSongs) user.likedSongs = []
+      return user
+    })
     console.log(users)
     songs = merge(songs, users, 'userId', 'creator')
   }
 
   console.log(songs)
   return songs
-}
-
-
-/**
- * 
- * @param a1 
- * @param a2 
- * @param matchKey 
- * @param outputKey 
- * @returns 
- */
-const merge = (a1: any, a2: any, matchKey: string, outputKey?: string) => {
-  return a1.map((o1: any) => {
-    const matchingObj = a2.find((o2: any) => o2[matchKey] === o1[matchKey])
-    if (!outputKey)  return matchingObj ? { ...o1, ...matchingObj } : o1
-    else return matchingObj ? { ...o1, [outputKey]: matchingObj } : o1
-  })
 }

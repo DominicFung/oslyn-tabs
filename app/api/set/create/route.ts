@@ -5,13 +5,14 @@ import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
 
 import * as m from '@/src/graphql/mutations'
-import { SetList } from '@/src/API'
+import { JamSongInput, SetList } from '@/src/API'
 
 // TODO Remove
 const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
 
 export interface SetRequest {
-  description: string
+  description: string,
+  songs: JamSongInput[]
 }
 
 export async function POST(request: Request) {
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
   const b = await request.json() as SetRequest
 
   Amplify.configure(awsConfig)
+  console.log(JSON.stringify(b))
 
   const d = await API.graphql(graphqlOperation(
     m.createSet, { ...b, userId: _generalUserId }

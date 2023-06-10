@@ -1,14 +1,19 @@
 "use client"
 
+import { SongRequest } from "@/app/api/song/create/route"
 import { Song } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export interface SaveProps {
-  song: Song
+  song: Song,
+  type: "create" | "update"
 }
 
 export default function Save(p: SaveProps) {
+  const router = useRouter()
+
   const [ saveMenu, setSaveMenu ] = useState(false)
 
   const updateSong = async () => {
@@ -18,6 +23,22 @@ export default function Save(p: SaveProps) {
       body: JSON.stringify(p.song, null, 2)
     })).json() as Song
     console.log(data)
+  }
+
+  const createSong = async () => {
+    if (!p.song.title || !p.song.chordSheetKey) { console.error("title and key not available"); return }
+
+    const data = await (await fetch(`/api/song/create`, {
+      method: "POST",
+      body: JSON.stringify({
+        title: p.song.title, chordSheetKey: p.song.chordSheetKey,
+        artist: p.song.artist, album: p.song.album, 
+        albumCover: p.song.albumCover, chordSheet: p.song.chordSheet
+      } as SongRequest)
+    })).json() as Song
+    console.log(data)
+
+    router.push(`/songs`)
   }
 
   return <>
@@ -32,7 +53,7 @@ export default function Save(p: SaveProps) {
               <div className="mb-2 text-sm font-normal">Review the experience now!</div> 
               <div className="grid grid-cols-2 gap-2">
                   <div>
-                      <button disabled={p.song.chordSheet === "" || p.song.title === "" || p.song.chordSheetKey === "" } onClick={updateSong}
+                      <button disabled={p.song.chordSheet === "" || p.song.title === "" || p.song.chordSheetKey === "" } onClick={p.type === "create" ? createSong : updateSong}
                         className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 disabled:bg-gray-600">
                           Submit
                       </button>
@@ -52,9 +73,9 @@ export default function Save(p: SaveProps) {
         </div>
     </div> }
     {!saveMenu && <button onClick={() => setSaveMenu(true)}
-      className="fixed z-90 bottom-10 right-8 bg-blue-600 w-16 h-16 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl"
+      className="fixed z-90 bottom-10 right-8 bg-coral-400 w-16 h-16 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl"
     >
-      <InboxArrowDownIcon className="w-8 h-8 text-white" />
+      <InboxArrowDownIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />
     </button>}
   </>
 

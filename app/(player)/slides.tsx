@@ -1,12 +1,18 @@
 "use client"
 
-import { chordSheetToSlides, convertOslynSongToPages } from "@/core/oslyn"
+import { chordSheetToSlides } from "@/core/oslyn"
 import { OslynSlide } from "@/core/types"
 import { Song } from "@/src/API"
 import { useEffect, useState } from "react"
 import Line from "../songs/(edit)/(components)/line"
 import { calcMaxWidthTailwindClass } from "@/core/utils/frontend"
-import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
+import Controls from "./controls"
+import Image from "next/image"
+
+import { transpose as trans } from "@/core/oslyn"
+
+ 
 
 interface SlidesProps {
   song: Song
@@ -15,21 +21,31 @@ interface SlidesProps {
 
 export default function Slides(p: SlidesProps) {
   const [ slides, setSlides ] = useState<OslynSlide>()
-  const [ page, setPage ] = useState(1)
+  const [ page, setPage ] = useState(0)
 
   const [ wClass, setWClass ] = useState("max-w-screen-sm")
-  const [ screen, setScreen ] = useState({ w: window.innerWidth, h: window.innerHeight }) 
-  
+  const [ screen, setScreen ] = useState({ 
+    w: window ? window.innerWidth : 500, 
+    h: window ? window.innerHeight : 500
+  }) 
+
+  const [transpose, setTranspose] = useState(0)
+
+  const setCapo = (c: string) => {
+    setTranspose(0-Number(c))
+  }
   
   useEffect(() => {
     console.log(p.song)
     if (p.song.chordSheet && p.song.chordSheetKey) {
       console.log(p.song.chordSheet)
-      const oslynSlides = chordSheetToSlides(p.song.chordSheet, p.skey || p.song.chordSheetKey || "C", true)
+
+      const key = trans(p.skey || p.song.chordSheetKey || "C", transpose)
+      const oslynSlides = chordSheetToSlides(p.song.chordSheet, key || "C", true)
       console.log(oslynSlides)
       setSlides(oslynSlides)
     }
-  }, [p.song])
+  }, [p.song, transpose])
 
   useEffect(() => {
     if (slides) {
@@ -88,5 +104,15 @@ export default function Slides(p: SlidesProps) {
         </div>
       </button> :  <div className="flex-1" /> }
     </div>
+    <Controls capo={`${0-transpose}`} setCapo={setCapo} />
+    {page === 0 && <div className="absolute left-72 top-28 rounded-lg">
+      <div className="flex flex-row hover:cursor-pointer">
+        {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
+        <div className="m-2">
+          <div className="text-gray-500 bold">{p.song.title}</div>
+          <div className="text-gray-600 text-xs">{p.song.artist}</div>
+        </div>
+      </div>
+    </div>}
   </>
 }

@@ -41,4 +41,5 @@ interface OslynChord {
   beats: number|null,
   position: number,
   meta: { start: number, end: number }
+  decorator: string
 }

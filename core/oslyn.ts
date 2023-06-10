@@ -20,7 +20,7 @@ const KeyDistanceMap = [
 ]
 
 const isChordLine = (line: string): boolean => {
-  let tempLine = line.trim().replace(/\s\s+/g, ' ').split(' ')
+  let tempLine = line.trim().replace(/[^a-zA-Z0-9#\s]/g, '').replace(/\s\s+/g, ' ').split(' ')
   let numOfChords = 0
   let numOfNonChords = 0
 
@@ -107,7 +107,20 @@ export const getChordByNumber = (chord: number, isMinor: boolean, key: string): 
   return null
 }
 
-export const rawChordsheetToSectionJson = (text: string): _Song => {
+export const transpose = (chord: string, transpose: number): string|null => {
+  if (transpose === 0) return chord
+  if (!new RegExp(keyRegex, 'g').test(chord)) return null
+
+  for (let i=0; i<KeyDistanceMap.length; i++) {
+    if (KeyDistanceMap[i].includes(chord)) {
+      return KeyDistanceMap[i+transpose][0]
+    }
+  }
+  console.warn(`transpose(): Could not find chord given chord ${chord}. Returning null.`)
+  return null
+}
+
+const rawChordsheetToSectionJson = (text: string): _Song => {
   let sectionJson = { sections: [] } as _Song
   let index = 0
   let currentSection = { name: "", chords: [] } as _Section
@@ -128,11 +141,11 @@ export const rawChordsheetToSectionJson = (text: string): _Song => {
         start = index + matchArr.index
         end = start + matchArr[0].length - 2
 
-        //chrordStrategy regex matches \n at the beginning & end of line. string.trim() cuts them out
+        // chrordStrategy regex matches \n at the beginning & end of line. string.trim() cuts them out
         if (matchArr.index === 0) start = start - 1
         if (matchArr.index + matchArr[0].length === textArray[i].length) end = end + 1
 
-        //console.log(`${currentSection.name} ${matchArr[0]}-${start}-${end} || ${matchArr.index + matchArr[0].length} : ${textArray[i].length}`)
+        // console.log(`${currentSection.name} ${matchArr[0]}-${start}-${end} || ${matchArr.index + matchArr[0].length} : ${textArray[i].length}`)
         currentSection.chords.push({
           chord: matchArr[0].trim(),
           start, end, duration: null
@@ -165,6 +178,23 @@ export const rawChordsheetToSectionJson = (text: string): _Song => {
   return sectionJson
 }
 
+function addSpacesToEnd(str: string, x: number) {
+  if (str.length >= x) {
+    return str; // Return the string unchanged if it's already equal to or longer than x
+  } else {
+    var spacesToAdd = x - str.length;
+    var spaces = ' '.repeat(spacesToAdd);
+    return str + spaces;
+  }
+}
+
+const getDecorator = (chord: string): string => {
+  let c = chord.replace(/^[A-Ga-g](##?|bb?)?/g, "")
+  if (/[mM][aA][jJ]/g.test(c)) { return c }
+  c.replace(/^[mM]/g, "")
+  return c
+}
+
 /**
  * 
  * @param text            Mono format text! We should not need to recalculate - use directly from DB
@@ -184,7 +214,6 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
   let currentIntermediaryJasonSection = sectionJson.sections[p] as _Section
 
   let c = 0 // currentChord
-
   for (let i=0; i<textArray.length; i++) {
     let line = textArray[i]
     let lineType = getLineType(line)
@@ -209,12 +238,12 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
       let regex = new RegExp(chordRegexForTextBlock, 'g')
       
       while ((matchArr = regex.exec(line)) !== null) {
-
         //console.log(`${matchArr[0].trim()} :: ${currentIntermediaryJasonSection.chords[c].chord} :: ${c}`)
-
         if (currentIntermediaryJasonSection.chords[c].chord === matchArr[0].trim()) {
           let currentIntermediaryJasonChord = currentIntermediaryJasonSection.chords[c] as _Chord
-          
+          let decorator = getDecorator(currentIntermediaryJasonSection.chords[c].chord)
+          //console.log(`${currentIntermediaryJasonSection.chords[c].chord} :: ${decorator}`)
+
           let currentChord = {
             chord: distanceFromKey(matchArr[0].trim(), key),
             isMinor: getIsMinor(matchArr[0].trim()),
@@ -223,6 +252,7 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
               start: currentIntermediaryJasonChord.start,
               end: currentIntermediaryJasonChord.end,
             },
+            decorator,
             position: matchArr.index
           } as OslynChord
 
@@ -235,6 +265,8 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
         }
       }
 
+      // add padding, so that chords have space
+      currentPhrase.lyric = addSpacesToEnd(currentPhrase.lyric, currentPhrase.chords[ currentPhrase.chords.length-1 ].meta.end)
       oslynSongJson.song.push(currentPhrase)
     } else if (lineType === 'annotation') {
       //console.log(getSectionName(line))
@@ -280,7 +312,7 @@ export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number
 
       currentSectionName = s.song[i].section
       const r = findClosestDivisor(currentSectionCache.length, min || _minLines, max || _maxLines)
-      console.log(`The closest divisor of ${currentSectionCache.length} between ${min || _minLines} and ${max || _maxLines} is ${r}`)
+      //console.log(`The closest divisor of ${currentSectionCache.length} between ${min || _minLines} and ${max || _maxLines} is ${r}`)
 
       let a = 0
       while (currentSectionCache.length > 0) {
@@ -292,7 +324,7 @@ export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number
         else { pages[pages.length-1].lines.push(c) }
         a++
       }
-      console.log(pages)
+      //console.log(pages)
     }
     currentSectionCache.push(s.song[i])
   }
@@ -324,6 +356,7 @@ export const chordSheetToOslynSong = (sheet: string, key: string, simplify: bool
 export const chordSheetToSlides = (sheet: string, key: string, simplify: boolean): OslynSlide => {
   if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
   const song = rawChordsheetToSectionJson(sheet)
+  console.log(song)
   const oslynSong = convertOslynSong(sheet, song, key)
   console.log(oslynSong)
   return convertOslynSongToPages(oslynSong)

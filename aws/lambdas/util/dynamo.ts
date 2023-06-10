@@ -26,3 +26,18 @@ export const updateDynamoUtil = (db: { table: string, item: { [key: string]: any
 export function hasSubstring(strings: string[], substring: string): boolean {
   return strings.some((str) => str.includes(substring));
 }
+
+/**
+ * @param a1 
+ * @param a2 
+ * @param matchKey 
+ * @param outputKey 
+ * @returns 
+ */
+export const merge = (a1: any, a2: any, matchKey: string, outputKey?: string) => {
+  return a1.map((o1: any) => {
+    const matchingObj = a2.find((o2: any) => o2[matchKey] === o1[matchKey])
+    if (!outputKey)  return matchingObj ? { ...o1, ...matchingObj } : o1
+    else return matchingObj ? { ...o1, [outputKey]: matchingObj } : o1
+  })
+}

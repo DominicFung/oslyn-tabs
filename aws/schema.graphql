@@ -17,7 +17,7 @@ type Query {
   listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
   getSet(setListId: ID!, userId: ID!): SetList! @aws_iam
-  listSets(limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
+  listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSong(jamSongId: ID!, userId: ID!): JamSong! @aws_iam
   getJamSession(jamSessionId: ID!, userId: ID!): JamSession! @aws_iam
@@ -32,6 +32,7 @@ type Mutation {
     userId: ID!
     artist: String
     album: String
+    albumCover: String
 
     chordSheet: String!
     chordSheetKey: String!
@@ -62,7 +63,7 @@ type Mutation {
   addSongsToBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
   removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
 
-  createSet(creatorId: ID!, description: String): SetList! @aws_iam
+  createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList! @aws_iam
   addEditorToSet(setListId: ID!, userId: ID!): SetList! @aws_iam
   removeEditorFromSet(setListId: ID!, userId: ID!): SetList! @aws_iam
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList! @aws_iam
@@ -90,7 +91,7 @@ type Band {
 
 type SetList {
   setListId: ID!
-  description: String
+  description: String!
   songs: [JamSong]!
   editors: [User]!
   creator: User!
@@ -112,7 +113,12 @@ type JamSession {
 
 # Not a DB Item!
 type JamSong {
+  key: String!
   song: Song!
+}
+
+input JamSongInput {
+  songId: ID!
   key: String!
 }
   

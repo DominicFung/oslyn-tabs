@@ -43,6 +43,6 @@ export default function PasteTabs(p: PasteTabsProps) {
   }
 
   return <Editor height="80vh" options={{ }} value={p.tabs} 
-    onChange={(e) => { console.log(e); if(e) p.setTabs(e)}} onMount={setEditorTheme} 
+    onChange={(e) => { e && p.setTabs(e) }} onMount={setEditorTheme} 
   />
 }

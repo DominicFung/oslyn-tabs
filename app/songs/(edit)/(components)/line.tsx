@@ -17,7 +17,7 @@ export default function Line(p: LineProps) {
   return <div className="relative h-12 mt-6">
     {p.phrase.chords.map((c, i) => { 
       const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
-      const width = calculateWidth(p.phrase.lyric.substring(0, c.position))
+      const width = calculateWidth(p.phrase.lyric.substring(0, c.position), p.textSize  || "text-lg")
       return<span className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1 rounded-lg`} style={{
         marginLeft: `${width}px`, left: 0, top: -24}} key={i}>{chord}</span>
     })}

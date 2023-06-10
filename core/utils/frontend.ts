@@ -1,10 +1,12 @@
 
 
-export const calculateWidth = (t: string) => {
+export const calculateWidth = (t: string, fontSize: string = "text-lg") => {
   let text = document.createElement("span")
   document.body.appendChild(text)
-  text.className = "text-lg"
-  text.innerHTML = t
+  text.className = fontSize
+
+  let a = t.replace(/ /g, "\u00A0")
+  text.innerHTML = `${a}`
 
   text.style.height = 'auto';
   text.style.width = 'auto';
@@ -12,6 +14,7 @@ export const calculateWidth = (t: string) => {
   text.style.whiteSpace = 'no-wrap';
 
   let width = text.clientWidth
+  //console.log(`"${t}" -> ${width}`)
   document.body.removeChild(text)
   return width
 }
