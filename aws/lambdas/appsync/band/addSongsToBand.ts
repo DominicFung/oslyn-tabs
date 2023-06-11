@@ -3,9 +3,15 @@ import { DynamoDBClient, BatchGetItemCommand, UpdateItemCommand, GetItemCommand 
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
+import { Band, Song } from '../../API'
 
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
+
+type _Band = Band & {
+  songIds: string[]
+  bandId: string
+}
 
 export const handler = async (event: AppSyncResolverEvent<{
   bandId: string, songIds: string[]
@@ -29,13 +35,13 @@ export const handler = async (event: AppSyncResolverEvent<{
   
   if (!res0.Item) { console.error(`ERROR: bandId not found: ${b.bandId}`); return }
 
-  const band = unmarshall(res0.Item) as { songIds: string[], songs: any }
+  const band = unmarshall(res0.Item) as _Band
   let songIds = [] as string[]
   for (let sid of b.songIds) { if ( !band.songIds.includes(sid) ) { songIds.push(sid) } }
   if (!songIds) { console.error(`nothing to add. Existing band: ${band.songIds} > new song ids: ${b.songIds}`); return }
   
   band.songIds = [...band.songIds, ...songIds]
-  const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { songIds: band.songIds } })
+  const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { songIds: band.songIds }, key: { bandId: {S: band.bandId}} })
   const res1 = await dynamo.send( new UpdateItemCommand(params) )
   console.log(res1)
 
@@ -51,7 +57,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res2)
     if (!res2.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res2.$metadata}`); return  } 
 
-    const songs = res2.Responses![SONG_TABLE_NAME]
+    const songs = res2.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u)) as Song[]
     band.songs = []
     for(let s of songs) { band.songs.push(s) }
   }

@@ -25,14 +25,14 @@ export async function POST(request: Request) {
   Amplify.configure(awsConfig)
 
   const d = await API.graphql(graphqlOperation(
-    m.startJamSession, { ...b }
-  )) as GraphQLResult<{ addSongToSet: JamSession }>
+    m.createJamSession, { ...b, userId:  _generalUserId }
+  )) as GraphQLResult<{ createJamSession: JamSession }>
 
-  if (!d.data?.addSongToSet) {
-    console.error(`startJamSession data is empty: ${JSON.stringify(d.data)}`)
+  if (!d.data?.createJamSession) {
+    console.error(`createJamSession data is empty: ${JSON.stringify(d.data)}`)
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
 
   console.log(`${request.method} ${request.url} .. complete`)
-  return NextResponse.json(d.data.addSongToSet)
+  return NextResponse.json(d.data.createJamSession)
 }

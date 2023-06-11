@@ -7,6 +7,8 @@ import { Fragment, useState } from "react"
 export interface ControlsProp {
   capo: string
   setCapo:  (capo: string) => void
+
+  pt?: boolean | undefined
 }
 
 const capos = ["0", "1", "2", "3", "4", "5", "6", "7"]
@@ -15,7 +17,8 @@ export default function Controls(p: ControlsProp) {
   const [ open, setOepn ] = useState(false)
 
   return <>
-    { open && <div id="toast-bottom-right" className="fixed max-w-xs flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 top-32 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+    { open && <div id="toast-bottom-right" 
+    className={`fixed max-w-xs flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
         <div className="text-sm font-normal">
           <div className="flex">
             <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-oslyn-500 bg-oslyn-100 rounded-lg dark:text-oslyn-300 dark:bg-oslyn-900">
@@ -92,7 +95,7 @@ export default function Controls(p: ControlsProp) {
         </div>
     </div> }
     { !open && <button onClick={() => setOepn(true)}
-      className="fixed z-90 right-10 top-32 bg-coral-400 w-12 h-12 rounded-lg p-2 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl"
+      className={`fixed z-90 right-10 ${p.pt ?"top-32":"top-4"} bg-coral-400 w-12 h-12 rounded-lg p-2 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl`}
     >
       <Cog6ToothIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />
     </button>}

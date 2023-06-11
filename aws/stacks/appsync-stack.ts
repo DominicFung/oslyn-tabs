@@ -25,6 +25,9 @@ export class AppsyncStack extends Stack {
     const setListDynamoName = Fn.importValue(`${props.name}-SetListTable-Name`)
     const setListDynamoArn = Fn.importValue(`${props.name}-SetListTable-Arn`)
 
+    const jamDynamoName = Fn.importValue(`${props.name}-JamTable-Name`)
+    const jamDynamoArn = Fn.importValue(`${props.name}-JamTable-Arn`)
+
     const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
       name: `${props.name}`,
       schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
@@ -73,7 +76,10 @@ export class AppsyncStack extends Stack {
           }),
           new PolicyStatement({
             actions: [ "dynamodb:*" ],
-            resources: [ `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, `${setListDynamoArn}*` ]
+            resources: [ 
+              `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
+              `${setListDynamoArn}*`, `${jamDynamoArn}*`
+            ]
           }),
           new PolicyStatement({
             actions: [ "lambda:InvokeFunction" ],
@@ -91,7 +97,8 @@ export class AppsyncStack extends Stack {
         USER_TABLE_NAME: userDynamoName,
         BAND_TABLE_NAME: bandDynamoName,
         SONG_TABLE_NAME: songDynamoName,
-        SETLIST_TABLE_NAME: setListDynamoName
+        SETLIST_TABLE_NAME: setListDynamoName,
+        JAM_TABLE_NAME: jamDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -190,6 +197,42 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-AddSongToSetResolver`, {
       typeName: "Mutation",
       fieldName: "addSongToSet"
+    })
+
+    const getJamSession = new NodejsFunction(this, `${props.name}-GetJamSession`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'getJamSession.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetJamSessionDS`, getJamSession)
+    .createResolver(`${props.name}-GetJamSessionResolver`, {
+      typeName: "Query",
+      fieldName: "getJamSession"
+    })
+
+    const createJamSession = new NodejsFunction(this, `${props.name}-CreateJamSession`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'createJamSession.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateJamSessionDS`, createJamSession)
+    .createResolver(`${props.name}-CreateJamSessionResolver`, {
+      typeName: "Mutation",
+      fieldName: "createJamSession"
+    })
+
+    const nextPage = new NodejsFunction(this, `${props.name}-NextPage`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'nextPage.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}NextPageDS`, nextPage)
+    .createResolver(`${props.name}-NextPageResolver`, {
+      typeName: "Mutation",
+      fieldName: "nextPage"
     })
   }
 }

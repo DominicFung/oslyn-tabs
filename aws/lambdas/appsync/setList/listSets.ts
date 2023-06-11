@@ -2,7 +2,7 @@ import { AppSyncResolverEvent } from 'aws-lambda'
 import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge } from '../../util/dynamo'
-import { JamSong, SetList } from '../../API'
+import { JamSong, SetList, Song, User } from '../../API'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
@@ -15,6 +15,10 @@ type _SetList = SetList & {
 
 type _JamSong = JamSong & {
   songId: string
+}
+
+type _Song = Song & {
+  userId: string
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
@@ -65,9 +69,35 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
     
-    const songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s))
+    let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
     console.log(songs)
 
+    if (hasSubstring(event.info.selectionSetList, "song/creator")) {
+      console.log("getting songs/../song/creator ..")
+
+      const creatorIds = songs.map((s) => { return s.userId })
+      const uniq = [...new Set(creatorIds)]
+      
+      const keys = uniq.map((s) => { return { userId: { S: s } } })
+      const res2 = await dynamo.send(new BatchGetItemCommand({
+        RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+      }))
+      console.log(res2)
+      if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
+
+      console.log(JSON.stringify(res2.Responses))
+      const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]
+      console.log(users)
+
+      songs = merge(songs, users, 'userId', 'creator')
+      console.log(songs)
+
+      songs = songs.map((s) => {
+        if (!s.recordings) s.recordings = []
+        return s
+      })
+    }
+    
     for (let i=0; i<sets.length; i++) {
       sets[i].songs = merge(sets[i].songs, songs, 'songId', 'song')
     }

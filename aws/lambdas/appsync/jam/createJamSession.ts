@@ -1,7 +1,8 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
+import { v4 as uuidv4 } from 'uuid'
 import { hasSubstring, merge } from '../../util/dynamo'
 import { JamSession, JamSong, SetList, User } from '../../API'
 
@@ -9,10 +10,6 @@ const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
-
-type _JamSession = JamSession & {
-  setListId: string
-}
 
 type _SetList = SetList & {
   userId: string
@@ -24,15 +21,16 @@ type _JamSong = JamSong & {
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
-  jamSessionId: string, userId: string
+  setListId: string, userId: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.userId) { console.error(`b.creatorId is empty`); return }
-  if (!b.jamSessionId) { console.error(`b.setListId is empty`); return }
+  if (!b.setListId) { console.error(`b.setListId is empty`); return }
 
   const dynamo = new DynamoDBClient({})
+  const jamSessionId = uuidv4()
 
   const res0 = await dynamo.send(
     new GetItemCommand({
@@ -44,30 +42,34 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   const res1 = await dynamo.send(
     new GetItemCommand({
-      TableName: JAM_TABLE_NAME,
-      Key: { jamSessionId: { S: b.jamSessionId } }
+      TableName: SETLIST_TABLE_NAME,
+      Key: { setListId: { S: b.setListId } }
     })
   )
-  if (!res1.Item) { console.error(`ERROR: jamSessionId not found: ${b.jamSessionId}`); return }
+  if (!res1.Item) { console.error(`ERROR: setListId not found: ${b.setListId}`); return }
+  
+  let jamSession = {
+    jamSessionId, setListId: b.setListId, userId: b.userId,
 
-  let jamSession = unmarshall(res1.Item) as _JamSession
+    currentSong: 0, currentPage: 0,
+    startDate: Date.now(),
+
+    pageSettings: {
+      pageMax: 3, pageMin: 2
+    }
+  } as any
+
+  const res2 = await dynamo.send(new PutItemCommand({
+    TableName: JAM_TABLE_NAME, Item: marshall(jamSession)
+  }))
+  console.log(res2)
 
   if (hasSubstring(event.info.selectionSetList, "setList")) {
-    console.log("getting setList ...")
-    const res2 = await dynamo.send(
-      new GetItemCommand({
-        TableName: SETLIST_TABLE_NAME,
-        Key: { setListId: { S: jamSession.setListId } }
-      })
-    )
-    if (!res2.Item) { console.error(`ERROR: setListId not found: ${jamSession.setListId}`); return }
-
-    let setList = unmarshall(res2.Item) as _SetList
+    let setList = unmarshall(res1.Item) as _SetList
     console.log(setList)
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
-      console.log("getting setList/songs ..")
-      const songIds = (setList.songs as _JamSong[]).map((s) => { return s!.songId as string })
+      const songIds = setList.songs.map((s) => { return (s as _JamSong).songId as string })
       const uniq = [...new Set(songIds)]
   
       const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
@@ -81,16 +83,10 @@ export const handler = async (event: AppSyncResolverEvent<{
   
       const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u))
       console.log(songs)
-
-      if (hasSubstring(event.info.selectionSetList, "creator")) {
-        console.log("getting setList/songs/../creator ..")
-      }
-
       setList.songs = merge(setList.songs, songs, 'songId', 'song')
     }
 
     if (hasSubstring(event.info.selectionSetList, "setList/creator")) {
-      console.log("getting setList/creator ..")
       const res2 = await dynamo.send(new GetItemCommand({
         TableName: USER_TABLE_NAME, Key: { userId: { S: setList.userId } }
       }))
@@ -115,7 +111,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "admin")) {
-    jamSession.admin = unmarshall(res0.Item) as User
+    jamSession.admin = unmarshall(res0.Item)
     if (!jamSession.admin.labelledRecording) jamSession.admin.labelledRecording = []
     if (!jamSession.admin.songsCreated) jamSession.admin.songsCreated = []
     if (!jamSession.admin.editHistory) jamSession.admin.editHistory = []
@@ -126,7 +122,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "members")) {
     jamSession.members = []
   }
-  
+
   console.log(JSON.stringify(jamSession))
-  return jamSession
+  return jamSession as JamSession
 }

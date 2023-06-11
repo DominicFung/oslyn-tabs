@@ -1,25 +1,33 @@
 import { UpdateItemCommandInput } from '@aws-sdk/client-dynamodb'
+import { marshall } from '@aws-sdk/util-dynamodb'
 
-export const updateDynamoUtil = (db: { table: string, item: { [key: string]: any } }): UpdateItemCommandInput => {
+export const updateDynamoUtil = (db: { table: string, item: { [key: string]: any }, key: { [key: string]: any } }): UpdateItemCommandInput => {
   let params = {
     TableName: db.table,
-    Key: {},
+    Key: db.key || {},
     ExpressionAttributeValues: {},
     ExpressionAttributeNames: {},
     UpdateExpression: "",
     ReturnValues: "UPDATED_NEW"
   } as UpdateItemCommandInput
 
+  console.log(params)
+
   let prefix = "set "
   for (const o of Object.keys(db.item)) {
+    console.log(`${o} :: ${db.item[o]}`)
     if (db.item[o]) { 
-      params.Key![o] = db.item[o]
       params.UpdateExpression += prefix + "#" + o + " = :" + o
       params.ExpressionAttributeValues![":" + o] = db.item[o]
       params.ExpressionAttributeNames!["#" + o] = o
       prefix = ", "
     }
   }
+
+  params.Key = marshall(params.Key)
+  params.ExpressionAttributeValues = marshall(params.ExpressionAttributeValues)
+
+  console.log(params)
   return params
 }
 

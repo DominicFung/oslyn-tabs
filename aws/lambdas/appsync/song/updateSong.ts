@@ -38,7 +38,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       originPlatorm: b.originPlatorm, originLink: b.originLink
     }
   
-    const params = updateDynamoUtil({ table: SONG_TABLE_NAME, item: updateSong })
+    const params = updateDynamoUtil({ table: SONG_TABLE_NAME, item: updateSong, key: { songId: { S: b.songId } } })
     const res1 = await dynamo.send(new UpdateItemCommand(params))
     console.log(res1)
 

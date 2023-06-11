@@ -9,6 +9,7 @@ import awsConfig from '@/src/aws-exports'
 
 import * as q from '@/src/graphql/queries'
 import { SetList } from '@/src/API'
+import CreateJamButton from "./(components)/createJam"
 
 const _img = [
   "https://i.scdn.co/image/ab67616d0000485141e9614560815b11c1ca543d",
@@ -111,16 +112,11 @@ export default async function Sets() {
                     </div>}
                 </td>
                 <td className="px-6 py-4">
-                  <a href={`/jam/start/set/${a.setListId}`}>
-                    <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                      Jam <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
-                    </button>
-                  </a>
-                  
+                  <CreateJamButton setListId={a.setListId} />
                 </td>
             </tr>)}
         </tbody>
-    </table>
-</div>
+      </table>
+    </div>
   </div>
 }

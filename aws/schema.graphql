@@ -6,26 +6,27 @@ schema {
 }
 
 type Query {
-  getSong(songId: ID!): Song! @aws_iam
+  getSong(songId: ID!): Song @aws_iam
   listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   
-  getUserById(userId: ID!): User! @aws_iam
-  getUserByEmail(email: AWSEmail): User! @aws_iam
+  getUserById(userId: ID!): User @aws_iam
+  getUserByEmail(email: AWSEmail): User @aws_iam
   listUsers(limit: Int, filter: String, nextToken: String): [User]! @aws_iam
   
-  getBand(bandId: ID!, userId: ID!): Band! @aws_iam
+  getBand(bandId: ID!, userId: ID!): Band @aws_iam
   listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
-  getSet(setListId: ID!, userId: ID!): SetList! @aws_iam
+  getSet(setListId: ID!, userId: ID!): SetList @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
-  getJamSong(jamSongId: ID!, userId: ID!): JamSong! @aws_iam
-  getJamSession(jamSessionId: ID!, userId: ID!): JamSession! @aws_iam
-  listJamSessions(bandId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
+
+  # getActiveJamSessions(userId: ID!): [JamSession]! @aws_iam
+  # listJamSessions(bandId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
 type Mutation {
-  createUser(username: String!, email: String!, firstName: String, lastName: String): User! @aws_iam
+  createUser(username: String!, email: String!, firstName: String, lastName: String): User @aws_iam
 
   createSong(
     title: String!
@@ -36,7 +37,7 @@ type Mutation {
 
     chordSheet: String!
     chordSheetKey: String!
-  ): Song! @aws_iam
+  ): Song @aws_iam
 
   updateSong(
     songId: ID!
@@ -52,35 +53,50 @@ type Mutation {
     chordSheetKey: String
     originalPlatorm: chordSheetPlatform 
     originalLink: String
-  ): Song! @aws_iam
+  ): Song @aws_iam
 
-  addRecordingToSong(songId: ID!, recordingId: ID!): Song! @aws_iam
-  removeRecordingFromSong(songId: ID!, recordingId: ID!): Song! @aws_iam
+  addRecordingToSong(songId: ID!, recordingId: ID!): Song @aws_iam
+  removeRecordingFromSong(songId: ID!, recordingId: ID!): Song @aws_iam
 
-  createBand(ownerId: ID!, name: String): Band! @aws_iam
-  addBandMembers(bandId: ID!, userIds: [ID]!): Band! @aws_iam
-  removeBandMembers(bandId: ID!, userIds: [ID]!): Band! @aws_iam
-  addSongsToBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
-  removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band! @aws_iam
+  createBand(ownerId: ID!, name: String): Band @aws_iam
+  addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
+  removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
+  addSongsToBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
+  removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
 
-  createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList! @aws_iam
-  addEditorToSet(setListId: ID!, userId: ID!): SetList! @aws_iam
-  removeEditorFromSet(setListId: ID!, userId: ID!): SetList! @aws_iam
-  addSongToSet(setListId: ID!, songId: ID!, key: String): SetList! @aws_iam
-  removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList! @aws_iam
+  createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList @aws_iam
+  addEditorToSet(setListId: ID!, userId: ID!): SetList @aws_iam
+  removeEditorFromSet(setListId: ID!, userId: ID!): SetList @aws_iam
+  addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam
+  removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList @aws_iam
 
-  startJamSession(setListId: ID!): JamSession! @aws_iam
-  endJamSession(jamSessionId: ID!): JamSession! @aws_iam
-  nextLine(hash: String!): JamSession @aws_iam
+  createJamSession(setListId: ID!, userId: ID!): JamSession @aws_iam
+  endJamSession(jamSessionId: ID!): JamSession @aws_iam
+  modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
+
+  nextPage(jamSessionId: ID!, page: Int!): NextPage
+  nextSong(jamSessionId: ID!, song: Int!): NextSong
 }
 
 type Subscription {
-  onNextLine(hash: String!): JamSession @aws_subscribe(mutations: ["nextLine"])
+  onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations: ["nextPage"])
+  onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations: ["nextSong"])
 }
 
 enum recordingStatus { TOLABEL INAUDIT COMPLETE }
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
+
+type NextPage {
+  jamSessionId: ID!
+  page: Int
+}
+
+type NextSong {
+  jamSessionId: ID!
+  songId: String
+  song: Int
+}
 
 type Band {
   bandId: ID!
@@ -104,11 +120,12 @@ type JamSession {
   admin: User!
   members: [User]!
 
-  currentSong: JamSong
-  currentLine: Int
+  currentSong: Int
+  currentPage: Int
+  pageSettings: PageSettings!
 
-  startDate: Int
-  endDate: Int
+  startDate: AWSTimestamp
+  endDate: AWSTimestamp
 }
 
 # Not a DB Item!
@@ -130,6 +147,11 @@ input _Beat {
 type Beat {
   count: Int!
   note: Int!
+}
+
+type PageSettings {
+  pageMax: Int
+  pageMin: Int
 }
 
 type Song {

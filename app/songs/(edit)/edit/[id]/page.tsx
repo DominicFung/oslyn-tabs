@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { headers } from 'next/headers'
 
 import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
@@ -8,8 +7,6 @@ import awsConfig from '@/src/aws-exports'
 import * as q from '@/src/graphql/queries'
 import { Song } from '@/src/API'
 import Edit from "./edit"
-
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
 
 Amplify.configure({...awsConfig, ssr: true })
 

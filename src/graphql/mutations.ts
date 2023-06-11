@@ -34,8 +34,45 @@ export const createUser = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -58,6 +95,52 @@ export const createUser = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -67,6 +150,39 @@ export const createUser = /* GraphQL */ `
         status
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -100,11 +216,70 @@ export const createUser = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -112,12 +287,31 @@ export const createUser = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -134,6 +328,19 @@ export const createUser = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -141,12 +348,31 @@ export const createUser = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -162,6 +388,52 @@ export const createUser = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         date
         actionColumn
@@ -177,8 +449,45 @@ export const createUser = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -232,6 +541,19 @@ export const createSong = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -239,12 +561,31 @@ export const createSong = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -256,8 +597,45 @@ export const createSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -265,6 +643,39 @@ export const createSong = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -273,6 +684,19 @@ export const createSong = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       recordings {
@@ -285,8 +709,45 @@ export const createSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -309,6 +770,52 @@ export const createSong = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -318,6 +825,39 @@ export const createSong = /* GraphQL */ `
         status
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -390,6 +930,19 @@ export const updateSong = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -397,12 +950,31 @@ export const updateSong = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -414,8 +986,45 @@ export const updateSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -423,6 +1032,39 @@ export const updateSong = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -431,6 +1073,19 @@ export const updateSong = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       recordings {
@@ -443,8 +1098,45 @@ export const updateSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -467,6 +1159,52 @@ export const updateSong = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -476,6 +1214,39 @@ export const updateSong = /* GraphQL */ `
         status
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -522,6 +1293,19 @@ export const addRecordingToSong = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -529,12 +1313,31 @@ export const addRecordingToSong = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -546,8 +1349,45 @@ export const addRecordingToSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -555,6 +1395,39 @@ export const addRecordingToSong = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -563,6 +1436,19 @@ export const addRecordingToSong = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       recordings {
@@ -575,8 +1461,45 @@ export const addRecordingToSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -599,6 +1522,52 @@ export const addRecordingToSong = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -608,6 +1577,39 @@ export const addRecordingToSong = /* GraphQL */ `
         status
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -654,6 +1656,19 @@ export const removeRecordingFromSong = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -661,12 +1676,31 @@ export const removeRecordingFromSong = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -678,8 +1712,45 @@ export const removeRecordingFromSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -687,6 +1758,39 @@ export const removeRecordingFromSong = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -695,6 +1799,19 @@ export const removeRecordingFromSong = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       recordings {
@@ -707,8 +1824,45 @@ export const removeRecordingFromSong = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -731,6 +1885,52 @@ export const removeRecordingFromSong = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -740,6 +1940,39 @@ export const removeRecordingFromSong = /* GraphQL */ `
         status
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -784,11 +2017,70 @@ export const createBand = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -796,12 +2088,31 @@ export const createBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -826,6 +2137,19 @@ export const createBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -833,12 +2157,31 @@ export const createBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -850,8 +2193,45 @@ export const createBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -859,6 +2239,39 @@ export const createBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -867,6 +2280,19 @@ export const createBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       owner {
@@ -883,6 +2309,19 @@ export const createBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -890,12 +2329,31 @@ export const createBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -907,8 +2365,45 @@ export const createBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -916,6 +2411,39 @@ export const createBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -924,6 +2452,19 @@ export const createBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
     }
@@ -955,11 +2496,70 @@ export const addBandMembers = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -967,12 +2567,31 @@ export const addBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -997,6 +2616,19 @@ export const addBandMembers = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1004,12 +2636,31 @@ export const addBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1021,8 +2672,45 @@ export const addBandMembers = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1030,6 +2718,39 @@ export const addBandMembers = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1038,6 +2759,19 @@ export const addBandMembers = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       owner {
@@ -1054,6 +2788,19 @@ export const addBandMembers = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1061,12 +2808,31 @@ export const addBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1078,8 +2844,45 @@ export const addBandMembers = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1087,6 +2890,39 @@ export const addBandMembers = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1095,6 +2931,19 @@ export const addBandMembers = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
     }
@@ -1126,11 +2975,70 @@ export const removeBandMembers = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1138,12 +3046,31 @@ export const removeBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1168,6 +3095,19 @@ export const removeBandMembers = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1175,12 +3115,31 @@ export const removeBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1192,8 +3151,45 @@ export const removeBandMembers = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1201,6 +3197,39 @@ export const removeBandMembers = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1209,6 +3238,19 @@ export const removeBandMembers = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       owner {
@@ -1225,6 +3267,19 @@ export const removeBandMembers = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1232,12 +3287,31 @@ export const removeBandMembers = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1249,8 +3323,45 @@ export const removeBandMembers = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1258,6 +3369,39 @@ export const removeBandMembers = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1266,6 +3410,19 @@ export const removeBandMembers = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
     }
@@ -1297,11 +3454,70 @@ export const addSongsToBand = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1309,12 +3525,31 @@ export const addSongsToBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1339,6 +3574,19 @@ export const addSongsToBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1346,12 +3594,31 @@ export const addSongsToBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1363,8 +3630,45 @@ export const addSongsToBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1372,6 +3676,39 @@ export const addSongsToBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1380,6 +3717,19 @@ export const addSongsToBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       owner {
@@ -1396,6 +3746,19 @@ export const addSongsToBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1403,12 +3766,31 @@ export const addSongsToBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1420,8 +3802,45 @@ export const addSongsToBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1429,6 +3848,39 @@ export const addSongsToBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1437,6 +3889,19 @@ export const addSongsToBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
     }
@@ -1468,11 +3933,70 @@ export const removeSongsFromBand = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         recordings {
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1480,12 +4004,31 @@ export const removeSongsFromBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1510,6 +4053,19 @@ export const removeSongsFromBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1517,12 +4073,31 @@ export const removeSongsFromBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1534,8 +4109,45 @@ export const removeSongsFromBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1543,6 +4155,39 @@ export const removeSongsFromBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1551,6 +4196,19 @@ export const removeSongsFromBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       owner {
@@ -1567,6 +4225,19 @@ export const removeSongsFromBand = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1574,12 +4245,31 @@ export const removeSongsFromBand = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1591,8 +4281,45 @@ export const removeSongsFromBand = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1600,6 +4327,39 @@ export const removeSongsFromBand = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1608,6 +4368,19 @@ export const removeSongsFromBand = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
     }
@@ -1630,8 +4403,45 @@ export const createSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1652,6 +4462,19 @@ export const createSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1659,12 +4482,31 @@ export const createSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1676,8 +4518,45 @@ export const createSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1685,6 +4564,39 @@ export const createSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1693,6 +4605,19 @@ export const createSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       creator {
@@ -1709,6 +4634,19 @@ export const createSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1716,12 +4654,31 @@ export const createSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1733,8 +4690,45 @@ export const createSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1742,6 +4736,39 @@ export const createSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1750,6 +4777,19 @@ export const createSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       band {
@@ -1760,8 +4800,45 @@ export const createSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1777,6 +4854,52 @@ export const createSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         owner {
           userId
@@ -1788,6 +4911,52 @@ export const createSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
       }
     }
@@ -1806,8 +4975,45 @@ export const addEditorToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1828,6 +5034,19 @@ export const addEditorToSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1835,12 +5054,31 @@ export const addEditorToSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1852,8 +5090,45 @@ export const addEditorToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1861,6 +5136,39 @@ export const addEditorToSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1869,6 +5177,19 @@ export const addEditorToSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       creator {
@@ -1885,6 +5206,19 @@ export const addEditorToSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -1892,12 +5226,31 @@ export const addEditorToSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -1909,8 +5262,45 @@ export const addEditorToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1918,6 +5308,39 @@ export const addEditorToSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -1926,6 +5349,19 @@ export const addEditorToSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       band {
@@ -1936,8 +5372,45 @@ export const addEditorToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -1953,6 +5426,52 @@ export const addEditorToSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         owner {
           userId
@@ -1964,6 +5483,52 @@ export const addEditorToSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
       }
     }
@@ -1982,8 +5547,45 @@ export const removeEditorFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2004,6 +5606,19 @@ export const removeEditorFromSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2011,12 +5626,31 @@ export const removeEditorFromSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2028,8 +5662,45 @@ export const removeEditorFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2037,6 +5708,39 @@ export const removeEditorFromSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2045,6 +5749,19 @@ export const removeEditorFromSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       creator {
@@ -2061,6 +5778,19 @@ export const removeEditorFromSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2068,12 +5798,31 @@ export const removeEditorFromSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2085,8 +5834,45 @@ export const removeEditorFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2094,6 +5880,39 @@ export const removeEditorFromSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2102,6 +5921,19 @@ export const removeEditorFromSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       band {
@@ -2112,8 +5944,45 @@ export const removeEditorFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2129,6 +5998,52 @@ export const removeEditorFromSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         owner {
           userId
@@ -2140,6 +6055,52 @@ export const removeEditorFromSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
       }
     }
@@ -2158,8 +6119,45 @@ export const addSongToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2180,6 +6178,19 @@ export const addSongToSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2187,12 +6198,31 @@ export const addSongToSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2204,8 +6234,45 @@ export const addSongToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2213,6 +6280,39 @@ export const addSongToSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2221,6 +6321,19 @@ export const addSongToSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       creator {
@@ -2237,6 +6350,19 @@ export const addSongToSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2244,12 +6370,31 @@ export const addSongToSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2261,8 +6406,45 @@ export const addSongToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2270,6 +6452,39 @@ export const addSongToSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2278,6 +6493,19 @@ export const addSongToSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       band {
@@ -2288,8 +6516,45 @@ export const addSongToSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2305,6 +6570,52 @@ export const addSongToSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         owner {
           userId
@@ -2316,6 +6627,52 @@ export const addSongToSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
       }
     }
@@ -2334,8 +6691,45 @@ export const removeSongFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2356,6 +6750,19 @@ export const removeSongFromSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2363,12 +6770,31 @@ export const removeSongFromSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2380,8 +6806,45 @@ export const removeSongFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2389,6 +6852,39 @@ export const removeSongFromSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2397,6 +6893,19 @@ export const removeSongFromSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       creator {
@@ -2413,6 +6922,19 @@ export const removeSongFromSet = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2420,12 +6942,31 @@ export const removeSongFromSet = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2437,8 +6978,45 @@ export const removeSongFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2446,6 +7024,39 @@ export const removeSongFromSet = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2454,6 +7065,19 @@ export const removeSongFromSet = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       band {
@@ -2464,8 +7088,45 @@ export const removeSongFromSet = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2481,6 +7142,52 @@ export const removeSongFromSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         owner {
           userId
@@ -2492,20 +7199,79 @@ export const removeSongFromSet = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
       }
     }
   }
 `;
-export const startJamSession = /* GraphQL */ `
-  mutation StartJamSession($setListId: ID!) {
-    startJamSession(setListId: $setListId) {
+export const createJamSession = /* GraphQL */ `
+  mutation CreateJamSession($setListId: ID!, $userId: ID!) {
+    createJamSession(setListId: $setListId, userId: $userId) {
       jamSessionId
       setList {
         setListId
         description
         songs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
         editors {
           userId
@@ -2517,6 +7283,52 @@ export const startJamSession = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         creator {
           userId
@@ -2528,9 +7340,90 @@ export const startJamSession = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         band {
           bandId
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          members {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          owner {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
         }
       }
       admin {
@@ -2547,6 +7440,19 @@ export const startJamSession = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2554,12 +7460,31 @@ export const startJamSession = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2571,8 +7496,45 @@ export const startJamSession = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2580,6 +7542,39 @@ export const startJamSession = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2588,6 +7583,19 @@ export const startJamSession = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       members {
@@ -2604,6 +7612,19 @@ export const startJamSession = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2611,12 +7632,31 @@ export const startJamSession = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2628,8 +7668,45 @@ export const startJamSession = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2637,6 +7714,39 @@ export const startJamSession = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2645,25 +7755,27 @@ export const startJamSession = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
-      currentSong {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-        }
+      currentSong
+      currentPage
+      pageSettings {
+        pageMax
+        pageMin
       }
-      currentLine
       startDate
       endDate
     }
@@ -2678,6 +7790,19 @@ export const endJamSession = /* GraphQL */ `
         description
         songs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
         editors {
           userId
@@ -2689,6 +7814,52 @@ export const endJamSession = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         creator {
           userId
@@ -2700,9 +7871,90 @@ export const endJamSession = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         band {
           bandId
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          members {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          owner {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
         }
       }
       admin {
@@ -2719,6 +7971,19 @@ export const endJamSession = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2726,12 +7991,31 @@ export const endJamSession = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2743,8 +8027,45 @@ export const endJamSession = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2752,6 +8073,39 @@ export const endJamSession = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2760,6 +8114,19 @@ export const endJamSession = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       members {
@@ -2776,6 +8143,19 @@ export const endJamSession = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2783,12 +8163,31 @@ export const endJamSession = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2800,8 +8199,45 @@ export const endJamSession = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2809,6 +8245,39 @@ export const endJamSession = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2817,39 +8286,54 @@ export const endJamSession = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
-      currentSong {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-        }
+      currentSong
+      currentPage
+      pageSettings {
+        pageMax
+        pageMin
       }
-      currentLine
       startDate
       endDate
     }
   }
 `;
-export const nextLine = /* GraphQL */ `
-  mutation NextLine($hash: String!) {
-    nextLine(hash: $hash) {
+export const modifyJamSongs = /* GraphQL */ `
+  mutation ModifyJamSongs($jamSessionId: ID!, $jamSongs: [JamSongInput]!) {
+    modifyJamSongs(jamSessionId: $jamSessionId, jamSongs: $jamSongs) {
       jamSessionId
       setList {
         setListId
         description
         songs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
         editors {
           userId
@@ -2861,6 +8345,52 @@ export const nextLine = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         creator {
           userId
@@ -2872,9 +8402,90 @@ export const nextLine = /* GraphQL */ `
           createDate
           email
           role
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
         }
         band {
           bandId
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          members {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          owner {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
         }
       }
       admin {
@@ -2891,6 +8502,19 @@ export const nextLine = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2898,12 +8522,31 @@ export const nextLine = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2915,8 +8558,45 @@ export const nextLine = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2924,6 +8604,39 @@ export const nextLine = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2932,6 +8645,19 @@ export const nextLine = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
       members {
@@ -2948,6 +8674,19 @@ export const nextLine = /* GraphQL */ `
           recordingId
           songTitle
           formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
           key
           tabLink
           rawTabs
@@ -2955,12 +8694,31 @@ export const nextLine = /* GraphQL */ `
           prelabelToolVersion
           labelTool
           labelToolVersion
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           isLabelerRejected
           labelerRejectionReason
           singerName
           singerEmail
           gender
           status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
           comment
           createDate
           updateDate
@@ -2972,8 +8730,45 @@ export const nextLine = /* GraphQL */ `
           artist
           album
           albumCover
+          beat {
+            count
+            note
+          }
           isApproved
           version
+          creator {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
           chordSheet
           chordSheetKey
           originPlatorm
@@ -2981,6 +8776,39 @@ export const nextLine = /* GraphQL */ `
         }
         editHistory {
           recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            firstName
+            lastName
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            email
+            role
+          }
           date
           actionColumn
           previousAction
@@ -2989,27 +8817,46 @@ export const nextLine = /* GraphQL */ `
         }
         likedSongs {
           key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
         }
       }
-      currentSong {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-        }
+      currentSong
+      currentPage
+      pageSettings {
+        pageMax
+        pageMin
       }
-      currentLine
       startDate
       endDate
+    }
+  }
+`;
+export const nextPage = /* GraphQL */ `
+  mutation NextPage($jamSessionId: ID!, $page: Int!) {
+    nextPage(jamSessionId: $jamSessionId, page: $page) {
+      jamSessionId
+      page
+    }
+  }
+`;
+export const nextSong = /* GraphQL */ `
+  mutation NextSong($jamSessionId: ID!, $song: Int!) {
+    nextSong(jamSessionId: $jamSessionId, song: $song) {
+      jamSessionId
+      songId
+      song
     }
   }
 `;

@@ -12,28 +12,40 @@ import Image from "next/image"
 
 import { transpose as trans } from "@/core/oslyn"
 
- 
-
 interface SlidesProps {
   song: Song
   skey?: string
+
+  page?: number
+  setPage?: (p: number) => void
+
+  pt?: boolean
 }
 
 export default function Slides(p: SlidesProps) {
   const [ slides, setSlides ] = useState<OslynSlide>()
-  const [ page, setPage ] = useState(0)
+  const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
+
+  const setPage = (n: number) => {
+    if (p.setPage) p.setPage(n)
+    else _setPage(n)
+  }
+
+  useEffect(() => {
+    _setPage(p.page || 0)
+  }, [p.page])
 
   const [ wClass, setWClass ] = useState("max-w-screen-sm")
-  const [ screen, setScreen ] = useState({ 
-    w: window ? window.innerWidth : 500, 
-    h: window ? window.innerHeight : 500
-  }) 
+  const [ screen, setScreen ] = useState({ w: 500, h: 500 }) 
 
   const [transpose, setTranspose] = useState(0)
 
-  const setCapo = (c: string) => {
-    setTranspose(0-Number(c))
-  }
+  const setCapo = (c: string) => { setTranspose(0-Number(c)) }
+
+  useEffect(() => { setScreen({
+    w: typeof window !== "undefined" ? window.innerWidth : 500, 
+    h: typeof window !== "undefined" ? window.innerHeight : 500
+  }) }, [])
   
   useEffect(() => {
     console.log(p.song)
@@ -90,22 +102,22 @@ export default function Slides(p: SlidesProps) {
       { page > 0 ? <button className="flex-1" onClick={() => setPage(page-1)}>
         <div className="w-32 rounded-lg flex justify-center items-center" style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))", 
-          height: screen.h-90
+          height: screen.h-(p.pt ? 90 : 0)
         }}>
-          <ChevronLeftIcon className="w-16 h-16 p-4"/>
+          <ChevronLeftIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> : <div className="flex-1" /> }
       { slides && slides?.pages.length-1 > page ? <button className="flex-1 flex flex-row-reverse" onClick={() => setPage(page+1)}>
         <div className="w-32 rounded-lg flex justify-center items-center" style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0), rgba(95,40,212,0.5))",
-          height: screen.h-90
+          height: screen.h-(p.pt ? 90 : 0)
         }}>
-          <ChevronRightIcon className="w-16 h-16 p-4"/>
+          <ChevronRightIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> :  <div className="flex-1" /> }
     </div>
-    <Controls capo={`${0-transpose}`} setCapo={setCapo} />
-    {page === 0 && <div className="absolute left-72 top-28 rounded-lg">
+    <Controls capo={`${0-transpose}`} setCapo={setCapo} pt={p.pt} />
+    {page === 0 && <div className={`absolute left-72 ${p.pt?"top-28":"top-8"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">
         {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
         <div className="m-2">

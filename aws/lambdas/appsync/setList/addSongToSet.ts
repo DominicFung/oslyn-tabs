@@ -52,7 +52,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   setListSongs.push(jamSong)
   setList.songs = setListSongs
 
-  let params = updateDynamoUtil({ table: SETLIST_TABLE_NAME, item: { songs: setListSongs }})
+  let params = updateDynamoUtil({ table: SETLIST_TABLE_NAME, item: { songs: setListSongs }, key: { setListId: { S: setList.setListId } }})
   const res3 = await dynamo.send( new UpdateItemCommand(params) )
   console.log(res3)
 

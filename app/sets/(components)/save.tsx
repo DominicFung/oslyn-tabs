@@ -1,7 +1,7 @@
 "use client"
 
 import { SetRequest } from "@/app/api/set/create/route"
-import { JamSong, JamSongInput, SetList } from "@/src/API"
+import { JamSongInput, SetList } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/navigation"
 

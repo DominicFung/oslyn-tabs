@@ -155,5 +155,26 @@ export class DynamoStack extends Stack {
       value: setListTable.tableArn,
       exportName: `${props.name}-SetListTable-Arn`
     })
+
+    const jamSessionTable = new Table(this, `${props.name}-JamSessionTable`, {
+      tableName: `${props.name}-JamSessionTable`,
+      partitionKey: {
+        name: `jamSessionId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    new CfnOutput(this, `${props.name}-JamTable-Name`, {
+      value: jamSessionTable.tableName,
+      exportName: `${props.name}-JamTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-JamTable-Arn`, {
+      value: jamSessionTable.tableArn,
+      exportName: `${props.name}-JamTable-Arn`
+    })
   }
 }
