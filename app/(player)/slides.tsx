@@ -11,6 +11,7 @@ import Controls from "./controls"
 import Image from "next/image"
 
 import { transpose as trans } from "@/core/oslyn"
+import { useSideBarContext } from "@/app/context"
 
 interface SlidesProps {
   song: Song
@@ -23,6 +24,8 @@ interface SlidesProps {
 }
 
 export default function Slides(p: SlidesProps) {
+  const {openSidebar, setOpenSidebar } = useSideBarContext()
+
   const [ slides, setSlides ] = useState<OslynSlide>()
   const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
 
@@ -39,7 +42,6 @@ export default function Slides(p: SlidesProps) {
   const [ screen, setScreen ] = useState({ w: 500, h: 500 }) 
 
   const [transpose, setTranspose] = useState(0)
-
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
 
   useEffect(() => { setScreen({
@@ -98,7 +100,9 @@ export default function Slides(p: SlidesProps) {
         </div> }
       </div>
     </div>
-    <div className="absolute bottom-0 left-0 px-4 sm:ml-64 flex flex-row" style={{width: screen.w-256}}>
+    <div className={`absolute bottom-0 left-0 px-4 ${openSidebar?"ml-64":"ml-0"} flex flex-row`} style={{
+      width: !openSidebar ? screen.w : screen.w-256
+    }}>
       { page > 0 ? <button className="flex-1" onClick={() => setPage(page-1)}>
         <div className="w-32 rounded-lg flex justify-center items-center" style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))", 

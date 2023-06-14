@@ -13,7 +13,10 @@ import { useEffect, useState } from "react"
 export interface PlayerProps {
   jam: JamSession
 }
-// http://localhost:3000/jam/8ad11bd9-a87d-47d2-949a-0512ed94b020
+
+Amplify.configure({ ...awsConfig, ssr: true });
+
+// http://192.168.68.128:3000/jam/95b1a549-127f-4a38-96c4-8dabfbb35bc1
 export default function Player(p: PlayerProps) {
 
   const [ song, setSong ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.song)
@@ -21,7 +24,6 @@ export default function Player(p: PlayerProps) {
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
 
   useEffect(() => {
-    Amplify.configure(awsConfig)
     if (p.jam.jamSessionId) { subscribeNextPage(p.jam.jamSessionId) }
   }, [page, p.jam.jamSessionId])
 
@@ -48,8 +50,6 @@ export default function Player(p: PlayerProps) {
   const incomingNextPage = async (page: number) => { setPage(page) }
   
   const setNextPage = async (page: number) => {
-    Amplify.configure(awsConfig)
-
     const d = await API.graphql(graphqlOperation(m.nextPage, {
       jamSessionId: p.jam.jamSessionId, page
     })) as GraphQLResult<{ nextPage: NextPage }>

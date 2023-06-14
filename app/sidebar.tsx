@@ -2,14 +2,28 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation"
+import { useSideBarContext } from "@/app/context";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 
 export default function Sidebar () {
   const path = usePathname()
+  const {openSidebar, setOpenSidebar } = useSideBarContext()
 
-  return <aside id="cta-button-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-  <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <a href="/" className="flex items-center pl-2.5 mb-5">
-         <Image src="/logo-wave.png" className="h-6 mr-3 sm:h-7" width={50} height={50} alt="Oslyn Logo" />
+  return <>
+  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
+    <div className={`relative h-0 w-0 top-4 ${openSidebar?"left-56":"left-72"}`}>
+      <button onClick={() => setOpenSidebar(!openSidebar)}
+        className="z-90 bg-gray-50 dark:bg-gray-700 w-16 h-16
+        rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300"
+      >
+        {openSidebar ? <ChevronLeftIcon className="w-16 h-16 text-white"/> :
+        <ChevronRightIcon className="w-16 h-16 text-white"/> }
+      </button>
+    </div>
+   
+    <div className="h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+      <a href="/" className="flex items-center pl-2.5 my-5">
+         <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" />
          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Oslyn Tabs</span>
       </a>
      <ul className="space-y-2 font-medium">
@@ -66,6 +80,7 @@ export default function Sidebar () {
         </p>
         <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="#">Give Feedback!</a>
      </div>
-  </div>
-</aside>
-}
+    </div>
+  </aside>
+  
+</>}
