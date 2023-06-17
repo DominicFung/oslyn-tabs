@@ -33,7 +33,7 @@ export interface ControlsProp {
 }
 
 export default function Controls(p: ControlsProp) {
-  const [ open, setOepn ] = useState(true)
+  const [ open, setOepn ] = useState(false)
 
   const [ options, setOptions ] = useState([
     { name: "Song", disabled: false },
@@ -44,8 +44,8 @@ export default function Controls(p: ControlsProp) {
 
   useEffect(() => {
     setOptions([
-      { name: "Song", disabled: !p.song || !p.song.song || !p.song.songs || !p.song.setSong },
-      { name: "Key", disabled: false },
+      { name: "Song", disabled: !p.song || !p.song.songs || !p.song.setSong },
+      { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Text", disabled: !p.text || !p.text.textSize || !p.text.setTextSize || !p.text.setAuto }
     ])
