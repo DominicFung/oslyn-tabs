@@ -113,7 +113,10 @@ export const transpose = (chord: string, transpose: number): string|null => {
 
   for (let i=0; i<KeyDistanceMap.length; i++) {
     if (KeyDistanceMap[i].includes(chord)) {
-      return KeyDistanceMap[i+transpose][0]
+      let t = i+transpose
+      while (t < 0) { t=t+KeyDistanceMap.length }
+      while (t >= KeyDistanceMap.length) { t=t-KeyDistanceMap.length }
+      return KeyDistanceMap[t][0]
     }
   }
   console.warn(`transpose(): Could not find chord given chord ${chord}. Returning null.`)

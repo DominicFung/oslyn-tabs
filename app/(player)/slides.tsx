@@ -35,6 +35,7 @@ export default function Slides(p: SlidesProps) {
 
   const [ slides, setSlides ] = useState<OslynSlide>()
   const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
+  const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
   const setPage = (n: number) => {
     if (p.setPage) p.setPage(n)
@@ -44,6 +45,12 @@ export default function Slides(p: SlidesProps) {
   useEffect(() => {
     _setPage(p.page || 0)
   }, [p.page])
+
+  useEffect(() => {
+    let baseKey = p.skey || p.song.chordSheetKey || "C"
+    if (p.transpose) baseKey = trans(baseKey, p.transpose) || "C"
+    setTransposedKey(baseKey)
+  }, [p.transpose, p.skey])
 
   const [ wClass, setWClass ] = useState("max-w-screen-sm")
   const [ screen, setScreen ] = useState({ w: 500, h: 500 }) 
@@ -74,7 +81,7 @@ export default function Slides(p: SlidesProps) {
       console.log(oslynSlides)
       setSlides(oslynSlides)
     }
-  }, [p.song, p.transpose])
+  }, [p.song])
 
   useEffect(() => {
     if (slides) {
@@ -111,7 +118,7 @@ export default function Slides(p: SlidesProps) {
           {slides?.pages && slides?.pages[page].lines[0].section}
         </div> }
         { slides?.pages && slides?.pages[page].lines.map((a, i) => <div key={i}>
-          <Line phrase={a} skey={p.skey || p.song.chordSheetKey || "C"} transpose={0} textSize={p.textSize || "text-lg"}/>
+          <Line phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"}/>
         </div>)}
 
         <div className="h-20" />
@@ -120,7 +127,7 @@ export default function Slides(p: SlidesProps) {
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
         { slides?.pages && slides?.pages[page].extra && <div>
-          <Line phrase={slides!.pages[page].extra!} skey={p.skey || p.song.chordSheetKey || "C"} transpose={0} secondary textSize={p.textSize || "text-lg"}/>
+          <Line phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"}/>
         </div> }
       </div>
     </div>
