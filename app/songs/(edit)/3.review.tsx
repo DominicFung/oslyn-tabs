@@ -4,7 +4,7 @@ import { chordSheetToOslynSong, convertOslynSongToPages } from "@/core/oslyn"
 import { OslynSong } from "@/core/types"
 import { Song } from "@/src/API"
 import { useEffect, useState } from "react"
-import Line from "./(components)/line"
+import Line from "../../(player)/line"
 
 interface ReviewProps {
   song: Song

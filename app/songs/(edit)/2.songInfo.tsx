@@ -4,13 +4,14 @@ import { TrashIcon, ArrowsUpDownIcon, SparklesIcon } from '@heroicons/react/24/s
 import { Fragment, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Listbox, Transition } from '@headlessui/react'
-import { chords } from './create/page'
 import { Song } from '@/src/API'
 
 interface SongProps {
   song: Song,
   setSong: (s: Song) => void
 }
+
+const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 
 export default function Song(p: SongProps) {
   const onDrop = useCallback((acceptedFiles: any) => {

@@ -1,90 +1,77 @@
 "use client"
 
-import { ArrowsUpDownIcon, Cog6ToothIcon } from "@heroicons/react/24/solid"
-import { Listbox, Transition } from '@headlessui/react'
-import { Fragment, useState } from "react"
+import { Cog6ToothIcon } from "@heroicons/react/24/solid"
+import { useEffect, useState } from "react"
+import Capo from "./(controls)/capo"
+import { JamSong } from "@/src/API"
+import Song from "./(controls)/song"
+import Key from "./(controls)/key"
+import Text from "./(controls)/text"
 
 export interface ControlsProp {
-  capo: string
-  setCapo:  (capo: string) => void
-
+  capo?: {
+    capo: string
+    setCapo: (capo: string) => void
+  }
+  song?: {
+    song: number
+    setSong: (n: number) => void
+    songs: JamSong[]
+  }
+  sKey?: {
+    skey: string
+    setKey: (s: string) => void
+  }
+  text?: {
+    textSize: string
+    setTextSize:  (s: string) => void
+    auto: boolean
+    setAuto: (b: boolean) => void
+  }
+  
   pt?: boolean | undefined
 }
 
-const capos = ["0", "1", "2", "3", "4", "5", "6", "7"]
-
 export default function Controls(p: ControlsProp) {
-  const [ open, setOepn ] = useState(false)
+  const [ open, setOepn ] = useState(true)
+
+  const [ options, setOptions ] = useState([
+    { name: "Song", disabled: false },
+    { name: "Key", disabled: false },
+    { name: "Capo", disabled: false },
+    { name: "Text", disabled: false }
+  ])
+
+  useEffect(() => {
+    setOptions([
+      { name: "Song", disabled: !p.song || !p.song.song || !p.song.songs || !p.song.setSong },
+      { name: "Key", disabled: false },
+      { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
+      { name: "Text", disabled: !p.text || !p.text.textSize || !p.text.setTextSize || !p.text.setAuto }
+    ])
+  }, [p])
+
+  const [ option, setOption ] = useState(0)
 
   return <>
     { open && <div id="toast-bottom-right" 
-    className={`fixed max-w-xs flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
+    className={`fixed max-w-lg flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
         <div className="text-sm font-normal">
           <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-oslyn-500 bg-oslyn-100 rounded-lg dark:text-oslyn-300 dark:bg-oslyn-900">
-              <Cog6ToothIcon className="w-5 h-5" />
+            <div className="flex-shrink-0 flex flex-col space-y-2 mr-4">
+              {options.map((o, i) => 
+                <button key={i} disabled={o.disabled} onClick={() => setOption(i)}
+                  className={`px-4 py-2 shadow-md text-oslyn-500 bg-oslyn-100 rounded-md ${option === i ? "dark:text-white dark:bg-oslyn-800" : "dark:text-oslyn-300 dark:bg-oslyn-900"} dark:disabled:text-gray-400 dark:disabled:bg-gray-600`}>
+                  {o.name}
+                </button>
+              )}
             </div>
-            <div className="ml-3 text-sm font-normal">
-              <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Capo</div>
-              <div className="pb-3 text-sm font-normal">Set your Capo to make chords easier to play! <span className="text-xs italic">(only affects you)</span></div> 
-
-              <div className='flex-0'>
-                <Listbox as="div" value={p.capo} onChange={(e) => { p.setCapo(e)}} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                {({ open }) => (
-                  <>
-                  <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
-                    <span className="p-1 px-4 text-sm truncate">{p.capo}</span>
-                    <span className="absolute flex items-center ml-3 pointer-events-none right-1">
-                    <ArrowsUpDownIcon
-                      className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
-                    />
-                  </span>
-                  </Listbox.Button>
-                  <Transition
-                    show={open}
-                    as={Fragment}
-                    enter="transition ease-in-out duration-100"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="transition ease-out duration-75"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <Listbox.Options static
-                      className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
-                    >
-                      {capos.map((capo) => (
-                        <Listbox.Option
-                          className="relative"
-                          key={capo}
-                          value={capo}
-                        >
-                          {({ active, selected, disabled }) => (
-                            <button
-                              disabled={disabled}
-                              aria-disabled={disabled}
-                              className={`flex items-center w-full px-4 pl-4 h-9 border-0 flex-shrink-0 text-sm text-left cursor-base font-normal focus:outline-none rounded-base
-                                ${active && "bg-neutral-100 dark:bg-neutral-700"}
-                                ${selected && "bg-blue-50 text-blue-800 dark:bg-blue-200 dark:bg-opacity-15 dark:text-blue-200"}`}
-                            >
-                              <span
-                                className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}
-                              >
-                                {capo}
-                              </span>
-                            </button>
-                          )}
-                        </Listbox.Option>
-                      ))}
-                    </Listbox.Options>
-                  </Transition>
-                  
-                  </>
-                )}
-                </Listbox>
-
-              </div>  
-            </div>
+            <>
+              { option === 0 && <Song song={p.song!.song} setSong={p.song!.setSong} songs={p.song!.songs}  /> }
+              { option === 1 && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} /> }
+              { option === 2 && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
+              { option === 3 && <Text textSize={p.text!.textSize} setTextSize={p.text!.setTextSize} auto={p.text!.auto} setAuto={p.text!.setAuto} /> }
+            </>
             <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOepn(false)}
             >

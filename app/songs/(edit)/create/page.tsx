@@ -187,10 +187,7 @@ He won’t fa    -     il
        G
 No, He won't`
 
-export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
-
 export default function CreateSong() {
-  const router = useRouter()
   const [ step, setStep ] = useState(0)
 
   const [ song, setSong ] = useState({

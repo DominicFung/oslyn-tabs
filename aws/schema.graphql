@@ -75,12 +75,14 @@ type Mutation {
   modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
 
   nextPage(jamSessionId: ID!, page: Int!): NextPage
-  nextSong(jamSessionId: ID!, song: Int!): NextSong
+  nextSong(jamSessionId: ID!, song: Int!, page: Int): NextSong
+  setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
 }
 
 type Subscription {
   onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations: ["nextPage"])
   onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations: ["nextSong"])
+  onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
 }
 
 enum recordingStatus { TOLABEL INAUDIT COMPLETE }
@@ -94,8 +96,14 @@ type NextPage {
 
 type NextSong {
   jamSessionId: ID!
-  songId: String
   song: Int
+  page: Int
+}
+
+type NextKey {
+  jamSessionId: ID!
+  song: Int
+  key: String
 }
 
 type Band {

@@ -8852,11 +8852,20 @@ export const nextPage = /* GraphQL */ `
   }
 `;
 export const nextSong = /* GraphQL */ `
-  mutation NextSong($jamSessionId: ID!, $song: Int!) {
-    nextSong(jamSessionId: $jamSessionId, song: $song) {
+  mutation NextSong($jamSessionId: ID!, $song: Int!, $page: Int) {
+    nextSong(jamSessionId: $jamSessionId, song: $song, page: $page) {
       jamSessionId
-      songId
       song
+      page
+    }
+  }
+`;
+export const setSongKey = /* GraphQL */ `
+  mutation SetSongKey($jamSessionId: ID!, $key: String!, $song: Int) {
+    setSongKey(jamSessionId: $jamSessionId, key: $key, song: $song) {
+      jamSessionId
+      song
+      key
     }
   }
 `;

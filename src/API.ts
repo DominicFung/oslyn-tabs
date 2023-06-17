@@ -170,8 +170,15 @@ export type NextPage = {
 export type NextSong = {
   __typename: "NextSong",
   jamSessionId: string,
-  songId?: string | null,
   song?: number | null,
+  page?: number | null,
+};
+
+export type NextKey = {
+  __typename: "NextKey",
+  jamSessionId: string,
+  song?: number | null,
+  key?: string | null,
 };
 
 export type CreateUserMutationVariables = {
@@ -9807,14 +9814,30 @@ export type NextPageMutation = {
 export type NextSongMutationVariables = {
   jamSessionId: string,
   song: number,
+  page?: number | null,
 };
 
 export type NextSongMutation = {
   nextSong?:  {
     __typename: "NextSong",
     jamSessionId: string,
-    songId?: string | null,
     song?: number | null,
+    page?: number | null,
+  } | null,
+};
+
+export type SetSongKeyMutationVariables = {
+  jamSessionId: string,
+  key: string,
+  song?: number | null,
+};
+
+export type SetSongKeyMutation = {
+  setSongKey?:  {
+    __typename: "NextKey",
+    jamSessionId: string,
+    song?: number | null,
+    key?: string | null,
   } | null,
 };
 
@@ -15098,7 +15121,20 @@ export type OnNextSongSubscription = {
   onNextSong?:  {
     __typename: "NextSong",
     jamSessionId: string,
-    songId?: string | null,
     song?: number | null,
+    page?: number | null,
+  } | null,
+};
+
+export type OnSongKeySubscriptionVariables = {
+  jamSessionId: string,
+};
+
+export type OnSongKeySubscription = {
+  onSongKey?:  {
+    __typename: "NextKey",
+    jamSessionId: string,
+    song?: number | null,
+    key?: string | null,
   } | null,
 };

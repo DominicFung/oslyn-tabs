@@ -16,12 +16,10 @@ export const updateDynamoUtil = (db: { table: string, item: { [key: string]: any
   let prefix = "set "
   for (const o of Object.keys(db.item)) {
     console.log(`${o} :: ${db.item[o]}`)
-    if (db.item[o]) { 
-      params.UpdateExpression += prefix + "#" + o + " = :" + o
-      params.ExpressionAttributeValues![":" + o] = db.item[o]
-      params.ExpressionAttributeNames!["#" + o] = o
-      prefix = ", "
-    }
+    params.UpdateExpression += prefix + "#" + o + " = :" + o
+    params.ExpressionAttributeValues![":" + o] = db.item[o]
+    params.ExpressionAttributeNames!["#" + o] = o
+    prefix = ", "
   }
 
   params.Key = marshall(params.Key)

@@ -234,5 +234,29 @@ export class AppsyncStack extends Stack {
       typeName: "Mutation",
       fieldName: "nextPage"
     })
+
+    const nextSong = new NodejsFunction(this, `${props.name}-NextSong`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'nextSong.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}NextSongDS`, nextSong)
+    .createResolver(`${props.name}-NextSongResolver`, {
+      typeName: "Mutation",
+      fieldName: "nextSong"
+    })
+
+    const setSongKey = new NodejsFunction(this, `${props.name}-SetSongKey`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setSongKey.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetSongKeyDS`, setSongKey)
+    .createResolver(`${props.name}-SetSongKeyResolver`, {
+      typeName: "Mutation",
+      fieldName: "setSongKey"
+    })
   }
 }

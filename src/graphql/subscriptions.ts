@@ -14,8 +14,17 @@ export const onNextSong = /* GraphQL */ `
   subscription OnNextSong($jamSessionId: ID!) {
     onNextSong(jamSessionId: $jamSessionId) {
       jamSessionId
-      songId
       song
+      page
+    }
+  }
+`;
+export const onSongKey = /* GraphQL */ `
+  subscription OnSongKey($jamSessionId: ID!) {
+    onSongKey(jamSessionId: $jamSessionId) {
+      jamSessionId
+      song
+      key
     }
   }
 `;

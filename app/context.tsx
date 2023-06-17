@@ -13,7 +13,7 @@ export const ContextProvider = ({ children }: any) => {
 
     return (
       <Context.Provider value={{ openSidebar, setOpenSidebar }}>
-        <div className={`${openSidebar?"ml-64":"ml-0"}`}>
+        <div className={`${openSidebar?"ml-64":"ml-0 overflow-x-hidden"}`}>
           {children}
         </div>
       </Context.Provider>
