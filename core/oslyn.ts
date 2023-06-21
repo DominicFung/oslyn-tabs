@@ -193,15 +193,15 @@ function addSpacesToEnd(str: string, x: number) {
 
 const getDecorator = (chord: string): string => {
   let c = chord.replace(/^[A-Ga-g](##?|bb?)?/g, "")
-  if (/[mM][aA][jJ]/g.test(c)) { return c }
-  c.replace(/^[mM]/g, "")
+  if (/[mM][aA][jJ]/g.test(c)) { return c } // after removing the chord + sharps/flats, if its a "maj" modifier, we're done, return
+  if(c.startsWith("m") || c.startsWith("M")) c = c.slice(1)
   return c
 }
 
 /**
  * 
  * @param text            Mono format text! We should not need to recalculate - use directly from DB
- * @param sectionJson    SectionJson from Step1
+ * @param sectionJson     SectionJson from Step1
  * @param key             Key from Step0 submitted by user
  */
 export const convertOslynSong = (text: string, sectionJson: _Song, key: string): OslynSong => {
@@ -349,15 +349,13 @@ const findClosestDivisor = (x: number, min: number, max: number): number => {
   return closestDivisor
 }
 
-export const chordSheetToOslynSong = (sheet: string, key: string, simplify: boolean): OslynSong => {
-  if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
+export const chordSheetToOslynSong = (sheet: string, key: string): OslynSong => {
   const song = rawChordsheetToSectionJson(sheet)
   console.log(song)
   return convertOslynSong(sheet, song, key)
 }
 
-export const chordSheetToSlides = (sheet: string, key: string, simplify: boolean): OslynSlide => {
-  if (simplify) console.log("TODO: allow chords to be expressed as original - via 'simplify' boolean.")
+export const chordSheetToSlides = (sheet: string, key: string): OslynSlide => {
   const song = rawChordsheetToSectionJson(sheet)
   console.log(song)
   const oslynSong = convertOslynSong(sheet, song, key)

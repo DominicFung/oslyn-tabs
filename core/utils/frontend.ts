@@ -46,3 +46,45 @@ export const calcMaxWidthTailwindClass = (text: string[]): string => {
   }
   return w
 }
+
+export const locations = (substring: string, string: string ) => {
+  var a=[],i=-1;
+  while((i=string.indexOf(substring,i+1)) >= 0) a.push(i);
+  return a;
+}
+
+export const insert = (str: string, insert: number[], char: string): string => {
+  let result = '';
+  let currentIndex = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    result += str[i];
+
+    if (currentIndex < insert.length && i === insert[currentIndex]) {
+      result += char;
+      currentIndex++;
+    }
+  }
+  return result;
+}
+
+export const findVowels = (str: string): number[] => {
+  const vowels = ['a', 'e', 'i', 'o', 'u'];
+  const positions: number[] = [];
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i].toLowerCase();
+
+    if (vowels.includes(char)) {
+      positions.push(i);
+    }
+  }
+
+  return positions;
+}
+
+export function substituteString(originalString: string, replacement: string, startIndex: number, endIndex: number): string {
+  const prefix = originalString.substring(0, startIndex);
+  const suffix = originalString.substring(endIndex);
+  return prefix + replacement + suffix;
+}

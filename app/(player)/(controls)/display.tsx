@@ -4,20 +4,23 @@ import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
 import { Fragment } from "react"
 
-export interface TextProps {
+export interface DisplayProps {
   textSize: string
   setTextSize:  (s: string) => void
   
   auto: boolean
   setAuto: (b: boolean) => void
+
+  complex: boolean
+  setComplex: (b: boolean) => void
 }
 
 const textSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
 
-export default function Text(p: TextProps) {
+export default function Display(p: DisplayProps) {
   return <>
     <div className="ml-3 text-sm font-normal">
-      <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Text</div>
+      <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</div>
       <div className="pb-3 text-sm font-normal">Set your text size to make it easier to read! <span className="text-xs italic">(only affects you)</span></div> 
 
       <div className='flex-0'>
@@ -74,7 +77,18 @@ export default function Text(p: TextProps) {
           </>
         )}
         </Listbox>
-      </div>  
+      </div>
+
+      <div className="flex mt-10 mb-5">
+        <div className="flex items-center h-5">
+            <input id="helper-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" checked={p.complex} onChange={() => p.setComplex(!p.complex)}
+              className="w-4 h-4 text-oslyn-600 bg-gray-100 border-gray-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+        </div>
+        <div className="ml-2 text-sm">
+            <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-gray-300">Chord Complexity</label>
+            <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">Check this off for chord decorators. Uncheck to simplify.</p>
+        </div>
+      </div>
     </div>
   </>
 }

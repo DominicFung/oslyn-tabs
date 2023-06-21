@@ -18,6 +18,7 @@ interface SlidesProps {
 
   transpose?: number
   textSize?: string
+  complex?: boolean
 
   /** page can be externalized / enable graphql call to sync pages */
   page?: number
@@ -77,7 +78,7 @@ export default function Slides(p: SlidesProps) {
     console.log(p.song)
     if (p.song.chordSheet && p.song.chordSheetKey) {
       console.log(p.song.chordSheet)
-      const oslynSlides = chordSheetToSlides(p.song.chordSheet, p.song.chordSheetKey || "C", true)
+      const oslynSlides = chordSheetToSlides(p.song.chordSheet, p.song.chordSheetKey || "C")
       console.log(oslynSlides)
       setSlides(oslynSlides)
     }
@@ -118,7 +119,7 @@ export default function Slides(p: SlidesProps) {
           {slides?.pages && slides?.pages[page].lines[0].section}
         </div> }
         { slides?.pages && slides?.pages[page].lines.map((a, i) => <div key={i}>
-          <Line phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"}/>
+          <Line phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
         </div>)}
 
         <div className="h-20" />
@@ -127,7 +128,7 @@ export default function Slides(p: SlidesProps) {
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
         { slides?.pages && slides?.pages[page].extra && <div>
-          <Line phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"}/>
+          <Line phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
         </div> }
       </div>
     </div>

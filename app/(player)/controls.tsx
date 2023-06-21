@@ -6,7 +6,7 @@ import Capo from "./(controls)/capo"
 import { JamSong } from "@/src/API"
 import Song from "./(controls)/song"
 import Key from "./(controls)/key"
-import Text from "./(controls)/text"
+import Display from "./(controls)/display"
 
 export interface ControlsProp {
   capo?: {
@@ -22,11 +22,13 @@ export interface ControlsProp {
     skey: string
     setKey: (s: string) => void
   }
-  text?: {
+  display?: {
     textSize: string
     setTextSize:  (s: string) => void
     auto: boolean
     setAuto: (b: boolean) => void
+    complex: boolean
+    setComplex: (b: boolean) => void
   }
   
   pt?: boolean | undefined
@@ -47,7 +49,7 @@ export default function Controls(p: ControlsProp) {
       { name: "Song", disabled: !p.song || !p.song.songs || !p.song.setSong },
       { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
-      { name: "Text", disabled: !p.text || !p.text.textSize || !p.text.setTextSize || !p.text.setAuto }
+      { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex }
     ])
   }, [p])
 
@@ -70,7 +72,7 @@ export default function Controls(p: ControlsProp) {
               { option === 0 && <Song song={p.song!.song} setSong={p.song!.setSong} songs={p.song!.songs}  /> }
               { option === 1 && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} /> }
               { option === 2 && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
-              { option === 3 && <Text textSize={p.text!.textSize} setTextSize={p.text!.setTextSize} auto={p.text!.auto} setAuto={p.text!.setAuto} /> }
+              { option === 3 && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} auto={p.display!.auto} setAuto={p.display!.setAuto} complex={p.display!.complex} setComplex={p.display!.setComplex}/> }
             </>
             <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOepn(false)}

@@ -11,6 +11,7 @@ import Slides from "./slides"
 import { useEffect, useState } from "react"
 import { ChevronDoubleRightIcon } from '@heroicons/react/24/solid'
 import Controls from './controls'
+import { useSideBarContext } from '../context'
 
 export interface PlayerProps {
   jam: JamSession
@@ -20,6 +21,7 @@ Amplify.configure({ ...awsConfig, ssr: true });
 
 // http://192.168.68.128:3000/jam/95b1a549-127f-4a38-96c4-8dabfbb35bc1
 export default function Player(p: PlayerProps) {
+  const { setOpenSidebar } = useSideBarContext()
 
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
@@ -31,6 +33,7 @@ export default function Player(p: PlayerProps) {
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
 
   const [ textSize, setTextSize ] = useState("text-lg")
+  const [ complex, setComplex ] = useState(true)
 
   useEffect(() => {
     if (p.jam.jamSessionId) { 
@@ -148,11 +151,23 @@ export default function Player(p: PlayerProps) {
     console.log("all set")
   }, [p.jam])
 
-  return <div className="text-white w-full h-screen flex flex-col">
-    { p.jam.setList.songs[song]?.song && 
-      <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize}/> 
+  const openFullScreen = () => {
+    let el = document.getElementById("player") as any
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) { /* Safari */
+      el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) { /* IE11 */
+      el.msRequestFullscreen();
     }
-    { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
+    setOpenSidebar(false)
+  }
+
+  return <div className="text-white w-full h-screen flex flex-col" id="player">
+    { p.jam.setList.songs[song]?.song && 
+      <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex}/> 
+    }
+    { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => openFullScreen() /*setNextSong(song+1)*/}
         className='fixed bottom-4 right-10 bg-gray-50 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
@@ -162,7 +177,7 @@ export default function Player(p: PlayerProps) {
         capo={{ capo:`${0-transpose}`, setCapo }} 
         song={{ song, setSong: setNextSong, songs: p.jam.setList.songs as JamSong[] }} 
         sKey={{ skey: sKey, setKey }}
-        text={{ textSize, setTextSize, auto: false, setAuto: () => {} }}
+        display={{ textSize, setTextSize, auto: false, setAuto: () => {}, complex, setComplex }}
       /> 
     }
   </div>
