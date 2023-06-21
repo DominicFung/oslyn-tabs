@@ -17,7 +17,7 @@ export default function Review(p: ReviewProps) {
   useEffect(() => {
     if (p.song.chordSheet && p.song.chordSheetKey) {
       console.log(p.song.chordSheet)
-      const oslynSong = chordSheetToOslynSong(p.song.chordSheet, p.skey || p.song.chordSheetKey || "C", true)
+      const oslynSong = chordSheetToOslynSong(p.song.chordSheet, p.skey || p.song.chordSheetKey || "C")
       console.log(oslynSong)
       setOslynSong(oslynSong)
 
