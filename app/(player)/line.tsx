@@ -67,7 +67,7 @@ export default function Line(p: LineProps) {
         } else if (vowels.length > 0) {
           do {
             a++
-            lyric = insert(lyric, spaces, "\u00A0".repeat(a)+"-"+"\u00A0".repeat(a))
+            lyric = insert(lyric, vowels, `${"\u00A0".repeat(a)}-${"\u00A0".repeat(a)}`)
             textWidth = calculateWidth(lyric, textSize)
           } while (textWidth < chordWidth)
           nposition = a * 2 + 1
@@ -76,7 +76,7 @@ export default function Line(p: LineProps) {
           let middle = Math.floor(lyric.length / 2)
           do {
             a++
-            lyric = insert(lyric, [middle], "\u00A0".repeat(a)+"-"+"\u00A0".repeat(a))
+            lyric = insert(lyric, [middle], `${"\u00A0".repeat(a)}-${"\u00A0".repeat(a)}`)
             textWidth = calculateWidth(lyric, textSize)
           } while (textWidth < chordWidth)
           nposition = a * 2 + 1

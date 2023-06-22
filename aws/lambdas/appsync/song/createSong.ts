@@ -56,6 +56,12 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
     console.log(`new song: ${JSON.stringify(song, null, 2)}`)
     song.creator = unmarshall(res0.Item)
+
+    if (!song.creator.labelledRecording) song.creator.labelledRecording = []
+    if (!song.creator.songsCreated) song.creator.songsCreated = []
+    if (!song.creator.editHistory) song.creator.editHistory = []
+    if (!song.creator.likedSongs) song.creator.likedSongs = []
+
     return song
   } else {
     console.error(`ERROR: userId not found: ${b.userId}`)
