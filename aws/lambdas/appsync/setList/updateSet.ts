@@ -1,8 +1,9 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, BatchGetItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { BatchGetItemCommand, DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
+
+import { hasSubstring, merge, updateDynamoUtil } from '../../util/dynamo'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { JamSong, SetList, Song, User } from '../../API'
-import { hasSubstring, merge } from '../../util/dynamo'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
@@ -11,7 +12,7 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 type _SetList = SetList & {
   userId: string
   songs: _JamSong[]
-} 
+}
 
 type _JamSong = JamSong & {
   songId: string
@@ -22,15 +23,16 @@ type _Song = Song & {
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string
+  setListId: string, userId?: string, description?: string, songs?: {songId: string, key: string}[], bandId?: string, 
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
-  if (!b.setListId) { console.error(`b.songId is empty`); return }
+  if (!b.setListId) { console.error(`b.setListId is empty`); return }
+  
+  console.log(JSON.stringify(b.songs))
 
   const dynamo = new DynamoDBClient({})
-
   const res0 = await dynamo.send(
     new GetItemCommand({
       TableName: SETLIST_TABLE_NAME,
@@ -38,14 +40,27 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
   )
 
-  if (!res0.Item) { console.error(`ERROR: setListId not found: ${b.setListId}`); return }
+  if (!res0.Item) { console.error(`could not find setListId: ${b.setListId}`); return }
   let setList = unmarshall(res0.Item!) as _SetList
-  console.log(JSON.stringify(setList))
+
+  let updateSet = {} as any
+
+  if (b.userId) updateSet.userId = b.userId
+  if (b.description) updateSet.description = b.description
+  if (b.songs) updateSet.songs = b.songs
+  if (b.bandId) updateSet.bandId = b.bandId
+
+  const params = updateDynamoUtil({ table: SETLIST_TABLE_NAME, item: updateSet, key: { setListId: b.setListId } })
+  const res1 = await dynamo.send(new UpdateItemCommand(params))
+  console.log(res1)
+
+  setList = { ...setList, ...updateSet } as _SetList
+  if (!setList.editors) setList.editors = []
 
   if (hasSubstring(event.info.selectionSetList, "songs")) {
     console.log("getting songs ...")
 
-    const songIds = setList.songs.map((s) => (s! as _JamSong).songId )
+    const songIds = setList.songs.map((s) => (s as _JamSong).songId!)
 
     const uniq = [...new Set(songIds.flat(1))]
     console.log(uniq)
@@ -93,6 +108,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   if (hasSubstring(event.info.selectionSetList, "creator")) {
     console.log("getting creator (user) ...")
+    console.log(setList)
 
     const res1 = await dynamo.send(
       new GetItemCommand({
@@ -109,6 +125,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     if (!setList.creator.likedSongs) setList.creator.likedSongs = []
   }
 
-  if (!setList.editors) { setList.editors = [] }
+  console.log(setList)
   return setList
 }

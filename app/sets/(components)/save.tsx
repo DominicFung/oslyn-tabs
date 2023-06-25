@@ -14,10 +14,19 @@ export default function Save(p: SaveProps) {
   const router = useRouter()
 
   const updateSet = async () => {
-    if (!p.set.setListId) { console.error("setListId not available"); return }
-    const data = await (await fetch(`/api/set/create`, {
+    if (!p.set?.setListId) { console.error("setListId not available"); return }
+
+    if (!p.set.description || !p.set.songs) { console.error("title and key not available"); return }
+
+    const jamsongs = p.set.songs.map(a => { 
+      return { songId: a?.song.songId, key: a?.key } as JamSongInput
+    })
+
+    const data = await (await fetch(`/api/set/${p.set?.setListId}/update`, {
       method: "POST",
-      body: JSON.stringify(p.set, null, 2)
+      body: JSON.stringify({
+        ...p.set, songs: jamsongs
+      } as SetRequest)
     })).json() as SetList
     console.log(data)
   }

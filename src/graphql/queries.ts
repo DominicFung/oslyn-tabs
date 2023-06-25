@@ -2194,8 +2194,8 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getBand = /* GraphQL */ `
-  query GetBand($bandId: ID!, $userId: ID!) {
-    getBand(bandId: $bandId, userId: $userId) {
+  query GetBand($bandId: ID!) {
+    getBand(bandId: $bandId) {
       bandId
       songs {
         songId
@@ -3152,8 +3152,8 @@ export const listBands = /* GraphQL */ `
   }
 `;
 export const getSet = /* GraphQL */ `
-  query GetSet($setListId: ID!, $userId: ID!) {
-    getSet(setListId: $setListId, userId: $userId) {
+  query GetSet($setListId: ID!) {
+    getSet(setListId: $setListId) {
       setListId
       description
       songs {

@@ -13,10 +13,10 @@ type Query {
   getUserByEmail(email: AWSEmail): User @aws_iam
   listUsers(limit: Int, filter: String, nextToken: String): [User]! @aws_iam
   
-  getBand(bandId: ID!, userId: ID!): Band @aws_iam
+  getBand(bandId: ID!): Band @aws_iam
   listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
-  getSet(setListId: ID!, userId: ID!): SetList @aws_iam
+  getSet(setListId: ID!): SetList @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
@@ -65,6 +65,13 @@ type Mutation {
   removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
 
   createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList @aws_iam
+  updateSet(
+    setListId: ID!
+    description: String
+    songs: [JamSongInput]
+    userId: ID
+  ): SetList @aws_iam
+
   addEditorToSet(setListId: ID!, userId: ID!): SetList @aws_iam
   removeEditorFromSet(setListId: ID!, userId: ID!): SetList @aws_iam
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam

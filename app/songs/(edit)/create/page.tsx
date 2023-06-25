@@ -3,10 +3,8 @@ import { useState } from 'react'
 
 import PasteTabs from "../1.pasteTabs"
 import SongInfo from '../2.songInfo'
-import { SongRequest } from '@/app/api/song/create/route'
 import { Song } from '@/src/API'
 import { User } from '@/src/API'
-import { useRouter } from 'next/navigation'
 import Slides from '@/app/(player)/slides'
 import Save from '../(components)/save'
 import Tabs from '../(components)/tabs'
