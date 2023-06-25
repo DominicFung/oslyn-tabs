@@ -29,8 +29,13 @@ export async function POST(request: Request) {
   const b = await request.json() as SongUpdateRequest
 
   Amplify.configure(awsConfig)
+  console.log(b)
+
+  const songId = request.url.split("song/")[1].split("/update")[0]
+  console.log(`songId: ${songId}`)
+
   const d = await API.graphql(graphqlOperation(
-    m.updateSong, { ...b, userId: _generalUserId }
+    m.updateSong, { ...b, ownerId: _generalUserId, songId }
   )) as GraphQLResult<{ updateSong: Song }>
 
   if (!d.data?.updateSong) {

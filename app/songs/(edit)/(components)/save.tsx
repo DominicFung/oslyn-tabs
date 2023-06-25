@@ -1,5 +1,6 @@
 "use client"
 
+import { SongUpdateRequest } from "@/app/api/song/[id]/update/route"
 import { SongRequest } from "@/app/api/song/create/route"
 import { Song } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
@@ -18,9 +19,9 @@ export default function Save(p: SaveProps) {
 
   const updateSong = async () => {
     if (!p.song.songId) { console.error("songId not available"); return }
-    const data = await (await fetch(`/api/song/create`, {
+    const data = await (await fetch(`/api/song/${p.song?.songId}/update`, {
       method: "POST",
-      body: JSON.stringify(p.song, null, 2)
+      body: JSON.stringify({...p.song} as SongUpdateRequest)
     })).json() as Song
     console.log(data)
   }
