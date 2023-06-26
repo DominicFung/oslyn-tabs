@@ -34,6 +34,8 @@ export default function Player(p: PlayerProps) {
 
   const [ textSize, setTextSize ] = useState("text-lg")
   const [ complex, setComplex ] = useState(true)
+  const [ fullScreen, setFullScreen ] = useState(false)
+  const [ headsUp, setHeadsUp ] = useState(false)
 
   useEffect(() => {
     if (p.jam.jamSessionId) { 
@@ -106,7 +108,10 @@ export default function Player(p: PlayerProps) {
   }
   
   const incomingNextPage = async (page: number) => { setPage(page) }
-  const incomingNextSong = async (song: number, page: number) => { setSong(song); setPage(page) }
+  const incomingNextSong = async (song: number, page: number) => { 
+    setSong(song); setPage(page) 
+    setKey(p.jam.setList.songs[song]?.key || "C")
+  }
   const incomingKey = async (s: number, key: string) => {
     if (song === s) { setSKey(key) } 
     else { console.error("TODO: handle case where we are modifying NOT current song's key.") }
@@ -157,17 +162,36 @@ export default function Player(p: PlayerProps) {
       el.requestFullscreen();
     } else if (el.webkitRequestFullscreen) { /* Safari */
       el.webkitRequestFullscreen();
+    } else if (el.mozRequestFullScreen) {
+      el.mozRequestFullScreen();
     } else if (el.msRequestFullscreen) { /* IE11 */
       el.msRequestFullscreen();
     }
     setOpenSidebar(false)
   }
 
+  const closeFullScreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if ((document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    } else if ((document as any).mozCancelFullScreen) {
+      (document as any).mozCancelFullScreen();
+    } else if ((document as any).msExitFullscreen) {
+      (document as any).msExitFullscreen();
+    }
+  }
+
+  useEffect(() => {
+    if (fullScreen) openFullScreen()
+    else closeFullScreen()
+  }, [fullScreen])
+
   return <div className="text-white w-full h-screen flex flex-col" id="player">
     { p.jam.setList.songs[song]?.song && 
-      <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex}/> 
+      <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex} headsUp={headsUp}/> 
     }
-    { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => openFullScreen() /*setNextSong(song+1)*/}
+    { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
         className='fixed bottom-4 right-10 bg-gray-50 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
@@ -177,7 +201,12 @@ export default function Player(p: PlayerProps) {
         capo={{ capo:`${0-transpose}`, setCapo }} 
         song={{ song, setSong: setNextSong, songs: p.jam.setList.songs as JamSong[] }} 
         sKey={{ skey: sKey, setKey }}
-        display={{ textSize, setTextSize, auto: false, setAuto: () => {}, complex, setComplex }}
+        display={{ textSize, setTextSize, 
+          auto: false, setAuto: () => {}, 
+          complex, setComplex,
+          fullScreen, setFullScreen,
+          headsUp, setHeadsUp
+        }}
       /> 
     }
   </div>

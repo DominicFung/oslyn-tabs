@@ -29,6 +29,10 @@ export interface ControlsProp {
     setAuto: (b: boolean) => void
     complex: boolean
     setComplex: (b: boolean) => void
+    fullScreen: boolean
+    setFullScreen: (b: boolean) => void
+    headsUp: boolean
+    setHeadsUp: (b: boolean) => void
   }
   
   pt?: boolean | undefined
@@ -72,7 +76,12 @@ export default function Controls(p: ControlsProp) {
               { option === 0 && <Song song={p.song!.song} setSong={p.song!.setSong} songs={p.song!.songs}  /> }
               { option === 1 && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} /> }
               { option === 2 && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
-              { option === 3 && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} auto={p.display!.auto} setAuto={p.display!.setAuto} complex={p.display!.complex} setComplex={p.display!.setComplex}/> }
+              { option === 3 && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 
+                                    auto={p.display!.auto} setAuto={p.display!.setAuto} 
+                                    complex={p.display!.complex} setComplex={p.display!.setComplex}
+                                    fullScreen={p.display!.fullScreen} setFullScreen={p.display!.setFullScreen}
+                                    headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
+                                /> }
             </>
             <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOepn(false)}

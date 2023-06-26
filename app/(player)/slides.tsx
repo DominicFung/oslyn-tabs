@@ -19,6 +19,7 @@ interface SlidesProps {
   transpose?: number
   textSize?: string
   complex?: boolean
+  headsUp?: boolean
 
   /** page can be externalized / enable graphql call to sync pages */
   page?: number
@@ -124,10 +125,10 @@ export default function Slides(p: SlidesProps) {
 
         <div className="h-20" />
 
-        { slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold">
+        { p.headsUp && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold">
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
-        { slides?.pages && slides?.pages[page].extra && <div>
+        { p.headsUp && slides?.pages && slides?.pages[page].extra && <div>
           <Line phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
         </div> }
       </div>
