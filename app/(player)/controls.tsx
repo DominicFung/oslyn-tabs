@@ -57,7 +57,7 @@ export default function Controls(p: ControlsProp) {
 
   return <>
     { open && <div id="toast-bottom-right" 
-    className={`fixed max-w-lg flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
+    className={`fixed max-w-lg max-h-[calc(100vh-2rem)] flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
         <div className="text-sm font-normal">
           <div className="flex">
             <div className="flex-shrink-0 flex flex-col space-y-2 mr-4">
