@@ -33,9 +33,18 @@ export default function Player(p: PlayerProps) {
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
 
   const [ textSize, setTextSize ] = useState("text-lg")
+  useEffect(() => { const a = localStorage.getItem('jam/textSize') || "text-lg"; if (a && a != "false") { setTextSize(a) } }, [])
+  useEffect(() => { localStorage.setItem('jam/textSize', textSize) }, [textSize])
+  
   const [ complex, setComplex ] = useState(true)
+  useEffect(() => { const a = localStorage.getItem('jam/complex') || "true"; if (a) { setComplex(a === "true") } }, [])
+  useEffect(() => { localStorage.setItem('jam/complex', JSON.stringify(complex)) }, [complex])
+
   const [ fullScreen, setFullScreen ] = useState(false)
+
   const [ headsUp, setHeadsUp ] = useState(false)
+  useEffect(() => { const a = localStorage.getItem('jam/headsUp') || "false"; if (a) { setHeadsUp(a === "true") } }, [])
+  useEffect(() => { localStorage.setItem('jam/headsUp', JSON.stringify(headsUp)) }, [headsUp])
 
   useEffect(() => {
     if (p.jam.jamSessionId) { 
@@ -171,15 +180,18 @@ export default function Player(p: PlayerProps) {
   }
 
   const closeFullScreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).mozCancelFullScreen) {
-      (document as any).mozCancelFullScreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
-    }
+    try {
+      if (document.fullscreenElement != null) // document not active issue
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if ((document as any).webkitExitFullscreen) {
+          (document as any).webkitExitFullscreen()
+        } else if ((document as any).mozCancelFullScreen) {
+          (document as any).mozCancelFullScreen()
+        } else if ((document as any).msExitFullscreen) {
+          (document as any).msExitFullscreen()
+        }
+    } catch (e) { console.warn("unalbe to exit full screen.") }
   }
 
   useEffect(() => {
