@@ -268,8 +268,8 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
         }
       }
 
-      // add padding, so that chords have space
-      currentPhrase.lyric = addSpacesToEnd(currentPhrase.lyric, currentPhrase.chords[ currentPhrase.chords.length-1 ].meta.end)
+      if (currentPhrase.chords[ currentPhrase.chords.length-1 ])
+        currentPhrase.lyric = addSpacesToEnd(currentPhrase.lyric, currentPhrase.chords[ currentPhrase.chords.length-1 ].meta.end)
       oslynSongJson.song.push(currentPhrase)
     } else if (lineType === 'annotation') {
       //console.log(getSectionName(line))
