@@ -86,7 +86,7 @@ export default function Slides(p: SlidesProps) {
   }, [p.song])
 
   useEffect(() => {
-    if (slides) {
+    if (slides && slides.pages[page]) {
       const a = slides.pages[page].lines.map((a) => a.lyric)
       if (slides.pages[page].extra) a.push(slides.pages[page].extra?.lyric!)
       const w = calcMaxWidthTailwindClass(a)
@@ -115,23 +115,24 @@ export default function Slides(p: SlidesProps) {
 
   return <>
     <div className={`flex justify-center items-center h-full m-auto ${wClass}`}>
-      <div>
-        { slides?.pages && slides?.pages[page].lines[0] && <div className="text-gray-500 text-sm italic bold">
+      { !slides?.pages[page] && <div className="text-white">Sorry something went wrong. Click on the gear, and select a new song to reset the system.</div> }
+      { slides?.pages[page] && <div>
+        { slides?.pages && slides?.pages[page]?.lines[0] && <div className="text-gray-500 text-sm italic bold">
           {slides?.pages && slides?.pages[page].lines[0].section}
         </div> }
-        { slides?.pages && slides?.pages[page].lines.map((a, i) => <div key={i}>
+        { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => <div key={i}>
           <Line phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
         </div>)}
 
         <div className="h-20" />
 
-        { p.headsUp && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold">
+        { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold">
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
-        { p.headsUp && slides?.pages && slides?.pages[page].extra && <div>
+        { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <div>
           <Line phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
         </div> }
-      </div>
+      </div> }
     </div>
     <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64":"ml-0"} flex flex-row`} style={{
       width: !openSidebar ? screen.w : screen.w-256
