@@ -1,7 +1,7 @@
 import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
 
-const chordRegexForTextBlock = "(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)"
-const chordRegex =  "^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$"
+const chordRegexForTextBlock = "(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)"
+const chordRegex =  "^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$"
 const keyRegex = "^[A-Ga-g](##?|bb?)?$"
 
 const KeyDistanceMap = [
@@ -20,7 +20,10 @@ const KeyDistanceMap = [
 ]
 
 const isChordLine = (line: string): boolean => {
-  let tempLine = line.trim().replace(/[^a-zA-Z0-9#\s]/g, '').replace(/\s\s+/g, ' ').split(' ')
+  let tempLine = line.trim()
+    .replace(/[^a-zA-Z0-9#\s]/g, '')  // removes unwanted chars such as %^& etc.
+    .replace(/\s\s+/g, ' ')           // turns "multi space" into a single space
+    .split(' ')                       // turn into array
   let numOfChords = 0
   let numOfNonChords = 0
 
@@ -64,7 +67,7 @@ const stripChordToKey = (chord: string): string|null => {
    *   4. (optional) check that the chord looks like what we expect
    */
 
-   chord = chord.split(/(sus|maj|min|aug|dim|\/)/g)[0]
+   chord = chord.split(/(add|sus|maj|min|aug|dim|\/)/g)[0]
    chord = chord.split(/(M|m)/g)[0]
    chord = chord.replace(/[0-9]/g, '')
    if (new RegExp(keyRegex, 'g').test(chord)) return chord
@@ -136,7 +139,7 @@ const rawChordsheetToSectionJson = (text: string): _Song => {
 
     let lineType = getLineType(line)
     if (lineType === 'chord') {
-      //console.log(`${lineType} "${pline}"`)
+      // console.log(`${lineType} "${line}"`)
       let matchArr, start, end
       let regex = new RegExp(chordRegexForTextBlock, 'g')
 
@@ -295,9 +298,26 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
   return oslynSongJson
 }
 
-export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number): OslynSlide => {
-  const pages = [] as { lines: OslynPhrase[], extra: OslynPhrase | null }[]
+const addPhraseToSlides = (
+  pages: { lines: OslynPhrase[], extra: OslynPhrase | null }[], cache: OslynPhrase[], min: number, max: number
+): { lines: OslynPhrase[], extra: OslynPhrase | null }[] => {
+  const r = findClosestDivisor(cache.length, min, max)
+  let a = 0
+  while (cache.length > 0) {
+    const c = cache.shift() as OslynPhrase
+    if (a%r === 0) { 
+      pages.push({ lines: [c], extra: null }) 
+      if (pages.length-1 > 0) pages[pages.length-2].extra = c
+    }
+    else { pages[pages.length-1].lines.push(c) }
+    a++
+  }
+  console.log(pages)
+  return pages
+}
 
+export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number): OslynSlide => {
+  let pages = [] as { lines: OslynPhrase[], extra: OslynPhrase | null }[]
   const _minLines = 2
   const _maxLines = 3
   
@@ -311,26 +331,15 @@ export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number
   let currentSectionCache = [s.song[0]]
 
   for (let i=1; i<s.song.length; i++) {
+    console.log(`${i} ${s.song[i].lyric}`)
     if (currentSectionName != s.song[i].section) {
-
       currentSectionName = s.song[i].section
-      const r = findClosestDivisor(currentSectionCache.length, min || _minLines, max || _maxLines)
-      //console.log(`The closest divisor of ${currentSectionCache.length} between ${min || _minLines} and ${max || _maxLines} is ${r}`)
-
-      let a = 0
-      while (currentSectionCache.length > 0) {
-        const c = currentSectionCache.shift() as OslynPhrase
-        if (a%r === 0) { 
-          pages.push({ lines: [c], extra: null }) 
-          if (pages.length-1 > 0) pages[pages.length-2].extra = c
-        }
-        else { pages[pages.length-1].lines.push(c) }
-        a++
-      }
-      //console.log(pages)
+      pages = addPhraseToSlides(pages, currentSectionCache, min || _minLines, max || _maxLines)
     }
     currentSectionCache.push(s.song[i])
   }
+
+  pages = addPhraseToSlides(pages, currentSectionCache, min || _minLines, max || _maxLines)
   return { pages } as OslynSlide
 }
 

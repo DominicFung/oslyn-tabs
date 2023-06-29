@@ -25,7 +25,7 @@ export default function Edit(p: EditProps) {
     <div className="flex-1 p-4">
       { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { console.log(t); setSong({ ...song, chordSheet: t }) }} /> }
       { step === 1 && <SongInfo song={song} setSong={setSong}/>}
-      { step === 2 && <Slides song={song} /> }
+      { step === 2 && <Slides song={song} pt={true} /> }
     </div>
     <Save song={song} type="update"/>
   </div>
