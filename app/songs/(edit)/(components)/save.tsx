@@ -24,6 +24,7 @@ export default function Save(p: SaveProps) {
       body: JSON.stringify({...p.song} as SongUpdateRequest)
     })).json() as Song
     console.log(data)
+    router.push(`/songs`)
   }
 
   const createSong = async () => {
@@ -38,7 +39,6 @@ export default function Save(p: SaveProps) {
       } as SongRequest)
     })).json() as Song
     console.log(data)
-
     router.push(`/songs`)
   }
 

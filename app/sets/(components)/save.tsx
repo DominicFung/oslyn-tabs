@@ -29,6 +29,7 @@ export default function Save(p: SaveProps) {
       } as SetRequest)
     })).json() as SetList
     console.log(data)
+    router.push(`/sets`)
   }
 
   const createSet = async () => {
@@ -46,7 +47,6 @@ export default function Save(p: SaveProps) {
       } as SetRequest)
     })).json() as SetList
     console.log(data)
-
     router.push(`/sets`)
   }
 
