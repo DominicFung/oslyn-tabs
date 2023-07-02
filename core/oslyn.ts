@@ -21,9 +21,9 @@ const KeyDistanceMap = [
 
 const isChordLine = (line: string): boolean => {
   let tempLine = line.trim()
-    .replace(/[^a-zA-Z0-9#\s]/g, '')  // removes unwanted chars such as %^& etc.
-    .replace(/\s\s+/g, ' ')           // turns "multi space" into a single space
-    .split(' ')                       // turn into array
+    .replace(/[^a-zA-Z0-9#\/\s]/g, '')  // removes unwanted chars such as %^& etc.
+    .replace(/\s\s+/g, ' ')             // turns "multi space" into a single space
+    .split(' ')                         // turn into array
   let numOfChords = 0
   let numOfNonChords = 0
 
@@ -139,7 +139,7 @@ const rawChordsheetToSectionJson = (text: string): _Song => {
 
     let lineType = getLineType(line)
     if (lineType === 'chord') {
-      // console.log(`${lineType} "${line}"`)
+      //console.log(`${lineType} "${line}"`)
       let matchArr, start, end
       let regex = new RegExp(chordRegexForTextBlock, 'g')
 
