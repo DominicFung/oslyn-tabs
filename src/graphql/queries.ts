@@ -19,12 +19,14 @@ export const getSong = /* GraphQL */ `
       creator {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -53,12 +55,14 @@ export const getSong = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -95,12 +99,14 @@ export const getSong = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -157,12 +163,14 @@ export const getSong = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -207,12 +215,14 @@ export const getSong = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -252,12 +262,14 @@ export const getSong = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -339,12 +351,14 @@ export const getSong = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -392,12 +406,14 @@ export const listSongs = /* GraphQL */ `
       creator {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -426,12 +442,14 @@ export const listSongs = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -468,12 +486,14 @@ export const listSongs = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -530,12 +550,14 @@ export const listSongs = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -580,12 +602,14 @@ export const listSongs = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -625,12 +649,14 @@ export const listSongs = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -712,12 +738,14 @@ export const listSongs = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -743,12 +771,14 @@ export const getUserById = /* GraphQL */ `
     getUserById(userId: $userId) {
       userId
       username
+      email
+      providers
       firstName
       lastName
+      imageUrl
       recieveUpdatesFromOslyn
       isActivated
       createDate
-      email
       role
       labelledRecording {
         recordingId
@@ -769,12 +799,14 @@ export const getUserById = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -814,12 +846,14 @@ export const getUserById = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -901,12 +935,14 @@ export const getUserById = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -935,12 +971,14 @@ export const getUserById = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1016,12 +1054,14 @@ export const getUserById = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -1077,12 +1117,14 @@ export const getUserById = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -1107,12 +1149,14 @@ export const getUserById = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1184,12 +1228,14 @@ export const getUserById = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -1228,12 +1274,14 @@ export const getUserByEmail = /* GraphQL */ `
     getUserByEmail(email: $email) {
       userId
       username
+      email
+      providers
       firstName
       lastName
+      imageUrl
       recieveUpdatesFromOslyn
       isActivated
       createDate
-      email
       role
       labelledRecording {
         recordingId
@@ -1254,12 +1302,14 @@ export const getUserByEmail = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -1299,12 +1349,14 @@ export const getUserByEmail = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1386,12 +1438,14 @@ export const getUserByEmail = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -1420,12 +1474,14 @@ export const getUserByEmail = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1501,12 +1557,14 @@ export const getUserByEmail = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -1562,12 +1620,14 @@ export const getUserByEmail = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -1592,12 +1652,14 @@ export const getUserByEmail = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1669,12 +1731,14 @@ export const getUserByEmail = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -1713,12 +1777,14 @@ export const listUsers = /* GraphQL */ `
     listUsers(limit: $limit, filter: $filter, nextToken: $nextToken) {
       userId
       username
+      email
+      providers
       firstName
       lastName
+      imageUrl
       recieveUpdatesFromOslyn
       isActivated
       createDate
-      email
       role
       labelledRecording {
         recordingId
@@ -1739,12 +1805,14 @@ export const listUsers = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -1784,12 +1852,14 @@ export const listUsers = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1871,12 +1941,14 @@ export const listUsers = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -1905,12 +1977,14 @@ export const listUsers = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -1986,12 +2060,14 @@ export const listUsers = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2047,12 +2123,14 @@ export const listUsers = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2077,12 +2155,14 @@ export const listUsers = /* GraphQL */ `
         labeller {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -2154,12 +2234,14 @@ export const listUsers = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -2212,12 +2294,14 @@ export const getBand = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -2293,12 +2377,14 @@ export const getBand = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2328,12 +2414,14 @@ export const getBand = /* GraphQL */ `
       members {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -2362,12 +2450,14 @@ export const getBand = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2404,12 +2494,14 @@ export const getBand = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -2466,12 +2558,14 @@ export const getBand = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -2500,12 +2594,14 @@ export const getBand = /* GraphQL */ `
       owner {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -2534,12 +2630,14 @@ export const getBand = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2576,12 +2674,14 @@ export const getBand = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -2638,12 +2738,14 @@ export const getBand = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -2691,12 +2793,14 @@ export const listBands = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -2772,12 +2876,14 @@ export const listBands = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2807,12 +2913,14 @@ export const listBands = /* GraphQL */ `
       members {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -2841,12 +2949,14 @@ export const listBands = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -2883,12 +2993,14 @@ export const listBands = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -2945,12 +3057,14 @@ export const listBands = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -2979,12 +3093,14 @@ export const listBands = /* GraphQL */ `
       owner {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -3013,12 +3129,14 @@ export const listBands = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -3055,12 +3173,14 @@ export const listBands = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3117,12 +3237,14 @@ export const listBands = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -3173,12 +3295,14 @@ export const getSet = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3212,12 +3336,14 @@ export const getSet = /* GraphQL */ `
       editors {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -3246,12 +3372,14 @@ export const getSet = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -3288,12 +3416,14 @@ export const getSet = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3350,12 +3480,14 @@ export const getSet = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -3384,12 +3516,14 @@ export const getSet = /* GraphQL */ `
       creator {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -3418,12 +3552,14 @@ export const getSet = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -3460,12 +3596,14 @@ export const getSet = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3522,12 +3660,14 @@ export const getSet = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -3570,12 +3710,14 @@ export const getSet = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3608,12 +3750,14 @@ export const getSet = /* GraphQL */ `
         members {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -3665,12 +3809,14 @@ export const getSet = /* GraphQL */ `
         owner {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -3755,12 +3901,14 @@ export const listSets = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3794,12 +3942,14 @@ export const listSets = /* GraphQL */ `
       editors {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -3828,12 +3978,14 @@ export const listSets = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -3870,12 +4022,14 @@ export const listSets = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -3932,12 +4086,14 @@ export const listSets = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -3966,12 +4122,14 @@ export const listSets = /* GraphQL */ `
       creator {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -4000,12 +4158,14 @@ export const listSets = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -4042,12 +4202,14 @@ export const listSets = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -4104,12 +4266,14 @@ export const listSets = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -4152,12 +4316,14 @@ export const listSets = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -4190,12 +4356,14 @@ export const listSets = /* GraphQL */ `
         members {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -4247,12 +4415,14 @@ export const listSets = /* GraphQL */ `
         owner {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -4331,12 +4501,14 @@ export const getJamSession = /* GraphQL */ `
         editors {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -4388,12 +4560,14 @@ export const getJamSession = /* GraphQL */ `
         creator {
           userId
           username
+          email
+          providers
           firstName
           lastName
+          imageUrl
           recieveUpdatesFromOslyn
           isActivated
           createDate
-          email
           role
           labelledRecording {
             recordingId
@@ -4460,23 +4634,27 @@ export const getJamSession = /* GraphQL */ `
           members {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           owner {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
         }
@@ -4484,12 +4662,14 @@ export const getJamSession = /* GraphQL */ `
       admin {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -4518,12 +4698,14 @@ export const getJamSession = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -4560,12 +4742,14 @@ export const getJamSession = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -4622,12 +4806,14 @@ export const getJamSession = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date
@@ -4656,12 +4842,14 @@ export const getJamSession = /* GraphQL */ `
       members {
         userId
         username
+        email
+        providers
         firstName
         lastName
+        imageUrl
         recieveUpdatesFromOslyn
         isActivated
         createDate
-        email
         role
         labelledRecording {
           recordingId
@@ -4690,12 +4878,14 @@ export const getJamSession = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           isLabelerRejected
@@ -4732,12 +4922,14 @@ export const getJamSession = /* GraphQL */ `
           creator {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           recordings {
@@ -4794,12 +4986,14 @@ export const getJamSession = /* GraphQL */ `
           labeller {
             userId
             username
+            email
+            providers
             firstName
             lastName
+            imageUrl
             recieveUpdatesFromOslyn
             isActivated
             createDate
-            email
             role
           }
           date

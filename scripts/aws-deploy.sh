@@ -37,5 +37,10 @@ else
     
     echo "run: amplify codegen add --apiId $NEWAPPSYNC"
     amplify codegen add --apiId $NEWAPPSYNC
-  fi 
+  fi
 fi
+
+echo "updating API.ts in lambda folder .."
+cp -f src/API.ts aws/lambdas/API.ts
+
+echo "Done."

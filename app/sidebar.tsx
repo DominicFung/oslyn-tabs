@@ -1,18 +1,23 @@
 "use client"
 
 import Image from "next/image";
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useSideBarContext } from "@/app/context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
-export default function Sidebar () {
-  const path = usePathname()
-  const { openSidebar, setOpenSidebar } = useSideBarContext()
-  const [ notice, setNotice ] = useState(true)
-  //const [ screen, setScreen ] = useState({ w: 500, h: 500 }) 
+import { useSession, signOut } from 'next-auth/react'
+import Login from "./login";
 
+export default function Sidebar () {
+  const router = useRouter()
+  const path = usePathname()
   
+  const { openSidebar, setOpenSidebar } = useSideBarContext()
+  const [ openLogin, setOpenLogin ] = useState(false)
+  const [ notice, setNotice ] = useState(true)
+  
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     if (window.innerWidth < 768) { setOpenSidebar(false) }
@@ -38,43 +43,48 @@ export default function Sidebar () {
       </a>
      <ul className="space-y-2 font-medium">
         <li>
-          <a href="/jam/start" className={`flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
+          <button onClick={() => router.push("/jam/start")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/jam') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
-          }`}>
+          } disabled:dark:text-gray-500`}>
               <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">Jam Session</span>
+              <span className="flex-1 ml-3 whitespace-nowrap text-left">Jam Session</span>
               <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">Start</span>
-           </a>
+           </button>
         </li>
         <li>
-          <a href="/songs" className={`flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
+          <button onClick={() => router.push("/songs")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/songs') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
-          }`}>
-              <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">My Songs</span>
-              <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300">20</span>
-           </a>
+          } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
+              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+              <span className="flex-1 ml-3 whitespace-nowrap text-left">My Songs</span>
+              { status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>30</span> }
+           </button>
         </li>
         <li>
-          <a href="/sets" className={`flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
+          <button onClick={() => router.push("/sets")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/sets') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
-          }`}>
-              <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">My Sets</span>
-              <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300">3</span>
-           </a>
+          } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
+              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+              <span className="flex-1 ml-3 whitespace-nowrap text-left">My Sets</span>
+              { status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>5</span> }
+           </button>
         </li>
         <li>
-           <a href="#" className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}>
-              <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">My Band</span>
-           </a>
+          <button onClick={() => router.push("/band")} className={`w-full flex items-center p-2 text-gray-900 dark:text-white ${
+            path.startsWith('/band') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
+          } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
+              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
+              <span className="flex-1 ml-3 whitespace-nowrap text-left">My Band</span>
+           </button>
         </li>
         <li>
-           <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
-              <span className="flex-1 ml-3 whitespace-nowrap">Sign In</span>
-           </a>
+          { status != "authenticated" &&  <button onClick={() => setOpenLogin(true)} className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+            <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
+            <span className="flex-1 ml-3 whitespace-nowrap text-left">Sign In</span>
+          </button> }
+          { session?.user?.name && <button onClick={() => signOut() } className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+            <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
+          </button> }
         </li>
      </ul>
      {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
@@ -94,4 +104,5 @@ export default function Sidebar () {
      </div> }
     </div>
   </aside>
+  <Login open={openLogin} setOpen={setOpenLogin} />
 </>}

@@ -26,7 +26,10 @@ type Query {
 }
 
 type Mutation {
-  createUser(username: String!, email: String!, firstName: String, lastName: String): User @aws_iam
+  createUser(
+    username: String!, email: String!, provider: provider!,
+    firstName: String, lastName: String, imageUrl: String
+  ): User @aws_iam
 
   createSong(
     title: String!
@@ -95,6 +98,7 @@ type Subscription {
 enum recordingStatus { TOLABEL INAUDIT COMPLETE }
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
+enum provider { google, facebook }
 
 type NextPage {
   jamSessionId: ID!
@@ -186,26 +190,21 @@ type Song {
   chordSheetKey: String
   originPlatorm: chordSheetPlatform 
   originLink: String
-
-  # intermediaryChordJson: String
-  # isIntermediaryChordChanged: Boolean
-  # intermediaryChordVersion: Int
-
-  # oslynJson: String
-  # oslynVersion: Int
 }
 
 type User {
   userId: ID!
   username: String!
+  email: AWSEmail!
+  providers: [provider]!
 
   firstName: String
   lastName: String
+  imageUrl: String
   recieveUpdatesFromOslyn: Boolean
   isActivated: Boolean
-  createDate: Int
+  createDate: AWSTimestamp
 
-  email: AWSEmail!
   role: role!
   labelledRecording: [Recording]!
   songsCreated: [Song]!
