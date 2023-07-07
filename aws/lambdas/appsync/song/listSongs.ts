@@ -2,9 +2,12 @@ import { AppSyncResolverEvent } from 'aws-lambda'
 import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge } from '../../util/dynamo'
+import { User } from '../../API'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
+
+type _User = User & {}
 
 export const handler = async (event: AppSyncResolverEvent<{
   userId: string, 
@@ -39,7 +42,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     const songUsers = songs.map((s) => { return s.userId as string })
     const uniq = [...new Set(songUsers)]
 
-
     const keys = uniq
     .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
     console.log(keys)
@@ -51,7 +53,8 @@ export const handler = async (event: AppSyncResolverEvent<{
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
     
     const users = res1.Responses![USER_TABLE_NAME].map((u) => {
-      let user = unmarshall(u)
+      let user = unmarshall(u) as _User
+
       if (!user.labelledRecording) user.labelledRecording = []
       if (!user.songsCreated) user.songsCreated = []
       if (!user.editHistory) user.editHistory = []
@@ -60,6 +63,16 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
     console.log(users)
     songs = merge(songs, users, 'userId', 'creator')
+  }
+
+  if (hasSubstring(event.info.selectionSetList, "editors")) {
+    // TODO - acutally get editors - only if this list Songs function is for owners.
+    songs = songs.map(s => { s.editors = []; return s })
+  }
+
+  if (hasSubstring(event.info.selectionSetList, "viewers")) {
+    // TODO - acutally get viewers - only if this list Songs function is for owners.
+    songs = songs.map(s => { s.viewers = []; return s })
   }
 
   console.log(songs)

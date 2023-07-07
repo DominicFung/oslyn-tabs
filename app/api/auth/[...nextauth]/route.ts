@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import FacebookProvider from "next-auth/providers/facebook"
 import GoogleProvider from "next-auth/providers/google"
 
@@ -11,7 +11,7 @@ import { User } from '@/src/API'
 
 import secret from '@/secret.json'
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   secret: secret.nextauth.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
@@ -37,51 +37,57 @@ const handler = NextAuth({
           let u = { username: profile.name, email: profile.email, provider: account.provider } as any
           
           // Google
-          if ((profile as any).picture) u.imageUrl = (profile as any).picture
-          if ((profile as any).given_name) u.firstName = (profile as any).given_name
-          if ((profile as any).family_name) u.lastName = (profile as any).family_name
-
+          if (account.provider === "google") {
+            if ((profile as any).picture) u.imageUrl = (profile as any).picture
+            if ((profile as any).given_name) u.firstName = (profile as any).given_name
+            if ((profile as any).family_name) u.lastName = (profile as any).family_name
+          }
+          
+          // Facebook
+          if (account.provider === "facebook") {
+            console.log((profile as any).picture.data)
+            if ((profile as any).picture && (profile as any).picture.data.url) u.imageUrl = (profile as any).picture.data.url
+          }
+          
           const d = await API.graphql(graphqlOperation(m.createUser, u)) as GraphQLResult<{ createUser: User }>
           console.log(d)
 
           console.log("User updated.")
+          if (d.data?.createUser) {
+            console.log(`user found: ${d.data.createUser.userId}`)
+            return { ...token, userId: d.data.createUser.userId }
+          } console.warn("createUser was not reaturned.")
         } else { console.log("User did NOT get update.") }
       }
 
       return token
-    } 
+    }, 
+
+    async session({ session, token, user }) {
+      console.log("User Session ...")
+      console.log(session)
+      console.log(token)
+      console.log(user)
+
+      if (session && token) {
+        if (session.user && token.userId) {
+          console.log("adding userId to session")
+          if (!(session.user as any).userId) { (session.user as any).userId = token.userId }
+        } else if (token.userId) {
+          (session as any).user = { userId: token.userID }
+        } else if (session.user) {
+          console.log("TODO: token.userId does not exist, fetch from DB")
+        } else {
+          console.log("TODO: token.userId does not exist, fetch from DB")
+        }
+
+      } else console.warn("session or token is missing")
+      console.log(session)
+      return session
+    }
   }
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
-
-/**
-
-{
-  provider: 'google',
-  type: 'oauth',
-  providerAccountId: '116162035704812410432',
-  access_token: 'ya29.a0AbVbY6OfBJWaWl2XDiolx2Cjw6NlirdS-ZnBfXxWQYyK4xpZnMiyfMmIxx8xBFjc3D2SOV6NHn_kLuTtopvgPBYyUA_-RWDAfe1vZSFKTi5Y3eDubtDjeXm5WjAqGbbNJr81YTb5XKp2w1mJev_SleQ-rQrjaCgYKAcgSARESFQFWKvPlGgx_Kq1t1oJd6TWKFz4N7A0163',
-  expires_at: 1688595012,
-  scope: 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-  token_type: 'Bearer',
-  id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkzNDFkZWRlZWUyZDE4NjliNjU3ZmE5MzAzMDAwODJmZTI2YjNkOTIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI5MDAwMTI1MDg3OTUtcDc0NWdsbzQ4MHNqdG5jbzFzdHF2N2FtNHJqMjJkbnMuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI5MDAwMTI1MDg3OTUtcDc0NWdsbzQ4MHNqdG5jbzFzdHF2N2FtNHJqMjJkbnMuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTYxNjIwMzU3MDQ4MTI0MTA0MzIiLCJlbWFpbCI6Im1pc3Npb24ucG9zc2libGVmb3JzdXJlQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiOXVLZ2FMOHRsNno4VWJWNlpCVXNpQSIsIm5hbWUiOiJEb21pbmljIEZ1bmciLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUFjSFR0ZGl0clBISGNyZ254SVRZdms0ZHRFVXJHR2VDWWNFMDRKU1ZOc05NR1dUOEJFPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkRvbWluaWMiLCJmYW1pbHlfbmFtZSI6IkZ1bmciLCJsb2NhbGUiOiJlbiIsImlhdCI6MTY4ODU5MTQxMywiZXhwIjoxNjg4NTk1MDEzfQ.mVGU4ss8_2Tq7LtvsEfgHK0t9R9ZOAu7nsm-i-JERsC9JDd0yRCHnfAPJVNbAlP6jcuQ6GJGVkHssS_OOwZ1vTjtIN0dMoGhcfCbjXkWLZeBoBSAx3_qxsEd7_XTE29Sik2CZWjTtoQdxsdtX10KHPD0l0aj240_6GFF5bdfUtmMKJcsg1VxZptt1cKHo_lc5y-zhVTP2kHXUf_JMLsDMHasWuBA4gnuyk0nM-AW4zEq35ow6nRRWr1OFDsxfUBQ460ruHhvvJS_-KfdFI2KaIt4N3rckH_YDc7maDd4Nd5CMx9PvSR_HXZ0rc-tylCcRpm0rpaphI_mOMdcQOk-TQ'
-}
-{
-  iss: 'https://accounts.google.com',
-  azp: '900012508795-p745glo480sjtnco1stqv7am4rj22dns.apps.googleusercontent.com',
-  aud: '900012508795-p745glo480sjtnco1stqv7am4rj22dns.apps.googleusercontent.com',
-  sub: '116162035704812410432',
-  email: 'mission.possibleforsure@gmail.com',
-  email_verified: true,
-  at_hash: '9uKgaL8tl6z8UbV6ZBUsiA',
-  name: 'Dominic Fung',
-  picture: 'https://lh3.googleusercontent.com/a/AAcHTtditrPHHcrgnxITYvk4dtEUrGGeCYcE04JSVNsNMGWT8BE=s96-c',
-  given_name: 'Dominic',
-  family_name: 'Fung',
-  locale: 'en',
-  iat: 1688591413,
-  exp: 1688595013
-}
-
- */

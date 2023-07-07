@@ -11,27 +11,30 @@ import * as q from '@/src/graphql/queries'
 import { SetList } from '@/src/API'
 import CreateJamButton from "./(components)/createJam"
 
-const _img = [
-  "https://i.scdn.co/image/ab67616d0000485141e9614560815b11c1ca543d",
-  "https://i.scdn.co/image/ab67616d00004851cc6c4df88e0b1c3022416010",
-  "https://i.scdn.co/image/ab67616d000048512e07e8eb4aff6fd9fa61b7f4",
-  "https://i.scdn.co/image/ab67616d00004851b424aeb510016daa1bc0251c",
-  "https://i.scdn.co/image/ab67616d00004851457163bec7e8e4decf8c6375"
-]
-
-// TODO Remove
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { Session } from "next-auth"
+import Unauth from "@/app/unauthorized"
 
 Amplify.configure({...awsConfig, ssr: true })
 
+type _Session = Session & {
+  userId: string
+}
+
 export default async function Sets() {
+  const session = await getServerSession(authOptions)
+
+  if (!(session?.user as _Session)?.userId) { return <Unauth /> }
+  const userId = (session?.user as _Session)?.userId
+
   const req = { headers: { cookie: headers().get('cookie') }}
   const SSR = withSSRContext({ req })
   let d = [] as SetList[]
 
   try {
     const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSets, { userId: _generalUserId }
+      q.listSets, { userId }
     )) as GraphQLResult<{ listSets: SetList[] }>
 
     console.log(JSON.stringify(data, null, 2))

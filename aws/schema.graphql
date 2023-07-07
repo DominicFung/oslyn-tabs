@@ -6,7 +6,7 @@ schema {
 }
 
 type Query {
-  getSong(songId: ID!): Song @aws_iam
+  getSong(songId: ID!, userId: ID!): Song @aws_iam
   listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   
   getUserById(userId: ID!): User @aws_iam
@@ -16,7 +16,7 @@ type Query {
   getBand(bandId: ID!): Band @aws_iam
   listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
-  getSet(setListId: ID!): SetList @aws_iam
+  getSet(setListId: ID!, userId: ID!): SetList @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
@@ -57,6 +57,9 @@ type Mutation {
     originalPlatorm: chordSheetPlatform 
     originalLink: String
   ): Song @aws_iam
+
+  shareSong(songId: ID!, userId: ID!, shareWithEmail: AWSEmail!, access: access!): Song @aws_iam
+  removeAccess(songId: ID!, userId: ID!, removeUserEmail: AWSEmail!): Song @aws_iam
 
   addRecordingToSong(songId: ID!, recordingId: ID!): Song @aws_iam
   removeRecordingFromSong(songId: ID!, recordingId: ID!): Song @aws_iam
@@ -99,6 +102,7 @@ enum recordingStatus { TOLABEL INAUDIT COMPLETE }
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
 enum provider { google, facebook }
+enum access { edit, view }
 
 type NextPage {
   jamSessionId: ID!
@@ -184,6 +188,9 @@ type Song {
   version: Int!
 
   creator: User!
+  editors: [User]!
+  viewers: [User]!
+
   recordings: [Recording]!
 
   chordSheet: String

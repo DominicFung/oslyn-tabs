@@ -30,41 +30,40 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
   )
 
-  if (res0.Item) {
-    let song = {
-      songId, title: b.title, 
-      userId: b.userId,
-      chordSheetKey: b.chordSheetKey,
-      chordSheet: b.chordSheet,
+  if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
+  let song = {
+    songId, title: b.title, 
+    userId: b.userId,
+    chordSheetKey: b.chordSheetKey,
+    chordSheet: b.chordSheet,
 
-      isApproved: true,
-      version: 1,    
-      recordings: []
-    } as any
+    isApproved: true,
+    version: 1,    
+    recordings: []
+  } as any
 
-    if (b.album) song.album = b.album
-    if (b.artist) song.artist = b.artist
-    if (b.albumCover) song.albumCover = b.albumCover
+  if (b.album) song.album = b.album
+  if (b.artist) song.artist = b.artist
+  if (b.albumCover) song.albumCover = b.albumCover
 
-    const res1 = await dynamo.send(
-      new PutItemCommand({
-        TableName: SONG_TABLE_NAME,
-        Item: marshall(song)
-      })
-    )
+  const res1 = await dynamo.send(
+    new PutItemCommand({
+      TableName: SONG_TABLE_NAME,
+      Item: marshall(song)
+    })
+  )
+
+  console.log(res1)
+  console.log(`new song: ${JSON.stringify(song, null, 2)}`)
+  song.creator = unmarshall(res0.Item)
+
+  if (!song.editors) song.editors = []
+  if (!song.viewers) song.viewers = []
+
+  if (!song.creator.labelledRecording) song.creator.labelledRecording = []
+  if (!song.creator.songsCreated) song.creator.songsCreated = []
+  if (!song.creator.editHistory) song.creator.editHistory = []
+  if (!song.creator.likedSongs) song.creator.likedSongs = []
   
-    console.log(res1)
-    console.log(`new song: ${JSON.stringify(song, null, 2)}`)
-    song.creator = unmarshall(res0.Item)
-
-    if (!song.creator.labelledRecording) song.creator.labelledRecording = []
-    if (!song.creator.songsCreated) song.creator.songsCreated = []
-    if (!song.creator.editHistory) song.creator.editHistory = []
-    if (!song.creator.likedSongs) song.creator.likedSongs = []
-
-    return song
-  } else {
-    console.error(`ERROR: userId not found: ${b.userId}`)
-    return
-  }
+  return song
 }

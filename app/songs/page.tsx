@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { headers } from 'next/headers'
 
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
+import { ArrowRightOnRectangleIcon, ShareIcon } from "@heroicons/react/24/solid"
 
 import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
 import { GraphQLResult } from "@aws-amplify/api"
@@ -10,36 +10,35 @@ import awsConfig from '@/src/aws-exports'
 import * as q from '@/src/graphql/queries'
 import { Song } from '@/src/API'
 
-const _img = [
-  "https://i.scdn.co/image/ab67616d0000485141e9614560815b11c1ca543d",
-  "https://i.scdn.co/image/ab67616d00004851cc6c4df88e0b1c3022416010",
-  "https://i.scdn.co/image/ab67616d000048512e07e8eb4aff6fd9fa61b7f4",
-  "https://i.scdn.co/image/ab67616d00004851b424aeb510016daa1bc0251c",
-  "https://i.scdn.co/image/ab67616d00004851457163bec7e8e4decf8c6375"
-]
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { Session } from "next-auth"
+import Unauth from "@/app/unauthorized"
+import ClickableCell from "../(components)/clikableCell"
 
 // TODO Remove
 const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
 
+type _Session = Session & {
+  userId: string
+}
+
 Amplify.configure({...awsConfig, ssr: true })
 
 export default async function Songs() {
-  // https://docs.amplify.aws/lib/ssr/q/platform/js/#2-prepare-a-request-object-for-withssrcontext-to-perform-server-side-operations-that-require-authentication
+  const session = await getServerSession(authOptions)
 
-  const req = {
-    headers: {
-      cookie: headers().get('cookie'),
-    },
-  }
+  if (!(session?.user as _Session)?.userId) { return <Unauth /> }
+  const userId = (session?.user as _Session)?.userId
+
+  const req = { headers: { cookie: headers().get('cookie') } }
   const SSR = withSSRContext({ req })
   let d = [] as Song[]
 
   try {
     const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSongs, { userId: _generalUserId }
+      q.listSongs, { userId }
     )) as GraphQLResult<{ listSongs: Song[] }>
-
-    console.log(data)
     if (data?.listSongs) d = data?.listSongs
     else throw new Error("data.listSongs is empty.")
   } catch (e) {
@@ -74,10 +73,10 @@ export default async function Songs() {
                 <th scope="col" className="px-6 py-3">
                     Title
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 hidden sm:table-cell">
                     Key
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 hidden sm:table-cell">
                     Album
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -87,31 +86,42 @@ export default async function Songs() {
         </thead>
         <tbody>
             {d.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i+1}</th>
-                <td className="px-6 py-4">
-                  <a href={`/songs/edit/${a.songId}`}>                  
-                    <div className="flex flex-row hover:cursor-pointer">
-                      {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
-                      <div className="m-2">
-                        <div className="text-white bold">{a.title}</div>
-                        <div>{a.artist}</div>
+                
+                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {i+1}
+                  </ClickableCell>
+                
+                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 text-ellipsis">
+                    <div className="flex flex-row">
+                      { a.albumCover && <div className="m-auto w-16">
+                          <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> 
+                        </div>
+                      }
+                      <div className="flex-0 m-2 w-36 lg:w-full">
+                        <div className="text-white bold truncate">{a.title}</div>
+                        <div className="text-ellipsis truncate">{a.artist}</div>
                       </div>
                     </div>
-                  </a>
-                </td>
-                <td className="px-6 py-4">
+                  </ClickableCell>
+                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 hidden sm:table-cell">
                     {a.chordSheetKey}
-                </td>
-                <td className="px-6 py-4">
+                  </ClickableCell>
+                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
                     {a.album}
-                </td>
+                  </ClickableCell>
+                
                 <td className="px-6 py-4">
-                  <a href={`/jam/start/song/${a.songId}`}>
-                    <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                      Jam <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
+                  <div className="flex flex-row">
+                    <a href={`/jam/start/song/${a.songId}`}>
+                      <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                        <span className='text-md pt-0.5'>Preview</span>
+                        <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
+                      </button>
+                    </a>
+                    <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2">
+                      <ShareIcon className="w-4 h-4 mt-1" />
                     </button>
-                  </a>
-                  
+                  </div>
                 </td>
             </tr>)}
         </tbody>

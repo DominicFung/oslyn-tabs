@@ -46,7 +46,7 @@ export default function Login(p: LoginProps) {
 
 
                 <div className="pt-4 text-sm font-medium text-gray-500 dark:text-gray-300">
-                    Social media? What's Social media?? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
+                    Social media? What&apos;s Social media?? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
                 </div>
 
               </span>

@@ -10,6 +10,7 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 type _SetList = SetList & {
   userId: string
+  editorIds: string[]
   songs: _JamSong[]
 } 
 
@@ -22,12 +23,13 @@ type _Song = Song & {
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string
+  setListId: string, userId: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.setListId) { console.error(`b.songId is empty`); return }
+  if (!b.userId) { console.error(`b.userId is empty`); return }
 
   const dynamo = new DynamoDBClient({})
 
@@ -41,6 +43,13 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!res0.Item) { console.error(`ERROR: setListId not found: ${b.setListId}`); return }
   let setList = unmarshall(res0.Item!) as _SetList
   console.log(JSON.stringify(setList))
+
+  // check if user is either owner or editor
+  let authorized = false
+  if (setList.userId === b.userId) authorized = true
+  else if (setList.editorIds && setList.editorIds.includes(b.userId)) authorized = true
+  
+  if (!authorized) { console.error("unauthorized"); return }
 
   if (hasSubstring(event.info.selectionSetList, "songs")) {
     console.log("getting songs ...")

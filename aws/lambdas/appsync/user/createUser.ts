@@ -73,6 +73,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       firstName: b.firstName || "", 
       lastName: b.lastName || "",
       isActivated: true,
+      imageUrl: b.imageUrl || "",
       createDate: Date.now(),
 
       providers: [b.provider],
