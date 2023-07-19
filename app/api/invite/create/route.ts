@@ -11,13 +11,10 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Session } from "next-auth"
 
-export interface SongRequest {
-  title: string,
-  artist?: string,
-  album?: string,
-  albumCover?: string,
-  chordSheet: string,
-  chordSheetKey: string,
+export interface InviteRequest {
+  songId: string,
+  shareWithEmail: string,
+  access: string
 }
 
 type _Session = Session & {
@@ -26,7 +23,7 @@ type _Session = Session & {
 
 export async function POST(request: Request) {
   console.log(`${request.method} ${request.url}`)
-  const b = await request.json() as SongRequest
+  const b = await request.json() as InviteRequest
 
   const session = await getServerSession(authOptions)
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
@@ -35,14 +32,14 @@ export async function POST(request: Request) {
   Amplify.configure(awsConfig)
 
   const d = await API.graphql(graphqlOperation(
-    m.createSong, { ...b, userId }
-  )) as GraphQLResult<{ createSong: Song }>
+    m.shareSong, { ...b, userId }
+  )) as GraphQLResult<{ shareSong: Song }>
 
-  if (!d.data?.createSong) {
-    console.error(`createSong data is empty: ${JSON.stringify(d.data)}`)
+  if (!d.data?.shareSong) {
+    console.error(`shareSong data is empty: ${JSON.stringify(d.data)}`)
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
 
   console.log(`${request.method} ${request.url} .. complete`)
-  return NextResponse.json(d.data.createSong)
+  return NextResponse.json(d.data.shareSong)
 }

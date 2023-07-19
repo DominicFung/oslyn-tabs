@@ -20,6 +20,10 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.238.0",
-    "aws-cdk-lib": "^2.37.1"
+    "@faire/mjml-react": "^3.3.0",
+    "aws-cdk-lib": "^2.37.1",
+    "mjml-core": "^4.14.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

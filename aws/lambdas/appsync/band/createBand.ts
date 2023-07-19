@@ -16,7 +16,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!b.ownerId) { console.error(`b.ownerId is empty`); return }
 
   const dynamo = new DynamoDBClient({})
-  const bandId = uuidv4()
+  const bandId = `bnd_${uuidv4()}`
 
   const res0 = await dynamo.send(
     new GetItemCommand({

@@ -1,26 +1,14 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, BatchGetItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { JamSong, SetList, Song, User } from '../../API'
+import { User } from '../../API'
 import { hasSubstring, merge } from '../../util/dynamo'
+
+import { _SetList, _JamSong, _Song } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
-
-type _SetList = SetList & {
-  userId: string
-  editorIds: string[]
-  songs: _JamSong[]
-} 
-
-type _JamSong = JamSong & {
-  songId: string
-}
-
-type _Song = Song & {
-  userId: string
-}
 
 export const handler = async (event: AppSyncResolverEvent<{
   setListId: string, userId: string

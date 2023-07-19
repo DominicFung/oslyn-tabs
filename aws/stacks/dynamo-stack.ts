@@ -176,5 +176,28 @@ export class DynamoStack extends Stack {
       value: jamSessionTable.tableArn,
       exportName: `${props.name}-JamTable-Arn`
     })
+
+    const TTL = "ttl"
+    const inviteTable = new Table(this, `${props.name}-InviteTable`, {
+      tableName: `${props.name}-InviteTable`,
+      partitionKey: {
+        name: `inviteId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY,
+      timeToLiveAttribute: TTL
+    })
+
+    new CfnOutput(this, `${props.name}-InviteTable-Name`, {
+      value: inviteTable.tableName,
+      exportName: `${props.name}-InviteTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-InviteTable-Arn`, {
+      value: inviteTable.tableArn,
+      exportName: `${props.name}-InviteTable-Arn`
+    })
   }
 }

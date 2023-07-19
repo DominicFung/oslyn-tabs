@@ -25,9 +25,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({token, account, profile}) {
-      console.log("User signin ...")
-      console.log(account)
-      console.log(profile)
+      // console.log("User signin ...")
+      // console.log(account)
+      // console.log(profile)
 
       if (account && profile) {
         Amplify.configure(awsConfig)
@@ -45,16 +45,16 @@ export const authOptions: NextAuthOptions = {
           
           // Facebook
           if (account.provider === "facebook") {
-            console.log((profile as any).picture.data)
+            //console.log((profile as any).picture.data)
             if ((profile as any).picture && (profile as any).picture.data.url) u.imageUrl = (profile as any).picture.data.url
           }
           
           const d = await API.graphql(graphqlOperation(m.createUser, u)) as GraphQLResult<{ createUser: User }>
-          console.log(d)
+          //console.log(d)
 
-          console.log("User updated.")
+          //console.log("User updated.")
           if (d.data?.createUser) {
-            console.log(`user found: ${d.data.createUser.userId}`)
+            //console.log(`user found: ${d.data.createUser.userId}`)
             return { ...token, userId: d.data.createUser.userId }
           } console.warn("createUser was not reaturned.")
         } else { console.log("User did NOT get update.") }
@@ -64,14 +64,14 @@ export const authOptions: NextAuthOptions = {
     }, 
 
     async session({ session, token, user }) {
-      console.log("User Session ...")
-      console.log(session)
-      console.log(token)
-      console.log(user)
+      // console.log("User Session ...")
+      // console.log(session)
+      // console.log(token)
+      // console.log(user)
 
       if (session && token) {
         if (session.user && token.userId) {
-          console.log("adding userId to session")
+          //console.log("adding userId to session")
           if (!(session.user as any).userId) { (session.user as any).userId = token.userId }
         } else if (token.userId) {
           (session as any).user = { userId: token.userID }
@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
         }
 
       } else console.warn("session or token is missing")
-      console.log(session)
+      // console.log(session)
       return session
     }
   }

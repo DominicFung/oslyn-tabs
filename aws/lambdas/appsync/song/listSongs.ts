@@ -2,12 +2,11 @@ import { AppSyncResolverEvent } from 'aws-lambda'
 import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge } from '../../util/dynamo'
-import { User } from '../../API'
+
+import { _User } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
-
-type _User = User & {}
 
 export const handler = async (event: AppSyncResolverEvent<{
   userId: string, 
@@ -43,8 +42,8 @@ export const handler = async (event: AppSyncResolverEvent<{
     const uniq = [...new Set(songUsers)]
 
     const keys = uniq
-    .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
-    console.log(keys)
+      .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
+      console.log(keys)
 
     const res1 = await dynamo.send(new BatchGetItemCommand({
       RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
@@ -59,6 +58,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (!user.songsCreated) user.songsCreated = []
       if (!user.editHistory) user.editHistory = []
       if (!user.likedSongs) user.likedSongs = []
+      if (!user.friends) user.friends = []
       return user
     })
     console.log(users)
@@ -73,6 +73,11 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "viewers")) {
     // TODO - acutally get viewers - only if this list Songs function is for owners.
     songs = songs.map(s => { s.viewers = []; return s })
+  }
+
+  if (hasSubstring(event.info.selectionSetList, "friends")) {
+    // TODO - acutally get editors - only if this list Songs function is for owners.
+    songs = songs.map(s => { s.friends = []; return s })
   }
 
   console.log(songs)

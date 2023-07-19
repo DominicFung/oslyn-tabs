@@ -8,16 +8,14 @@ import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
 
 import * as q from '@/src/graphql/queries'
-import { Song } from '@/src/API'
+import { Song, User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 import ClickableCell from "../(components)/clikableCell"
-
-// TODO Remove
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
+import Share from "./(edit)/(components)/share"
 
 type _Session = Session & {
   userId: string
@@ -29,6 +27,7 @@ export default async function Songs() {
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
+  const name = session?.user?.name?.split(" ")[0]
   const userId = (session?.user as _Session)?.userId
 
   const req = { headers: { cookie: headers().get('cookie') } }
@@ -45,6 +44,18 @@ export default async function Songs() {
     console.log(JSON.stringify(e, null, 2))
   }
 
+  let user: User|null = null 
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.getUserById, { userId }
+    )) as GraphQLResult<{ getUserById: User }>
+    if (data?.getUserById) user = data.getUserById
+    else throw new Error("data.getUserById is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
   return <div>
     <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
@@ -52,7 +63,7 @@ export default async function Songs() {
               <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
               <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
           </a>
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Dom&apos;s Songs</h1>
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">{name ? `${name}'s` : "Your"} Songs</h1>
           <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">
             These are all the song&apos;s you&apos;ve added. Share them with your friends!
           </p>
@@ -118,9 +129,7 @@ export default async function Songs() {
                         <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
                       </button>
                     </a>
-                    <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2">
-                      <ShareIcon className="w-4 h-4 mt-1" />
-                    </button>
+                    { user && <Share user={user} song={a} /> }
                   </div>
                 </td>
             </tr>)}

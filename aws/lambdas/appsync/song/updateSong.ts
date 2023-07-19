@@ -2,15 +2,14 @@ import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 
 import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
-import { Song, User } from '../../API'
+import { User } from '../../API'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
+
+import { _Song } from '../../type'
 
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 
-type _Song = Song & {
-  userId: string
-}
 
 export const handler = async (event: AppSyncResolverEvent<{
   songId: string, 

@@ -102,7 +102,7 @@ enum recordingStatus { TOLABEL INAUDIT COMPLETE }
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
 enum provider { google, facebook }
-enum access { edit, view }
+enum access { admin, edit, view }
 
 type NextPage {
   jamSessionId: ID!
@@ -213,6 +213,8 @@ type User {
   createDate: AWSTimestamp
 
   role: role!
+
+  friends: [User]!
   labelledRecording: [Recording]!
   songsCreated: [Song]!
   editHistory: [RecordingHistory]! 

@@ -1,10 +1,12 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, PutItemCommand, QueryCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
+import { BatchGetItemCommand, DynamoDBClient, PutItemCommand, QueryCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
-import { User, provider } from '../../API'
-import { updateDynamoUtil } from '../../util/dynamo'
+import { provider } from '../../API'
+import { hasSubstring, merge, updateDynamoUtil } from '../../util/dynamo'
+
+import { _User } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 
@@ -36,8 +38,8 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (res0.Count! > 0 && res0.Items) {
     console.log(" === USER ALREADY EXIST === ")
     
-    let user = {} as User 
-    let savedUser = unmarshall(res0.Items[0]) as User
+    let user = {} as _User 
+    const savedUser = unmarshall(res0.Items[0]) as _User
     console.log(savedUser)
 
     if (b.username != savedUser.username) user.username = b.username
@@ -52,7 +54,41 @@ export const handler = async (event: AppSyncResolverEvent<{
       user.imageUrl = b.imageUrl
     }
 
-    // Catch if no updates needed
+    if (hasSubstring(event.info.selectionSetList, "friends")) {
+      console.log("friends ..")
+      if (savedUser.friendIds && savedUser.friendIds.length > 0) {
+        console.log("friendIds found, fetching friend details ..")
+        const uniq = [...new Set(savedUser.friendIds)]
+
+        const keys = uniq
+          .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
+          console.log(keys)
+
+        const res1 = await dynamo.send(new BatchGetItemCommand({
+          RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+        }))
+        console.log(res1)
+
+        if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
+
+        const users = res1.Responses![USER_TABLE_NAME].map((u) => {
+          let user = unmarshall(u) as _User
+    
+          if (!user.labelledRecording) user.labelledRecording = []
+          if (!user.songsCreated) user.songsCreated = []
+          if (!user.editHistory) user.editHistory = []
+          if (!user.likedSongs) user.likedSongs = []
+          if (!user.friends) user.friends = []
+          return user
+        })
+        console.log(users)
+        savedUser.friends = merge(savedUser.friends, users, 'userId', 'friends')
+      } else { savedUser.friends = [] }
+
+      console.log(user)
+    }
+
+    // If there are no updates, return whatever's saved.
     if ( Object.keys(user).length === 0 ) return savedUser
 
     const params = updateDynamoUtil({
@@ -60,13 +96,13 @@ export const handler = async (event: AppSyncResolverEvent<{
       key: { userId: savedUser.userId },
       item: user
     })
-
+    
     const res1 = await dynamo.send(new UpdateItemCommand(params))
     console.log(res1)
 
     return { ...savedUser, ...user }
   } else {
-    const userId = uuidv4()
+    const userId = `usr_${uuidv4()}`
 
     const user = {
       userId, username: b.username,
@@ -82,7 +118,8 @@ export const handler = async (event: AppSyncResolverEvent<{
       labelledRecording: [],
       songsCreated: [],
       editHistory: [],
-      likedSongs: []
+      likedSongs: [],
+      friendIds: [],
     } as any
 
     const res1 = await dynamo.send(

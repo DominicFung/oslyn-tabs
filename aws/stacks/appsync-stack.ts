@@ -28,6 +28,9 @@ export class AppsyncStack extends Stack {
     const jamDynamoName = Fn.importValue(`${props.name}-JamTable-Name`)
     const jamDynamoArn = Fn.importValue(`${props.name}-JamTable-Arn`)
 
+    const inviteDynamoName = Fn.importValue(`${props.name}-InviteTable-Name`)
+    const inviteDynamoArn = Fn.importValue(`${props.name}-InviteTable-Arn`)
+
     const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
       name: `${props.name}`,
       schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
@@ -78,7 +81,7 @@ export class AppsyncStack extends Stack {
             actions: [ "dynamodb:*" ],
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
-              `${setListDynamoArn}*`, `${jamDynamoArn}*`
+              `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`
             ]
           }),
           new PolicyStatement({
@@ -98,7 +101,8 @@ export class AppsyncStack extends Stack {
         BAND_TABLE_NAME: bandDynamoName,
         SONG_TABLE_NAME: songDynamoName,
         SETLIST_TABLE_NAME: setListDynamoName,
-        JAM_TABLE_NAME: jamDynamoName
+        JAM_TABLE_NAME: jamDynamoName,
+        INVITE_TABLE_NAME: inviteDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -113,6 +117,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-CreateUserResolver`, {
       typeName: "Mutation",
       fieldName: "createUser"
+    })
+
+    const getUserById = new NodejsFunction(this, `${props.name}-GetUserById`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'user', 'getUserById.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetUserByIdDS`, getUserById)
+    .createResolver(`${props.name}-GetUserByIdResolver`, {
+      typeName: "Query",
+      fieldName: "getUserById"
     })
 
     const createSong = new NodejsFunction(this, `${props.name}-CreateSong`, {
@@ -161,6 +177,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-ListSongsResolver`, {
       typeName: "Query",
       fieldName: "listSongs"
+    })
+
+    const shareSong = new NodejsFunction(this, `${props.name}-ShareSong`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'shareSong.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ShareSongDS`, shareSong)
+    .createResolver(`${props.name}-ShareSongResolver`, {
+      typeName: "Mutation",
+      fieldName: "shareSong"
     })
 
     const createBand = new NodejsFunction(this, `${props.name}-CreateBand`, {
