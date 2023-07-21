@@ -1,4 +1,4 @@
-
+import { Session } from "next-auth"
 
 export const calculateWidth = (t: string, fontSize: string = "text-lg") => {
   let text = document.createElement("span")
@@ -87,4 +87,8 @@ export function substituteString(originalString: string, replacement: string, st
   const prefix = originalString.substring(0, startIndex);
   const suffix = originalString.substring(endIndex);
   return prefix + replacement + suffix;
+}
+
+export type _Session = Session & {
+  userId: string
 }

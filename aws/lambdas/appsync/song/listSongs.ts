@@ -3,7 +3,7 @@ import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/clie
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge } from '../../util/dynamo'
 
-import { _User } from '../../type'
+import { _Song, _User } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
@@ -32,7 +32,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.error(`ERROR: songs for userId not found: ${b.userId}`)
     return []
   }
-  let songs = res0.Items?.map((e) => unmarshall(e))
+  let songs = res0.Items?.map((e) => unmarshall(e) as _Song)
   console.log(songs)
 
   if (hasSubstring(event.info.selectionSetList, "creator")) {
@@ -73,11 +73,6 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "viewers")) {
     // TODO - acutally get viewers - only if this list Songs function is for owners.
     songs = songs.map(s => { s.viewers = []; return s })
-  }
-
-  if (hasSubstring(event.info.selectionSetList, "friends")) {
-    // TODO - acutally get editors - only if this list Songs function is for owners.
-    songs = songs.map(s => { s.friends = []; return s })
   }
 
   console.log(songs)

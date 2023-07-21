@@ -36,6 +36,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   let sets = res0.Items?.map((e) => unmarshall(e)) as _SetList[]
   console.log(sets)
+  if (sets.length === 0) { console.log(`set is empty, returning.`); return sets }
 
   if (hasSubstring(event.info.selectionSetList, "songs")) {
     console.log("getting songs ...")

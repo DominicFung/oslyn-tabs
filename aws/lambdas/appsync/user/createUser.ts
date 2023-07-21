@@ -4,7 +4,7 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
 import { provider } from '../../API'
-import { hasSubstring, merge, updateDynamoUtil } from '../../util/dynamo'
+import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
 
 import { _User } from '../../type'
 
@@ -62,7 +62,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
         const keys = uniq
           .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
-          console.log(keys)
+        console.log(keys)
 
         const res1 = await dynamo.send(new BatchGetItemCommand({
           RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
@@ -82,7 +82,7 @@ export const handler = async (event: AppSyncResolverEvent<{
           return user
         })
         console.log(users)
-        savedUser.friends = merge(savedUser.friends, users, 'userId', 'friends')
+        savedUser.friends = users
       } else { savedUser.friends = [] }
 
       console.log(user)

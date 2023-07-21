@@ -1,7 +1,7 @@
 import { BatchGetItemCommand, DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { hasSubstring, merge } from '../../util/dynamo'
+import { hasSubstring } from '../../util/dynamo'
 
 import { _User } from '../../type'
 
@@ -51,10 +51,11 @@ export const handler = async (event: AppSyncResolverEvent<{
         if (!user.songsCreated) user.songsCreated = []
         if (!user.editHistory) user.editHistory = []
         if (!user.likedSongs) user.likedSongs = []
+        if (!user.friends) user.friends = []
         return user
       })
       console.log(friends)
-      user = merge(user, friends, 'userId', 'friends')
+      user.friends = friends
     }
   }
 

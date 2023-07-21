@@ -8,6 +8,7 @@ schema {
 type Query {
   getSong(songId: ID!, userId: ID!): Song @aws_iam
   listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  listSharedSongs(userId: ID!, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   
   getUserById(userId: ID!): User @aws_iam
   getUserByEmail(email: AWSEmail): User @aws_iam
@@ -20,9 +21,6 @@ type Query {
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
-
-  # getActiveJamSessions(userId: ID!): [JamSession]! @aws_iam
-  # listJamSessions(bandId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
 type Mutation {

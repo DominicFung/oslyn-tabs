@@ -113,6 +113,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     )
     if (!res3.Item) { console.error(`Could not find this creator with userId: ${b.userId}`); return }
     const owner =  unmarshall(res3.Item!) as _User
+    console.log(owner.friendIds)
 
     if (owner.friendIds && owner.friendIds.includes(user.userId)) {
       console.log(console.log(`you are already friends with ${user.userId}, nothing to add.`)  )
@@ -120,16 +121,38 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (owner.friendIds && owner.friendIds.length > 0) owner.friendIds!.push(user.userId)
       else owner.friendIds = [user.userId]
 
-      let friendIds = marshall(owner.friendIds)
       const params = updateDynamoUtil({ 
         table: USER_TABLE_NAME, 
         key: { userId: b.userId },
-        item: friendIds
+        item: { friendIds: owner.friendIds }
       })
       const res2 = await dynamo.send(new UpdateItemCommand(params))
       console.log(res2)
       console.log(owner)
       console.log(`friend added to owner.`)
+    }
+
+    /**
+     * Add Owner to Users friend list
+     */
+    console.log(`Adding ${b.userId} to ${user.userId} 's friend list ..`)
+    if (user.friendIds && user.friendIds.includes(owner.userId)) {
+      if (owner.friendIds && owner.friendIds.includes(user.userId)) {
+        console.log(console.log(`owner is already friends with you, nothing to add.`)  )
+      }
+    } else {
+      if (user.friendIds && user.friendIds.length > 0) user.friendIds!.push(user.userId)
+      else user.friendIds = [user.userId]
+
+      const params = updateDynamoUtil({ 
+        table: USER_TABLE_NAME, 
+        key: { userId: user.userId },
+        item: { friendIds: user.friendIds }
+      })
+      const res2 = await dynamo.send(new UpdateItemCommand(params))
+      console.log(res2)
+      console.log(user)
+      console.log(`friend added to user.`)
     }
   } else {
     console.log(`No user exists with email: ${email}, sending email invite ..`)
