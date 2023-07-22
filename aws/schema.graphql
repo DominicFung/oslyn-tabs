@@ -15,7 +15,7 @@ type Query {
   listUsers(limit: Int, filter: String, nextToken: String): [User]! @aws_iam
   
   getBand(bandId: ID!): Band @aws_iam
-  listBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
+  listBands(userId: ID!, limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
   getSet(setListId: ID!, userId: ID!): SetList @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
@@ -62,7 +62,7 @@ type Mutation {
   addRecordingToSong(songId: ID!, recordingId: ID!): Song @aws_iam
   removeRecordingFromSong(songId: ID!, recordingId: ID!): Song @aws_iam
 
-  createBand(ownerId: ID!, name: String): Band @aws_iam
+  createBand(userId: ID!, name: String, description: String, adminIds: [ID]): Band @aws_iam
   addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   addSongsToBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
@@ -121,8 +121,18 @@ type NextKey {
 
 type Band {
   bandId: ID!
+  imageUrl: String
+
+  name: String!
+  description: String
+
+
   songs: [Song]!
+  sets: [SetList]!
+
   members: [User]!
+  admins: [User]!
+  
   owner: User!
 }
 

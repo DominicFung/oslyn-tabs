@@ -9,18 +9,29 @@ import * as q from '@/src/graphql/queries'
 import { Song } from '@/src/API'
 import CreateSetTable from "./table"
 
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { Session } from "next-auth"
+import Unauth from "@/app/unauthorized"
 
 Amplify.configure({...awsConfig, ssr: true })
+
+type _Session = Session & {
+  userId: string
+}
 
 export default async function CreateSet() {
   const req = { headers: { cookie: headers().get('cookie') } }
   const SSR = withSSRContext({ req })
   let d = [] as Song[]
 
+  const session = await getServerSession(authOptions)
+  if (!(session?.user as _Session)?.userId) { return <Unauth /> }
+  const userId = (session?.user as _Session)?.userId
+
   try {
     const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSongs, { userId: _generalUserId }
+      q.listSongs, { userId }
     )) as GraphQLResult<{ listSongs: Song[] }>
 
     if (data?.listSongs) d = data?.listSongs

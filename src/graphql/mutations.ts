@@ -7513,9 +7513,22 @@ export const removeRecordingFromSong = /* GraphQL */ `
   }
 `;
 export const createBand = /* GraphQL */ `
-  mutation CreateBand($ownerId: ID!, $name: String) {
-    createBand(ownerId: $ownerId, name: $name) {
+  mutation CreateBand(
+    $userId: ID!
+    $name: String
+    $description: String
+    $adminIds: [ID]
+  ) {
+    createBand(
+      userId: $userId
+      name: $name
+      description: $description
+      adminIds: $adminIds
+    ) {
       bandId
+      imageUrl
+      name
+      description
       songs {
         songId
         title
@@ -7805,7 +7818,511 @@ export const createBand = /* GraphQL */ `
         originPlatorm
         originLink
       }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+        }
+      }
       members {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        labelledRecording {
+          recordingId
+          songTitle
+          formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          key
+          tabLink
+          rawTabs
+          prelabelTool
+          prelabelToolVersion
+          labelTool
+          labelToolVersion
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          isLabelerRejected
+          labelerRejectionReason
+          singerName
+          singerEmail
+          gender
+          status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          comment
+          createDate
+          updateDate
+          lastOULGenerateDate
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+        }
+        editHistory {
+          recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          date
+          actionColumn
+          previousAction
+          newAction
+          comment
+        }
+        likedSongs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+      }
+      admins {
         userId
         username
         email
@@ -8368,6 +8885,9 @@ export const addBandMembers = /* GraphQL */ `
   mutation AddBandMembers($bandId: ID!, $userIds: [ID]!) {
     addBandMembers(bandId: $bandId, userIds: $userIds) {
       bandId
+      imageUrl
+      name
+      description
       songs {
         songId
         title
@@ -8657,7 +9177,511 @@ export const addBandMembers = /* GraphQL */ `
         originPlatorm
         originLink
       }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+        }
+      }
       members {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        labelledRecording {
+          recordingId
+          songTitle
+          formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          key
+          tabLink
+          rawTabs
+          prelabelTool
+          prelabelToolVersion
+          labelTool
+          labelToolVersion
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          isLabelerRejected
+          labelerRejectionReason
+          singerName
+          singerEmail
+          gender
+          status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          comment
+          createDate
+          updateDate
+          lastOULGenerateDate
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+        }
+        editHistory {
+          recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          date
+          actionColumn
+          previousAction
+          newAction
+          comment
+        }
+        likedSongs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+      }
+      admins {
         userId
         username
         email
@@ -9220,6 +10244,9 @@ export const removeBandMembers = /* GraphQL */ `
   mutation RemoveBandMembers($bandId: ID!, $userIds: [ID]!) {
     removeBandMembers(bandId: $bandId, userIds: $userIds) {
       bandId
+      imageUrl
+      name
+      description
       songs {
         songId
         title
@@ -9509,7 +10536,511 @@ export const removeBandMembers = /* GraphQL */ `
         originPlatorm
         originLink
       }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+        }
+      }
       members {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        labelledRecording {
+          recordingId
+          songTitle
+          formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          key
+          tabLink
+          rawTabs
+          prelabelTool
+          prelabelToolVersion
+          labelTool
+          labelToolVersion
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          isLabelerRejected
+          labelerRejectionReason
+          singerName
+          singerEmail
+          gender
+          status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          comment
+          createDate
+          updateDate
+          lastOULGenerateDate
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+        }
+        editHistory {
+          recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          date
+          actionColumn
+          previousAction
+          newAction
+          comment
+        }
+        likedSongs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+      }
+      admins {
         userId
         username
         email
@@ -10072,6 +11603,9 @@ export const addSongsToBand = /* GraphQL */ `
   mutation AddSongsToBand($bandId: ID!, $songIds: [ID]!) {
     addSongsToBand(bandId: $bandId, songIds: $songIds) {
       bandId
+      imageUrl
+      name
+      description
       songs {
         songId
         title
@@ -10361,7 +11895,511 @@ export const addSongsToBand = /* GraphQL */ `
         originPlatorm
         originLink
       }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+        }
+      }
       members {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        labelledRecording {
+          recordingId
+          songTitle
+          formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          key
+          tabLink
+          rawTabs
+          prelabelTool
+          prelabelToolVersion
+          labelTool
+          labelToolVersion
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          isLabelerRejected
+          labelerRejectionReason
+          singerName
+          singerEmail
+          gender
+          status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          comment
+          createDate
+          updateDate
+          lastOULGenerateDate
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+        }
+        editHistory {
+          recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          date
+          actionColumn
+          previousAction
+          newAction
+          comment
+        }
+        likedSongs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+      }
+      admins {
         userId
         username
         email
@@ -10924,6 +12962,9 @@ export const removeSongsFromBand = /* GraphQL */ `
   mutation RemoveSongsFromBand($bandId: ID!, $songIds: [ID]!) {
     removeSongsFromBand(bandId: $bandId, songIds: $songIds) {
       bandId
+      imageUrl
+      name
+      description
       songs {
         songId
         title
@@ -11213,7 +13254,511 @@ export const removeSongsFromBand = /* GraphQL */ `
         originPlatorm
         originLink
       }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+        }
+      }
       members {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        labelledRecording {
+          recordingId
+          songTitle
+          formId
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          key
+          tabLink
+          rawTabs
+          prelabelTool
+          prelabelToolVersion
+          labelTool
+          labelToolVersion
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          isLabelerRejected
+          labelerRejectionReason
+          singerName
+          singerEmail
+          gender
+          status
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          comment
+          createDate
+          updateDate
+          lastOULGenerateDate
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+        }
+        editHistory {
+          recordingHistoryId
+          recording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          labeller {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          date
+          actionColumn
+          previousAction
+          newAction
+          comment
+        }
+        likedSongs {
+          key
+          song {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+        }
+      }
+      admins {
         userId
         username
         email
@@ -12420,6 +14965,9 @@ export const createSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -12498,7 +15046,118 @@ export const createSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -13300,6 +15959,9 @@ export const updateSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -13378,7 +16040,118 @@ export const updateSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -14170,6 +16943,9 @@ export const addEditorToSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -14248,7 +17024,118 @@ export const addEditorToSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -15040,6 +17927,9 @@ export const removeEditorFromSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -15118,7 +18008,118 @@ export const removeEditorFromSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -15910,6 +18911,9 @@ export const addSongToSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -15988,7 +18992,118 @@ export const addSongToSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -16780,6 +19895,9 @@ export const removeSongFromSet = /* GraphQL */ `
       }
       band {
         bandId
+        imageUrl
+        name
+        description
         songs {
           songId
           title
@@ -16858,7 +19976,118 @@ export const removeSongFromSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        sets {
+          setListId
+          description
+          songs {
+            key
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+          }
+        }
         members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+          }
+        }
+        admins {
           userId
           username
           email
@@ -17175,6 +20404,9 @@ export const createJamSession = /* GraphQL */ `
         }
         band {
           bandId
+          imageUrl
+          name
+          description
           songs {
             songId
             title
@@ -17188,7 +20420,24 @@ export const createJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          sets {
+            setListId
+            description
+          }
           members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
             userId
             username
             email
@@ -17952,6 +21201,9 @@ export const endJamSession = /* GraphQL */ `
         }
         band {
           bandId
+          imageUrl
+          name
+          description
           songs {
             songId
             title
@@ -17965,7 +21217,24 @@ export const endJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          sets {
+            setListId
+            description
+          }
           members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
             userId
             username
             email
@@ -18729,6 +21998,9 @@ export const modifyJamSongs = /* GraphQL */ `
         }
         band {
           bandId
+          imageUrl
+          name
+          description
           songs {
             songId
             title
@@ -18742,7 +22014,24 @@ export const modifyJamSongs = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          sets {
+            setListId
+            description
+          }
           members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
             userId
             username
             email

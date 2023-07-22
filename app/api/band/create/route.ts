@@ -5,27 +5,24 @@ import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
 
 import * as m from '@/src/graphql/mutations'
-import { JamSongInput, SetList } from '@/src/API'
+import { Band } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Session } from "next-auth"
 
-// TODO Remove
-//const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
-
-export interface SetRequest {
-  description: string,
-  songs: JamSongInput[]
+export interface BandRequest {
+  name: string,
+  description: string
 }
 
 type _Session = Session & {
   userId: string
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request){
   console.log(`${request.method} ${request.url}`)
-  const b = await request.json() as SetRequest
+  const b = await request.json() as BandRequest
 
   const session = await getServerSession(authOptions)
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
@@ -35,14 +32,14 @@ export async function POST(request: Request) {
   console.log(JSON.stringify(b))
 
   const d = await API.graphql(graphqlOperation(
-    m.createSet, { ...b, userId: userId }
-  )) as GraphQLResult<{ createSet: SetList }>
+    m.createBand, { ...b, userId }
+  )) as GraphQLResult<{ createBand: Band }>
 
-  if (!d.data?.createSet) {
-    console.error(`createSet data is empty: ${JSON.stringify(d.data)}`)
+  if (!d.data?.createBand) {
+    console.error(`createBand data is empty: ${JSON.stringify(d.data)}`)
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
 
   console.log(`${request.method} ${request.url} .. complete`)
-  return NextResponse.json(d.data.createSet)
+  return NextResponse.json(d.data.createBand)
 }
