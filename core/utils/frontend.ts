@@ -92,3 +92,5 @@ export function substituteString(originalString: string, replacement: string, st
 export type _Session = Session & {
   userId: string
 }
+
+export const sleep = (timeToDelay: number) => new Promise((resolve) => setTimeout(resolve, timeToDelay))

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { headers } from 'next/headers'
 
-import { ArrowRightOnRectangleIcon, ShareIcon } from "@heroicons/react/24/solid"
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
 
 import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
 import { GraphQLResult } from "@aws-amplify/api"

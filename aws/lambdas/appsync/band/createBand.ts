@@ -10,7 +10,7 @@ const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  userId: string, name: string, description: string, adminIds: string[]
+  userId: string, name: string, description: string, imageUrl: string, adminIds: string[] 
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -19,6 +19,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!b.userId) { console.error(`b.userId is empty`); return }
   if (!b.name) { console.error(`b.name is empty`); return }
   if (!b.description) { console.error(`b.description is empty`); return }
+  if (!b.imageUrl) { console.error(`b.imageUrl is empty`); return }
 
   const dynamo = new DynamoDBClient({})
   const bandId = `bnd_${uuidv4()}`
@@ -31,7 +32,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   )
 
   if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
-  let band = { bandId, userId: b.userId, name: b.name, description: b.description } as any
+  let band = { bandId, imageUrl: b.imageUrl, userId: b.userId, name: b.name, description: b.description, policy: "PRIVATE" } as any
   
   if (b.adminIds && b.adminIds.length > 0) { band.adminIds = b.adminIds }
   else { band.adminIds = [] }

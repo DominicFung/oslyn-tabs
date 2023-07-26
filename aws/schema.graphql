@@ -16,11 +16,13 @@ type Query {
   
   getBand(bandId: ID!): Band @aws_iam
   listBands(userId: ID!, limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
+  listPublicBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
   getSet(setListId: ID!, userId: ID!): SetList @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
+  listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
 type Mutation {
@@ -62,7 +64,7 @@ type Mutation {
   addRecordingToSong(songId: ID!, recordingId: ID!): Song @aws_iam
   removeRecordingFromSong(songId: ID!, recordingId: ID!): Song @aws_iam
 
-  createBand(userId: ID!, name: String, description: String, adminIds: [ID]): Band @aws_iam
+  createBand(userId: ID!, name: String!, description: String!, imageUrl: String!, adminIds: [ID]): Band @aws_iam
   addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   addSongsToBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
@@ -81,7 +83,7 @@ type Mutation {
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam
   removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList @aws_iam
 
-  createJamSession(setListId: ID!, userId: ID!): JamSession @aws_iam
+  createJamSession(setListId: ID!, userId: ID!, policy: policy, bandId: ID): JamSession @aws_iam
   endJamSession(jamSessionId: ID!): JamSession @aws_iam
   modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
 
@@ -121,20 +123,22 @@ type NextKey {
 
 type Band {
   bandId: ID!
-  imageUrl: String
+  imageUrl: String!
 
   name: String!
   description: String
-
 
   songs: [Song]!
   sets: [SetList]!
 
   members: [User]!
-  admins: [User]!
-  
+  admins: [User]!  
   owner: User!
+
+  policy: policy!
 }
+
+enum policy { PRIVATE, PUBLIC_VIEW, PUBLIC_JOIN }
 
 type SetList {
   setListId: ID!
@@ -148,8 +152,14 @@ type SetList {
 type JamSession {
   jamSessionId: ID!
   setList: SetList!
-  admin: User!
+  admin: [User]!
   members: [User]!
+
+  policy: policy!
+  description: String
+  active: [User]! # if they are part of members or admin, they can edit/play ... else view only.
+  guests: Int     # used by non-login users (guests). Total will be the addition of active + guest.
+  passcode: String
 
   currentSong: Int
   currentPage: Int

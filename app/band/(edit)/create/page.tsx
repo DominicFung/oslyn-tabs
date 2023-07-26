@@ -2,7 +2,7 @@
 
 import { Band } from "@/src/API"
 import { useState } from "react"
-import BandInfo from "../../bandInfo"
+import BandInfo from "../../(components)/bandInfo"
 import Save from "../../(components)/save"
 
 export default function CreateBand() {

@@ -3,25 +3,14 @@ import { DynamoDBClient, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/cl
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { hasSubstring, merge } from '../../util/dynamo'
-import { JamSession, JamSong, SetList, User } from '../../API'
+
+import { User } from '../../API'
+import { _JamSession, _JamSong, _SetList } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
-
-type _JamSession = JamSession & {
-  setListId: string
-}
-
-type _SetList = SetList & {
-  userId: string
-  songs: _JamSong[]
-}
-
-type _JamSong = JamSong & {
-  songId: string
-}
 
 export const handler = async (event: AppSyncResolverEvent<{
   jamSessionId: string, userId: string
@@ -102,6 +91,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (!creator.songsCreated) creator.songsCreated = []
       if (!creator.editHistory) creator.editHistory = []
       if (!creator.likedSongs) creator.likedSongs = []
+      if (!creator.friends) creator.friends = []
       
       setList.creator = creator
     }
@@ -115,16 +105,22 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "admin")) {
-    jamSession.admin = unmarshall(res0.Item) as User
-    if (!jamSession.admin.labelledRecording) jamSession.admin.labelledRecording = []
-    if (!jamSession.admin.songsCreated) jamSession.admin.songsCreated = []
-    if (!jamSession.admin.editHistory) jamSession.admin.editHistory = []
-    if (!jamSession.admin.likedSongs) jamSession.admin.likedSongs = []
+    jamSession.admin = [unmarshall(res0.Item)] as User[]
+    if (!jamSession.admin[0]!.labelledRecording) jamSession.admin[0]!.labelledRecording = []
+    if (!jamSession.admin[0]!.songsCreated) jamSession.admin[0]!.songsCreated = []
+    if (!jamSession.admin[0]!.editHistory) jamSession.admin[0]!.editHistory = []
+    if (!jamSession.admin[0]!.likedSongs) jamSession.admin[0]!.likedSongs = []
+    if (!jamSession.admin[0]!.friends) jamSession.admin[0]!.friends = []
   }
 
   // TODO: members
   if (hasSubstring(event.info.selectionSetList, "members")) {
     jamSession.members = []
+  }
+
+  // TODO: members
+  if (hasSubstring(event.info.selectionSetList, "active")) {
+    jamSession.active = []
   }
   
   console.log(JSON.stringify(jamSession))

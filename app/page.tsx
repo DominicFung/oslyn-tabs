@@ -7,38 +7,159 @@
  * Eerie Black:     #212121
  */
 
-import { CameraIcon, QrCodeIcon } from "@heroicons/react/24/solid";
 
-export default function Home() {
+import Image from "next/image"
+import { headers } from 'next/headers'
+
+import ClickableCell from "./(components)/clikableCell"
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
+import { Band, JamSession, SetList } from "@/src/API"
+
+import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
+import { GraphQLResult } from "@aws-amplify/api"
+import awsConfig from '@/src/aws-exports'
+
+import * as q from '@/src/graphql/queries'
+import { Song, User } from '@/src/API'
+import BandCard from "./(components)/bandCard"
+
+Amplify.configure({...awsConfig, ssr: true })
+
+export default async function Home() {
+  const req = { headers: { cookie: headers().get('cookie') } }
+  const SSR = withSSRContext({ req })
+
+  let d = [{
+    __typename: "JamSession",
+    jamSessionId: "2085b9e0-7dfc-4b51-989b-ef3d653e3b5e",
+    description: "Worship Together!",
+    setList: {
+      setListId: ""
+    } as SetList,
+    admin: [],
+    members: [],
+
+    active: [],
+    guests: 5,
+    policy: "PUBLIC_VIEW",
+    pageSettings: { __typename: "PageSettings", pageMax: 2, pageMin: 3 }
+    
+  }] as JamSession[]
+
+  // try {
+  //   const { data } = await SSR.API.graphql(graphqlOperation(
+  //     q.listPublicJamSessions, {}
+  //   )) as GraphQLResult<{ listPublicJamSessions: JamSession[] }>
+  //   if (data?.listPublicJamSessions) d = data?.listPublicJamSessions
+  //   else throw new Error("data.listPublicJamSessions is empty.")
+  // } catch (e) {
+  //   console.log(JSON.stringify(e, null, 2))
+  // }
+
+  let d2 = [] as Band[]
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.listPublicBands, {}
+    )) as GraphQLResult<{ listPublicBands: Band[] }>
+    if (data?.listPublicBands) d2 = data?.listPublicBands
+    else throw new Error("data.listPublicBands is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
   return (
     <main className="">
       <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
-        <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
-            <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-oslyn-700 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300 hover:bg-oslyn-200 dark:hover:bg-oslyn-800">
-                <span className="text-xs bg-oslyn-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
-                <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
-            </a>
-            <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Jam Now!</h1>
-            <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-oslyn-200">
-              Synchronized chord sheets, built for spontanious jamming! Let Oslyn choose the next song for you <span className="text-sm">(and your band)</span> in the key meant for your voice! 
-              Elevate your jamming experience for FREE.
-            </p>
-            <form className="w-full max-w-md mx-auto">   
-                <label htmlFor="default-email" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Jam Session Id</label>
-                <div className="relative">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <QrCodeIcon className="w-6 h-6 text-gray-200" />
-                    </div>
-                    <input type="text" id="default-text" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" placeholder="Jam Session Id" required />
-                    <button type="submit" className="text-white absolute right-16 bottom-2.5 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">Submit</button>
-                    <button type="submit" className="text-white absolute right-2.5 bottom-2.5 py-2.5 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
-                      <CameraIcon className="w-4 h-4 text-gray-200" />
-                    </button>
-                </div>
-            </form>
+        <div className="pt-8 px-4 pb-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:pb-4 z-10 relative">
+          <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-oslyn-700 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300 hover:bg-oslyn-200 dark:hover:bg-oslyn-800">
+              <span className="text-xs bg-oslyn-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
+              <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+          </a>
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Jam Now!</h1>
+
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                      <th scope="col" className="px-6 py-3">
+                          #
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Room ID or Description
+                      </th>
+                      <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                          Active Users
+                      </th>
+                      <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                          Time
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Action
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {d.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                      
+                        <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {i+1}
+                        </ClickableCell>
+                      
+                        <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 text-ellipsis">
+                          <div className="flex-0 m-2 w-36 lg:w-full">
+                            <div className="text-base text-white bold truncate">{a.description}</div>
+                            <div className="text-xs text-ellipsis truncate">{a.jamSessionId}</div>
+                          </div>
+                        </ClickableCell>
+                        <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
+                          <div className="flex flex-row">
+                            { a.active.map((a, i) => {
+                              if (i < 5) 
+                                return  <div className="m-auto w-16">
+                                          { a?.imageUrl &&  <Image src={a?.imageUrl} alt={""} width={40} height={40} className="w-10 m-2"/> }
+                                        </div>
+                              else return <></>
+                            })}
+                          </div>
+                        </ClickableCell>
+                        <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
+                          <div className="flex flex-row bg-gray-500 border-gray-300 text-sm px-2 py-1 border text-center rounded-md">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" className="w-4 h-4 m-1 mt-1 text-gray-300" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" clipRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"></path>
+                          </svg>
+                          <span className="flex-1 text-center pt-0.5">8:12</span>
+                          </div>
+
+                        </ClickableCell>
+                      
+                      <td className="px-6 py-4">
+                        <div className="flex flex-row">
+                          <a href={`/jam/${a.jamSessionId}`}>
+                            <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                              <span className='text-md pt-0.5'>Join</span>
+                              <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
+                            </button>
+                          </a>
+                        </div>
+                      </td>
+                  </tr>)}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="bg-gradient-to-b from-oslyn-50 to-transparent dark:from-oslyn-900 w-full h-full absolute top-0 left-0 z-0"></div>
       </section>
+      
+      <div className="relative z-20">
+        <div className="pt-8 px-6 text-lg font-bold text-white">Public Bands:</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 m-5">
+          { d2.map((b, i) => <div key={i}>
+                <BandCard band={b} />
+              </div>
+          )}
+        </div>
+      </div>
     </main>
   )
 }

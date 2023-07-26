@@ -1,5 +1,5 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { BatchGetItemCommand, DynamoDBClient, GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
+import { BatchGetItemCommand, DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { _Band, _Song, _User } from '../../type'
@@ -10,53 +10,67 @@ const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 
-export const handler = async (event: AppSyncResolverEvent<{
-  userId: string, 
-}, null>) => {
+export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
   console.log(event)
-  const b = event.arguments
-  if (!b) { console.error(`event.arguments is empty`); return }
 
   const dynamo = new DynamoDBClient({})
 
   const res0 = await dynamo.send(
-    new QueryCommand({
+    new ScanCommand({
       TableName: BAND_TABLE_NAME,
-      IndexName: "owner",
-      KeyConditionExpression: "userId = :key",
-      ExpressionAttributeValues: { ":key": { S: b.userId } }
+      Select: "ALL_ATTRIBUTES",
+      ScanFilter: {
+        policy: { 
+          AttributeValueList: [ { S: "PUBLIC" }],
+          ComparisonOperator: "BEGINS_WITH"
+        }
+      }
     })
   )
 
-  if (!res0.Items) {
-    console.error(`ERROR: bands for userId not found: ${b.userId}`)
-    return []
-  }
-
-  let bands = res0.Items?.map((e) => {
+  if (!res0) { console.log("ERROR: empty scan response"); return }
+  if (res0.Items && res0.Items.length === 0) return []
+  
+  let bands = res0.Items!.map((e) => {
     let band = unmarshall(e) as _Band
     if (!band.songIds) band.songIds = []
     return band
   })
   console.log(bands)
+
   if (bands.length === 0) { console.log(`bands is empty, returning.`); return bands }
 
   if (hasSubstring(event.info.selectionSetList, "owner")) {
     console.log("getting owner ...")
-    const res1 = await dynamo.send(
-      new GetItemCommand({TableName: USER_TABLE_NAME, Key: { userId: { S: b.userId } }})
-    )
 
-    if (!res1.Item) { console.error("ERROR: Could not find band owner."); return }
-    const owner = unmarshall(res1.Item) as _User
+    const userIds = bands.map(b => b.userId)
 
-    if (!owner.labelledRecording) owner.labelledRecording = []
-    if (!owner.songsCreated) owner.songsCreated = []
-    if (!owner.editHistory) owner.editHistory = []
-    if (!owner.likedSongs) owner.likedSongs = []
-    if (!owner.friends) owner.friends = []
+    const uniq = [...new Set(userIds)]
+    console.log(uniq)
 
-    bands = bands.map(b => { return { ...b, owner } })
+    const keys = uniq.map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
+    console.log(keys)
+
+    const res1 = await dynamo.send(new BatchGetItemCommand({
+      RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+    }))
+    console.log(res1)
+    if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
+
+    const owners = res1.Responses![USER_TABLE_NAME].map((o) => {
+      let owner = unmarshall(o)
+
+      if (!owner.labelledRecording) owner.labelledRecording = []
+      if (!owner.songsCreated) owner.songsCreated = []
+      if (!owner.editHistory) owner.editHistory = []
+      if (!owner.likedSongs) owner.likedSongs = []
+      if (!owner.friends) owner.friends = []
+
+      return owner
+    }) as _User[]
+    console.log(owners)
+
+    bands = merge(bands, owners, 'userId', 'owner')
   }
   
   if (hasSubstring(event.info.selectionSetList, "songs")) {
@@ -171,5 +185,6 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   console.log(JSON.stringify(bands))
+
   return bands
 }

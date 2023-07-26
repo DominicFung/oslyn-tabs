@@ -21,13 +21,15 @@ type _JamSong = JamSong & {
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string, userId: string
+  setListId: string, userId: string, policy: string, bandId: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.userId) { console.error(`b.creatorId is empty`); return }
   if (!b.setListId) { console.error(`b.setListId is empty`); return }
+
+  const policy = b.policy || "PRIVATE"
 
   const dynamo = new DynamoDBClient({})
   const jamSessionId = uuidv4()
@@ -53,6 +55,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
     currentSong: 0, currentPage: 0,
     startDate: Date.now(),
+    policy: policy,
 
     pageSettings: {
       pageMax: 3, pageMin: 2

@@ -26,7 +26,7 @@ export class S3Stack extends Stack {
           allowedHeaders: ['*'],
         }],
       // https://stackoverflow.com/questions/76097031/aws-s3-bucket-cannot-have-acls-set-with-objectownerships-bucketownerenforced-s
-      //accessControl: BucketAccessControl.PUBLIC_READ,
+      // accessControl: BucketAccessControl.PUBLIC_READ,
       publicReadAccess: true
     })
 

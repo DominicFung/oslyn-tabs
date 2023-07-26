@@ -1,4 +1,4 @@
-import { Band, JamSong, SetList, Song, User } from "./API";
+import { Band, JamSession, JamSong, SetList, Song, User } from "./API";
 
 export type _User = User & {
   friendIds: string[]
@@ -27,4 +27,11 @@ export type _Band = Band & {
   memberIds?: string[]
   setIds?: string[]
   songIds?: string[]
+}
+
+export type _JamSession = JamSession & {
+  userId?: string
+  setListId: string
+  adminIds?: string[]
+  activeIds: string[]
 }

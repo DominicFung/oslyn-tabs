@@ -1,16 +1,19 @@
 "use client"
 import { SparklesIcon, BoltIcon } from '@heroicons/react/24/solid'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Listbox, Transition } from '@headlessui/react'
+
 import { Band } from '@/src/API'
 import Image from 'next/image'
+import { sleep } from '@/core/utils/frontend'
 
 interface BandProps {
   band: Band
   setBand: (b: Band) => void
 }
+
+const INSTRUCTION = "Band cover art with the following description."
 
 export default function BandInfo(p: BandProps) {
   const onDrop = useCallback((acceptedFiles: any) => {
@@ -18,10 +21,41 @@ export default function BandInfo(p: BandProps) {
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({onDrop})
 
-  const [ name, setName ] = useState("")
-
   const [ bandOpen, setBandOpen ] = useState(false)
   const [ bandLink, setBandLink ] = useState("")
+
+  const generateBandImage = async () => {
+    if (!p.band.description) { console.error("description needs to be filled."); return }
+
+    const stableDiffusionId = (await (await fetch(`/api/band/generate`, {
+      method: 'POST', 
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ input: { prompt: `${INSTRUCTION} ${p.band.description}` } })
+    })).json() as { id: string }).id
+
+    console.log(`stable diffusion: ${stableDiffusionId}`)
+    if (!stableDiffusionId) { console.error("no return"); return }
+    
+    setImage(stableDiffusionId)
+  }
+
+  const setImage = async (stableDiffusionId: string) => {
+    let status = "processing"
+    do {
+      await sleep(800)
+      status = await check(stableDiffusionId)
+      console.log(status)
+    } while (status === "processing" || status === "starting")
+
+    if (status.startsWith("https")) {
+      p.setBand({ ...p.band, imageUrl: status })
+    } else console.error(`exit with status: ${status}`)
+  }
+
+  const check = async (stableDiffusionId: string): Promise<string> => {
+    let url = `/api/band/generate/${stableDiffusionId}`
+    return (await (await fetch(url)).json() as {output: string}).output
+  }
 
   return <>
     <div className='mx-auto max-w-4xl cursor-pointer'>
@@ -62,7 +96,7 @@ export default function BandInfo(p: BandProps) {
           <div className="relative w-full mt-2">
             <textarea rows={4} id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               value={p.band.description || ""}  placeholder="Description ..." onChange={(e) => p.setBand({ ...p.band, description: e.currentTarget.value })}/>
-            <button type="submit" onClick={() => { }}
+            <button type="submit" onClick={generateBandImage}
               className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <BoltIcon className="w-6 h-6" />

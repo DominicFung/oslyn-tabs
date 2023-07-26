@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@aws-amplify/api": "^5.1.1",
+    "@aws-sdk/client-s3": "^3.374.0",
     "@hapi/iron": "^7.0.1",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",
@@ -23,7 +24,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
-    "next": "^13.4.4",
+    "next": "^13.4.12",
     "next-auth": "^4.22.1",
     "next-intercept-stdout": "^1.0.1",
     "postcss": "8.4.23",

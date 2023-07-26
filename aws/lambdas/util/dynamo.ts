@@ -42,7 +42,7 @@ export function hasSubstring(strings: string[], substring: string): boolean {
  * @param outputKey 
  * @returns 
  */
-export const merge = (a1: any, a2: any, matchKey: string, outputKey?: string) => {
+export const merge = (a1: any[], a2: any[], matchKey: string, outputKey?: string) => {
   return a1.map((o1: any) => {
     const matchingObj = a2.find((o2: any) => o2[matchKey] === o1[matchKey])
     if (!outputKey)  return matchingObj ? { ...o1, ...matchingObj } : o1

@@ -227,6 +227,18 @@ export class AppsyncStack extends Stack {
       fieldName: "listBands"
     })
 
+    const listPublicBands = new NodejsFunction(this, `${props.name}-ListPublicBands`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listPublicBands.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListPublicBandsDS`, listPublicBands)
+    .createResolver(`${props.name}-ListPublicBandsResolver`, {
+      typeName: "Query",
+      fieldName: "listPublicBands"
+    })
+
     const createSet = new NodejsFunction(this, `${props.name}-CreateSet`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'createSet.ts'),
       timeout: Duration.minutes(5),
@@ -309,6 +321,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-CreateJamSessionResolver`, {
       typeName: "Mutation",
       fieldName: "createJamSession"
+    })
+
+    const listPublicJamSessions = new NodejsFunction(this, `${props.name}-ListPublicJamSessions`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'listPublicJamSessions.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListPublicJamSessionsDS`, listPublicJamSessions)
+    .createResolver(`${props.name}-ListPublicJamSessionsResolver`, {
+      typeName: "Query",
+      fieldName: "listPublicJamSessions"
     })
 
     const nextPage = new NodejsFunction(this, `${props.name}-NextPage`, {
