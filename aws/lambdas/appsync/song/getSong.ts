@@ -51,6 +51,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     if (!song.creator.songsCreated) song.creator.songsCreated = []
     if (!song.creator.editHistory) song.creator.editHistory = []
     if (!song.creator.likedSongs) song.creator.likedSongs = []
+    if (!song.creator.friends) song.creator.friends = []
   }
 
   if (hasSubstring(event.info.selectionSetList, "editors")) {
@@ -74,6 +75,7 @@ export const handler = async (event: AppSyncResolverEvent<{
         if (!user.songsCreated) user.songsCreated = []
         if (!user.editHistory) user.editHistory = []
         if (!user.likedSongs) user.likedSongs = []
+        if (!user.friends) user.friends = []
         return user
       })
     }
@@ -100,6 +102,7 @@ export const handler = async (event: AppSyncResolverEvent<{
         if (!user.songsCreated) user.songsCreated = []
         if (!user.editHistory) user.editHistory = []
         if (!user.likedSongs) user.likedSongs = []
+        if (!user.friends) user.friends = []
         return user
       })
     }

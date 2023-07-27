@@ -16,13 +16,28 @@ export default function Sidebar () {
   const { openSidebar, setOpenSidebar } = useSideBarContext()
   const [ openLogin, setOpenLogin ] = useState(false)
   const [ notice, setNotice ] = useState(true)
+
+  const [ songCount, setSongCount ] = useState(0)
+  const [ setCount, setSetCount ] = useState(0)
   
   const { data: session, status } = useSession()
 
   useEffect(() => {
     if (window.innerWidth < 768) { setOpenSidebar(false) }
     if (window.innerHeight < 640) { setNotice(false) }
+    getSongCount()
+    getSetCount()
   }, [])
+
+  const getSongCount = async () => {
+    const d = await (await fetch(`/api/song/count`, { method: "GET" })).json() as { count: number }
+    console.log(d); setSongCount(d.count)
+  }
+
+  const getSetCount = async () => {
+    const d = await (await fetch(`/api/set/count`, { method: "GET" })).json() as { count: number }
+    console.log(d); setSetCount(d.count)
+  }
 
   return <>
   <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
@@ -57,7 +72,9 @@ export default function Sidebar () {
           } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
               <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Songs</span>
-              { status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>30</span> }
+              { songCount > 0 && status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>
+                {songCount}
+              </span> }
            </button>
         </li>
         <li>
@@ -66,7 +83,9 @@ export default function Sidebar () {
           } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
               <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Sets</span>
-              { status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>5</span> }
+              { setCount > 0 && status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>
+                {setCount}
+              </span> }
            </button>
         </li>
         <li>

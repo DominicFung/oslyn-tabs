@@ -1,14 +1,12 @@
 "use client"
 
 import { Listbox, Transition } from '@headlessui/react'
-import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
+import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon, EyeIcon } from '@heroicons/react/24/solid'
 
 import { SetRequest } from '@/app/api/set/create/route'
 import { JamSession, SetList, Song } from '@/src/API'
 
 import { useState, Fragment } from 'react'
-import { AddToSetRequest } from '@/app/api/set/[id]/add/route'
-import { JamRequest } from '@/app/api/jam/create/route'
 import Review from '@/app/songs/(edit)/3.review'
 
 export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
@@ -19,34 +17,6 @@ interface KeySelectorProps {
 
 export default function KeySelector(p: KeySelectorProps) {
   const [ key, setKey ] = useState(chords[10])
-
-  const createSetAndStartJam = async () => {
-    if (!key || !p.song.songId) { console.error(`key or songId not provided`); return }
-
-    const set = await (await fetch(`/api/set/create`, {
-      method: "POST",
-      body: JSON.stringify({ 
-        description: `${new Date().toDateString()} - Jam Sesh`
-      } as SetRequest)
-    })).json() as SetList
-    console.log(set)
-
-    const addJamSong = await (await fetch(`/api/set/${set.setListId}/add`, {
-      method: "POST",
-      body: JSON.stringify({
-        key, songId: p.song.songId
-      } as AddToSetRequest)
-    })).json() as SetList
-    console.log(addJamSong)
-
-    const jamSession = await (await fetch(`/api/jam/create`, {
-      method: "POST",
-      body: JSON.stringify({
-        setListId: set.setListId
-      } as JamRequest)
-    })).json() as JamSession
-    console.log(jamSession)
-  }
 
   return <>
     <div className="mt-4 mx-auto max-w-xl flex flex-row">
@@ -107,10 +77,10 @@ export default function KeySelector(p: KeySelectorProps) {
       </div>
       <div className='flex-0'>
         <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mx-2 mb-2"
-          onClick={createSetAndStartJam}
+          onClick={() => {}}
         >
-          <span className='text-md pt-1.5'>Start Jamming!</span>
-          <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 my-2" />
+          <span className='text-md pt-1.5'>Switch View</span>
+          <EyeIcon className="ml-2 w-4 h-4 my-2" />
         </button>
       </div>
     </div>

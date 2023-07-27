@@ -167,6 +167,18 @@ export class AppsyncStack extends Stack {
       fieldName: "getSong"
     })
 
+    const getSongCount = new NodejsFunction(this, `${props.name}-GetSongCount`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'getSongCount.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetSongCountDS`, getSongCount)
+    .createResolver(`${props.name}-GetSongCountResolver`, {
+      typeName: "Query",
+      fieldName: "getSongCount"
+    })
+
     const listSongs = new NodejsFunction(this, `${props.name}-ListSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSongs.ts'),
       timeout: Duration.minutes(5),
@@ -273,6 +285,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-GetSetResolver`, {
       typeName: "Query",
       fieldName: "getSet"
+    })
+
+    const getSetCount = new NodejsFunction(this, `${props.name}-GetSetCount`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'getSetCount.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetSetCountDS`, getSetCount)
+    .createResolver(`${props.name}-GetSetCountResolver`, {
+      typeName: "Query",
+      fieldName: "getSetCount"
     })
 
     const listSet = new NodejsFunction(this, `${props.name}-ListSet`, {

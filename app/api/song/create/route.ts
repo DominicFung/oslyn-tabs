@@ -9,7 +9,7 @@ import { Song } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { Session } from "next-auth"
+import { _Session } from '@/core/utils/frontend'
 
 export interface SongRequest {
   title: string,
@@ -18,10 +18,6 @@ export interface SongRequest {
   albumCover?: string,
   chordSheet: string,
   chordSheetKey: string,
-}
-
-type _Session = Session & {
-  userId: string
 }
 
 export async function POST(request: Request) {

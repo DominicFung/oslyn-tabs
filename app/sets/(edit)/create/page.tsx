@@ -40,6 +40,17 @@ export default async function CreateSet() {
     console.log(JSON.stringify(e, null, 2))
   }
 
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.listSharedSongs, { userId }
+    )) as GraphQLResult<{ listSharedSongs: Song[] }>
+
+    if (data?.listSharedSongs) d.push(...data?.listSharedSongs)
+    else throw new Error("data.listSongs is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
   return <>
     <CreateSetTable songs={d} />
   </>

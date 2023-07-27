@@ -26833,6 +26833,15 @@ export type GetSongQuery = {
   } | null,
 };
 
+export type GetSongCountQueryVariables = {
+  userId: string,
+  addSharedCount?: boolean | null,
+};
+
+export type GetSongCountQuery = {
+  getSongCount: number,
+};
+
 export type ListSongsQueryVariables = {
   userId: string,
   limit?: number | null,
@@ -37959,6 +37968,15 @@ export type GetSetQuery = {
       policy: policy,
     } | null,
   } | null,
+};
+
+export type GetSetCountQueryVariables = {
+  userId: string,
+  addSharedCount?: boolean | null,
+};
+
+export type GetSetCountQuery = {
+  getSetCount: number,
 };
 
 export type ListSetsQueryVariables = {

@@ -1072,6 +1072,11 @@ export const getSong = /* GraphQL */ `
     }
   }
 `;
+export const getSongCount = /* GraphQL */ `
+  query GetSongCount($userId: ID!, $addSharedCount: Boolean) {
+    getSongCount(userId: $userId, addSharedCount: $addSharedCount)
+  }
+`;
 export const listSongs = /* GraphQL */ `
   query ListSongs(
     $userId: ID!
@@ -11359,6 +11364,11 @@ export const getSet = /* GraphQL */ `
         policy
       }
     }
+  }
+`;
+export const getSetCount = /* GraphQL */ `
+  query GetSetCount($userId: ID!, $addSharedCount: Boolean) {
+    getSetCount(userId: $userId, addSharedCount: $addSharedCount)
   }
 `;
 export const listSets = /* GraphQL */ `

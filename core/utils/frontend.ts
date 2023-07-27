@@ -94,3 +94,11 @@ export type _Session = Session & {
 }
 
 export const sleep = (timeToDelay: number) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
+
+export function capitalizeFirstLetter(str: string) {
+  if (typeof str !== "string") {
+    throw new Error("Input must be a string.");
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

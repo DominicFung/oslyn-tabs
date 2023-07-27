@@ -4,7 +4,7 @@ import { Band } from "@/src/API"
 import { useEffect, useState } from "react"
 import BandInfo from "./(components)/bandInfo"
 import Save from "./(components)/save"
-import { useBandContext } from "./(context)/bandContext"
+import { useBandContext } from "./context"
 
 interface BandsProps {
   bands: Band[]

@@ -12,7 +12,7 @@ import * as q from '@/src/graphql/queries'
 import { _Session } from "@/core/utils/frontend"
 import { Band } from '@/src/API'
 import Bands from './bands'
-import { BandContextProvider } from './(context)/bandContext'
+import { BandContextProvider } from './context'
 import BandTabs from './(components)/bandTabs'
 
 Amplify.configure({...awsConfig, ssr: true })

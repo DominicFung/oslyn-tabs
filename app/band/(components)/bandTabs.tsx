@@ -1,7 +1,7 @@
 "use client"
 
 import { Band } from "@/src/API"
-import { useBandContext } from "../(context)/bandContext"
+import { useBandContext } from "../context"
 
 interface BandTabsProps {
   bands: Band[]
