@@ -177,7 +177,7 @@ export type JamSession = {
   __typename: "JamSession",
   jamSessionId: string,
   setList: SetList,
-  admin:  Array<User | null >,
+  admins:  Array<User | null >,
   members:  Array<User | null >,
   policy: policy,
   description?: string | null,
@@ -22371,7 +22371,7 @@ export type CreateJamSessionMutation = {
         policy: policy,
       } | null,
     },
-    admin:  Array< {
+    admins:  Array< {
       __typename: "User",
       userId: string,
       username: string,
@@ -23543,7 +23543,7 @@ export type EndJamSessionMutation = {
         policy: policy,
       } | null,
     },
-    admin:  Array< {
+    admins:  Array< {
       __typename: "User",
       userId: string,
       username: string,
@@ -24716,7 +24716,7 @@ export type ModifyJamSongsMutation = {
         policy: policy,
       } | null,
     },
-    admin:  Array< {
+    admins:  Array< {
       __typename: "User",
       userId: string,
       username: string,
@@ -39310,7 +39310,7 @@ export type GetJamSessionQuery = {
         policy: policy,
       } | null,
     },
-    admin:  Array< {
+    admins:  Array< {
       __typename: "User",
       userId: string,
       username: string,
@@ -40484,7 +40484,7 @@ export type ListPublicJamSessionsQuery = {
         policy: policy,
       } | null,
     },
-    admin:  Array< {
+    admins:  Array< {
       __typename: "User",
       userId: string,
       username: string,

@@ -105,12 +105,12 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "admin")) {
-    jamSession.admin = [unmarshall(res0.Item)] as User[]
-    if (!jamSession.admin[0]!.labelledRecording) jamSession.admin[0]!.labelledRecording = []
-    if (!jamSession.admin[0]!.songsCreated) jamSession.admin[0]!.songsCreated = []
-    if (!jamSession.admin[0]!.editHistory) jamSession.admin[0]!.editHistory = []
-    if (!jamSession.admin[0]!.likedSongs) jamSession.admin[0]!.likedSongs = []
-    if (!jamSession.admin[0]!.friends) jamSession.admin[0]!.friends = []
+    jamSession.admins = [unmarshall(res0.Item)] as User[]
+    if (!jamSession.admins[0]!.labelledRecording) jamSession.admins[0]!.labelledRecording = []
+    if (!jamSession.admins[0]!.songsCreated) jamSession.admins[0]!.songsCreated = []
+    if (!jamSession.admins[0]!.editHistory) jamSession.admins[0]!.editHistory = []
+    if (!jamSession.admins[0]!.likedSongs) jamSession.admins[0]!.likedSongs = []
+    if (!jamSession.admins[0]!.friends) jamSession.admins[0]!.friends = []
   }
 
   // TODO: members

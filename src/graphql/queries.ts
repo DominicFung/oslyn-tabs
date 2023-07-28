@@ -12598,7 +12598,7 @@ export const getJamSession = /* GraphQL */ `
           policy
         }
       }
-      admin {
+      admins {
         userId
         username
         email
@@ -13686,7 +13686,7 @@ export const listPublicJamSessions = /* GraphQL */ `
           policy
         }
       }
-      admin {
+      admins {
         userId
         username
         email

@@ -154,7 +154,7 @@ type SetList {
 type JamSession {
   jamSessionId: ID!
   setList: SetList!
-  admin: [User]!
+  admins: [User]!
   members: [User]!
 
   policy: policy!

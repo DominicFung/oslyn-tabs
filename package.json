@@ -24,6 +24,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
+    "html5-qrcode": "^2.3.8",
     "next": "^13.4.12",
     "next-auth": "^4.22.1",
     "next-intercept-stdout": "^1.0.1",

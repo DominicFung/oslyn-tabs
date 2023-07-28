@@ -20500,7 +20500,7 @@ export const createJamSession = /* GraphQL */ `
           policy
         }
       }
-      admin {
+      admins {
         userId
         username
         email
@@ -21580,7 +21580,7 @@ export const endJamSession = /* GraphQL */ `
           policy
         }
       }
-      admin {
+      admins {
         userId
         username
         email
@@ -22660,7 +22660,7 @@ export const modifyJamSongs = /* GraphQL */ `
           policy
         }
       }
-      admin {
+      admins {
         userId
         username
         email

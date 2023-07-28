@@ -102,3 +102,31 @@ export function capitalizeFirstLetter(str: string) {
 
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function getTimeDifferenceFromNowToEpoch(startTimeEpoch: number): string {
+  const currentTimeEpoch = Math.floor(Date.now() / 1000); // Convert current time to epoch format (in seconds)
+  const timeDifferenceSeconds = currentTimeEpoch - startTimeEpoch;
+
+  // Calculate time difference in seconds, minutes, hours, and days
+  const seconds = timeDifferenceSeconds % 60;
+  const minutes = Math.floor(timeDifferenceSeconds / 60) % 60;
+  const hours = Math.floor(timeDifferenceSeconds / 3600) % 24;
+  const days = Math.floor(timeDifferenceSeconds / 86400);
+
+  // Format the result string
+  let result = "";
+  if (days > 0) {
+    result += `${days} day${days > 1 ? "s" : ""}, `;
+  }
+  if (hours > 0) {
+    result += `${hours} hour${hours > 1 ? "s" : ""}, `;
+  }
+  if (minutes > 0) {
+    result += `${minutes} minute${minutes > 1 ? "s" : ""}, `;
+  }
+  if (seconds > 0 || result === "") {
+    result += `${seconds} second${seconds !== 1 ? "s" : ""}`;
+  }
+
+  return result;
+}
