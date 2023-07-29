@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { ContextProvider } from './context'
 import Sidebar from './sidebar'
 import AuthContext from './authcontext'
+import { ThemeProvider } from "./theme"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,12 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <AuthContext>
-          <ContextProvider>
-            {children}
-            <Sidebar />
-          </ContextProvider>
-        </AuthContext>
+        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
+          <AuthContext>
+            <ContextProvider>
+              {children}
+              <Sidebar />
+            </ContextProvider>
+          </AuthContext>
+        </ThemeProvider>
       </body>
     </html>
   )

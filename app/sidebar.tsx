@@ -51,7 +51,7 @@ export default function Sidebar () {
       </button>
     </div>
    
-    <div className="h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+    <div className="flex flex-col h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
       <a href="/" className="flex items-center pl-2.5 my-5">
          <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" />
          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Oslyn Tabs</span>
@@ -70,7 +70,6 @@ export default function Sidebar () {
           <button onClick={() => router.push("/songs")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/songs') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
           } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
-              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Songs</span>
               { songCount > 0 && status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>
                 {songCount}
@@ -81,7 +80,6 @@ export default function Sidebar () {
           <button onClick={() => router.push("/sets")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/sets') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
           } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
-              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Sets</span>
               { setCount > 0 && status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>
                 {setCount}
@@ -92,21 +90,14 @@ export default function Sidebar () {
           <button onClick={() => router.push("/band")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/band') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
           } disabled:dark:text-gray-500`} disabled={status != "authenticated"}>
-              <svg aria-hidden="true" className={`flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 ${status != "authenticated" ? "dark:text-gray-500": "dark:text-gray-400"} group-hover:text-gray-900 dark:group-hover:text-white`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Band</span>
            </button>
         </li>
-        <li>
-          { status != "authenticated" &&  <button onClick={() => setOpenLogin(true)} className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-            <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
-            <span className="flex-1 ml-3 whitespace-nowrap text-left">Sign In</span>
-          </button> }
-          { session?.user?.name && <button onClick={() => signOut() } className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-            <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
-          </button> }
-        </li>
      </ul>
-     {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
+
+
+
+      {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
         <div className="flex items-center mb-3">
           <span className="bg-coral-100 text-coral-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-coral-200 dark:text-coral-900">Alpha</span>
             <button type="button" onClick={() => setNotice(false)} data-dismiss-target="#dropdown-cta" aria-label="Close"
@@ -120,7 +111,20 @@ export default function Sidebar () {
            This App is currently in Alpha! Music brings people together and online tabs should reflect that! Help us make this app better by providing feedback.
         </p>
         <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="#">Give Feedback!</a>
-     </div> }
+      </div> }
+
+      <div className="flex-1" />
+
+
+      { status != "authenticated" &&  <button onClick={() => setOpenLogin(true)} className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+        <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
+        <span className="flex-1 ml-3 whitespace-nowrap text-left">Sign In</span>
+      </button> }
+      { session?.user && <button onClick={() => signOut() } className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+        { session.user.image && <Image src={session.user.image} className="h-6 rounded-full" width={24} height={24} alt="Oslyn Logo" /> }
+        <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
+      </button> }
+
     </div>
   </aside>
   <Login open={openLogin} setOpen={setOpenLogin} />
