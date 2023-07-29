@@ -72,7 +72,7 @@ export default async function Home() {
 
   return (
     <main className="">
-      <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+      <section className="dark:bg-oslyn-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
         <div className="pt-8 px-4 pb-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:pb-4 z-10 relative">
           <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-oslyn-700 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300 hover:bg-oslyn-200 dark:hover:bg-oslyn-800">
               <span className="text-xs bg-oslyn-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
@@ -110,7 +110,7 @@ export default async function Home() {
                       
                         <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 text-ellipsis">
                           <div className="flex-0 m-2 w-36 lg:w-full">
-                            <div className="text-base text-white bold truncate">{a.description || a.setList.description }</div>
+                            <div className="text-base dark:text-white text-gray-800 bold truncate">{a.description || a.setList.description }</div>
                             <div className="text-xs text-ellipsis truncate">{a.jamSessionId}</div>
                           </div>
                         </ClickableCell>
@@ -150,11 +150,10 @@ export default async function Home() {
             </table>
           </div>
         </div>
-        <div className="bg-gradient-to-b from-oslyn-50 to-transparent dark:from-oslyn-900 w-full h-full absolute top-0 left-0 z-0"></div>
       </section>
       
       <div className="relative z-20">
-        <div className="pt-8 px-6 text-lg font-bold text-white">Public Bands:</div>
+        <div className="pt-8 px-6 text-lg font-bold dark:text-white text-gray-700">Artists and Bands:</div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 m-5">
           { d2.map((b, i) => <div key={i}>
                 <BandCard band={b} />

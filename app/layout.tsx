@@ -20,7 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
+        <div className="bg-gradient-to-b from-coral-50 to-oslyn-200 dark:from-oslyn-900 dark:to-transparent w-full h-full absolute top-0 left-0 z-0">
+        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem storageKey={"oslynTheme"}>
           <AuthContext>
             <ContextProvider>
               {children}
@@ -28,6 +29,7 @@ export default function RootLayout({
             </ContextProvider>
           </AuthContext>
         </ThemeProvider>
+        </div>
       </body>
     </html>
   )

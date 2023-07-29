@@ -6,7 +6,7 @@ import { useSideBarContext } from "@/app/context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Login from "./login";
 
 export default function Sidebar () {
@@ -46,8 +46,8 @@ export default function Sidebar () {
         className="z-90 bg-gray-50 dark:bg-gray-700 w-12 h-12
         rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300"
       >
-        {openSidebar ? <ChevronLeftIcon className="w-16 h-16 text-white"/> :
-        <ChevronRightIcon className="w-16 h-16 text-white"/> }
+        {openSidebar ? <ChevronLeftIcon className="w-16 h-16 dark:text-white text-gray-700"/> :
+        <ChevronRightIcon className="w-16 h-16 dark:text-white text-gray-700"/> }
       </button>
     </div>
    
@@ -95,8 +95,6 @@ export default function Sidebar () {
         </li>
      </ul>
 
-
-
       {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
         <div className="flex items-center mb-3">
           <span className="bg-coral-100 text-coral-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-coral-200 dark:text-coral-900">Alpha</span>
@@ -120,10 +118,14 @@ export default function Sidebar () {
         <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
         <span className="flex-1 ml-3 whitespace-nowrap text-left">Sign In</span>
       </button> }
-      { session?.user && <button onClick={() => signOut() } className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-        { session.user.image && <Image src={session.user.image} className="h-6 rounded-full" width={24} height={24} alt="Oslyn Logo" /> }
-        <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
-      </button> }
+      { session?.user && <a href="/profile">
+        <button className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
+          path.startsWith('/profile') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
+        } disabled:dark:text-gray-500`}>
+          { session.user.image && <Image src={session.user.image} className="h-6 rounded-full" width={24} height={24} alt="Oslyn Logo" /> }
+          <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
+        </button>
+      </a> }
 
     </div>
   </aside>

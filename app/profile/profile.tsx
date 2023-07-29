@@ -2,10 +2,15 @@
 
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 import { useTheme } from "next-themes"
 import { User } from "@/src/API"
 import { capitalizeFirstLetter } from "@/core/utils/frontend"
+import { PowerIcon, UserMinusIcon, UserPlusIcon } from "@heroicons/react/24/solid"
+
+import { signOut } from 'next-auth/react'
+import ClickableCell from "../(components)/clikableCell"
 
 interface ProfileProps {
   user: User
@@ -14,23 +19,24 @@ interface ProfileProps {
 const MODE = ["dark", "light", "system"]
 
 export default function Profile(p: ProfileProps) {
+  const router = useRouter()
   const [user, setUser] = useState(p.user)
 
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [ mode, setMode ] = useState("dark")
+  const [ mode, setMode ] = useState(theme || "dark")
 
   useEffect(() => { setMounted(true) }, [])
   
   useEffect(() => { setTheme(mode) }, [mode])
-  useEffect(() => { console.log(theme) }, [theme])
+  useEffect(() => { if (theme && theme != mode) setMode(theme)}, [theme])
   useEffect(() => { if (p.user) setUser(p.user) }, [p.user])
 
   return <div>
-    <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+    <section className="dark:bg-oslyn-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
       <div className="lg:pt-16 lg:pb-4 pt-8 pb-2 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
-          <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800">
-              <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
+          <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-oslyn-700 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300 hover:bg-oslyn-200 dark:hover:bg-oslyn-800">
+              <span className="text-xs bg-oslyn-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
               <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
           </a>
           <div className="flex flex-row max-w-lg m-auto">
@@ -39,7 +45,13 @@ export default function Profile(p: ProfileProps) {
             <h1 className="pt-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">{user.username}</h1>
           </div>
       </div>
-      <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-0 left-0 z-0"></div>
+
+      <div className="flex flex-row-reverse z-10 relative">
+          <button onClick={() => {signOut(); router.push("/profile")}}
+              className="text-white mx-5 my-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
+            <PowerIcon className="w-6 h-6" />
+          </button>
+      </div>
     </section>
 
     { mounted && <div className="mt-6 mx-auto max-w-sm relative z-10">
@@ -53,12 +65,75 @@ export default function Profile(p: ProfileProps) {
             <button onClick={() => setMode(m)}
               className={`inline-block w-full p-4 ${
                 selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
-                  first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-blue-300 focus:outline-none`} aria-current="page">
+                  first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none`} aria-current="page">
                 {m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}
             </button>
           </li>
         }) }
       </ul>
     </div> }
+
+    <div className="flex flex-row-reverse z-10 relative mt-10">
+        <button onClick={() => {signOut(); router.push("/profile")}}
+            className="text-white mr-5 ml-2 my-2 bg-gradient-to-br from-purple-600 to-oslyn-500 hover:to-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
+          <UserPlusIcon className="w-5 h-5" />
+        </button>
+        <span className="mt-1 pt-4 font-bold dark:text-gray-200 text-oslyn-700 text-sm uppercase">Add Friend:</span>
+    </div>
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5 mt-1">
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" className="px-6 py-3">
+                    #
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Friend
+                </th>
+                <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                    Email
+                </th>
+                <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                    Role
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {user.friends.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                  <ClickableCell href={`/user/${a?.userId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {i+1}
+                  </ClickableCell>
+                  <ClickableCell href={`/user/${a?.userId}`} className="px-6 py-4 text-ellipsis">
+                      <div className="flex flex-row">
+                        { a?.imageUrl && <div className="m-auto w-16">
+                            <Image src={a.imageUrl} alt={""} width={40} height={40} className="w-10 m-2 rounded-full"/> 
+                          </div>
+                        }
+                        <div className="flex-0 m-2 w-36 lg:w-full">
+                          <div className="text-gray-900 dark:text-white font-bold truncate">{a?.username}</div>
+                          <div className="text-xs text-ellipsis truncate">{a?.userId}</div>
+                        </div>
+                      </div>
+                  </ClickableCell>
+                  <ClickableCell href={`/user/${a?.userId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
+                    {a?.email}
+                  </ClickableCell>
+                  <ClickableCell href={`/user/${a?.userId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
+                    {a?.role}
+                  </ClickableCell>
+                <td className="px-6 py-4">
+                  <div className="flex flex-row">
+                    <button type="button" className="mx-5 my-2 text-white bg-gradient-to-br from-purple-600 to-oslyn-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:focus:ring-oslyn-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                      <UserMinusIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+            </tr>)}
+        </tbody>
+      </table>
+    </div>
   </div>
 }
