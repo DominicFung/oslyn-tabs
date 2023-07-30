@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { User } from "@/src/API"
 import { capitalizeFirstLetter } from "@/core/utils/frontend"
-import { PowerIcon, UserMinusIcon, UserPlusIcon } from "@heroicons/react/24/solid"
+import { PowerIcon, UserMinusIcon } from "@heroicons/react/24/solid"
 
 import { signOut } from 'next-auth/react'
 import ClickableCell from "../(components)/clikableCell"
+import InviteFriend from "./(friend)/invite"
 
 interface ProfileProps {
   user: User
@@ -31,6 +32,14 @@ export default function Profile(p: ProfileProps) {
   useEffect(() => { setTheme(mode) }, [mode])
   useEffect(() => { if (theme && theme != mode) setMode(theme)}, [theme])
   useEffect(() => { if (p.user) setUser(p.user) }, [p.user])
+
+  const addFriend = () => {
+
+  }
+
+  const removeFriend = () => {
+
+  }
 
   return <div>
     <section className="dark:bg-oslyn-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
@@ -73,13 +82,7 @@ export default function Profile(p: ProfileProps) {
       </ul>
     </div> }
 
-    <div className="flex flex-row-reverse z-10 relative mt-10">
-        <button onClick={() => {signOut(); router.push("/profile")}}
-            className="text-white mr-5 ml-2 my-2 bg-gradient-to-br from-purple-600 to-oslyn-500 hover:to-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
-          <UserPlusIcon className="w-5 h-5" />
-        </button>
-        <span className="mt-1 pt-4 font-bold dark:text-gray-200 text-oslyn-700 text-sm uppercase">Add Friend:</span>
-    </div>
+    <InviteFriend user={p.user} />
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5 mt-1">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

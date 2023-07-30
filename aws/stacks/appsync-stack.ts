@@ -131,6 +131,30 @@ export class AppsyncStack extends Stack {
       fieldName: "getUserById"
     })
 
+    const addFriendByEmail = new NodejsFunction(this, `${props.name}-AddFriendByEmail`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'user', 'addFriendByEmail.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}AddFriendByEmailDS`, addFriendByEmail)
+    .createResolver(`${props.name}-AddFriendByEmailResolver`, {
+      typeName: "Mutation",
+      fieldName: "addFriendByEmail"
+    })
+
+    const removeFriendById = new NodejsFunction(this, `${props.name}-RemoveFriendById`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'user', 'removeFriendById.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}RemoveFriendByIdDS`, removeFriendById)
+    .createResolver(`${props.name}-RemoveFriendByIdResolver`, {
+      typeName: "Mutation",
+      fieldName: "removeFriendById"
+    })
+
     const createSong = new NodejsFunction(this, `${props.name}-CreateSong`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'createSong.ts'),
       timeout: Duration.minutes(5),

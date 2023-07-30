@@ -32,6 +32,8 @@ type Mutation {
     username: String!, email: String!, provider: provider!,
     firstName: String, lastName: String, imageUrl: String
   ): User @aws_iam
+  addFriendByEmail(userId: ID!, email: AWSEmail!): User! @aws_iam
+  removeFriendById(userId: ID!, friendId: ID!): User @aws_iam
 
   createSong(
     title: String!
