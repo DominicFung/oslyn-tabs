@@ -33,5 +33,6 @@ export type _JamSession = JamSession & {
   userId?: string
   setListId: string
   adminIds?: string[]
+  memberIds?: string[]
   activeIds: string[]
 }

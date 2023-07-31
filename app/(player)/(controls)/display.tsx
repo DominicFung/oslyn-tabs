@@ -2,7 +2,9 @@
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment } from "react"
+import { Fragment, useState, useEffect } from "react"
+import { useTheme } from "next-themes"
+import { capitalizeFirstLetter } from "@/core/utils/frontend"
 
 export interface DisplayProps {
   textSize: string
@@ -22,8 +24,18 @@ export interface DisplayProps {
 }
 
 const textSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
+const MODE = ["dark", "light", "system"]
 
 export default function Display(p: DisplayProps) {
+
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const [ mode, setMode ] = useState(theme || "dark")
+
+  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { setTheme(mode) }, [mode])
+  useEffect(() => { if (theme && theme != mode) setMode(theme)}, [theme])
+
   return <>
     <div className="ml-3 text-sm font-normal">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</div>
@@ -53,7 +65,7 @@ export default function Display(p: DisplayProps) {
               leaveTo="opacity-0"
             >
               <Listbox.Options static
-                className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
+                className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 bg-neutral-50 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
               >
                 {textSizes.map((ts) => (
                   <Listbox.Option
@@ -67,7 +79,7 @@ export default function Display(p: DisplayProps) {
                         aria-disabled={disabled}
                         className={`flex items-center w-full px-4 pl-4 h-9 border-0 flex-shrink-0 text-sm text-left cursor-base font-normal focus:outline-none rounded-base
                           ${active && "bg-neutral-100 dark:bg-neutral-700"}
-                          ${selected && "bg-blue-50 text-blue-800 dark:bg-blue-200 dark:bg-opacity-15 dark:text-blue-200"}`}
+                          ${selected && "bg-oslyn-100 text-oslyn-800 dark:bg-oslyn-600 dark:bg-opacity-15 dark:text-oslyn-100"}`}
                       >
                         <span
                           className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}
@@ -117,6 +129,27 @@ export default function Display(p: DisplayProps) {
             <label htmlFor="helper-checkbox2" className="font-medium text-gray-900 dark:text-gray-300">Heads Up!</label>
             <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">Have the application show the first line of the next slide.</p>
           </div>
+        </div>
+
+        <div className="flex mt-10 mb-5">
+          { mounted && <div className="mt-6 w-full max-w-sm relative z-10">
+            <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+              { MODE.map((m,i) => {
+                let selected = m === mode
+                let first = i === 0
+                let last = i === MODE.length - 1
+
+                return <li className="w-full" key={i}>
+                  <button onClick={() => setMode(m)}
+                    className={`inline-block w-full p-4 ${
+                      selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
+                        first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none`} aria-current="page">
+                      {m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}
+                  </button>
+                </li>
+              }) }
+            </ul>
+          </div> }
         </div>
 
       </div>

@@ -9,15 +9,11 @@ import { User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { Session } from "next-auth"
+import { _Session } from '@/core/utils/frontend'
 import Unauth from "@/app/unauthorized"
 import Profile from './profile'
 
 Amplify.configure({...awsConfig, ssr: true })
-
-type _Session = Session & {
-  userId: string
-}
 
 export default async function _Profile () {
   const req = { headers: { cookie: headers().get('cookie') } }

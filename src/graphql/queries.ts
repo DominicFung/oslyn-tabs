@@ -12368,7 +12368,7 @@ export const listSets = /* GraphQL */ `
   }
 `;
 export const getJamSession = /* GraphQL */ `
-  query GetJamSession($jamSessionId: ID!, $userId: ID!) {
+  query GetJamSession($jamSessionId: ID!, $userId: ID) {
     getJamSession(jamSessionId: $jamSessionId, userId: $userId) {
       jamSessionId
       setList {

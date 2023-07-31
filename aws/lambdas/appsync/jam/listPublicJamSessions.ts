@@ -222,5 +222,9 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
     sessions.map(s => { if (!s.members) s.members = [] })
   }
 
+  if (hasSubstring(event.info.selectionSetList, "guests")) {
+    sessions.map(s => { if (!s.guests) s.guests = [] })
+  }
+
   return sessions
 }

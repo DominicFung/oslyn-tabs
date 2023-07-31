@@ -99,7 +99,7 @@ export default function Line(p: LineProps) {
         return<span className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1 rounded-lg`} style={{
           marginLeft: `${width}px`, left: 0, top: -24}} key={i}>{chord}{p.decorate && c.decorator}</span>
       })}
-      <div className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-400": "text-oslyn-200"} whitespace-nowrap`}>{phrase.lyric}</div>
+      <div className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"} whitespace-nowrap`}>{phrase.lyric}</div>
     </div> }
     { phrase && phrase.lyric.trim() === "" && <div className="relative h-12 mt-6">
       { phrase.chords.map((c, i) => { 

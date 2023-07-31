@@ -23,7 +23,7 @@ type Query {
   getSetCount(userId: ID!, addSharedCount:Boolean): Int! @aws_iam
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
-  getJamSession(jamSessionId: ID!, userId: ID!): JamSession @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID): JamSession @aws_iam
   listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
@@ -94,12 +94,18 @@ type Mutation {
   nextPage(jamSessionId: ID!, page: Int!): NextPage
   nextSong(jamSessionId: ID!, song: Int!, page: Int): NextSong
   setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
+
+  signInToJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
+  signOutFromJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
 }
 
 type Subscription {
   onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations: ["nextPage"])
   onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations: ["nextSong"])
   onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
+
+  onSignInToJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signInToJamSession"])
+  onSignOutFromJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signOutFromJamSession"])
 }
 
 enum recordingStatus { TOLABEL INAUDIT COMPLETE }
@@ -153,6 +159,11 @@ type SetList {
   band: Band
 }
 
+type JamSessionActiveUsers {
+  active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
+  guests: [String]!     # used by non-login users (guests). Total will be the addition of active + guest.
+}
+
 type JamSession {
   jamSessionId: ID!
   setList: SetList!
@@ -161,8 +172,8 @@ type JamSession {
 
   policy: policy!
   description: String
-  active: [User]! # if they are part of members or admin, they can edit/play ... else view only.
-  guests: Int     # used by non-login users (guests). Total will be the addition of active + guest.
+  active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
+  guests: [String]!     # used by non-login users (guests). Total will be the addition of active + guest.
   passcode: String
 
   currentSong: Int

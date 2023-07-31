@@ -13,24 +13,14 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  jamSessionId: string, userId: string
+  jamSessionId: string, userId?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
-  if (!b.userId) { console.error(`b.creatorId is empty`); return }
   if (!b.jamSessionId) { console.error(`b.setListId is empty`); return }
-
+  
   const dynamo = new DynamoDBClient({})
-
-  const res0 = await dynamo.send(
-    new GetItemCommand({
-      TableName: USER_TABLE_NAME,
-      Key: { userId: { S: b.userId } }
-    })
-  )
-  if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
-
   const res1 = await dynamo.send(
     new GetItemCommand({
       TableName: JAM_TABLE_NAME,
@@ -38,8 +28,16 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
   )
   if (!res1.Item) { console.error(`ERROR: jamSessionId not found: ${b.jamSessionId}`); return }
-
   let jamSession = unmarshall(res1.Item) as _JamSession
+
+  // check authorization
+  if (jamSession.policy === "PRIVATE") {
+    if (!b.userId) { console.error(`This is a private jam session.`); return }
+    
+    if ((jamSession.adminIds || []).includes(b.userId)) { console.log("is an admin, athorized") }
+    else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
+    else { console.error(`This is a private jam session.`); return }
+  }
 
   if (hasSubstring(event.info.selectionSetList, "setList")) {
     console.log("getting setList ...")
@@ -105,12 +103,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "admin")) {
-    jamSession.admins = [unmarshall(res0.Item)] as User[]
-    if (!jamSession.admins[0]!.labelledRecording) jamSession.admins[0]!.labelledRecording = []
-    if (!jamSession.admins[0]!.songsCreated) jamSession.admins[0]!.songsCreated = []
-    if (!jamSession.admins[0]!.editHistory) jamSession.admins[0]!.editHistory = []
-    if (!jamSession.admins[0]!.likedSongs) jamSession.admins[0]!.likedSongs = []
-    if (!jamSession.admins[0]!.friends) jamSession.admins[0]!.friends = []
+    jamSession.admins = [] as User[]
   }
 
   // TODO: members
@@ -123,6 +116,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     jamSession.active = []
   }
   
+  if (!jamSession.guests) jamSession.guests = []
   console.log(JSON.stringify(jamSession))
   return jamSession
 }

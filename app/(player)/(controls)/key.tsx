@@ -40,7 +40,7 @@ export default function Key(p: KeyProps) {
             leaveTo="opacity-0"
           >
             <Listbox.Options static
-              className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
+              className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 bg-neutral-50 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
             >
               {chords.map((chord) => (
                 <Listbox.Option
@@ -54,7 +54,7 @@ export default function Key(p: KeyProps) {
                       aria-disabled={disabled}
                       className={`flex items-center w-full px-4 pl-4 h-9 border-0 flex-shrink-0 text-sm text-left cursor-base font-normal focus:outline-none rounded-base
                         ${active && "bg-neutral-100 dark:bg-neutral-700"}
-                        ${selected && "bg-blue-50 text-blue-800 dark:bg-blue-200 dark:bg-opacity-15 dark:text-blue-200"}`}
+                        ${selected && "bg-oslyn-100 text-oslyn-800 dark:bg-oslyn-600 dark:bg-opacity-15 dark:text-oslyn-100"}`}
                     >
                       <span
                         className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}

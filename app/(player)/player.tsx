@@ -204,7 +204,7 @@ export default function Player(p: PlayerProps) {
       <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex} headsUp={headsUp}/> 
     }
     { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
-        className='fixed bottom-4 right-10 bg-gray-50 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
+        className='fixed bottom-4 right-10 bg-oslyn-600 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
     </button> }

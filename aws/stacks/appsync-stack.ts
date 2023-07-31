@@ -383,6 +383,30 @@ export class AppsyncStack extends Stack {
       fieldName: "listPublicJamSessions"
     })
 
+    const signInToJamSession = new NodejsFunction(this, `${props.name}-SignInToJamSession`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'signInToJamSession.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SignInToJamSessionDS`, signInToJamSession)
+    .createResolver(`${props.name}-SignInToJamSessionResolver`, {
+      typeName: "Mutation",
+      fieldName: "signInToJamSession"
+    })
+
+    const signOutFromJamSession = new NodejsFunction(this, `${props.name}-SignOutFromJamSession`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'signOutFromJamSession.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SignOutFromJamSessionDS`, signOutFromJamSession)
+    .createResolver(`${props.name}-SignOutFromJamSessionResolver`, {
+      typeName: "Mutation",
+      fieldName: "signOutFromJamSession"
+    })
+
     const nextPage = new NodejsFunction(this, `${props.name}-NextPage`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'nextPage.ts'),
       timeout: Duration.minutes(5),

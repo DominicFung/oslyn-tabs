@@ -31,7 +31,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   user.friendIds = user.friendIds || []
 
   if (!user.friendIds.includes(b.friendId)) { console.error(`user does not have friendId: ${b.friendId}`); return }
-  user.friendIds.some(v => v === b.friendId)
+  user.friendIds = user.friendIds.filter(v => v === b.friendId)
   
   const uniq = [...new Set(user.friendIds)]
   let params = updateDynamoUtil({
