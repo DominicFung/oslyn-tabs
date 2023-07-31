@@ -15,7 +15,7 @@ export default function Song(p: SongProps) {
     <div className="max-h-[calc(100vh-10rem)] overflow-auto">
       <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         { p.songs.map((e, i) => 
-          <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.setSong(i) }}>
+          <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.setSong(i) }}>
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
                   {e.song.albumCover && <img className="w-8 h-8 rounded-full" src={e.song.albumCover} alt="Neil image" />}

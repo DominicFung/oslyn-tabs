@@ -132,7 +132,7 @@ export default function Display(p: DisplayProps) {
         </div>
 
         <div className="flex mt-10 mb-5">
-          { mounted && <div className="mt-6 w-full max-w-sm relative z-10">
+          { mounted && <div className="mt-6 w-full mx-2 max-w-sm relative z-10">
             <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
               { MODE.map((m,i) => {
                 let selected = m === mode
@@ -143,7 +143,7 @@ export default function Display(p: DisplayProps) {
                   <button onClick={() => setMode(m)}
                     className={`inline-block w-full p-4 ${
                       selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
-                        first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none`} aria-current="page">
+                        first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none focus:z-10 relative`} aria-current="page">
                       {m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}
                   </button>
                 </li>

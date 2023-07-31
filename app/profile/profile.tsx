@@ -64,7 +64,7 @@ export default function Profile(p: ProfileProps) {
     </section>
 
     { mounted && <div className="mt-6 mx-auto max-w-sm relative z-10">
-      <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+      <ul className="text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow flex dark:divide-gray-700 dark:text-gray-400">
         { MODE.map((m,i) => {
           let selected = m === mode
           let first = i === 0
@@ -74,7 +74,7 @@ export default function Profile(p: ProfileProps) {
             <button onClick={() => setMode(m)}
               className={`inline-block w-full p-4 ${
                 selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
-                  first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none`} aria-current="page">
+                  first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none focus:z-10 relative`} aria-current="page">
                 {m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}
             </button>
           </li>
@@ -83,7 +83,7 @@ export default function Profile(p: ProfileProps) {
     </div> }
 
     <InviteFriend user={p.user} />
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5 mt-1">
+    <div className="relative overflow-x-auto shadow-md rounded-md sm:rounded-lg mx-5 mt-1">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

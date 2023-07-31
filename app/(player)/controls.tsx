@@ -7,6 +7,7 @@ import { JamSong } from "@/src/API"
 import Song from "./(controls)/song"
 import Key from "./(controls)/key"
 import Display from "./(controls)/display"
+import QrCode from "./(controls)/qrcode"
 
 export interface ControlsProp {
   capo?: {
@@ -45,7 +46,8 @@ export default function Controls(p: ControlsProp) {
     { name: "Song", disabled: false },
     { name: "Key", disabled: false },
     { name: "Capo", disabled: false },
-    { name: "Text", disabled: false }
+    { name: "Text", disabled: false },
+    { name: "QR", disabled: false }
   ])
 
   useEffect(() => {
@@ -53,7 +55,8 @@ export default function Controls(p: ControlsProp) {
       { name: "Song", disabled: !p.song || !p.song.songs || !p.song.setSong },
       { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
-      { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex }
+      { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
+      { name: "QR", disabled: false }
     ])
   }, [p])
 
@@ -82,6 +85,7 @@ export default function Controls(p: ControlsProp) {
                                     fullScreen={p.display!.fullScreen} setFullScreen={p.display!.setFullScreen}
                                     headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
                                 /> }
+              { option === 4 && <QrCode /> }
             </>
             <button type="button" className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOepn(false)}
