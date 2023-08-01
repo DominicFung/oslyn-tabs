@@ -55,16 +55,21 @@ export default function Slides(p: SlidesProps) {
   }, [p.transpose, p.skey])
 
   const [ wClass, setWClass ] = useState("max-w-screen-sm")
-  const [ screen, setScreen ] = useState({ w: 500, h: 500 }) 
+  const [ screen, setScreen ] = useState({ w: 300, h: 300 }) 
 
   useEffect(() => {
     setScreen({
-      w: typeof window !== "undefined" ? window.innerWidth : 500, 
-      h: typeof window !== "undefined" ? window.innerHeight : 500
+      w: typeof window !== "undefined" ? window.innerWidth : 300, 
+      h: typeof window !== "undefined" ? window.innerHeight : 300
     })
     requestWakeLock()
     window.addEventListener("resize", updateWindowDimensions)
-    return () => window.removeEventListener("resize", updateWindowDimensions)
+    window.addEventListener("orientationchange", updateWindowDimensions)
+
+    return () => { 
+      window.removeEventListener("resize", updateWindowDimensions)
+      window.removeEventListener("orientationchange", updateWindowDimensions)
+    }
   }, [])
 
   useEffect(() => {
@@ -97,6 +102,16 @@ export default function Slides(p: SlidesProps) {
 
   const updateWindowDimensions = () => {
     setScreen({w: window.innerWidth, h: window.innerHeight})
+    zoomOutMobile()
+  }
+
+  const zoomOutMobile = () => {
+    const viewport = document.querySelector('meta[name="viewport"]');
+
+    if ( viewport ) {
+      (viewport as any).content = 'initial-scale=1';
+      (viewport as any).content = 'width=device-width';
+    }
   }
 
   const requestWakeLock = async () => {
@@ -134,25 +149,21 @@ export default function Slides(p: SlidesProps) {
         </div> }
       </div> }
     </div>
-    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64":"ml-0"} flex flex-row`} style={{
-      width: !openSidebar ? screen.w : screen.w-256
-    }}>
+    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden xs:block":"ml-0 w-full"} flex flex-row`}>
       { page > 0 ? <button className="flex-1" onClick={() => setPage(page-1)}>
-        <div className="w-32 flex justify-center items-center" style={{
-          backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))", 
-          height: screen.h-(p.pt ? 90 : 0)
+        <div className={`w-32 flex justify-center items-center ${p.pt?"h-[calc(100%-90px)]":"h-screen"}`} style={{
+          backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))"
         }}>
           <ChevronLeftIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> : <div className="flex-1" /> }
       { slides && slides?.pages.length-1 > page ? <button className="flex-1 flex flex-row-reverse" onClick={() => setPage(page+1)}>
-        <div className="w-32 flex justify-center items-center" style={{
-          backgroundImage: "linear-gradient(to right, rgba(95,40,212,0), rgba(95,40,212,0.5))",
-          height: screen.h-(p.pt ? 90 : 0)
+        <div className={`w-32 flex justify-center items-center ${p.pt?"h-[calc(100%-90px)]":"h-screen"}`} style={{
+          backgroundImage: "linear-gradient(to right, rgba(95,40,212,0), rgba(95,40,212,0.5))"
         }}>
           <ChevronRightIcon className="w-16 h-16 p-4 text-white"/>
         </div>
-      </button> :  <div className="flex-1" /> }
+      </button> : <div className="flex-1" /> }
     </div>
     {page === 0 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">

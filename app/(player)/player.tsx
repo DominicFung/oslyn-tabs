@@ -199,7 +199,7 @@ export default function Player(p: PlayerProps) {
     else closeFullScreen()
   }, [fullScreen])
 
-  return <div className="text-white w-full h-screen flex flex-col" id="player">
+  return <div className="text-white w-full h-screen flex flex-col overflow-hidden" id="player">
     { p.jam.setList.songs[song]?.song && 
       <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex} headsUp={headsUp}/> 
     }
