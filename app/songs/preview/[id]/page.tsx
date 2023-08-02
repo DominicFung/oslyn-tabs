@@ -49,7 +49,7 @@ export default async function CreateJam({ params }: { params: { id: string } }) 
 
   return <>
     <SongPreviewContextProvider>
-      <section className="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+      <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
         <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
             <Image src={d?.albumCover || ""} alt={""} width={192} height={192} className="w-48 m-2 mx-auto" />
             <div className="mt-6">

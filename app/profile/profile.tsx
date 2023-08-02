@@ -12,6 +12,8 @@ import { PowerIcon, UserMinusIcon } from "@heroicons/react/24/solid"
 import { signOut } from 'next-auth/react'
 import ClickableCell from "../(components)/clikableCell"
 import InviteFriend from "./(friend)/invite"
+import { useSideBarContext } from "../context"
+import RemoveFriend from "./(friend)/remove"
 
 interface ProfileProps {
   user: User
@@ -21,6 +23,8 @@ const MODE = ["dark", "light", "system"]
 
 export default function Profile(p: ProfileProps) {
   const router = useRouter()
+  const { openSidebar } = useSideBarContext()
+  
   const [user, setUser] = useState(p.user)
 
   const { theme, setTheme } = useTheme()
@@ -33,16 +37,8 @@ export default function Profile(p: ProfileProps) {
   useEffect(() => { if (theme && theme != mode) setMode(theme)}, [theme])
   useEffect(() => { if (p.user) setUser(p.user) }, [p.user])
 
-  const addFriend = () => {
-
-  }
-
-  const removeFriend = () => {
-
-  }
-
-  return <div>
-    <section className="dark:bg-oslyn-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+  return <div className={`${openSidebar?"min-w-[640px]":""}`}>
+    <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
       <div className="lg:pt-16 lg:pb-4 pt-8 pb-2 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
           <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-oslyn-700 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300 hover:bg-oslyn-200 dark:hover:bg-oslyn-800">
               <span className="text-xs bg-oslyn-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span className="text-sm font-medium">Upload your chord sheets today!</span> 
@@ -128,11 +124,7 @@ export default function Profile(p: ProfileProps) {
                     {a?.role}
                   </ClickableCell>
                 <td className="px-6 py-4">
-                  <div className="flex flex-row">
-                    <button type="button" className="mx-5 my-2 text-white bg-gradient-to-br from-purple-600 to-oslyn-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:focus:ring-oslyn-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                      <UserMinusIcon className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <RemoveFriend user={p.user} friendId={a?.userId || ""} friendUserName={a?.username || ""}/>
                 </td>
             </tr>)}
         </tbody>

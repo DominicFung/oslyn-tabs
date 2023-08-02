@@ -37,7 +37,7 @@ export default function SongTable(p: SongTableProps) {
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-6 py-3 hidden sm:table-cell">
                     #
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -57,7 +57,7 @@ export default function SongTable(p: SongTableProps) {
         <tbody>
             {songs.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                 
-                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <ClickableCell href={`/songs/edit/${a.songId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white hidden sm:table-cell">
                     {i+1}
                   </ClickableCell>
                 
@@ -83,7 +83,7 @@ export default function SongTable(p: SongTableProps) {
                 <td className="px-6 py-4">
                   <div className="flex flex-row">
                     <a href={`/songs/preview/${a.songId}`}>
-                      <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                      <button type="button" className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hidden">
                         <span className='text-md pt-0.5'>Preview</span>
                         <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
                       </button>

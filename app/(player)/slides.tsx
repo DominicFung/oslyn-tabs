@@ -149,7 +149,7 @@ export default function Slides(p: SlidesProps) {
         </div> }
       </div> }
     </div>
-    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden xs:block":"ml-0 w-full"} flex flex-row`}>
+    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden sm:flex sm:flex-row":"ml-0 w-full flex flex-row"}`}>
       { page > 0 ? <button className="flex-1" onClick={() => setPage(page-1)}>
         <div className={`w-32 flex justify-center items-center ${p.pt?"h-[calc(100%-90px)]":"h-screen"}`} style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))"
