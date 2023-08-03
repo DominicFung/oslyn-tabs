@@ -32,7 +32,7 @@ I love how music brings people together. Most chord sheet apps focus on the indi
  - "Heads Up" feature! Instrument players (those who're not tasked with turning the page) will be able to see the next line coming up.
  - Full Screen
  - QR Code to enter the jam session
- - Oauth Login (FaceBook, Google) .. Apple help wanted!
+ - Oauth Login (Facebook, Google) .. Apple help wanted!
 
 ## Getting started - Developers
 

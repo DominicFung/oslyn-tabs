@@ -188,6 +188,16 @@ type JamSession {
 type JamSong {
   key: String!
   song: Song!
+
+  background: String
+  textColor: String
+  highlightColor: String
+  highlightOpacity: String
+
+  CCLISongTitle: String
+  CCLISongWriter: String
+  CCLICopyrightNotice: String
+  CCLILicenseNumber: String
 }
 
 input JamSongInput {
