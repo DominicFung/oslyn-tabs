@@ -2,18 +2,14 @@
 
 # Oslyn Tabs
 
-[![crates.io][crates.io-badge]][crates.io]
-[![Downloads][downloads-badge]][releases]
-[![Built with Nix][builtwithnix-badge]][builtwithnix]
-
 3 words: **Synchronized chord sheets**.
 
 <img src="https://github.com/DominicFung/oslyn-studio-v3/blob/main/screenshots/Desktop%20-%20Controls%20Open%20-%202023-08-02.jpeg?raw=true" align="center"
-     alt="Screenshot of Logistical.ly" width="830" height="456">
+     alt="Screenshot of Logistical.ly" width="830" height="504">
 </p>
 
 <img src="https://github.com/DominicFung/oslyn-studio-v3/blob/main/screenshots/Desktop%20-%20Dark%20Mode%20-%202023-08-02.jpeg?raw=true" align="center"
-     alt="Screenshot of Logistical.ly" width="830" height="456">
+     alt="Screenshot of Logistical.ly" width="830" height="504">
 </p>
 
 <img src="https://github.com/DominicFung/oslyn-studio-v3/blob/main/screenshots/iPhone%20SE%202023-08-02.jpeg?raw=true" align="center"
