@@ -112,6 +112,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -306,6 +315,15 @@ export const createUser = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       labelledRecording {
@@ -467,6 +485,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -605,6 +632,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -677,6 +713,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -749,6 +794,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -940,6 +994,15 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         date
@@ -1028,6 +1091,15 @@ export const createUser = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
     }
   }
@@ -1128,6 +1200,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -1322,6 +1403,15 @@ export const addFriendByEmail = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       labelledRecording {
@@ -1483,6 +1573,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -1621,6 +1720,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -1693,6 +1801,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -1765,6 +1882,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -1956,6 +2082,15 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         date
@@ -2044,6 +2179,15 @@ export const addFriendByEmail = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
     }
   }
@@ -2144,6 +2288,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -2338,6 +2491,15 @@ export const removeFriendById = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       labelledRecording {
@@ -2499,6 +2661,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -2637,6 +2808,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -2709,6 +2889,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -2781,6 +2970,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -2972,6 +3170,15 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         date
@@ -3060,6 +3267,15 @@ export const removeFriendById = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
     }
   }
@@ -3176,6 +3392,15 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -3370,6 +3595,15 @@ export const createSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -3454,6 +3688,15 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -3648,6 +3891,15 @@ export const createSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -3732,6 +3984,15 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -3926,6 +4187,15 @@ export const createSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -4087,6 +4357,15 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -4272,6 +4551,15 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -4466,6 +4754,15 @@ export const updateSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -4550,6 +4847,15 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -4744,6 +5050,15 @@ export const updateSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -4828,6 +5143,15 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -5022,6 +5346,15 @@ export const updateSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -5183,6 +5516,15 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -5352,6 +5694,15 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -5546,6 +5897,15 @@ export const shareSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -5630,6 +5990,15 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -5824,6 +6193,15 @@ export const shareSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -5908,6 +6286,15 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -6102,6 +6489,15 @@ export const shareSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -6263,6 +6659,15 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -6430,6 +6835,15 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -6624,6 +7038,15 @@ export const removeAccess = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -6708,6 +7131,15 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -6902,6 +7334,15 @@ export const removeAccess = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -6986,6 +7427,15 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7180,6 +7630,15 @@ export const removeAccess = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -7341,6 +7800,15 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -7500,6 +7968,15 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7694,6 +8171,15 @@ export const addRecordingToSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -7778,6 +8264,15 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7972,6 +8467,15 @@ export const addRecordingToSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -8056,6 +8560,15 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -8250,6 +8763,15 @@ export const addRecordingToSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -8411,6 +8933,15 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -8570,6 +9101,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -8764,6 +9304,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       editors {
@@ -8848,6 +9397,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -9042,6 +9600,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       viewers {
@@ -9126,6 +9693,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -9320,6 +9896,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       recordings {
@@ -9481,6 +10066,15 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -9645,6 +10239,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -9717,6 +10320,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -9789,6 +10401,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -9870,6 +10491,15 @@ export const createBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -9941,6 +10571,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -10013,6 +10652,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -10161,6 +10809,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10355,6 +11012,15 @@ export const createBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       admins {
@@ -10439,6 +11105,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10633,6 +11308,15 @@ export const createBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       owner {
@@ -10717,6 +11401,15 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10911,6 +11604,15 @@ export const createBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -11006,6 +11708,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -11078,6 +11789,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -11150,6 +11870,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -11231,6 +11960,15 @@ export const addBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -11302,6 +12040,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -11374,6 +12121,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -11522,6 +12278,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -11716,6 +12481,15 @@ export const addBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       admins {
@@ -11800,6 +12574,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -11994,6 +12777,15 @@ export const addBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       owner {
@@ -12078,6 +12870,15 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -12272,6 +13073,15 @@ export const addBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -12367,6 +13177,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -12439,6 +13258,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -12511,6 +13339,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -12592,6 +13429,15 @@ export const removeBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -12663,6 +13509,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -12735,6 +13590,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -12883,6 +13747,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -13077,6 +13950,15 @@ export const removeBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       admins {
@@ -13161,6 +14043,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -13355,6 +14246,15 @@ export const removeBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       owner {
@@ -13439,6 +14339,15 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -13633,6 +14542,15 @@ export const removeBandMembers = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -13728,6 +14646,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -13800,6 +14727,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -13872,6 +14808,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -13953,6 +14898,15 @@ export const addSongsToBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -14024,6 +14978,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -14096,6 +15059,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -14244,6 +15216,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -14438,6 +15419,15 @@ export const addSongsToBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       admins {
@@ -14522,6 +15512,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -14716,6 +15715,15 @@ export const addSongsToBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       owner {
@@ -14800,6 +15808,15 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -14994,6 +16011,15 @@ export const addSongsToBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -15089,6 +16115,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         editors {
@@ -15161,6 +16196,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         viewers {
@@ -15233,6 +16277,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         recordings {
@@ -15314,6 +16367,15 @@ export const removeSongsFromBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -15385,6 +16447,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -15457,6 +16528,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -15605,6 +16685,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -15799,6 +16888,15 @@ export const removeSongsFromBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       admins {
@@ -15883,6 +16981,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -16077,6 +17184,15 @@ export const removeSongsFromBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       owner {
@@ -16161,6 +17277,15 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -16355,6 +17480,15 @@ export const removeSongsFromBand = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -16450,6 +17584,15 @@ export const createSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -16533,6 +17676,15 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -16727,6 +17879,15 @@ export const createSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -16811,6 +17972,15 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -17005,6 +18175,15 @@ export const createSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -17095,6 +18274,15 @@ export const createSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -17200,6 +18388,15 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -17272,6 +18469,15 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -17344,6 +18550,15 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -17446,6 +18661,15 @@ export const updateSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -17529,6 +18753,15 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -17723,6 +18956,15 @@ export const updateSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -17807,6 +19049,15 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -18001,6 +19252,15 @@ export const updateSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -18091,6 +19351,15 @@ export const updateSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -18196,6 +19465,15 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -18268,6 +19546,15 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -18340,6 +19627,15 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -18432,6 +19728,15 @@ export const addEditorToSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -18515,6 +19820,15 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -18709,6 +20023,15 @@ export const addEditorToSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -18793,6 +20116,15 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -18987,6 +20319,15 @@ export const addEditorToSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -19077,6 +20418,15 @@ export const addEditorToSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -19182,6 +20532,15 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -19254,6 +20613,15 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -19326,6 +20694,15 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -19418,6 +20795,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -19501,6 +20887,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -19695,6 +21090,15 @@ export const removeEditorFromSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -19779,6 +21183,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -19973,6 +21386,15 @@ export const removeEditorFromSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -20063,6 +21485,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -20168,6 +21599,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -20240,6 +21680,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -20312,6 +21761,15 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -20404,6 +21862,15 @@ export const addSongToSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -20487,6 +21954,15 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -20681,6 +22157,15 @@ export const addSongToSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -20765,6 +22250,15 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -20959,6 +22453,15 @@ export const addSongToSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -21049,6 +22552,15 @@ export const addSongToSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -21154,6 +22666,15 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -21226,6 +22747,15 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -21298,6 +22828,15 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -21390,6 +22929,15 @@ export const removeSongFromSet = /* GraphQL */ `
           originPlatorm
           originLink
         }
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editors {
         userId
@@ -21473,6 +23021,15 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -21667,6 +23224,15 @@ export const removeSongFromSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       creator {
@@ -21751,6 +23317,15 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -21945,6 +23520,15 @@ export const removeSongFromSet = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       band {
@@ -22035,6 +23619,15 @@ export const removeSongFromSet = /* GraphQL */ `
           description
           songs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editors {
             userId
@@ -22140,6 +23733,15 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         admins {
@@ -22212,6 +23814,15 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         owner {
@@ -22284,6 +23895,15 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         policy
@@ -22323,6 +23943,15 @@ export const createJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -22394,6 +24023,15 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -22466,6 +24104,15 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -22614,6 +24261,15 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -22808,6 +24464,15 @@ export const createJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       members {
@@ -22892,6 +24557,15 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -23086,6 +24760,15 @@ export const createJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -23172,6 +24855,15 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -23366,6 +25058,15 @@ export const createJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests
@@ -23403,6 +25104,15 @@ export const endJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -23474,6 +25184,15 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -23546,6 +25265,15 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -23694,6 +25422,15 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -23888,6 +25625,15 @@ export const endJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       members {
@@ -23972,6 +25718,15 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -24166,6 +25921,15 @@ export const endJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -24252,6 +26016,15 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -24446,6 +26219,15 @@ export const endJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests
@@ -24483,6 +26265,15 @@ export const modifyJamSongs = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editors {
           userId
@@ -24554,6 +26345,15 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         creator {
@@ -24626,6 +26426,15 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         band {
@@ -24774,6 +26583,15 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -24968,6 +26786,15 @@ export const modifyJamSongs = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       members {
@@ -25052,6 +26879,15 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -25246,6 +27082,15 @@ export const modifyJamSongs = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       policy
@@ -25332,6 +27177,15 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -25526,6 +27380,15 @@ export const modifyJamSongs = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests
@@ -25660,6 +27523,15 @@ export const signInToJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -25854,6 +27726,15 @@ export const signInToJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests
@@ -25953,6 +27834,15 @@ export const signOutFromJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -26147,6 +28037,15 @@ export const signOutFromJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests

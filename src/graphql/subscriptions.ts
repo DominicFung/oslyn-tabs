@@ -113,6 +113,15 @@ export const onSignInToJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -307,6 +316,15 @@ export const onSignInToJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests
@@ -398,6 +416,15 @@ export const onSignOutFromJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -592,6 +619,15 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             originPlatorm
             originLink
           }
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
       }
       guests

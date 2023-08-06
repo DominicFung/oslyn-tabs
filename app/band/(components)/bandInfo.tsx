@@ -3,12 +3,12 @@ import { SparklesIcon, BoltIcon, ArrowsUpDownIcon } from '@heroicons/react/24/so
 import { Listbox, Transition } from '@headlessui/react'
 import { Fragment } from "react"
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 import { Band } from '@/src/API'
 import Image from 'next/image'
-import { capitalizeFirstLetter, sleep } from '@/core/utils/frontend'
+import { sleep } from '@/core/utils/frontend'
 
 interface BandProps {
   band: Band

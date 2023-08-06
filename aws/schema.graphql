@@ -189,7 +189,8 @@ type JamSong {
   key: String!
   song: Song!
 
-  background: String
+  backgroundImg: String
+  backgroundColor: String
   textColor: String
   highlightColor: String
   highlightOpacity: String

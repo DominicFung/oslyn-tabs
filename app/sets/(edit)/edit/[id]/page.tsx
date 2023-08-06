@@ -13,8 +13,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
-
 type _Session = Session & {
   userId: string
 }
