@@ -22,7 +22,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!b.imageUrl) { console.error(`b.imageUrl is empty`); return }
 
   const dynamo = new DynamoDBClient({})
-  const bandId = `bnd_${uuidv4()}`
+  const bandId = `${uuidv4()}_bnd`
 
   const res0 = await dynamo.send(
     new GetItemCommand({

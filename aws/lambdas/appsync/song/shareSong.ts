@@ -167,7 +167,7 @@ export const handler = async (event: AppSyncResolverEvent<{
           inviteId: uuidv4(),
           from: b.userId,
           to: email,
-          newUserId: `usr_${uuidv4()}`,
+          newUserId: `${uuidv4()}_usr`,
           shared: b.songId,
           ttl: today.getTime() / 1000
         })

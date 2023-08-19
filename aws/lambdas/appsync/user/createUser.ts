@@ -102,7 +102,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
     return { ...savedUser, ...user }
   } else {
-    const userId = `usr_${uuidv4()}`
+    const userId = `${uuidv4()}_usr`
 
     const user = {
       userId, username: b.username,
@@ -119,7 +119,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       songsCreated: [],
       editHistory: [],
       likedSongs: [],
-      friendIds: [],
+      friendIds: []
     } as any
 
     const res1 = await dynamo.send(
@@ -131,6 +131,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
     console.log(`new user: ${JSON.stringify(user, null, 2)}`)
 
-    return user
+    return { ...user, friends: [] }
   }
 }
