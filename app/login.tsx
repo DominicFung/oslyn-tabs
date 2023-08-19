@@ -8,9 +8,10 @@ interface LoginProps {
 }
 
 export default function Login(p: LoginProps) {
+  const fb_disable=true
 
   return <>
-    <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${p.open?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900/75`}>
+    <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${p.open?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(110%)] max-h-full bg-gray-900/75`}>
       <div className="relative w-full h-full max-w-md max-h-full mx-auto flex flex-col">
         <div className='flex-1' />
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -24,10 +25,10 @@ export default function Login(p: LoginProps) {
               <p className="mb-6 text-sm font-normal dark:text-gray-400"> Sign in or sign up with the social media of your choice. </p>
               <span className="space-y-2">
 
-                <button onClick={() => signIn("facebook")}
-                    className="w-full flex flex-row text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button onClick={() => signIn("facebook")} disabled={fb_disable}
+                    className="w-full flex flex-row text-white bg-blue-700 hover:bg-blue-800 disabled:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 disabled:dark:bg-gray-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                       <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0 0 48 48">
-                        <path fill="#039be5" d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path><path fill="#fff" d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"></path>
+                        <path fill={fb_disable?"#039be5":"#9CA3AF"} d="M24 5A19 19 0 1 0 24 43A19 19 0 1 0 24 5Z"></path><path fill="#fff" d="M26.572,29.036h4.917l0.772-4.995h-5.69v-2.73c0-2.075,0.678-3.915,2.619-3.915h3.119v-4.359c-0.548-0.074-1.707-0.236-3.897-0.236c-4.573,0-7.254,2.415-7.254,7.917v3.323h-4.701v4.995h4.701v13.729C22.089,42.905,23.032,43,24,43c0.875,0,1.729-0.08,2.572-0.194V29.036z"></path>
                       </svg>
                       <div className='flex-1' />
                       <div className="px-10 py-2.5" >Facebook Login</div>

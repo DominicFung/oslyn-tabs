@@ -52,7 +52,7 @@ export default function Profile(p: ProfileProps) {
       </div>
 
       <div className="flex flex-row-reverse z-10 relative">
-          <button onClick={() => {signOut(); router.push("/profile")}}
+          <button onClick={async () => {router.push("/"); signOut()}}
               className="text-white mx-5 my-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
             <PowerIcon className="w-6 h-6" />
           </button>
