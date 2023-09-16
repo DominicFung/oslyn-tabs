@@ -84,6 +84,8 @@ export const handler = async (event: AppSyncResolverEvent<{
 
       songs = songs.map((s) => {
         if (!s.recordings) s.recordings = []
+        if (!s.editors) s.editors = []
+        if (!s.viewers) s.viewers = []
         return s
       })
     }
@@ -115,6 +117,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (!user.songsCreated) user.songsCreated = []
       if (!user.editHistory) user.editHistory = []
       if (!user.likedSongs) user.likedSongs = []
+      if (!user.friends) user.friends = []
       return user
     })
 

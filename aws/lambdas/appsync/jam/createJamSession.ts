@@ -29,7 +29,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!b.userId) { console.error(`b.creatorId is empty`); return }
   if (!b.setListId) { console.error(`b.setListId is empty`); return }
 
-  const policy = b.policy || "PRIVATE"
+  const policy = b.policy ||  "PUBLIC_VIEW" //"PRIVATE"
 
   const dynamo = new DynamoDBClient({})
   const jamSessionId = uuidv4()
@@ -59,7 +59,9 @@ export const handler = async (event: AppSyncResolverEvent<{
 
     pageSettings: {
       pageMax: 3, pageMin: 2
-    }
+    },
+
+    active: true
   } as any
 
   const res2 = await dynamo.send(new PutItemCommand({
@@ -101,6 +103,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (!creator.songsCreated) creator.songsCreated = []
       if (!creator.editHistory) creator.editHistory = []
       if (!creator.likedSongs) creator.likedSongs = []
+      if (!creator.friends) creator.friends = []
       
       setList.creator = creator
     }
@@ -113,17 +116,23 @@ export const handler = async (event: AppSyncResolverEvent<{
     jamSession.setList = setList
   }
 
-  if (hasSubstring(event.info.selectionSetList, "admin")) {
-    jamSession.admin = unmarshall(res0.Item)
-    if (!jamSession.admin.labelledRecording) jamSession.admin.labelledRecording = []
-    if (!jamSession.admin.songsCreated) jamSession.admin.songsCreated = []
-    if (!jamSession.admin.editHistory) jamSession.admin.editHistory = []
-    if (!jamSession.admin.likedSongs) jamSession.admin.likedSongs = []
+  if (hasSubstring(event.info.selectionSetList, "admins")) {
+    jamSession.admins = [unmarshall(res0.Item)]
+    if (!jamSession.admins[0].labelledRecording) jamSession.admins[0].labelledRecording = []
+    if (!jamSession.admins[0].songsCreated) jamSession.admins[0].songsCreated = []
+    if (!jamSession.admins[0].editHistory) jamSession.admins[0].editHistory = []
+    if (!jamSession.admins[0].likedSongs) jamSession.admins[0].likedSongs = []
+    if (!jamSession.admins[0].friends) jamSession.admins[0].friends = []
   }
 
   // TODO: members
   if (hasSubstring(event.info.selectionSetList, "members")) {
     jamSession.members = []
+  }
+
+  // TODO: guests
+  if (hasSubstring(event.info.selectionSetList, "guests")) {
+    jamSession.guests = []
   }
 
   console.log(JSON.stringify(jamSession))

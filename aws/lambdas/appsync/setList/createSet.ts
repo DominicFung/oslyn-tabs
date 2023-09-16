@@ -30,6 +30,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   )
 
   if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
+  const creator = { ...unmarshall(res0.Item), friends: []}
   
   let setList = { setListId, description: b.description, userId: b.userId } as any
   setList.songs = b.songs
@@ -52,13 +53,19 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(res1)
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
 
-    const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u))
+    const songs = res1.Responses![SONG_TABLE_NAME].map((u) => {
+      let song = unmarshall(u)
+      if (!song.creator) song.creator = creator
+      if (!song.editors) song.editors = []
+      if (!song.viewers) song.viewers = []
+      return song
+    })
     console.log(songs)
     setList.songs = merge(setList.songs, songs, 'songId', 'song')
   }
   
   setList.editors = []
-  setList.creator = unmarshall(res0.Item)
+  setList.creator = creator
   
   console.log(JSON.stringify(setList))
   return setList
