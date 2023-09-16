@@ -68,7 +68,7 @@ export default function SongTable(p: SongTableProps) {
                         </div>
                       }
                       <div className="flex-0 m-2 w-36 lg:w-full">
-                        <div className="text-white bold truncate">{a.title}</div>
+                        <div className="dark:text-white text-oslyn-900 bold truncate">{a.title}</div>
                         <div className="text-ellipsis truncate">{a.artist}</div>
                       </div>
                     </div>

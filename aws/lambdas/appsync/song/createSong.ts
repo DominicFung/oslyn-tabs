@@ -64,6 +64,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!song.creator.songsCreated) song.creator.songsCreated = []
   if (!song.creator.editHistory) song.creator.editHistory = []
   if (!song.creator.likedSongs) song.creator.likedSongs = []
+  if (!song.creator.friendsIds) song.creator.friends = []
   
   return song
 }

@@ -1,15 +1,25 @@
 "use client"
 import { useEffect, useRef, useState } from 'react'
+import { useTheme } from "next-themes"
 
 import Editor, { useMonaco } from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 
-const theme = {
+const darktheme = {
   base: 'vs-dark',
   inherit: true,
   rules: [],
   colors: {
     'editor.background': '#000000',
+  },
+} as editor.IStandaloneThemeData
+
+const lighttheme = {
+  base: 'vs',
+  inherit: true,
+  rules: [],
+  colors: {
+    'editor.background': '#ffffff',
   },
 } as editor.IStandaloneThemeData
 
@@ -19,16 +29,17 @@ interface PasteTabsProps {
 }
 
 export default function PasteTabs(p: PasteTabsProps) {
+  const { theme, setTheme } = useTheme()
   const monaco = useMonaco()
   const monacoRef = useRef(null)
 
   // used in first monaco load ..
   useEffect(() => {
-    if (monaco) {    
-      monaco.editor.defineTheme("myTheme", theme)
+    if (monaco) {  
+      monaco.editor.defineTheme("myTheme", theme === 'dark' ? darktheme : lighttheme)
       monaco.editor.setTheme("myTheme")
     }
-  }, [monaco])
+  }, [monaco, theme])
 
 
   // used in subsequent monaco loads
@@ -37,7 +48,7 @@ export default function PasteTabs(p: PasteTabsProps) {
       console.log("mounted")
       monacoRef.current = editor
 
-      monaco.editor.defineTheme("myTheme", theme)
+      monaco.editor.defineTheme("myTheme", theme === 'dark' ? darktheme : lighttheme)
       monaco.editor.setTheme("myTheme")
     }
   }
