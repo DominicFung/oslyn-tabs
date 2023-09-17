@@ -104,29 +104,38 @@ export function capitalizeFirstLetter(str: string) {
 }
 
 export function getTimeDifferenceFromNowToEpoch(startTimeEpoch: number): string {
+  console.log(`converting - ${startTimeEpoch}`)
+
   const currentTimeEpoch = Math.floor(Date.now() / 1000); // Convert current time to epoch format (in seconds)
-  const timeDifferenceSeconds = currentTimeEpoch - startTimeEpoch;
+  const timeDifferenceSeconds = currentTimeEpoch - Math.floor(startTimeEpoch / 1000);
 
   // Calculate time difference in seconds, minutes, hours, and days
   const seconds = timeDifferenceSeconds % 60;
   const minutes = Math.floor(timeDifferenceSeconds / 60) % 60;
   const hours = Math.floor(timeDifferenceSeconds / 3600) % 24;
   const days = Math.floor(timeDifferenceSeconds / 86400);
+  const months = Math.floor(timeDifferenceSeconds / (86400 * 30))
+  const years = Math.floor(timeDifferenceSeconds / 31536000)
 
   // Format the result string
-  let result = "";
+  if (years > 0) {
+    return `${years} year${years > 1 ? "s" : ""}`;
+  }
+  if (months > 0) {
+    return `${months} month${months > 1 ? "s" : ""}`;
+  }
   if (days > 0) {
-    result += `${days} day${days > 1 ? "s" : ""}, `;
+    return `${days} day${days > 1 ? "s" : ""}`;
   }
   if (hours > 0) {
-    result += `${hours} hour${hours > 1 ? "s" : ""}, `;
+    return `${hours} hour${hours > 1 ? "s" : ""}`;
   }
   if (minutes > 0) {
-    result += `${minutes} minute${minutes > 1 ? "s" : ""}, `;
+    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
   }
-  if (seconds > 0 || result === "") {
-    result += `${seconds} second${seconds !== 1 ? "s" : ""}`;
+  if (seconds > 0) {
+    return `${seconds} second${seconds !== 1 ? "s" : ""}`;
   }
 
-  return result;
+  return "moments"
 }

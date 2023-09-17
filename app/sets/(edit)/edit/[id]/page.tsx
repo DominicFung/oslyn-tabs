@@ -33,7 +33,7 @@ export default async function EditSets({ params }: { params: { id: string } }) {
 
   try {
     const { data } = await SSR.API.graphql(graphqlOperation(
-      q.getSet, { setListId: params.id }
+      q.getSet, { setListId: params.id, userId: userId }
     )) as GraphQLResult<{ getSet: SetList }>
 
     if (data?.getSet) d2 = data?.getSet

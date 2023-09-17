@@ -101,7 +101,7 @@ export default function SetTable(p: SetTableProps) {
     </div>
     <div className="bg-gradient-to-b from-oslyn-50 to-transparent dark:from-oslyn-900 w-full h-full absolute top-0 left-0 z-0"></div>
   </section>
-  <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5">
     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -136,7 +136,7 @@ export default function SetTable(p: SetTableProps) {
                   <div className="flex flex-row hover:cursor-pointer">
                     {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
                     <div className="m-2">
-                      <div className="text-white bold">{a.title}</div>
+                      <div className="dark:text-white text-oslyn-900 bold">{a.title}</div>
                       <div>{a.artist}</div>
                     </div>
                   </div>
