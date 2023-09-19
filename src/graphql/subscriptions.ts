@@ -28,6 +28,14 @@ export const onSongKey = /* GraphQL */ `
     }
   }
 `;
+export const onJamSlideConfigChange = /* GraphQL */ `
+  subscription OnJamSlideConfigChange($jamSessionId: ID!) {
+    onJamSlideConfigChange(jamSessionId: $jamSessionId) {
+      jamSessionId
+      textSize
+    }
+  }
+`;
 export const onSignInToJamSession = /* GraphQL */ `
   subscription OnSignInToJamSession($jamSessionId: ID!) {
     onSignInToJamSession(jamSessionId: $jamSessionId) {
@@ -102,6 +110,10 @@ export const onSignInToJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -113,15 +125,6 @@ export const onSignInToJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -140,6 +143,10 @@ export const onSignInToJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -257,6 +264,10 @@ export const onSignInToJamSession = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -315,16 +326,19 @@ export const onSignInToJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       guests
@@ -405,6 +419,10 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -416,15 +434,6 @@ export const onSignOutFromJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -443,6 +452,10 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -560,6 +573,10 @@ export const onSignOutFromJamSession = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -618,16 +635,19 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       guests

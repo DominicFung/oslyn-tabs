@@ -87,6 +87,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -98,15 +102,6 @@ export const getSong = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -125,6 +120,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -242,6 +241,10 @@ export const getSong = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -300,16 +303,19 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       editors {
@@ -383,6 +389,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -394,15 +404,6 @@ export const getSong = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -421,6 +422,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -538,6 +543,10 @@ export const getSong = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -596,16 +605,19 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       viewers {
@@ -679,6 +691,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -690,15 +706,6 @@ export const getSong = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -717,6 +724,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -834,6 +845,10 @@ export const getSong = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -892,16 +907,19 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       recordings {
@@ -985,6 +1003,10 @@ export const getSong = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -1052,6 +1074,10 @@ export const getSong = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -1063,15 +1089,6 @@ export const getSong = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -1132,6 +1149,10 @@ export const getSong = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
+      CCLISongTitle
+      CCLISongWriter
+      CCLICopyrightNotice
+      CCLILicenseNumber
     }
   }
 `;
@@ -1235,6 +1256,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -1246,15 +1271,6 @@ export const listSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -1273,6 +1289,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -1390,6 +1410,10 @@ export const listSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -1448,16 +1472,19 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       editors {
@@ -1531,6 +1558,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -1542,15 +1573,6 @@ export const listSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -1569,6 +1591,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -1686,6 +1712,10 @@ export const listSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -1744,16 +1774,19 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       viewers {
@@ -1827,6 +1860,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -1838,15 +1875,6 @@ export const listSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -1865,6 +1893,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -1982,6 +2014,10 @@ export const listSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -2040,16 +2076,19 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       recordings {
@@ -2133,6 +2172,10 @@ export const listSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -2200,6 +2243,10 @@ export const listSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -2211,15 +2258,6 @@ export const listSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -2280,6 +2318,10 @@ export const listSongs = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
+      CCLISongTitle
+      CCLISongWriter
+      CCLICopyrightNotice
+      CCLILicenseNumber
     }
   }
 `;
@@ -2380,6 +2422,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -2391,15 +2437,6 @@ export const listSharedSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -2418,6 +2455,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -2535,6 +2576,10 @@ export const listSharedSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -2593,16 +2638,19 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       editors {
@@ -2676,6 +2724,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -2687,15 +2739,6 @@ export const listSharedSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -2714,6 +2757,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -2831,6 +2878,10 @@ export const listSharedSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -2889,16 +2940,19 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       viewers {
@@ -2972,6 +3026,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -2983,15 +3041,6 @@ export const listSharedSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -3010,6 +3059,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -3127,6 +3180,10 @@ export const listSharedSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -3185,16 +3242,19 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       recordings {
@@ -3278,6 +3338,10 @@ export const listSharedSongs = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -3345,6 +3409,10 @@ export const listSharedSongs = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -3356,15 +3424,6 @@ export const listSharedSongs = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -3425,6 +3484,10 @@ export const listSharedSongs = /* GraphQL */ `
       chordSheetKey
       originPlatorm
       originLink
+      CCLISongTitle
+      CCLISongWriter
+      CCLICopyrightNotice
+      CCLILicenseNumber
     }
   }
 `;
@@ -3513,6 +3576,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -3524,15 +3591,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -3551,6 +3609,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -3668,6 +3730,10 @@ export const getUserById = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -3726,16 +3792,19 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       labelledRecording {
@@ -3819,6 +3888,10 @@ export const getUserById = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -3886,6 +3959,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -3897,15 +3974,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -4033,6 +4101,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4044,15 +4116,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -4114,6 +4177,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4125,15 +4192,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -4195,6 +4253,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4206,15 +4268,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -4233,6 +4286,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -4277,6 +4334,10 @@ export const getUserById = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editHistory {
         recordingHistoryId
@@ -4296,6 +4357,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -4395,6 +4460,10 @@ export const getUserById = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4406,15 +4475,6 @@ export const getUserById = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         date
@@ -4502,16 +4562,19 @@ export const getUserById = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
-        backgroundImg
-        backgroundColor
-        textColor
-        highlightColor
-        highlightOpacity
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
       }
     }
   }
@@ -4601,6 +4664,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4612,15 +4679,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -4639,6 +4697,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -4756,6 +4818,10 @@ export const getUserByEmail = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -4814,16 +4880,19 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       labelledRecording {
@@ -4907,6 +4976,10 @@ export const getUserByEmail = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -4974,6 +5047,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -4985,15 +5062,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -5121,6 +5189,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -5132,15 +5204,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -5202,6 +5265,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -5213,15 +5280,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -5283,6 +5341,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -5294,15 +5356,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -5321,6 +5374,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -5365,6 +5422,10 @@ export const getUserByEmail = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editHistory {
         recordingHistoryId
@@ -5384,6 +5445,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -5483,6 +5548,10 @@ export const getUserByEmail = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -5494,15 +5563,6 @@ export const getUserByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         date
@@ -5590,16 +5650,19 @@ export const getUserByEmail = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
-        backgroundImg
-        backgroundColor
-        textColor
-        highlightColor
-        highlightOpacity
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
       }
     }
   }
@@ -5689,6 +5752,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -5700,15 +5767,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -5727,6 +5785,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -5844,6 +5906,10 @@ export const listUsers = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -5902,16 +5968,19 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       labelledRecording {
@@ -5995,6 +6064,10 @@ export const listUsers = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         key
         tabLink
@@ -6062,6 +6135,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6073,15 +6150,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         isLabelerRejected
@@ -6209,6 +6277,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6220,15 +6292,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -6290,6 +6353,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6301,15 +6368,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -6371,6 +6429,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6382,15 +6444,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -6409,6 +6462,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -6453,6 +6510,10 @@ export const listUsers = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       editHistory {
         recordingHistoryId
@@ -6472,6 +6533,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -6571,6 +6636,10 @@ export const listUsers = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6582,15 +6651,6 @@ export const listUsers = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         date
@@ -6678,16 +6738,19 @@ export const listUsers = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
-        backgroundImg
-        backgroundColor
-        textColor
-        highlightColor
-        highlightOpacity
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
       }
     }
   }
@@ -6770,6 +6833,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6781,15 +6848,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -6851,6 +6909,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6862,15 +6924,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -6932,6 +6985,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -6943,15 +7000,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -6970,6 +7018,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -7014,6 +7066,10 @@ export const getBand = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       sets {
         setListId
@@ -7032,16 +7088,19 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
         editors {
           userId
@@ -7102,6 +7161,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -7113,15 +7176,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         creator {
@@ -7183,6 +7237,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -7194,15 +7252,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         band {
@@ -7222,6 +7271,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           sets {
             setListId
@@ -7340,6 +7393,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -7351,15 +7408,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7378,6 +7426,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -7495,6 +7547,10 @@ export const getBand = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -7553,16 +7609,19 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       admins {
@@ -7636,6 +7695,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -7647,15 +7710,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7674,6 +7728,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -7791,6 +7849,10 @@ export const getBand = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -7849,16 +7911,19 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       owner {
@@ -7932,6 +7997,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -7943,15 +8012,6 @@ export const getBand = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -7970,6 +8030,10 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -8087,6 +8151,10 @@ export const getBand = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -8145,16 +8213,19 @@ export const getBand = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       policy
@@ -8249,6 +8320,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8260,15 +8335,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -8330,6 +8396,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8341,15 +8411,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -8411,6 +8472,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8422,15 +8487,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -8449,6 +8505,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -8493,6 +8553,10 @@ export const listBands = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       sets {
         setListId
@@ -8511,16 +8575,19 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
         editors {
           userId
@@ -8581,6 +8648,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8592,15 +8663,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         creator {
@@ -8662,6 +8724,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8673,15 +8739,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         band {
@@ -8701,6 +8758,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           sets {
             setListId
@@ -8819,6 +8880,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -8830,15 +8895,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -8857,6 +8913,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -8974,6 +9034,10 @@ export const listBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -9032,16 +9096,19 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       admins {
@@ -9115,6 +9182,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -9126,15 +9197,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -9153,6 +9215,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -9270,6 +9336,10 @@ export const listBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -9328,16 +9398,19 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       owner {
@@ -9411,6 +9484,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -9422,15 +9499,6 @@ export const listBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -9449,6 +9517,10 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -9566,6 +9638,10 @@ export const listBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -9624,16 +9700,19 @@ export const listBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       policy
@@ -9718,6 +9797,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -9729,15 +9812,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         editors {
@@ -9799,6 +9873,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -9810,15 +9888,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         viewers {
@@ -9880,6 +9949,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -9891,15 +9964,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         recordings {
@@ -9918,6 +9982,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -9962,6 +10030,10 @@ export const listPublicBands = /* GraphQL */ `
         chordSheetKey
         originPlatorm
         originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
       }
       sets {
         setListId
@@ -9980,16 +10052,19 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
         editors {
           userId
@@ -10050,6 +10125,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -10061,15 +10140,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         creator {
@@ -10131,6 +10201,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -10142,15 +10216,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         band {
@@ -10170,6 +10235,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           sets {
             setListId
@@ -10288,6 +10357,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -10299,15 +10372,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10326,6 +10390,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -10443,6 +10511,10 @@ export const listPublicBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -10501,16 +10573,19 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       admins {
@@ -10584,6 +10659,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -10595,15 +10674,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10622,6 +10692,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -10739,6 +10813,10 @@ export const listPublicBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -10797,16 +10875,19 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       owner {
@@ -10880,6 +10961,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -10891,15 +10976,6 @@ export const listPublicBands = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -10918,6 +10994,10 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -11035,6 +11115,10 @@ export const listPublicBands = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -11093,16 +11177,19 @@ export const listPublicBands = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       policy
@@ -11193,16 +11280,19 @@ export const getSet = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
-        backgroundImg
-        backgroundColor
-        textColor
-        highlightColor
-        highlightOpacity
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
       }
       editors {
         userId
@@ -11275,6 +11365,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -11286,15 +11380,6 @@ export const getSet = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -11313,6 +11398,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -11430,6 +11519,10 @@ export const getSet = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -11488,16 +11581,19 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       creator {
@@ -11571,6 +11667,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -11582,15 +11682,6 @@ export const getSet = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -11609,6 +11700,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -11726,6 +11821,10 @@ export const getSet = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -11784,16 +11883,19 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       band {
@@ -11878,21 +11980,16 @@ export const getSet = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         sets {
           setListId
           description
           songs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
           editors {
             userId
@@ -11987,6 +12084,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -11998,15 +12099,6 @@ export const getSet = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         admins {
@@ -12068,6 +12160,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -12079,15 +12175,6 @@ export const getSet = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         owner {
@@ -12149,6 +12236,10 @@ export const getSet = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -12160,15 +12251,6 @@ export const getSet = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         policy
@@ -12275,16 +12357,19 @@ export const listSets = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
-        backgroundImg
-        backgroundColor
-        textColor
-        highlightColor
-        highlightOpacity
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
       }
       editors {
         userId
@@ -12357,6 +12442,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -12368,15 +12457,6 @@ export const listSets = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -12395,6 +12475,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -12512,6 +12596,10 @@ export const listSets = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -12570,16 +12658,19 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       creator {
@@ -12653,6 +12744,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -12664,15 +12759,6 @@ export const listSets = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -12691,6 +12777,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -12808,6 +12898,10 @@ export const listSets = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -12866,16 +12960,19 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       band {
@@ -12960,21 +13057,16 @@ export const listSets = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         sets {
           setListId
           description
           songs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
           editors {
             userId
@@ -13069,6 +13161,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13080,15 +13176,6 @@ export const listSets = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         admins {
@@ -13150,6 +13237,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13161,15 +13252,6 @@ export const listSets = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         owner {
@@ -13231,6 +13313,10 @@ export const listSets = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13242,15 +13328,6 @@ export const listSets = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         policy
@@ -13279,16 +13356,19 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
         editors {
           userId
@@ -13349,6 +13429,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13360,15 +13444,6 @@ export const getJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         creator {
@@ -13430,6 +13505,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13441,15 +13520,6 @@ export const getJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         band {
@@ -13469,6 +13539,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           sets {
             setListId
@@ -13587,6 +13661,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13598,15 +13676,6 @@ export const getJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -13625,6 +13694,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -13742,6 +13815,10 @@ export const getJamSession = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -13800,16 +13877,19 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       members {
@@ -13883,6 +13963,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -13894,15 +13978,6 @@ export const getJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -13921,6 +13996,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -14038,6 +14117,10 @@ export const getJamSession = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -14096,16 +14179,19 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       policy
@@ -14181,6 +14267,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -14192,15 +14282,6 @@ export const getJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -14219,6 +14300,10 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -14336,6 +14421,10 @@ export const getJamSession = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -14394,16 +14483,19 @@ export const getJamSession = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       guests
@@ -14416,6 +14508,15 @@ export const getJamSession = /* GraphQL */ `
       }
       startDate
       endDate
+      slideConfigOverrides {
+        songId
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+      }
+      slideTextSize
     }
   }
 `;
@@ -14448,16 +14549,19 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
         editors {
           userId
@@ -14518,6 +14622,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -14529,15 +14637,6 @@ export const listPublicJamSessions = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         creator {
@@ -14599,6 +14698,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -14610,15 +14713,6 @@ export const listPublicJamSessions = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         band {
@@ -14638,6 +14732,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           sets {
             setListId
@@ -14756,6 +14854,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -14767,15 +14869,6 @@ export const listPublicJamSessions = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -14794,6 +14887,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -14911,6 +15008,10 @@ export const listPublicJamSessions = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -14969,16 +15070,19 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       members {
@@ -15052,6 +15156,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -15063,15 +15171,6 @@ export const listPublicJamSessions = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -15090,6 +15189,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -15207,6 +15310,10 @@ export const listPublicJamSessions = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -15265,16 +15372,19 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       policy
@@ -15350,6 +15460,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           editHistory {
             recordingHistoryId
@@ -15361,15 +15475,6 @@ export const listPublicJamSessions = /* GraphQL */ `
           }
           likedSongs {
             key
-            backgroundImg
-            backgroundColor
-            textColor
-            highlightColor
-            highlightOpacity
-            CCLISongTitle
-            CCLISongWriter
-            CCLICopyrightNotice
-            CCLILicenseNumber
           }
         }
         labelledRecording {
@@ -15388,6 +15493,10 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
           key
           tabLink
@@ -15505,6 +15614,10 @@ export const listPublicJamSessions = /* GraphQL */ `
           chordSheetKey
           originPlatorm
           originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
         }
         editHistory {
           recordingHistoryId
@@ -15563,16 +15676,19 @@ export const listPublicJamSessions = /* GraphQL */ `
             chordSheetKey
             originPlatorm
             originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
           }
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          defaultSlideConfig {
+            songId
+            backgroundImg
+            backgroundColor
+            textColor
+            highlightColor
+            highlightOpacity
+          }
         }
       }
       guests
@@ -15585,6 +15701,15 @@ export const listPublicJamSessions = /* GraphQL */ `
       }
       startDate
       endDate
+      slideConfigOverrides {
+        songId
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+      }
+      slideTextSize
     }
   }
 `;

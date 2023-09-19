@@ -442,5 +442,17 @@ export class AppsyncStack extends Stack {
       typeName: "Mutation",
       fieldName: "setSongKey"
     })
+
+    const setJamSlideConfig = new NodejsFunction(this, `${props.name}-SetJamSlideConfig`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setJamSlideConfig.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetJamSlideConfigDS`, setJamSlideConfig)
+    .createResolver(`${props.name}-SetJamSlideConfigResolver`, {
+      typeName: "Mutation",
+      fieldName: "setJamSlideConfig"
+    })
   }
 }

@@ -7,14 +7,16 @@ import { GraphQLResult, GraphQLSubscription } from '@aws-amplify/api'
 import * as s from '@/src/graphql/subscriptions'
 import * as m from '@/src/graphql/mutations'
 import { JamSession, JamSong, NextKey, NextPage, OnNextPageSubscription, OnNextSongSubscription, OnSongKeySubscription, Song } from "@/src/API"
-import Slides from "./slides"
 import { useEffect, useState } from "react"
-import { ChevronDoubleRightIcon } from '@heroicons/react/24/solid'
+import { ChevronDoubleRightIcon, ArrowsPointingOutIcon } from '@heroicons/react/24/solid'
 import Controls from './controls'
 import { useSideBarContext } from '../context'
 
+import { default as PSlides } from "./slides"
+import { default as SSlides } from '../(slides)/slides'
+
 export interface PlayerProps {
-  jam: JamSession
+  jam: JamSession, isSlideShow?: boolean
 }
 
 Amplify.configure({ ...awsConfig, ssr: true });
@@ -199,16 +201,35 @@ export default function Player(p: PlayerProps) {
     else closeFullScreen()
   }, [fullScreen])
 
+  const onFullScreenChange = (event: any) => { 
+    if (document.fullscreenElement) setFullScreen(true)
+    else setFullScreen(false)
+  }
+  useEffect(() => {
+    addEventListener("fullscreenchange", onFullScreenChange)
+    return () => removeEventListener("fullscreenchange", onFullScreenChange)
+  }, [])
+
   return <div className="text-white w-full h-screen flex flex-col overflow-hidden" id="player">
     { p.jam.setList.songs[song]?.song && 
-      <Slides song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} textSize={textSize} complex={complex} headsUp={headsUp}/> 
+      p.isSlideShow ? 
+        <SSlides
+          song={p.jam.setList.songs[song]!.song} page={page} 
+          setPage={setNextPage} setLastPage={setLastPage}
+          textSize={"text-3xl"}
+        />:
+        <PSlides 
+          song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} 
+          setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
+          textSize={textSize} complex={complex} headsUp={headsUp}
+        />
     }
-    { isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
+    { !p.isSlideShow && isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
         className='fixed bottom-4 right-10 bg-oslyn-600 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
     </button> }
-    { p.jam.setList.songs && 
+    { p.jam.setList.songs && !p.isSlideShow &&
       <Controls 
         capo={{ capo:`${0-transpose}`, setCapo }} 
         song={{ song, setSong: setNextSong, songs: p.jam.setList.songs as JamSong[] }} 
@@ -221,5 +242,10 @@ export default function Player(p: PlayerProps) {
         }}
       /> 
     }
+    { p.isSlideShow && !fullScreen && <button onClick={() => setFullScreen(true)}
+      className={`fixed z-90 right-10 top-4 bg-coral-400 w-12 h-12 rounded-lg p-2 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl`}
+    >
+      <ArrowsPointingOutIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />
+    </button>}
   </div>
 }

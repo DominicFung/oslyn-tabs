@@ -2,7 +2,7 @@
 
 import { chordSheetToSlides } from "@/core/oslyn"
 import { OslynSlide } from "@/core/types"
-import { JamSong } from "@/src/API"
+import { Song } from "@/src/API"
 import { useEffect, useState } from "react"
 import Line from "./line"
 import { calcMaxWidthTailwindClass } from "@/core/utils/frontend"
@@ -11,7 +11,7 @@ import Image from "next/image"
 import { useSideBarContext } from "@/app/context"
 
 interface SlidesProps {
-  song: JamSong  
+  song: Song  
   textSize?: string
 
 
@@ -64,9 +64,9 @@ export default function Slides(p: SlidesProps) {
   
   useEffect(() => {
     console.log(p.song)
-    if (p.song.song.chordSheet && p.song.song.chordSheetKey) {
-      console.log(p.song.song.chordSheet)
-      const oslynSlides = chordSheetToSlides(p.song.song.chordSheet, p.song.song.chordSheetKey || "C")
+    if (p.song.chordSheet && p.song.chordSheetKey) {
+      console.log(p.song.chordSheet)
+      const oslynSlides = chordSheetToSlides(p.song.chordSheet, p.song.chordSheetKey || "C")
       console.log(oslynSlides)
       setSlides(oslynSlides)
     }
@@ -123,10 +123,10 @@ export default function Slides(p: SlidesProps) {
    
     {page === 0 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">
-        {p.song.song.albumCover && <Image src={p.song.song.albumCover} alt={p.song.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
+        {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
         <div className="m-2">
-          <div className="text-gray-500 bold">{p.song.song.title}</div>
-          <div className="text-gray-600 text-xs">{p.song.song.artist}</div>
+          <div className="text-gray-500 bold">{p.song.title}</div>
+          <div className="text-gray-600 text-xs">{p.song.artist}</div>
         </div>
       </div>
     </div>}

@@ -94,6 +94,7 @@ type Mutation {
   nextPage(jamSessionId: ID!, page: Int!): NextPage
   nextSong(jamSessionId: ID!, song: Int!, page: Int): NextSong
   setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
+  setJamSlideConfig(jamSessionId:ID!, textSize: String): JamSessionSlideConfig 
 
   signInToJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
   signOutFromJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
@@ -103,6 +104,7 @@ type Subscription {
   onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations: ["nextPage"])
   onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations: ["nextSong"])
   onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
+  onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
 
   onSignInToJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signInToJamSession"])
   onSignOutFromJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signOutFromJamSession"])
@@ -113,6 +115,11 @@ enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
 enum provider { google, facebook }
 enum access { admin, edit, view }
+
+type JamSessionSlideConfig {
+  jamSessionId: ID!
+  textSize: String
+}
 
 type NextPage {
   jamSessionId: ID!
@@ -182,23 +189,25 @@ type JamSession {
 
   startDate: AWSTimestamp
   endDate: AWSTimestamp
+
+  slideConfigOverrides: [SongSlideConfig]
+  slideTextSize: String
 }
 
 # Not a DB Item!
 type JamSong {
   key: String!
   song: Song!
+  defaultSlideConfig: SongSlideConfig
+}
 
+type SongSlideConfig {
+  songId: ID!
   backgroundImg: String
   backgroundColor: String
   textColor: String
   highlightColor: String
   highlightOpacity: String
-
-  CCLISongTitle: String
-  CCLISongWriter: String
-  CCLICopyrightNotice: String
-  CCLILicenseNumber: String
 }
 
 input JamSongInput {
@@ -241,6 +250,11 @@ type Song {
   chordSheetKey: String
   originPlatorm: chordSheetPlatform 
   originLink: String
+
+  CCLISongTitle: String
+  CCLISongWriter: String
+  CCLICopyrightNotice: String
+  CCLILicenseNumber: String
 }
 
 type User {
