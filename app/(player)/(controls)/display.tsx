@@ -34,7 +34,7 @@ export default function Display(p: DisplayProps) {
 
   useEffect(() => { setMounted(true) }, [])
   useEffect(() => { setTheme(mode) }, [mode])
-  useEffect(() => { if (theme && theme != mode) setMode(theme)}, [theme])
+  useEffect(() => { if (theme && theme != mode) { setMode(theme) }}, [theme])
 
   return <>
     <div className="ml-3 text-sm font-normal">

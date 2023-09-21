@@ -14,6 +14,7 @@ import { useSideBarContext } from '../context'
 
 import { default as PSlides } from "./slides"
 import { default as SSlides } from '../(slides)/slides'
+import { useTheme } from 'next-themes'
 
 export interface PlayerProps {
   jam: JamSession, isSlideShow?: boolean
@@ -23,6 +24,7 @@ Amplify.configure({ ...awsConfig, ssr: true });
 
 // http://192.168.68.128:3000/jam/95b1a549-127f-4a38-96c4-8dabfbb35bc1
 export default function Player(p: PlayerProps) {
+  const theme = useTheme()
   const { setOpenSidebar } = useSideBarContext()
 
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
@@ -210,7 +212,7 @@ export default function Player(p: PlayerProps) {
     return () => removeEventListener("fullscreenchange", onFullScreenChange)
   }, [])
 
-  return <div className="text-white w-full h-screen flex flex-col overflow-hidden" id="player">
+  return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${theme.theme || "light"}`} id="player">
     { p.jam.setList.songs[song]?.song && 
       p.isSlideShow ? 
         <SSlides

@@ -28,18 +28,17 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-::backdrop {
+.light::backdrop {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
   --tw-gradient-to: #bb9bff var(--tw-gradient-to-position);
   --tw-gradient-from: #e4bcbb var(--tw-gradient-from-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-@media (prefers-color-scheme: dark) {
-  ::backdrop {
-    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
-    --tw-gradient-to: #000 var(--tw-gradient-to-position);
-    --tw-gradient-from: #2a1a4a var(--tw-gradient-from-position);
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-  }
+
+.dark::backdrop {
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+  --tw-gradient-to: #000 var(--tw-gradient-to-position);
+  --tw-gradient-from: #2a1a4a var(--tw-gradient-from-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
