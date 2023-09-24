@@ -125,6 +125,7 @@ export const onSignInToJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -339,6 +340,7 @@ export const onSignInToJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests
@@ -434,6 +436,7 @@ export const onSignOutFromJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -648,6 +651,7 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests

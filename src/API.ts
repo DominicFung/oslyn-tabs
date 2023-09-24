@@ -128,6 +128,7 @@ export type JamSong = {
   key: string,
   song: Song,
   defaultSlideConfig?: SongSlideConfig | null,
+  order?: number | null,
 };
 
 export type SongSlideConfig = {
@@ -186,6 +187,7 @@ export enum policy {
 export type JamSongInput = {
   songId: string,
   key: string,
+  order?: number | null,
 };
 
 export type JamSession = {
@@ -362,6 +364,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -592,6 +595,7 @@ export type CreateUserMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -774,6 +778,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -927,6 +932,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -1009,6 +1015,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -1091,6 +1098,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -1313,6 +1321,7 @@ export type CreateUserMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -1421,6 +1430,7 @@ export type CreateUserMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   } | null,
 };
@@ -1537,6 +1547,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -1767,6 +1778,7 @@ export type AddFriendByEmailMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -1949,6 +1961,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -2102,6 +2115,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -2184,6 +2198,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -2266,6 +2281,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -2488,6 +2504,7 @@ export type AddFriendByEmailMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -2596,6 +2613,7 @@ export type AddFriendByEmailMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   },
 };
@@ -2712,6 +2730,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -2942,6 +2961,7 @@ export type RemoveFriendByIdMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -3124,6 +3144,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -3277,6 +3298,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -3359,6 +3381,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -3441,6 +3464,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -3663,6 +3687,7 @@ export type RemoveFriendByIdMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -3771,6 +3796,7 @@ export type RemoveFriendByIdMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   } | null,
 };
@@ -3893,6 +3919,7 @@ export type CreateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -4123,6 +4150,7 @@ export type CreateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -4218,6 +4246,7 @@ export type CreateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -4448,6 +4477,7 @@ export type CreateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -4543,6 +4573,7 @@ export type CreateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -4773,6 +4804,7 @@ export type CreateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -4955,6 +4987,7 @@ export type CreateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -5148,6 +5181,7 @@ export type UpdateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -5378,6 +5412,7 @@ export type UpdateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -5473,6 +5508,7 @@ export type UpdateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -5703,6 +5739,7 @@ export type UpdateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -5798,6 +5835,7 @@ export type UpdateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -6028,6 +6066,7 @@ export type UpdateSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -6210,6 +6249,7 @@ export type UpdateSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -6395,6 +6435,7 @@ export type ShareSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -6625,6 +6666,7 @@ export type ShareSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -6720,6 +6762,7 @@ export type ShareSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -6950,6 +6993,7 @@ export type ShareSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -7045,6 +7089,7 @@ export type ShareSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -7275,6 +7320,7 @@ export type ShareSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -7457,6 +7503,7 @@ export type ShareSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -7641,6 +7688,7 @@ export type RemoveAccessMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -7871,6 +7919,7 @@ export type RemoveAccessMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -7966,6 +8015,7 @@ export type RemoveAccessMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -8196,6 +8246,7 @@ export type RemoveAccessMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -8291,6 +8342,7 @@ export type RemoveAccessMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -8521,6 +8573,7 @@ export type RemoveAccessMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -8703,6 +8756,7 @@ export type RemoveAccessMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -8886,6 +8940,7 @@ export type AddRecordingToSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -9116,6 +9171,7 @@ export type AddRecordingToSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -9211,6 +9267,7 @@ export type AddRecordingToSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -9441,6 +9498,7 @@ export type AddRecordingToSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -9536,6 +9594,7 @@ export type AddRecordingToSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -9766,6 +9825,7 @@ export type AddRecordingToSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -9948,6 +10008,7 @@ export type AddRecordingToSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -10131,6 +10192,7 @@ export type RemoveRecordingFromSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -10361,6 +10423,7 @@ export type RemoveRecordingFromSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -10456,6 +10519,7 @@ export type RemoveRecordingFromSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -10686,6 +10750,7 @@ export type RemoveRecordingFromSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -10781,6 +10846,7 @@ export type RemoveRecordingFromSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -11011,6 +11077,7 @@ export type RemoveRecordingFromSongMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -11193,6 +11260,7 @@ export type RemoveRecordingFromSongMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -11372,6 +11440,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -11454,6 +11523,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -11536,6 +11606,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -11645,6 +11716,7 @@ export type CreateBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -11726,6 +11798,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -11808,6 +11881,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -11977,6 +12051,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -12207,6 +12282,7 @@ export type CreateBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -12302,6 +12378,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -12532,6 +12609,7 @@ export type CreateBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -12627,6 +12705,7 @@ export type CreateBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -12857,6 +12936,7 @@ export type CreateBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -12969,6 +13049,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -13051,6 +13132,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -13133,6 +13215,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -13242,6 +13325,7 @@ export type AddBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -13323,6 +13407,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -13405,6 +13490,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -13574,6 +13660,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -13804,6 +13891,7 @@ export type AddBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -13899,6 +13987,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -14129,6 +14218,7 @@ export type AddBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -14224,6 +14314,7 @@ export type AddBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -14454,6 +14545,7 @@ export type AddBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -14566,6 +14658,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -14648,6 +14741,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -14730,6 +14824,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -14839,6 +14934,7 @@ export type RemoveBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -14920,6 +15016,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -15002,6 +15099,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -15171,6 +15269,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -15401,6 +15500,7 @@ export type RemoveBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -15496,6 +15596,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -15726,6 +15827,7 @@ export type RemoveBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -15821,6 +15923,7 @@ export type RemoveBandMembersMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -16051,6 +16154,7 @@ export type RemoveBandMembersMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -16163,6 +16267,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -16245,6 +16350,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -16327,6 +16433,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -16436,6 +16543,7 @@ export type AddSongsToBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -16517,6 +16625,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -16599,6 +16708,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -16768,6 +16878,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -16998,6 +17109,7 @@ export type AddSongsToBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -17093,6 +17205,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -17323,6 +17436,7 @@ export type AddSongsToBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -17418,6 +17532,7 @@ export type AddSongsToBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -17648,6 +17763,7 @@ export type AddSongsToBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -17760,6 +17876,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -17842,6 +17959,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -17924,6 +18042,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -18033,6 +18152,7 @@ export type RemoveSongsFromBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -18114,6 +18234,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -18196,6 +18317,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -18365,6 +18487,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -18595,6 +18718,7 @@ export type RemoveSongsFromBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -18690,6 +18814,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -18920,6 +19045,7 @@ export type RemoveSongsFromBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -19015,6 +19141,7 @@ export type RemoveSongsFromBandMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -19245,6 +19372,7 @@ export type RemoveSongsFromBandMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -19362,6 +19490,7 @@ export type CreateSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -19456,6 +19585,7 @@ export type CreateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -19686,6 +19816,7 @@ export type CreateSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -19781,6 +19912,7 @@ export type CreateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -20011,6 +20143,7 @@ export type CreateSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -20114,6 +20247,7 @@ export type CreateSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -20232,6 +20366,7 @@ export type CreateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -20314,6 +20449,7 @@ export type CreateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -20396,6 +20532,7 @@ export type CreateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -20515,6 +20652,7 @@ export type UpdateSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -20609,6 +20747,7 @@ export type UpdateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -20839,6 +20978,7 @@ export type UpdateSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -20934,6 +21074,7 @@ export type UpdateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -21164,6 +21305,7 @@ export type UpdateSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -21267,6 +21409,7 @@ export type UpdateSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -21385,6 +21528,7 @@ export type UpdateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -21467,6 +21611,7 @@ export type UpdateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -21549,6 +21694,7 @@ export type UpdateSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -21666,6 +21812,7 @@ export type AddEditorToSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -21760,6 +21907,7 @@ export type AddEditorToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -21990,6 +22138,7 @@ export type AddEditorToSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -22085,6 +22234,7 @@ export type AddEditorToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -22315,6 +22465,7 @@ export type AddEditorToSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -22418,6 +22569,7 @@ export type AddEditorToSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -22536,6 +22688,7 @@ export type AddEditorToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -22618,6 +22771,7 @@ export type AddEditorToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -22700,6 +22854,7 @@ export type AddEditorToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -22817,6 +22972,7 @@ export type RemoveEditorFromSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -22911,6 +23067,7 @@ export type RemoveEditorFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -23141,6 +23298,7 @@ export type RemoveEditorFromSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -23236,6 +23394,7 @@ export type RemoveEditorFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -23466,6 +23625,7 @@ export type RemoveEditorFromSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -23569,6 +23729,7 @@ export type RemoveEditorFromSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -23687,6 +23848,7 @@ export type RemoveEditorFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -23769,6 +23931,7 @@ export type RemoveEditorFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -23851,6 +24014,7 @@ export type RemoveEditorFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -23969,6 +24133,7 @@ export type AddSongToSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -24063,6 +24228,7 @@ export type AddSongToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -24293,6 +24459,7 @@ export type AddSongToSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -24388,6 +24555,7 @@ export type AddSongToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -24618,6 +24786,7 @@ export type AddSongToSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -24721,6 +24890,7 @@ export type AddSongToSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -24839,6 +25009,7 @@ export type AddSongToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -24921,6 +25092,7 @@ export type AddSongToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -25003,6 +25175,7 @@ export type AddSongToSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -25120,6 +25293,7 @@ export type RemoveSongFromSetMutation = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -25214,6 +25388,7 @@ export type RemoveSongFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -25444,6 +25619,7 @@ export type RemoveSongFromSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -25539,6 +25715,7 @@ export type RemoveSongFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -25769,6 +25946,7 @@ export type RemoveSongFromSetMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -25872,6 +26050,7 @@ export type RemoveSongFromSetMutation = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -25990,6 +26169,7 @@ export type RemoveSongFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -26072,6 +26252,7 @@ export type RemoveSongFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -26154,6 +26335,7 @@ export type RemoveSongFromSetMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -26206,6 +26388,7 @@ export type CreateJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -26287,6 +26470,7 @@ export type CreateJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -26369,6 +26553,7 @@ export type CreateJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -26538,6 +26723,7 @@ export type CreateJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -26768,6 +26954,7 @@ export type CreateJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     members:  Array< {
@@ -26863,6 +27050,7 @@ export type CreateJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -27093,6 +27281,7 @@ export type CreateJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     policy: policy,
@@ -27190,6 +27379,7 @@ export type CreateJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -27420,6 +27610,7 @@ export type CreateJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -27488,6 +27679,7 @@ export type EndJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -27569,6 +27761,7 @@ export type EndJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -27651,6 +27844,7 @@ export type EndJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -27820,6 +28014,7 @@ export type EndJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -28050,6 +28245,7 @@ export type EndJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     members:  Array< {
@@ -28145,6 +28341,7 @@ export type EndJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -28375,6 +28572,7 @@ export type EndJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     policy: policy,
@@ -28472,6 +28670,7 @@ export type EndJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -28702,6 +28901,7 @@ export type EndJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -28771,6 +28971,7 @@ export type ModifyJamSongsMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -28852,6 +29053,7 @@ export type ModifyJamSongsMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -28934,6 +29136,7 @@ export type ModifyJamSongsMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -29103,6 +29306,7 @@ export type ModifyJamSongsMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -29333,6 +29537,7 @@ export type ModifyJamSongsMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     members:  Array< {
@@ -29428,6 +29633,7 @@ export type ModifyJamSongsMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -29658,6 +29864,7 @@ export type ModifyJamSongsMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     policy: policy,
@@ -29755,6 +29962,7 @@ export type ModifyJamSongsMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -29985,6 +30193,7 @@ export type ModifyJamSongsMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -30169,6 +30378,7 @@ export type SignInToJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -30399,6 +30609,7 @@ export type SignInToJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -30507,6 +30718,7 @@ export type SignOutFromJamSessionMutation = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -30737,6 +30949,7 @@ export type SignOutFromJamSessionMutation = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -30856,6 +31069,7 @@ export type GetSongQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -31086,6 +31300,7 @@ export type GetSongQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -31181,6 +31396,7 @@ export type GetSongQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -31411,6 +31627,7 @@ export type GetSongQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -31506,6 +31723,7 @@ export type GetSongQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -31736,6 +31954,7 @@ export type GetSongQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -31918,6 +32137,7 @@ export type GetSongQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -32112,6 +32332,7 @@ export type ListSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -32342,6 +32563,7 @@ export type ListSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -32437,6 +32659,7 @@ export type ListSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -32667,6 +32890,7 @@ export type ListSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -32762,6 +32986,7 @@ export type ListSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -32992,6 +33217,7 @@ export type ListSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -33174,6 +33400,7 @@ export type ListSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -33360,6 +33587,7 @@ export type ListSharedSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -33590,6 +33818,7 @@ export type ListSharedSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     editors:  Array< {
@@ -33685,6 +33914,7 @@ export type ListSharedSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -33915,6 +34145,7 @@ export type ListSharedSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     viewers:  Array< {
@@ -34010,6 +34241,7 @@ export type ListSharedSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -34240,6 +34472,7 @@ export type ListSharedSongsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     recordings:  Array< {
@@ -34422,6 +34655,7 @@ export type ListSharedSongsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -34603,6 +34837,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -34833,6 +35068,7 @@ export type GetUserByIdQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -35015,6 +35251,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -35168,6 +35405,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -35250,6 +35488,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -35332,6 +35571,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -35554,6 +35794,7 @@ export type GetUserByIdQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -35662,6 +35903,7 @@ export type GetUserByIdQuery = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   } | null,
 };
@@ -35777,6 +36019,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -36007,6 +36250,7 @@ export type GetUserByEmailQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -36189,6 +36433,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -36342,6 +36587,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -36424,6 +36670,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -36506,6 +36753,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -36728,6 +36976,7 @@ export type GetUserByEmailQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -36836,6 +37085,7 @@ export type GetUserByEmailQuery = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   } | null,
 };
@@ -36953,6 +37203,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -37183,6 +37434,7 @@ export type ListUsersQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     labelledRecording:  Array< {
@@ -37365,6 +37617,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null,
       isLabelerRejected: boolean,
@@ -37518,6 +37771,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -37600,6 +37854,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -37682,6 +37937,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -37904,6 +38160,7 @@ export type ListUsersQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       date: string,
@@ -38012,6 +38269,7 @@ export type ListUsersQuery = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
   } | null >,
 };
@@ -38121,6 +38379,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -38203,6 +38462,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -38285,6 +38545,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -38394,6 +38655,7 @@ export type GetBandQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -38475,6 +38737,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -38557,6 +38820,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -38726,6 +38990,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -38956,6 +39221,7 @@ export type GetBandQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -39051,6 +39317,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -39281,6 +39548,7 @@ export type GetBandQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -39376,6 +39644,7 @@ export type GetBandQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -39606,6 +39875,7 @@ export type GetBandQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -39720,6 +39990,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -39802,6 +40073,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -39884,6 +40156,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -39993,6 +40266,7 @@ export type ListBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -40074,6 +40348,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -40156,6 +40431,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -40325,6 +40601,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -40555,6 +40832,7 @@ export type ListBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -40650,6 +40928,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -40880,6 +41159,7 @@ export type ListBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -40975,6 +41255,7 @@ export type ListBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -41205,6 +41486,7 @@ export type ListBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -41318,6 +41600,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       editors:  Array< {
@@ -41400,6 +41683,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       viewers:  Array< {
@@ -41482,6 +41766,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       recordings:  Array< {
@@ -41591,6 +41876,7 @@ export type ListPublicBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -41672,6 +41958,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -41754,6 +42041,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -41923,6 +42211,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -42153,6 +42442,7 @@ export type ListPublicBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     admins:  Array< {
@@ -42248,6 +42538,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -42478,6 +42769,7 @@ export type ListPublicBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     owner:  {
@@ -42573,6 +42865,7 @@ export type ListPublicBandsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -42803,6 +43096,7 @@ export type ListPublicBandsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     policy: policy,
@@ -42919,6 +43213,7 @@ export type GetSetQuery = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -43013,6 +43308,7 @@ export type GetSetQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -43243,6 +43539,7 @@ export type GetSetQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -43338,6 +43635,7 @@ export type GetSetQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -43568,6 +43866,7 @@ export type GetSetQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -43671,6 +43970,7 @@ export type GetSetQuery = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -43789,6 +44089,7 @@ export type GetSetQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -43871,6 +44172,7 @@ export type GetSetQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -43953,6 +44255,7 @@ export type GetSetQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -44081,6 +44384,7 @@ export type ListSetsQuery = {
         highlightColor?: string | null,
         highlightOpacity?: string | null,
       } | null,
+      order?: number | null,
     } | null >,
     editors:  Array< {
       __typename: "User",
@@ -44175,6 +44479,7 @@ export type ListSetsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -44405,6 +44710,7 @@ export type ListSetsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     creator:  {
@@ -44500,6 +44806,7 @@ export type ListSetsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -44730,6 +45037,7 @@ export type ListSetsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     },
     band?:  {
@@ -44833,6 +45141,7 @@ export type ListSetsQuery = {
         songs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
         editors:  Array< {
           __typename: "User",
@@ -44951,6 +45260,7 @@ export type ListSetsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       admins:  Array< {
@@ -45033,6 +45343,7 @@ export type ListSetsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       owner:  {
@@ -45115,6 +45426,7 @@ export type ListSetsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       policy: policy,
@@ -45165,6 +45477,7 @@ export type GetJamSessionQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -45246,6 +45559,7 @@ export type GetJamSessionQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -45328,6 +45642,7 @@ export type GetJamSessionQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -45497,6 +45812,7 @@ export type GetJamSessionQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -45727,6 +46043,7 @@ export type GetJamSessionQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     members:  Array< {
@@ -45822,6 +46139,7 @@ export type GetJamSessionQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -46052,6 +46370,7 @@ export type GetJamSessionQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     policy: policy,
@@ -46149,6 +46468,7 @@ export type GetJamSessionQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -46379,6 +46699,7 @@ export type GetJamSessionQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -46449,6 +46770,7 @@ export type ListPublicJamSessionsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
       editors:  Array< {
         __typename: "User",
@@ -46530,6 +46852,7 @@ export type ListPublicJamSessionsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       creator:  {
@@ -46612,6 +46935,7 @@ export type ListPublicJamSessionsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       },
       band?:  {
@@ -46781,6 +47105,7 @@ export type ListPublicJamSessionsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -47011,6 +47336,7 @@ export type ListPublicJamSessionsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     members:  Array< {
@@ -47106,6 +47432,7 @@ export type ListPublicJamSessionsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -47336,6 +47663,7 @@ export type ListPublicJamSessionsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     policy: policy,
@@ -47433,6 +47761,7 @@ export type ListPublicJamSessionsQuery = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -47663,6 +47992,7 @@ export type ListPublicJamSessionsQuery = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -47839,6 +48169,7 @@ export type OnSignInToJamSessionSubscription = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -48069,6 +48400,7 @@ export type OnSignInToJamSessionSubscription = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,
@@ -48175,6 +48507,7 @@ export type OnSignOutFromJamSessionSubscription = {
         likedSongs:  Array< {
           __typename: "JamSong",
           key: string,
+          order?: number | null,
         } | null >,
       } | null >,
       labelledRecording:  Array< {
@@ -48405,6 +48738,7 @@ export type OnSignOutFromJamSessionSubscription = {
           highlightColor?: string | null,
           highlightOpacity?: string | null,
         } | null,
+        order?: number | null,
       } | null >,
     } | null >,
     guests: Array< string | null >,

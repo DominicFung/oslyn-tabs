@@ -194,11 +194,12 @@ type JamSession {
   slideTextSize: String
 }
 
-# Not a DB Item!
+# Not a table
 type JamSong {
   key: String!
   song: Song!
   defaultSlideConfig: SongSlideConfig
+  order: Int
 }
 
 type SongSlideConfig {
@@ -213,6 +214,7 @@ type SongSlideConfig {
 input JamSongInput {
   songId: ID!
   key: String!
+  order: Int
 }
   
 input _Beat {

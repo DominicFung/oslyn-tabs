@@ -116,6 +116,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -330,6 +331,7 @@ export const createUser = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       labelledRecording {
@@ -499,6 +501,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -641,6 +644,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -717,6 +721,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -793,6 +798,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -1000,6 +1006,7 @@ export const createUser = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         date
@@ -1100,6 +1107,7 @@ export const createUser = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
     }
   }
@@ -1204,6 +1212,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -1418,6 +1427,7 @@ export const addFriendByEmail = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       labelledRecording {
@@ -1587,6 +1597,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -1729,6 +1740,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -1805,6 +1817,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -1881,6 +1894,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -2088,6 +2102,7 @@ export const addFriendByEmail = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         date
@@ -2188,6 +2203,7 @@ export const addFriendByEmail = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
     }
   }
@@ -2292,6 +2308,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -2506,6 +2523,7 @@ export const removeFriendById = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       labelledRecording {
@@ -2675,6 +2693,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -2817,6 +2836,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -2893,6 +2913,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -2969,6 +2990,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -3176,6 +3198,7 @@ export const removeFriendById = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         date
@@ -3276,6 +3299,7 @@ export const removeFriendById = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
     }
   }
@@ -3396,6 +3420,7 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -3610,6 +3635,7 @@ export const createSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -3698,6 +3724,7 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -3912,6 +3939,7 @@ export const createSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -4000,6 +4028,7 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -4214,6 +4243,7 @@ export const createSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -4383,6 +4413,7 @@ export const createSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -4576,6 +4607,7 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -4790,6 +4822,7 @@ export const updateSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -4878,6 +4911,7 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -5092,6 +5126,7 @@ export const updateSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -5180,6 +5215,7 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -5394,6 +5430,7 @@ export const updateSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -5563,6 +5600,7 @@ export const updateSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -5740,6 +5778,7 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -5954,6 +5993,7 @@ export const shareSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -6042,6 +6082,7 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -6256,6 +6297,7 @@ export const shareSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -6344,6 +6386,7 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -6558,6 +6601,7 @@ export const shareSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -6727,6 +6771,7 @@ export const shareSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -6902,6 +6947,7 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -7116,6 +7162,7 @@ export const removeAccess = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -7204,6 +7251,7 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -7418,6 +7466,7 @@ export const removeAccess = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -7506,6 +7555,7 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -7720,6 +7770,7 @@ export const removeAccess = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -7889,6 +7940,7 @@ export const removeAccess = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -8056,6 +8108,7 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -8270,6 +8323,7 @@ export const addRecordingToSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -8358,6 +8412,7 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -8572,6 +8627,7 @@ export const addRecordingToSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -8660,6 +8716,7 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -8874,6 +8931,7 @@ export const addRecordingToSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -9043,6 +9101,7 @@ export const addRecordingToSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -9210,6 +9269,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -9424,6 +9484,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       editors {
@@ -9512,6 +9573,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -9726,6 +9788,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       viewers {
@@ -9814,6 +9877,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -10028,6 +10092,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       recordings {
@@ -10197,6 +10262,7 @@ export const removeRecordingFromSong = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         isLabelerRejected
@@ -10369,6 +10435,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -10445,6 +10512,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -10521,6 +10589,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -10622,6 +10691,7 @@ export const createBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -10697,6 +10767,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -10773,6 +10844,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -10929,6 +11001,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -11143,6 +11216,7 @@ export const createBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       admins {
@@ -11231,6 +11305,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -11445,6 +11520,7 @@ export const createBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       owner {
@@ -11533,6 +11609,7 @@ export const createBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -11747,6 +11824,7 @@ export const createBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -11846,6 +11924,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -11922,6 +12001,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -11998,6 +12078,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -12099,6 +12180,7 @@ export const addBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -12174,6 +12256,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -12250,6 +12333,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -12406,6 +12490,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -12620,6 +12705,7 @@ export const addBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       admins {
@@ -12708,6 +12794,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -12922,6 +13009,7 @@ export const addBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       owner {
@@ -13010,6 +13098,7 @@ export const addBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -13224,6 +13313,7 @@ export const addBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -13323,6 +13413,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -13399,6 +13490,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -13475,6 +13567,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -13576,6 +13669,7 @@ export const removeBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -13651,6 +13745,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -13727,6 +13822,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -13883,6 +13979,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -14097,6 +14194,7 @@ export const removeBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       admins {
@@ -14185,6 +14283,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -14399,6 +14498,7 @@ export const removeBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       owner {
@@ -14487,6 +14587,7 @@ export const removeBandMembers = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -14701,6 +14802,7 @@ export const removeBandMembers = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -14800,6 +14902,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -14876,6 +14979,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -14952,6 +15056,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -15053,6 +15158,7 @@ export const addSongsToBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -15128,6 +15234,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -15204,6 +15311,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -15360,6 +15468,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -15574,6 +15683,7 @@ export const addSongsToBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       admins {
@@ -15662,6 +15772,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -15876,6 +15987,7 @@ export const addSongsToBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       owner {
@@ -15964,6 +16076,7 @@ export const addSongsToBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -16178,6 +16291,7 @@ export const addSongsToBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -16277,6 +16391,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         editors {
@@ -16353,6 +16468,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         viewers {
@@ -16429,6 +16545,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         recordings {
@@ -16530,6 +16647,7 @@ export const removeSongsFromBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -16605,6 +16723,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -16681,6 +16800,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -16837,6 +16957,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -17051,6 +17172,7 @@ export const removeSongsFromBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       admins {
@@ -17139,6 +17261,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -17353,6 +17476,7 @@ export const removeSongsFromBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       owner {
@@ -17441,6 +17565,7 @@ export const removeSongsFromBand = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -17655,6 +17780,7 @@ export const removeSongsFromBand = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -17762,6 +17888,7 @@ export const createSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -17849,6 +17976,7 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -18063,6 +18191,7 @@ export const createSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -18151,6 +18280,7 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -18365,6 +18495,7 @@ export const createSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -18459,6 +18590,7 @@ export const createSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -18568,6 +18700,7 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -18644,6 +18777,7 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -18720,6 +18854,7 @@ export const createSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -18834,6 +18969,7 @@ export const updateSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -18921,6 +19057,7 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -19135,6 +19272,7 @@ export const updateSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -19223,6 +19361,7 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -19437,6 +19576,7 @@ export const updateSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -19531,6 +19671,7 @@ export const updateSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -19640,6 +19781,7 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -19716,6 +19858,7 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -19792,6 +19935,7 @@ export const updateSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -19896,6 +20040,7 @@ export const addEditorToSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -19983,6 +20128,7 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -20197,6 +20343,7 @@ export const addEditorToSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -20285,6 +20432,7 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -20499,6 +20647,7 @@ export const addEditorToSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -20593,6 +20742,7 @@ export const addEditorToSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -20702,6 +20852,7 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -20778,6 +20929,7 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -20854,6 +21006,7 @@ export const addEditorToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -20958,6 +21111,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -21045,6 +21199,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -21259,6 +21414,7 @@ export const removeEditorFromSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -21347,6 +21503,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -21561,6 +21718,7 @@ export const removeEditorFromSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -21655,6 +21813,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -21764,6 +21923,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -21840,6 +22000,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -21916,6 +22077,7 @@ export const removeEditorFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -22020,6 +22182,7 @@ export const addSongToSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -22107,6 +22270,7 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -22321,6 +22485,7 @@ export const addSongToSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -22409,6 +22574,7 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -22623,6 +22789,7 @@ export const addSongToSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -22717,6 +22884,7 @@ export const addSongToSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -22826,6 +22994,7 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -22902,6 +23071,7 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -22978,6 +23148,7 @@ export const addSongToSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -23082,6 +23253,7 @@ export const removeSongFromSet = /* GraphQL */ `
           highlightColor
           highlightOpacity
         }
+        order
       }
       editors {
         userId
@@ -23169,6 +23341,7 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -23383,6 +23556,7 @@ export const removeSongFromSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       creator {
@@ -23471,6 +23645,7 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -23685,6 +23860,7 @@ export const removeSongFromSet = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       band {
@@ -23779,6 +23955,7 @@ export const removeSongFromSet = /* GraphQL */ `
           description
           songs {
             key
+            order
           }
           editors {
             userId
@@ -23888,6 +24065,7 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         admins {
@@ -23964,6 +24142,7 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         owner {
@@ -24040,6 +24219,7 @@ export const removeSongFromSet = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         policy
@@ -24091,6 +24271,7 @@ export const createJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -24166,6 +24347,7 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -24242,6 +24424,7 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -24398,6 +24581,7 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -24612,6 +24796,7 @@ export const createJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       members {
@@ -24700,6 +24885,7 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -24914,6 +25100,7 @@ export const createJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -25004,6 +25191,7 @@ export const createJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -25218,6 +25406,7 @@ export const createJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests
@@ -25276,6 +25465,7 @@ export const endJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -25351,6 +25541,7 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -25427,6 +25618,7 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -25583,6 +25775,7 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -25797,6 +25990,7 @@ export const endJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       members {
@@ -25885,6 +26079,7 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -26099,6 +26294,7 @@ export const endJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -26189,6 +26385,7 @@ export const endJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -26403,6 +26600,7 @@ export const endJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests
@@ -26461,6 +26659,7 @@ export const modifyJamSongs = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
         editors {
           userId
@@ -26536,6 +26735,7 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         creator {
@@ -26612,6 +26812,7 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         band {
@@ -26768,6 +26969,7 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -26982,6 +27184,7 @@ export const modifyJamSongs = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       members {
@@ -27070,6 +27273,7 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -27284,6 +27488,7 @@ export const modifyJamSongs = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       policy
@@ -27374,6 +27579,7 @@ export const modifyJamSongs = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -27588,6 +27794,7 @@ export const modifyJamSongs = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests
@@ -27743,6 +27950,7 @@ export const signInToJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -27957,6 +28165,7 @@ export const signInToJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests
@@ -28060,6 +28269,7 @@ export const signOutFromJamSession = /* GraphQL */ `
           }
           likedSongs {
             key
+            order
           }
         }
         labelledRecording {
@@ -28274,6 +28484,7 @@ export const signOutFromJamSession = /* GraphQL */ `
             highlightColor
             highlightOpacity
           }
+          order
         }
       }
       guests

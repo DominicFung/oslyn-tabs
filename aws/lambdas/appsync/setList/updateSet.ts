@@ -12,7 +12,10 @@ const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string, userId?: string, description?: string, songs?: {songId: string, key: string}[], bandId?: string, 
+  setListId: string, userId?: string, description?: string, 
+  songs?: {
+    songId: string, key: string, order: number
+  }[], bandId?: string, 
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -38,7 +41,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (b.description) updateSet.description = b.description
   if (b.songs) updateSet.songs = b.songs
   if (b.bandId) updateSet.bandId = b.bandId
-
+  
   const params = updateDynamoUtil({ table: SETLIST_TABLE_NAME, item: updateSet, key: { setListId: b.setListId } })
   const res1 = await dynamo.send(new UpdateItemCommand(params))
   console.log(res1)

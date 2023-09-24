@@ -11,8 +11,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { _Session } from '@/core/utils/frontend'
 
 export async function GET(request: Request) {
-  console.log(`${request.method} ${request.url}`)
-
   const session = await getServerSession(authOptions)
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
@@ -23,13 +21,10 @@ export async function GET(request: Request) {
     q.getSetCount, { userId: userId, addSharedCount: true }
   )) as GraphQLResult<{ getSetCount: number }>
 
-  console.log(d)
-
   if (!d.data?.getSetCount === undefined || !d.data?.getSetCount === null) {
     console.error(`getSongCount data is empty: ${JSON.stringify(d.data)}`)
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
 
-  console.log(`${request.method} ${request.url} .. complete`)
   return NextResponse.json({ count: d.data?.getSetCount })
 }

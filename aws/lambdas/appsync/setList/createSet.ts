@@ -10,7 +10,9 @@ const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  userId: string, description: string, songs: {songId: string, key: string}[], bandId?: string, 
+  userId: string, description: string, songs: {
+    songId: string, key: string, order: Number
+  }[], bandId?: string, 
 }, null>) => {
   console.log(event)
   const b = event.arguments

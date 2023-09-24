@@ -1,22 +1,38 @@
 "use client"
-import Image from "next/image"
 import { JamSong, SetList, Song, User } from "@/src/API"
 
-import { Listbox, Transition } from '@headlessui/react'
-import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
-
-import { useEffect, useState, Fragment } from "react"
+import { useEffect, useState, useMemo } from "react"
 import Save from "./save"
+
+import Row from "./(table)/row"
+
+import { 
+  closestCenter, DndContext, DragOverlay, KeyboardSensor, 
+  MouseSensor, TouchSensor, useSensor, useSensors
+} from "@dnd-kit/core"
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { DraggableTableRow } from "./(table)/dragrow"
+import DragHandle from "./(table)/draghandle"
+
 
 export interface SetTableProps {
   songs: Song[]
   set?: SetList
 }
 
-export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
+function songIndex(songs: Song[], songId: string) {
+  for (let i=0; i<songs.length; i++) {
+    if (songs[i].songId === songId) return i
+  }
+  return -1
+}
 
 export default function SetTable(p: SetTableProps) {
   const [ songs, setSongs ] = useState<Song[]>([]) // only to be set within
+  const [ active, setActive ] = useState<Song|null>(null)
+  const items = useMemo(() => songs?.map(({ songId }) => songId), [songs])
+
   const [ setList, setSetList ] = useState({
     setListId: "",
     description: "",
@@ -31,18 +47,60 @@ export default function SetTable(p: SetTableProps) {
 
   const [ preview, setPreview ] = useState("")
 
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  )
+
+  function handleDragStart(event: any) {
+    if (event.active && event.active.id) {
+      console.log(`handleDragStart: ${event.active.id}`)
+      setActive(songs[songIndex(songs, event.active.id)])
+    } else console.error("ERROR: could not handdle 'handleDragStart'")
+  }
+
+  function handleDragEnd(event: any) {
+    const { active, over } = event
+    console.log("handleDragEnd")
+    console.log(active)
+    console.log(over)
+    if (active.id !== over.id) {
+      const oldIndex = songIndex(songs, active.id)
+      const newIndex = songIndex(songs, over.id)
+      console.log(`old: ${oldIndex}, new: ${newIndex}`)
+
+      setSListCheck((data) => {
+        return arrayMove(data, oldIndex, newIndex)
+      })
+
+      setSongs((data) => {
+        console.log(data)
+        let s = arrayMove(data, oldIndex, newIndex)
+        console.log(s)
+        return s
+      })
+    }
+
+    setActive(null)
+  }
+
+  function handleDragCancel() {
+    setActive(null)
+  }
+
   useEffect(() => {
     const b = { ...setList, description, songs: [] as JamSong[] } as SetList
     if (sListCheck.length !== keys.length) { console.error("CheckList needs to be the same length as keys."); return }
     if (sListCheck.length !== songs.length) { console.error("CheckList needs to be the same length as p.songs."); return }
 
     for (let i = 0; i < sListCheck.length; i++) {
-      if (sListCheck[i]) { b.songs.push({ song: p.songs[i] as Song, key: keys[i] } as JamSong) }
+      if (sListCheck[i]) { b.songs.push({ song: songs[i] as Song, key: keys[i] } as JamSong) }
     }
 
     console.log(b)
     setSetList(b)
-  }, [description, sListCheck, keys])
+  }, [description, sListCheck, keys, songs])
 
   useEffect(() => {
     let allTrue = true
@@ -101,116 +159,71 @@ export default function SetTable(p: SetTableProps) {
     </div>
     <div className="bg-gradient-to-b from-oslyn-50 to-transparent dark:from-oslyn-900 w-full h-full absolute top-0 left-0 z-0"></div>
   </section>
-  <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-5">
-    <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-              <th scope="col" className="px-6 py-3">
-                <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-oslyn-600 bg-coral-100 border-coral-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
-                  checked={allCheck} onChange={() => { setAllCheck(!allCheck); setSListCheck(Array(p.songs.length).fill(!allCheck)) }}
+  <div className="relative overflow-x-auto sm:rounded-lg mx-5 h-[calc(100vh-230px)]"> {/** height css calculation needs work. shadow removed to make this work. */}
+    <DndContext
+      sensors={sensors}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      onDragCancel={handleDragCancel}
+      collisionDetection={closestCenter}
+      modifiers={[restrictToVerticalAxis]}
+    >
+      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th></th>
+                <th scope="col" className="px-6 py-3">
+                  <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-oslyn-600 bg-coral-100 border-coral-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+                    checked={allCheck} onChange={() => { setAllCheck(!allCheck); setSListCheck(Array(p.songs.length).fill(!allCheck)) }}
+                  />
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Title
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Key
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Album
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            { songs.map((a, i) => <DraggableTableRow key={a.songId} row={a}>
+                <Row key={i} song={songs[i]} setPreview={() => setPreview(songs[i].songId)}
+                  checked={sListCheck[i]} setChecked={(b) => {sListCheck[i]=b; setSListCheck([...sListCheck])}}
+                  skey={keys[i]} setKey={(e) => { keys[i] = e; setKeys([...keys]) }} 
                 />
-              </th>
-              <th scope="col" className="px-6 py-3">
-                  Title
-              </th>
-              <th scope="col" className="px-6 py-3">
-                  Key
-              </th>
-              <th scope="col" className="px-6 py-3">
-                  Album
-              </th>
-              <th scope="col" className="px-6 py-3">
-                  Action
-              </th>
-          </tr>
-      </thead>
-      <tbody>
-          {songs.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-              <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-oslyn-600 bg-coral-100 border-coral-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
-                  checked={sListCheck[i]} onChange={() => { sListCheck[i] = !sListCheck[i]; setSListCheck([...sListCheck]) }}
+            </DraggableTableRow>)}
+          </SortableContext>
+        </tbody>
+      </table>
+      <DragOverlay>
+        {active && (
+          <table style={{ width: "100%" }}>
+            <tbody>
+              <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <th>
+                  <DragHandle />
+                </th>
+                <Row song={active} setPreview={() => setPreview(active.songId)}
+                    checked={sListCheck[songIndex(songs, active.songId)]} setChecked={(b) => {sListCheck[songIndex(songs, active.songId)]=b; setSListCheck([...sListCheck])}}
+                    skey={keys[songIndex(songs, active.songId)]} setKey={(e) => { keys[songIndex(songs, active.songId)] = e; setKeys([...keys]) }} 
                 />
-              </th>
-              <td className="px-6 py-4">
-                <a href={`/songs/edit/${a.songId}`}>                  
-                  <div className="flex flex-row hover:cursor-pointer">
-                    {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
-                    <div className="m-2">
-                      <div className="dark:text-white text-oslyn-900 bold">{a.title}</div>
-                      <div>{a.artist}</div>
-                    </div>
-                  </div>
-                </a>
-              </td>
-              <td className="px-6 py-4">
-                  {!sListCheck[i] && a.chordSheetKey}
-                  {sListCheck[i] && <Listbox as="div" value={keys[i]} onChange={(e) => { keys[i] = e; setKeys([...keys]) }} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    {({ open }) => (
-                      <>
-                      <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
-                        <span className="p-1 px-4 text-sm truncate">{keys[i]}</span>
-                        <span className="absolute flex items-center ml-3 pointer-events-none right-1">
-                        <ArrowsUpDownIcon
-                          className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
-                        />
-                      </span>
-                      </Listbox.Button>
-                      <Transition
-                        show={open}
-                        as={Fragment}
-                        enter="transition ease-in-out duration-100"
-                        enterFrom="opacity-0"
-                        enterTo="opacity-100"
-                        leave="transition ease-out duration-75"
-                        leaveFrom="opacity-100"
-                        leaveTo="opacity-0"
-                      >
-                        <Listbox.Options static
-                          className="absolute left-0 z-40 max-h-64 w-full mt-2 origin-top-left rounded-base shadow-sm outline-none overflow-auto border border-gray-200 dark:bg-neutral-800 dark:border-gray-700 py-1.5 px-1.5 space-y-1"
-                        >
-                          {chords.map((chord) => (
-                            <Listbox.Option
-                              className="relative"
-                              key={chord}
-                              value={chord}
-                            >
-                              {({ active, selected, disabled }) => (
-                                <button
-                                  disabled={disabled}
-                                  aria-disabled={disabled}
-                                  className={`flex items-center w-full px-4 pl-4 h-9 border-0 flex-shrink-0 text-sm text-left cursor-base font-normal focus:outline-none rounded-base
-                                    ${active && "bg-neutral-100 dark:bg-neutral-700"}
-                                    ${selected && "bg-blue-50 text-blue-800 dark:bg-blue-200 dark:bg-opacity-15 dark:text-blue-200"}`}
-                                >
-                                  <span
-                                    className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}
-                                  >
-                                    {chord}
-                                  </span>
-                                </button>
-                              )}
-                            </Listbox.Option>
-                          ))}
-                        </Listbox.Options>
-                      </Transition>
-                      
-                      </>
-                    )}
-                  </Listbox>}
-              </td>
-              <td className="px-6 py-4">
-                  {a.album}
-              </td>
-              <td className="px-6 py-4">
-                <button type="button" onClick={() => setPreview(a.songId)}
-                  className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-oslyn-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:focus:ring-oslyn-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                >
-                  Preview <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4" />
-                </button>
-              </td>
-          </tr>)}
-      </tbody>
-    </table>
+              </tr>
+              
+            </tbody>
+          </table>
+        )}
+      </DragOverlay>
+
+    </DndContext>
+    
+      
   </div>
   <Save set={setList} type="update" />
 </>

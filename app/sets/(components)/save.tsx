@@ -18,8 +18,8 @@ export default function Save(p: SaveProps) {
 
     if (!p.set.description || !p.set.songs) { console.error("title and key not available"); return }
 
-    const jamsongs = p.set.songs.map(a => { 
-      return { songId: a?.song.songId, key: a?.key } as JamSongInput
+    const jamsongs = p.set.songs.map((a, i) => { 
+      return { songId: a?.song.songId, key: a?.key, order: i } as JamSongInput
     })
 
     const data = await (await fetch(`/api/set/${p.set?.setListId}/update`, {
@@ -35,8 +35,8 @@ export default function Save(p: SaveProps) {
   const createSet = async () => {
     if (!p.set.description || !p.set.songs) { console.error("title and key not available"); return }
 
-    const jamsongs = p.set.songs.map(a => { 
-      return { songId: a?.song.songId, key: a?.key } as JamSongInput
+    const jamsongs = p.set.songs.map((a, i) => { 
+      return { songId: a?.song.songId, key: a?.key, order: i } as JamSongInput
     })
 
     const data = await (await fetch(`/api/set/create`, {
