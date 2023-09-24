@@ -214,7 +214,7 @@ export default function Player(p: PlayerProps) {
 
   return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${theme.theme || "light"}`} id="player">
     { p.jam.setList.songs[song]?.song && 
-      p.isSlideShow ? 
+      (p.isSlideShow ? 
         <SSlides
           song={p.jam.setList.songs[song]!.song} page={page} 
           setPage={setNextPage} setLastPage={setLastPage}
@@ -224,7 +224,7 @@ export default function Player(p: PlayerProps) {
           song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} 
           setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
           textSize={textSize} complex={complex} headsUp={headsUp}
-        />
+        />)
     }
     { !p.isSlideShow && isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
         className='fixed bottom-4 right-10 bg-oslyn-600 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
