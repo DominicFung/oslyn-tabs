@@ -45,7 +45,7 @@ export default function Sidebar () {
   }
 
   return <>
-  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
+  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-30 w-64 h-screen transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
     <div className={`relative h-0 w-0 top-4 ${openSidebar?"left-56":"left-72"}`}>
       <button onClick={() => setOpenSidebar(!openSidebar)}
         className="z-90 bg-gray-50 dark:bg-gray-700 w-12 h-12
