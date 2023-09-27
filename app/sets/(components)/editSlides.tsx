@@ -23,7 +23,7 @@ export default function EditSlides(p: EditSlidesProps) {
   ])
 
   return <>
-    <Slides song={p.song.song} page={2} />
+    <Slides song={p.song.song} page={2} textSize={"text-3xl"} />
 
     <aside id="cta-button-sidebar" className={`fixed top-0 right-0 z-40 w-screen md:w-96 h-screen transition-transform ${open?"translate-x-0":"translate-x-full"}`} aria-label="Sidebar">
       <div className={`relative h-0 w-0 top-4 ${open?"right-6":"right-20"}`}>
