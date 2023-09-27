@@ -54,7 +54,7 @@ export default function Controls(p: ControlsProp) {
     { name: "Capo", disabled: false },
     { name: "Text", disabled: false },
     { name: "QR", disabled: false },
-    { name: "Slides", disabled: true }
+    { name: "Slides", disabled: false }
   ])
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function Controls(p: ControlsProp) {
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
       { name: "QR", disabled: false },
-      { name: "Slides", disabled: true }
+      { name: "Slides", disabled: false }
     ])
   }, [p])
 

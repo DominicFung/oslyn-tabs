@@ -6,7 +6,7 @@ import { GraphQLResult, GraphQLSubscription } from '@aws-amplify/api'
 
 import * as s from '@/src/graphql/subscriptions'
 import * as m from '@/src/graphql/mutations'
-import { JamSession, JamSong, NextKey, NextPage, OnNextPageSubscription, OnNextSongSubscription, OnSongKeySubscription, Song } from "@/src/API"
+import { JamSession, JamSessionSlideConfig, JamSong, NextKey, NextPage, OnNextPageSubscription, OnNextSongSubscription, OnSongKeySubscription, OnJamSlideConfigChangeSubscription } from "@/src/API"
 import { useEffect, useState } from "react"
 import { ChevronDoubleRightIcon, ArrowsPointingOutIcon } from '@heroicons/react/24/solid'
 import Controls from './controls'
@@ -50,6 +50,26 @@ export default function Player(p: PlayerProps) {
   useEffect(() => { const a = localStorage.getItem('jam/headsUp') || "false"; if (a) { setHeadsUp(a === "true") } }, [])
   useEffect(() => { localStorage.setItem('jam/headsUp', JSON.stringify(headsUp)) }, [headsUp])
 
+  const [ slideTextSize, setSlideTextSize ] = useState(p.jam.slideTextSize || "text-3xl")
+  useEffect(() => {
+    console.log("subscribe text size")
+    if (p.jam.jamSessionId) { subscribeTextSize(p.jam.jamSessionId) }
+  }, [p.jam.slideTextSize, p.jam.jamSessionId])
+
+  const subscribeTextSize = async (jamSessionId: string) => {
+    const sub = API.graphql<GraphQLSubscription<OnJamSlideConfigChangeSubscription>>(
+      graphqlOperation(s.onJamSlideConfigChange, { jamSessionId } )
+    ).subscribe({
+      next: ({ value }) => {
+        const ts = value.data?.onJamSlideConfigChange?.textSize
+        console.log(ts)
+        setSlideTextSize(ts || "text-3xl")
+      },
+      error: (error) => console.error(error)
+    })
+    console.log(sub)
+  }
+
   useEffect(() => {
     if (p.jam.jamSessionId) { 
       subscribeNextPage(p.jam.jamSessionId)
@@ -62,13 +82,8 @@ export default function Player(p: PlayerProps) {
     const sub = API.graphql<GraphQLSubscription<OnNextPageSubscription>>(
       graphqlOperation(s.onNextPage, { jamSessionId } )
     ).subscribe({
-      next: ({provider, value}) => {
-        console.log("=== On Next Page ===")
-        console.log(JSON.stringify(provider))
-        console.log(JSON.stringify(value))
-
+      next: ({ value }) => {
         const page = value.data?.onNextPage?.page
-        console.log(page)
         incomingNextPage(page || 0)
       },
       error: (error) => console.error(error)
@@ -81,10 +96,6 @@ export default function Player(p: PlayerProps) {
       graphqlOperation(s.onNextSong, { jamSessionId } )
     ).subscribe({
       next: ({provider, value}) => {
-        console.log("=== On Next Song ===")
-        console.log(JSON.stringify(provider))
-        console.log(JSON.stringify(value))
-
         const song = value.data?.onNextSong?.song
         const page = value.data?.onNextSong?.page
 
@@ -150,6 +161,13 @@ export default function Player(p: PlayerProps) {
     const d = await API.graphql(graphqlOperation(m.setSongKey, {
       jamSessionId: p.jam.jamSessionId, song, key
     })) as GraphQLResult<{ setSongKey: NextKey }>
+    console.log(d)
+  }
+
+  const setJamConfig = async (textSize: string) => {
+    const d = await API.graphql(graphqlOperation(m.setJamSlideConfig, {
+      jamSessionId: p.jam.jamSessionId, textSize
+    })) as GraphQLResult<{ setJamSlideConfig: JamSessionSlideConfig }>
     console.log(d)
   }
   
@@ -218,7 +236,7 @@ export default function Player(p: PlayerProps) {
         <SSlides
           song={p.jam.setList.songs[song]!.song} page={page} 
           setPage={setNextPage} setLastPage={setLastPage}
-          textSize={"text-3xl"}
+          textSize={slideTextSize || "text-3xl"}
         />:
         <PSlides 
           song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} 
@@ -241,6 +259,10 @@ export default function Player(p: PlayerProps) {
           complex, setComplex,
           fullScreen, setFullScreen,
           headsUp, setHeadsUp
+        }}
+        slides={{
+          textSize: slideTextSize,
+          setTextSize: setJamConfig
         }}
       /> 
     }

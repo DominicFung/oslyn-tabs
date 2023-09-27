@@ -2,7 +2,7 @@
 
 import { chordSheetToSlides } from "@/core/oslyn"
 import { OslynSlide } from "@/core/types"
-import { Song } from "@/src/API"
+import { OnJamSlideConfigChangeSubscription, Song } from "@/src/API"
 import { useEffect, useState } from "react"
 import Line from "./line"
 import { calcMaxWidthTailwindClass } from "@/core/utils/frontend"
@@ -10,10 +10,13 @@ import Image from "next/image"
 
 import { useSideBarContext } from "@/app/context"
 
+import { API, graphqlOperation } from 'aws-amplify'
+import { GraphQLSubscription } from '@aws-amplify/api'
+import * as s from '@/src/graphql/subscriptions'
+
 interface SlidesProps {
   song: Song  
-  textSize?: string
-
+  textSize: string
 
   /** page can be externalized / enable graphql call to sync pages */
   page?: number
@@ -32,14 +35,7 @@ export default function Slides(p: SlidesProps) {
   const [ slides, setSlides ] = useState<OslynSlide>()
   const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
 
-  const setPage = (n: number) => {
-    if (p.setPage) p.setPage(n)
-    else _setPage(n)
-  }
-
-  useEffect(() => {
-    _setPage(p.page || 0)
-  }, [p.page])
+  useEffect(() => { _setPage(p.page || 0) }, [p.page])
 
   const [ wClass, setWClass ] = useState("max-w-screen-sm")
 
@@ -109,12 +105,13 @@ export default function Slides(p: SlidesProps) {
     }
   }
 
+
   return <>
     <div className={`flex justify-center items-center h-full m-auto ${wClass}`}>
       { !slides?.pages[page] && <div className="text-white">Sorry something went wrong. Click on the gear, and select a new song to reset the system.</div> }
       { slides?.pages[page] && <div>
         { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => <div key={i}>
-          <Line phrase={a} textSize={p.textSize || "text-lg"} />
+          <Line phrase={a} textSize={p.textSize} />
         </div>)}
 
         <div className="h-20" />
