@@ -16,12 +16,12 @@ import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3'
 
 import cdk from "@/cdk-outputs.json"
 import secret from "@/secret.json"
-import config from '@/src/aws-exports'
 
 export interface BandRequest {
   name: string,
   description: string
-  imageUrl: string
+  imageUrl?: string
+  arrayBuffer?: ArrayBuffer
 }
 
 type _Session = Session & {
@@ -36,8 +36,13 @@ export async function POST(request: Request){
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
+  if (!b.imageUrl && !b.arrayBuffer) {
+    console.error(`both b.imageUrl && b.arrayBuffer cannot be empty`)
+    return NextResponse.json({ error: `Improper Body` }, { status: 400 })
+  }
+
   Amplify.configure(awsConfig)
-  console.log(JSON.stringify(b))
+  // console.log(JSON.stringify(b))
 
   const d = await API.graphql(graphqlOperation(
     m.createBand, { ...b, userId }
@@ -48,14 +53,11 @@ export async function POST(request: Request){
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
 
-  const band = d.data.createBand as Band
+  const band = d.data.createBand as Band 
 
-  if (b.imageUrl.indexOf("replicate.delivery") > -1) {
-    let img = await (await fetch(b.imageUrl, {
-      headers: {'Authorization': `TOKEN ${secret.replicate.token}`}
-    })).arrayBuffer()
-    console.log(img)
+  const needStorage = b.arrayBuffer != undefined || b.imageUrl!.indexOf("replicate.delivery") > -1
 
+  if (needStorage) {
     let s3Config = { region: "us-east-1" } as S3ClientConfig
     if (process.env.NODE_ENV === 'development') { 
       s3Config["credentials"] = { 
@@ -66,7 +68,17 @@ export async function POST(request: Request){
     }
 
     let s3 = new S3Client(s3Config)
+    
+    console.log(b.arrayBuffer)
+    let img = toArrayBuffer((b.arrayBuffer as any).data)
 
+    if (!img) {
+      img = await (await fetch(b.imageUrl!, {
+        headers: {'Authorization': `TOKEN ${secret.replicate.token}`}
+      })).arrayBuffer()
+    }
+
+    console.log(img)
     const res1 = await s3.send(
       new PutObjectCommand({
         Bucket: cdk["oslynstudio-S3Stack"].bucketName,
@@ -74,10 +86,30 @@ export async function POST(request: Request){
         Body: img as Buffer
       })
     )
-
+    
     console.log(res1)
+
+    console.log(band.bandId)
+    const d = await API.graphql(graphqlOperation(
+      m.updateBand, { bandId: band.bandId, imageUrl: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/band/${band.bandId}/latest.jpg` }
+    )) as GraphQLResult<{ updateBand: Band }>
+  
+    if (!d.data?.updateBand) {
+      console.error(`createBand data is empty: ${JSON.stringify(d.data)}`)
+      return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
+    }
+
   }
 
   console.log(`${request.method} ${request.url} .. complete`)
   return NextResponse.json(d.data.createBand)
+}
+
+function toArrayBuffer(buffer: Buffer) {
+  const arrayBuffer = new ArrayBuffer(buffer.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < buffer.length; ++i) {
+    view[i] = buffer[i];
+  }
+  return arrayBuffer;
 }

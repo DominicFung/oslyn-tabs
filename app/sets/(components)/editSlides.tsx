@@ -2,8 +2,8 @@
 
 import Slides from "@/app/(slides)/slides"
 import { JamSong } from "@/src/API"
-import { PencilIcon, PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid"
-import { useState, useCallback } from "react"
+import { PencilIcon, XMarkIcon } from "@heroicons/react/24/solid"
+import { useState } from "react"
 
 import Background from './(editSlides)/background'
 import Text from './(editSlides)/text'

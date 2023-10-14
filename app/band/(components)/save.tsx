@@ -5,6 +5,8 @@ import { Band } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/navigation"
 
+import { get } from "http"
+
 export interface SaveProps {
   band: Band,
   type: "create" | "update"
@@ -28,16 +30,29 @@ export default function Save(p: SaveProps) {
   const createSet = async () => {
     if (!p.band.description || !p.band.name || !p.band.imageUrl) { console.error("name, description or imageUrl not available"); return }
 
-    const data = await (await fetch(`/api/band/create`, {
-      method: "POST",
-      body: JSON.stringify({
-        name: p.band.name,
-        description: p.band.description, 
-        imageUrl: p.band.imageUrl
-      } as BandRequest)
-    })).json() as Band
-    console.log(data)
-    router.push(`/band`)
+    let bandRequest = {
+      name: p.band.name,
+      description: p.band.description, 
+      imageUrl: p.band.imageUrl
+    } as BandRequest
+
+    let img = await urlToBuffer(p.band.imageUrl)
+    console.log(bandRequest.imageUrl)
+    console.log(img)
+    console.log(img.toString())
+    
+    
+    // if (p.band.imageUrl.startsWith("blob")) {
+    //   delete bandRequest.imageUrl
+    //   bandRequest.arrayBuffer = img
+    // }
+
+    // const data = await (await fetch(`/api/band/create`, {
+    //   method: "POST",
+    //   body: JSON.stringify(bandRequest)
+    // })).json() as Band
+    // console.log(data)
+    // router.push(`/band`)
   }
 
   return <>
@@ -49,4 +64,23 @@ export default function Save(p: SaveProps) {
     </button>
   </>
 
+}
+
+function urlToBuffer(blobURL: string): Promise<Buffer> {
+  let url = blobURL.split("blob://")[1]
+  return new Promise((resolve, reject) => {
+    const data: Uint8Array[] = [];
+    get(url, (res: any) => {
+      res
+        .on("data", (chunk: Uint8Array) => {
+          data.push(chunk);
+        })
+        .on("end", () => {
+          resolve(Buffer.concat(data));
+        })
+        .on("error", (err: any) => {
+          reject(err);
+        });
+    });
+  });
 }

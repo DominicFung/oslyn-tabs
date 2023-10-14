@@ -251,6 +251,18 @@ export class AppsyncStack extends Stack {
       fieldName: "createBand"
     })
 
+    const updateBand = new NodejsFunction(this, `${props.name}-UpdateBand`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'band', 'updateBand.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}UpdateBandDS`, updateBand)
+    .createResolver(`${props.name}-UpdateBandResolver`, {
+      typeName: "Mutation",
+      fieldName: "updateBand"
+    })
+
     const listBands = new NodejsFunction(this, `${props.name}-ListBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listBands.ts'),
       timeout: Duration.minutes(5),

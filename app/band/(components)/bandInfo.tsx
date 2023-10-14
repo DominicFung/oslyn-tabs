@@ -1,5 +1,5 @@
 "use client"
-import { SparklesIcon, BoltIcon, ArrowsUpDownIcon } from '@heroicons/react/24/solid'
+import { PhotoIcon, BoltIcon, ArrowsUpDownIcon } from '@heroicons/react/24/solid'
 import { Listbox, Transition } from '@headlessui/react'
 import { Fragment } from "react"
 
@@ -19,10 +19,20 @@ const INSTRUCTION = "Band cover art with the following description."
 const POLICY = [ "PRIVATE", "PUBLIC_VIEW", "PUBLIC_JOIN" ]
 
 export default function BandInfo(p: BandProps) {
-  const onDrop = useCallback((acceptedFiles: any) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log(acceptedFiles)
+
+    let files = acceptedFiles.map(file => Object.assign(file, {
+      preview: URL.createObjectURL(file)
+    }))
+
+    console.log(files)
+
+    p.setBand({ ...p.band, imageUrl: URL.createObjectURL(acceptedFiles[0]) })
   }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({onDrop})
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {'image/*': []}, onDrop
+  })
 
   const [ bandOpen, setBandOpen ] = useState(false)
   const [ bandLink, setBandLink ] = useState("")
@@ -82,7 +92,7 @@ export default function BandInfo(p: BandProps) {
                 <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500'>
                   { p.band.imageUrl ? <Image src={p.band.imageUrl} alt={''} width={192} height={192} 
                       className='w-48 h-48 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500' />:
-                    <span><SparklesIcon className='h-12 w-12 mx-auto mt-20' /></span>
+                    <span><PhotoIcon className='h-12 w-12 mx-auto mt-20' /></span>
                   }
                 </div>
             }
@@ -114,7 +124,7 @@ export default function BandInfo(p: BandProps) {
           <>
           <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
             <span className="p-1 px-4 text-sm truncate">
-              {p.band.policy}{/*capitalizeFirstLetter(policy.toLocaleLowerCase().replace("_", " "))*/}
+              {p.band.policy  || "PRIVATE"}{/*capitalizeFirstLetter(policy.toLocaleLowerCase().replace("_", " "))*/}
             </span>
             <span className="absolute flex items-center ml-3 pointer-events-none right-1">
             <ArrowsUpDownIcon

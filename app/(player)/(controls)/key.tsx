@@ -13,7 +13,7 @@ const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 
 export default function Key(p: KeyProps) {
   return <>
-    <div className="ml-3 text-sm font-normal">
+    <div className="ml-3 text-sm font-normal w-[calc(100vw-4rem)] sm:w-full">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Key</div>
       <div className="pb-3 text-sm font-normal">Set the current song key for the entire team! <br /><span className="text-xs italic">Note: this affects everyone in the session.</span></div> 
 

@@ -11,7 +11,7 @@ export default function CreateBand() {
   } as Band)
 
   return <>
-    <div className="m-5">
+    <div className="m-5 h-[90vh]">
       <BandInfo band={band} setBand={setBand}/>
       <Save band={band} type="create" />
     </div>

@@ -24,6 +24,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'platform-lookaside.fbsbx.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbxt.replicate.delivery'
+      }, 
+      {
+        protocol: 'https',
+        hostname: 'oslynstudio-s3stack-oslynstudiobucket4f3f730f-de5ih4nnn90k.s3.amazonaws.com'
       }
     ]
   },

@@ -1,55 +1,49 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+import { DynamoDBClient, UpdateItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
+import { unmarshall } from '@aws-sdk/util-dynamodb'
 
-import { v4 as uuidv4 } from 'uuid'
-import { hasSubstring } from '../../util/dynamo'
-import { _User } from '../../type'
+import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
+import { _User, _Band } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  userId: string, name: string, description: string, imageUrl?: string, policy?: string, adminIds: string[] 
+  bandId: string, imageUrl?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
 
-  if (!b.userId) { console.error(`b.userId is empty`); return }
-  if (!b.name) { console.error(`b.name is empty`); return }
-  if (!b.description) { console.error(`b.description is empty`); return }
+  if (!b.bandId) { console.error(`b.bandId is empty`); return }
 
   const dynamo = new DynamoDBClient({})
-  const bandId = `${uuidv4()}_bnd`
 
   const res0 = await dynamo.send(
     new GetItemCommand({
-      TableName: USER_TABLE_NAME,
-      Key: { userId: { S: b.userId } }
-    })
-  )
-
-  if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
-  let band = { bandId, userId: b.userId, name: b.name, description: b.description } as any
-  
-  if (b.adminIds && b.adminIds.length > 0) { band.adminIds = b.adminIds }
-  else { band.adminIds = [] }
-
-  if (b.imageUrl) { band.imageUrl = b.imageUrl }
-  
-  if (b.policy) { band.policy = b.policy }
-  else { band.policy = "PRIVATE" }
-
-  const res1 = await dynamo.send(
-    new PutItemCommand({
       TableName: BAND_TABLE_NAME,
-      Item: marshall(band)
+      Key: { bandId : { S: b.bandId } }
+    })
+  )
+  
+  if (!res0.Item) { console.error(`ERROR: bandId not found: ${b.bandId}`); return }
+
+  const band = unmarshall(res0.Item) as any
+  if (b.imageUrl) band.imageUrl = b.imageUrl
+
+  const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { imageUrl: band.imageUrl }, key: { bandId: band.bandId } })
+  const res1 = await dynamo.send( new UpdateItemCommand(params) )
+  console.log(res1)
+
+  const res2 = await dynamo.send(
+    new GetItemCommand({
+      TableName: USER_TABLE_NAME,
+      Key: { userId: { S: band.userId } }
     })
   )
 
-  console.log(res1)
-  band.owner = unmarshall(res0.Item)
+  if (!res2.Item) { console.error(`ERROR: userId not found: ${band.userId}`); return }
+  band.owner = unmarshall(res2.Item)
 
   if (!band.owner.labelledRecording) band.owner.labelledRecording = []
   if (!band.owner.songsCreated) band.owner.songsCreated = []
@@ -70,7 +64,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "admins")) {
-    if (b.adminIds && b.adminIds.length > 0) {
+    if (band.adminIds && band.adminIds.length > 0) {
       const uniq = [...new Set(band.adminIds)]
       const keys = uniq.map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
       console.log(keys)
@@ -96,4 +90,5 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   return band
+
 }

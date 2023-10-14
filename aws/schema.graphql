@@ -68,7 +68,8 @@ type Mutation {
   addRecordingToSong(songId: ID!, recordingId: ID!): Song @aws_iam
   removeRecordingFromSong(songId: ID!, recordingId: ID!): Song @aws_iam
 
-  createBand(userId: ID!, name: String!, description: String!, imageUrl: String!, adminIds: [ID]): Band @aws_iam
+  createBand(userId: ID!, name: String!, description: String!, imageUrl: String, policy: String, adminIds: [ID]): Band @aws_iam
+  updateBand(bandId: ID!, imageUrl: String, policy: String): Band @aws_iam
   addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   addSongsToBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
@@ -140,7 +141,7 @@ type NextKey {
 
 type Band {
   bandId: ID!
-  imageUrl: String!
+  imageUrl: String
 
   name: String!
   description: String
