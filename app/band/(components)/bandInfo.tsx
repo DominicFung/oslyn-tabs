@@ -77,10 +77,10 @@ export default function BandInfo(p: BandProps) {
           <div className='mx-4'>
             <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
               <li className="w-full">
-                  <span className="inline-block w-full p-4 text-gray-900 bg-gray-100 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white" aria-current="page">Band</span>
+                  <span className="inline-block w-full p-4 text-gray-900 bg-gray-100 rounded-l-lg focus:ring-4 focus:ring-oslyn-300 active focus:outline-none dark:bg-gray-700 dark:text-white" aria-current="page">Band</span>
               </li>
               <li className="w-full hover:cursor-pointer" onClick={() => setBandOpen(true)}>
-                  <span className="inline-block w-full p-4 bg-white rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Link</span>
+                  <span className="inline-block w-full p-4 bg-white rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Link</span>
               </li>
             </ul>
           </div>
@@ -89,9 +89,9 @@ export default function BandInfo(p: BandProps) {
             <input {...getInputProps()} />
             { isDragActive ?
                 <p>Drop the files here ...</p> :
-                <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500'>
+                <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500'>
                   { p.band.imageUrl ? <Image src={p.band.imageUrl} alt={''} width={192} height={192} 
-                      className='w-48 h-48 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500' />:
+                      className='w-48 h-48 rounded-lg border focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500' />:
                     <span><PhotoIcon className='h-12 w-12 mx-auto mt-20' /></span>
                   }
                 </div>
@@ -101,16 +101,16 @@ export default function BandInfo(p: BandProps) {
         <div className='flex-1 mt-20'>
           <div className="flex flex-row">
             <div className='flex-1'>
-              <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+              <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
                 value={p.band.name}  placeholder="Band Name" onChange={(e) => p.setBand({ ...p.band, name: e.currentTarget.value })}/>
             </div>
             
           </div>
           <div className="relative w-full mt-2">
-            <textarea rows={4} id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <textarea rows={4} id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
               value={p.band.description || ""}  placeholder="Description ..." onChange={(e) => p.setBand({ ...p.band, description: e.currentTarget.value })}/>
             <button type="submit" onClick={generateBandImage}
-              className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800"
             >
               <BoltIcon className="w-6 h-6" />
             </button>
@@ -119,16 +119,16 @@ export default function BandInfo(p: BandProps) {
       </div>
 
       <div className='ml-5 flex-0'>
-        <Listbox as="div" value={p.band.policy} onChange={(e) => { p.setBand({ ...p.band, policy: e })}} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <Listbox as="div" value={p.band.policy || "PRIVATE"} onChange={(e) => { p.setBand({ ...p.band, policy: e })}} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500">
         {({ open }) => (
           <>
           <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
             <span className="p-1 px-4 text-sm truncate">
-              {p.band.policy  || "PRIVATE"}{/*capitalizeFirstLetter(policy.toLocaleLowerCase().replace("_", " "))*/}
+              {p.band.policy || "PRIVATE" }
             </span>
             <span className="absolute flex items-center ml-3 pointer-events-none right-1">
             <ArrowsUpDownIcon
-              className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
+              className={`"w-4 h-4 ${open ? "text-oslyn-500" : "text-gray-400"}`}
             />
           </span>
           </Listbox.Button>
@@ -157,12 +157,12 @@ export default function BandInfo(p: BandProps) {
                       aria-disabled={disabled}
                       className={`flex items-center w-full px-4 pl-4 h-9 border-0 flex-shrink-0 text-sm text-left cursor-base font-normal focus:outline-none rounded-base
                         ${active && "bg-neutral-100 dark:bg-neutral-700"}
-                        ${selected && "bg-blue-50 text-blue-800 dark:bg-blue-200 dark:bg-opacity-15 dark:text-blue-200"}`}
+                        ${selected && "bg-oslyn-100 text-oslyn-800 dark:bg-oslyn-600 dark:bg-opacity-15 dark:text-oslyn-100"}`}
                     >
                       <span
                         className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}
                       >
-                        {policy}{/*capitalizeFirstLetter(policy.toLocaleLowerCase().replace("_", " "))*/}
+                        {policy}
                       </span>
                     </button>
                   )}
@@ -193,14 +193,14 @@ export default function BandInfo(p: BandProps) {
                   <div>
                       <label htmlFor="link" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
                       <input type="text" name="link" id="link" value={bandLink} onChange={ e => setBandLink(e.currentTarget.value) }
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="https://" 
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-oslyn-500 focus:border-oslyn-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="https://" 
                         required />
                   </div>
                   
                   <button onClick={() => { p.band.imageUrl = bandLink; p.setBand({ ...p.band }); setBandOpen(false) }}
-                    className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
+                    className="w-full text-white bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">Save</button>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                      How do I get a link? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
+                      How do I get a link? <a href="#" className="text-oslyn-700 hover:underline dark:text-oslyn-500">Instructions</a>
                   </div>
               </span>
             </div>

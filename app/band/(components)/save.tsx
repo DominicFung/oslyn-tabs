@@ -5,8 +5,6 @@ import { Band } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/navigation"
 
-import { get } from "http"
-
 export interface SaveProps {
   band: Band,
   type: "create" | "update"
@@ -31,28 +29,30 @@ export default function Save(p: SaveProps) {
     if (!p.band.description || !p.band.name || !p.band.imageUrl) { console.error("name, description or imageUrl not available"); return }
 
     let bandRequest = {
-      name: p.band.name,
+      name: p.band.name, policy: p.band.policy,
       description: p.band.description, 
       imageUrl: p.band.imageUrl
     } as BandRequest
-
-    let img = await urlToBuffer(p.band.imageUrl)
-    console.log(bandRequest.imageUrl)
-    console.log(img)
-    console.log(img.toString())
     
-    
-    // if (p.band.imageUrl.startsWith("blob")) {
-    //   delete bandRequest.imageUrl
-    //   bandRequest.arrayBuffer = img
-    // }
+    if (p.band.imageUrl.startsWith("blob")) {
+      let img = await getArrayBufferFromObjectURL(p.band.imageUrl)
+      console.log(bandRequest.imageUrl)
+      console.log(img)
 
-    // const data = await (await fetch(`/api/band/create`, {
-    //   method: "POST",
-    //   body: JSON.stringify(bandRequest)
-    // })).json() as Band
-    // console.log(data)
-    // router.push(`/band`)
+      if (img) {
+        delete bandRequest.imageUrl
+        bandRequest.arrayBuffer = new Uint8Array(img as ArrayBuffer)
+      } else {
+        console.error("unable to process blob arraybuffer")
+      }
+    }
+
+    const data = await (await fetch(`/api/band/create`, {
+      method: "POST",
+      body: JSON.stringify(bandRequest)
+    })).json() as Band
+    console.log(data)
+    router.push(`/band`)
   }
 
   return <>
@@ -66,21 +66,26 @@ export default function Save(p: SaveProps) {
 
 }
 
-function urlToBuffer(blobURL: string): Promise<Buffer> {
-  let url = blobURL.split("blob://")[1]
-  return new Promise((resolve, reject) => {
-    const data: Uint8Array[] = [];
-    get(url, (res: any) => {
-      res
-        .on("data", (chunk: Uint8Array) => {
-          data.push(chunk);
-        })
-        .on("end", () => {
-          resolve(Buffer.concat(data));
-        })
-        .on("error", (err: any) => {
-          reject(err);
-        });
+function getArrayBufferFromObjectURL(objectURL: string): Promise<string | ArrayBuffer | null | undefined> {
+  // Fetch the Blob data from the object URL.
+  return fetch(objectURL)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch Blob data from the object URL');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      // Convert the Blob to ArrayBuffer.
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = event => {
+          resolve(event.target?.result);
+        };
+        reader.onerror = error => {
+          reject(error);
+        };
+        reader.readAsArrayBuffer(blob);
+      });
     });
-  });
 }

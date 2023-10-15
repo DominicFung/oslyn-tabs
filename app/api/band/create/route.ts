@@ -21,7 +21,8 @@ export interface BandRequest {
   name: string,
   description: string
   imageUrl?: string
-  arrayBuffer?: ArrayBuffer
+  arrayBuffer?: Uint8Array,
+  policy: string
 }
 
 type _Session = Session & {
@@ -42,7 +43,7 @@ export async function POST(request: Request){
   }
 
   Amplify.configure(awsConfig)
-  // console.log(JSON.stringify(b))
+  //console.log(JSON.stringify(b))
 
   const d = await API.graphql(graphqlOperation(
     m.createBand, { ...b, userId }
@@ -68,17 +69,14 @@ export async function POST(request: Request){
     }
 
     let s3 = new S3Client(s3Config)
-    
-    console.log(b.arrayBuffer)
-    let img = toArrayBuffer((b.arrayBuffer as any).data)
+    let img = uint8ArrayToArrayBuffer(b.arrayBuffer as any)
 
-    if (!img) {
+    if (!img && b.imageUrl!.indexOf("replicate.delivery") > -1) {
       img = await (await fetch(b.imageUrl!, {
         headers: {'Authorization': `TOKEN ${secret.replicate.token}`}
       })).arrayBuffer()
     }
 
-    console.log(img)
     const res1 = await s3.send(
       new PutObjectCommand({
         Bucket: cdk["oslynstudio-S3Stack"].bucketName,
@@ -105,11 +103,12 @@ export async function POST(request: Request){
   return NextResponse.json(d.data.createBand)
 }
 
-function toArrayBuffer(buffer: Buffer) {
-  const arrayBuffer = new ArrayBuffer(buffer.length);
-  const view = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < buffer.length; ++i) {
-    view[i] = buffer[i];
+function uint8ArrayToArrayBuffer(serializedBuffer: {[key: number]: number}): ArrayBuffer {
+  const arrayBuffer = []
+
+  for (let i = 0; i < Object.keys(serializedBuffer).length; i++) {
+    arrayBuffer.push(serializedBuffer[i])
   }
-  return arrayBuffer;
+
+  return Buffer.from(arrayBuffer);
 }
