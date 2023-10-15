@@ -15,9 +15,7 @@ export default function Bands(p: BandsProps) {
   const [band, setBand] = useState(p.bands[0])
 
   useEffect(() => {
-    if (p.bands.length < index) {
-      setBand(p.bands[index])
-    }
+    if (p.bands.length > index) { setBand(p.bands[index]) }
   }, [p.bands, index])
 
   return <>

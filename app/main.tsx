@@ -101,7 +101,7 @@ export default function Main(p: MainProps) {
   
   <div className="relative z-20">
     <div className="pt-8 px-6 text-lg font-bold dark:text-white text-gray-700">Artists and Bands:</div>
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 m-5">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 m-5 gap-2">
       { p.bands.map((b, i) => <div key={i}>
             <BandCard band={b} />
           </div>
