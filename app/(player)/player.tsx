@@ -26,6 +26,9 @@ Amplify.configure({ ...awsConfig, ssr: true });
 export default function Player(p: PlayerProps) {
   const theme = useTheme()
   const { setOpenSidebar } = useSideBarContext()
+  
+  const [ isFullScreenEnabled, setFullScreenEnabled ] = useState(false)
+  useEffect(() => { setFullScreenEnabled(document?.fullscreenEnabled || (document as any)?.webkitFullscreenEnabled) }, [])
 
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
@@ -189,6 +192,7 @@ export default function Player(p: PlayerProps) {
 
   const openFullScreen = () => {
     let el = document.getElementById("player") as any
+
     if (el.requestFullscreen) {
       el.requestFullscreen();
     } else if (el.webkitRequestFullscreen) { /* Safari */
@@ -197,6 +201,8 @@ export default function Player(p: PlayerProps) {
       el.mozRequestFullScreen();
     } else if (el.msRequestFullscreen) { /* IE11 */
       el.msRequestFullscreen();
+    } else {
+      console.log("could not open full screen ...")
     }
     setOpenSidebar(false)
   }
@@ -266,7 +272,7 @@ export default function Player(p: PlayerProps) {
         }}
       /> 
     }
-    { p.isSlideShow && !fullScreen && <button onClick={() => setFullScreen(true)}
+    { isFullScreenEnabled && p.isSlideShow && !fullScreen && <button onClick={() => setFullScreen(true)}
       className={`fixed z-90 right-10 top-4 bg-coral-400 w-12 h-12 rounded-lg p-2 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl`}
     >
       <ArrowsPointingOutIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />

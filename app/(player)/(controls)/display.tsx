@@ -27,8 +27,11 @@ const textSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'tex
 const MODE = ["dark", "light", "system"]
 
 export default function Display(p: DisplayProps) {
-
   const { theme, setTheme } = useTheme()
+
+  const [ isFullScreenEnabled, setFullScreenEnabled ] = useState(false)
+  useEffect(() => { setFullScreenEnabled(document?.fullscreenEnabled || (document as any)?.webkitFullscreenEnabled) }, [])
+
   const [mounted, setMounted] = useState(false)
   const [ mode, setMode ] = useState(theme || "dark")
 
@@ -109,16 +112,18 @@ export default function Display(p: DisplayProps) {
           </div>
         </div>
 
-        <div className="flex mt-10 mb-5">
-          <div className="flex items-center h-5">
-            <input id="helper-checkbox2" aria-describedby="helper-checkbox-text" type="checkbox" value="" checked={p.fullScreen} onChange={() => p.setFullScreen(!p.fullScreen)}
-                className="w-4 h-4 text-oslyn-600 bg-gray-100 border-gray-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+        { isFullScreenEnabled &&
+          <div className={`flex mt-10 mb-5`}>
+            <div className="flex items-center h-5">
+              <input id="helper-checkbox2" aria-describedby="helper-checkbox-text" type="checkbox" value="" checked={p.fullScreen} onChange={() => p.setFullScreen(!p.fullScreen)}
+                  className="w-4 h-4 text-oslyn-600 bg-gray-100 border-gray-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+            </div>
+            <div className="ml-2 text-sm">
+              <label htmlFor="helper-checkbox2" className="font-medium text-gray-900 dark:text-gray-300">Full Screen</label>
+              <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">Have the application take full screen.</p>
+            </div>
           </div>
-          <div className="ml-2 text-sm">
-            <label htmlFor="helper-checkbox2" className="font-medium text-gray-900 dark:text-gray-300">Full Screen</label>
-            <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">Have the application take full screen.</p>
-          </div>
-        </div>
+        }
 
         <div className="flex mt-10 mb-5">
           <div className="flex items-center h-5">
