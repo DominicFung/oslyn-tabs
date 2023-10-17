@@ -39887,6 +39887,7 @@ export type ListUsersQuery = {
 
 export type GetBandQueryVariables = {
   bandId: string,
+  userId: string,
 };
 
 export type GetBandQuery = {

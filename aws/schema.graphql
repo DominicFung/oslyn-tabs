@@ -15,7 +15,7 @@ type Query {
   getUserByEmail(email: AWSEmail): User @aws_iam
   listUsers(limit: Int, filter: String, nextToken: String): [User]! @aws_iam
   
-  getBand(bandId: ID!): Band @aws_iam
+  getBand(bandId: ID!, userId: ID!): Band @aws_iam
   listBands(userId: ID!, limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
   listPublicBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 

@@ -6801,8 +6801,8 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getBand = /* GraphQL */ `
-  query GetBand($bandId: ID!) {
-    getBand(bandId: $bandId) {
+  query GetBand($bandId: ID!, $userId: ID!) {
+    getBand(bandId: $bandId, userId: $userId) {
       bandId
       imageUrl
       name
