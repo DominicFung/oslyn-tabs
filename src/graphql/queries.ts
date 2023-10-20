@@ -104,6 +104,13 @@ export const getSong = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -318,6 +325,73 @@ export const getSong = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       editors {
@@ -408,6 +482,13 @@ export const getSong = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -622,6 +703,73 @@ export const getSong = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       viewers {
@@ -712,6 +860,13 @@ export const getSong = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -926,6 +1081,73 @@ export const getSong = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       recordings {
@@ -1096,6 +1318,13 @@ export const getSong = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         isLabelerRejected
@@ -1280,6 +1509,13 @@ export const listSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -1494,6 +1730,73 @@ export const listSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       editors {
@@ -1584,6 +1887,13 @@ export const listSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -1798,6 +2108,73 @@ export const listSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       viewers {
@@ -1888,6 +2265,13 @@ export const listSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -2102,6 +2486,73 @@ export const listSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       recordings {
@@ -2272,6 +2723,13 @@ export const listSongs = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         isLabelerRejected
@@ -2453,6 +2911,13 @@ export const listSharedSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -2667,6 +3132,73 @@ export const listSharedSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       editors {
@@ -2757,6 +3289,13 @@ export const listSharedSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -2971,6 +3510,73 @@ export const listSharedSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       viewers {
@@ -3061,6 +3667,13 @@ export const listSharedSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -3275,6 +3888,73 @@ export const listSharedSongs = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       recordings {
@@ -3446,6 +4126,13 @@ export const listSharedSongs = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -3614,6 +4301,13 @@ export const getUserById = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -3829,6 +4523,73 @@ export const getUserById = /* GraphQL */ `
           }
           order
         }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
+        }
       }
       labelledRecording {
         recordingId
@@ -3999,6 +4760,13 @@ export const getUserById = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -4142,6 +4910,13 @@ export const getUserById = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -4219,6 +4994,13 @@ export const getUserById = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -4295,6 +5077,13 @@ export const getUserById = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -4504,6 +5293,13 @@ export const getUserById = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         date
         actionColumn
@@ -4604,6 +5400,388 @@ export const getUserById = /* GraphQL */ `
           highlightOpacity
         }
         order
+      }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+        }
+        sets {
+          setListId
+          description
+          songs {
+            key
+            order
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        admins {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        policy
       }
     }
   }
@@ -4710,6 +5888,13 @@ export const getUserByEmail = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -4925,6 +6110,73 @@ export const getUserByEmail = /* GraphQL */ `
           }
           order
         }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
+        }
       }
       labelledRecording {
         recordingId
@@ -5095,6 +6347,13 @@ export const getUserByEmail = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -5238,6 +6497,13 @@ export const getUserByEmail = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -5315,6 +6581,13 @@ export const getUserByEmail = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -5391,6 +6664,13 @@ export const getUserByEmail = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -5600,6 +6880,13 @@ export const getUserByEmail = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         date
         actionColumn
@@ -5700,6 +6987,388 @@ export const getUserByEmail = /* GraphQL */ `
           highlightOpacity
         }
         order
+      }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+        }
+        sets {
+          setListId
+          description
+          songs {
+            key
+            order
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        admins {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        policy
       }
     }
   }
@@ -5806,6 +7475,13 @@ export const listUsers = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -6021,6 +7697,73 @@ export const listUsers = /* GraphQL */ `
           }
           order
         }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
+        }
       }
       labelledRecording {
         recordingId
@@ -6191,6 +7934,13 @@ export const listUsers = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         isLabelerRejected
         labelerRejectionReason
@@ -6334,6 +8084,13 @@ export const listUsers = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -6411,6 +8168,13 @@ export const listUsers = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -6487,6 +8251,13 @@ export const listUsers = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -6696,6 +8467,13 @@ export const listUsers = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         date
         actionColumn
@@ -6797,6 +8575,388 @@ export const listUsers = /* GraphQL */ `
         }
         order
       }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          beat {
+            count
+            note
+          }
+          isApproved
+          version
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          viewers {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          recordings {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+        }
+        sets {
+          setListId
+          description
+          songs {
+            key
+            order
+          }
+          editors {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          creator {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          band {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        members {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        admins {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
+        }
+        policy
+      }
     }
   }
 `;
@@ -6895,6 +9055,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -6972,6 +9139,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -7048,6 +9222,13 @@ export const getBand = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -7227,6 +9408,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         creator {
           userId
@@ -7303,6 +9491,13 @@ export const getBand = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         band {
@@ -7461,6 +9656,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -7675,6 +9877,73 @@ export const getBand = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       admins {
@@ -7765,6 +10034,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -7979,6 +10255,73 @@ export const getBand = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       owner {
@@ -8069,6 +10412,13 @@ export const getBand = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -8283,6 +10633,73 @@ export const getBand = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       policy
@@ -8394,6 +10811,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -8471,6 +10895,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -8547,6 +10978,13 @@ export const listBands = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -8726,6 +11164,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         creator {
           userId
@@ -8802,6 +11247,13 @@ export const listBands = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         band {
@@ -8960,6 +11412,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -9174,6 +11633,73 @@ export const listBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       admins {
@@ -9264,6 +11790,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -9478,6 +12011,73 @@ export const listBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       owner {
@@ -9568,6 +12168,13 @@ export const listBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -9782,6 +12389,73 @@ export const listBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       policy
@@ -9883,6 +12557,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         editors {
           userId
@@ -9960,6 +12641,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         viewers {
           userId
@@ -10036,6 +12724,13 @@ export const listPublicBands = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         recordings {
@@ -10215,6 +12910,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         creator {
           userId
@@ -10291,6 +12993,13 @@ export const listPublicBands = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         band {
@@ -10449,6 +13158,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -10663,6 +13379,73 @@ export const listPublicBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       admins {
@@ -10753,6 +13536,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -10967,6 +13757,73 @@ export const listPublicBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       owner {
@@ -11057,6 +13914,13 @@ export const listPublicBands = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -11271,6 +14135,73 @@ export const listPublicBands = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       policy
@@ -11464,6 +14395,13 @@ export const getSet = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -11678,6 +14616,73 @@ export const getSet = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       creator {
@@ -11768,6 +14773,13 @@ export const getSet = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -11982,6 +14994,73 @@ export const getSet = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       band {
@@ -12188,6 +15267,13 @@ export const getSet = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         admins {
           userId
@@ -12265,6 +15351,13 @@ export const getSet = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         owner {
           userId
@@ -12341,6 +15434,13 @@ export const getSet = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         policy
@@ -12550,6 +15650,13 @@ export const listSets = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -12764,6 +15871,73 @@ export const listSets = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       creator {
@@ -12854,6 +16028,13 @@ export const listSets = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -13068,6 +16249,73 @@ export const listSets = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       band {
@@ -13274,6 +16522,13 @@ export const listSets = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         admins {
           userId
@@ -13351,6 +16606,13 @@ export const listSets = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         owner {
           userId
@@ -13427,6 +16689,13 @@ export const listSets = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         policy
@@ -13546,6 +16815,13 @@ export const getJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         creator {
           userId
@@ -13622,6 +16898,13 @@ export const getJamSession = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         band {
@@ -13780,6 +17063,13 @@ export const getJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -13994,6 +17284,73 @@ export const getJamSession = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       members {
@@ -14084,6 +17441,13 @@ export const getJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -14298,6 +17662,73 @@ export const getJamSession = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       policy
@@ -14390,6 +17821,13 @@ export const getJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -14604,6 +18042,73 @@ export const getJamSession = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       guests
@@ -14748,6 +18253,13 @@ export const listPublicJamSessions = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         creator {
           userId
@@ -14824,6 +18336,13 @@ export const listPublicJamSessions = /* GraphQL */ `
           likedSongs {
             key
             order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
           }
         }
         band {
@@ -14982,6 +18501,13 @@ export const listPublicJamSessions = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -15196,6 +18722,73 @@ export const listPublicJamSessions = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       members {
@@ -15286,6 +18879,13 @@ export const listPublicJamSessions = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -15500,6 +19100,73 @@ export const listPublicJamSessions = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       policy
@@ -15592,6 +19259,13 @@ export const listPublicJamSessions = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -15806,6 +19480,73 @@ export const listPublicJamSessions = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       guests

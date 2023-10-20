@@ -5,7 +5,7 @@ import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
 
 import * as q from '@/src/graphql/queries'
-import { Band } from '@/src/API'
+import { Band, User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
@@ -34,12 +34,26 @@ export default async function BandPage({ params }: { params: { id: string } }) {
 
     if (data?.getBand) d = data.getBand
     else return <Unauth />
+
+    console.log(d)
   } catch (e) {
     console.log(JSON.stringify(e, null, 2))
     return <Unauth />
   }
 
+  let user: User|null = null 
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.getUserById, { userId }
+    )) as GraphQLResult<{ getUserById: User }>
+    if (data?.getUserById) user = data.getUserById
+    else throw new Error("data.getUserById is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
   return <>
-    { d && <BandComponent band={d} /> }
+    { user && d && <BandComponent band={d} user={user} /> }
   </>
 }

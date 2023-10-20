@@ -11,7 +11,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import Unauth from "@/app/unauthorized"
 
-import SongTable from "./table"
 import { _Session } from "@/core/utils/frontend"
 import Songs from './songs'
 

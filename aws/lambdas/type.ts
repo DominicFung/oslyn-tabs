@@ -2,6 +2,7 @@ import { Band, JamSession, JamSong, SetList, Song, User } from "./API";
 
 export type _User = User & {
   friendIds: string[]
+  bandIds: string[]
 }
 
 export type _SetList = SetList & {

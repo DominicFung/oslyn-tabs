@@ -52,12 +52,10 @@ export const handler = async (event: AppSyncResolverEvent<{
     band.owner = owner
   }
 
-  if (hasSubstring(event.info.selectionSetList, "songs") && band.songs) {
+  if (hasSubstring(event.info.selectionSetList, "songs") && band.songIds) {
     console.log("getting songs ...")
 
-    const songIds = band.songs.map((s) => (s! as _Song).songId )
-
-    const uniq = [...new Set(songIds.flat(1))]
+    const uniq = [...new Set(band.songIds)]
     console.log(uniq)
 
     const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
@@ -72,7 +70,8 @@ export const handler = async (event: AppSyncResolverEvent<{
     let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
     console.log(songs)
 
-    if (hasSubstring(event.info.selectionSetList, "song/creator")) {
+    console.log(event.info.selectionSetList)
+    if (hasSubstring(event.info.selectionSetList, "songs/creator")) {
       console.log("getting songs/../song/creator ..")
 
       const creatorIds = songs.map((s) => { return s.userId })
@@ -86,7 +85,11 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
 
       console.log(JSON.stringify(res2.Responses))
-      const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]
+      const users = res2.Responses![USER_TABLE_NAME].map((s) => {
+        let user = unmarshall(s) as User
+        user.friends = []
+        return user
+      }) as User[]
       console.log(users)
 
       songs = merge(songs, users, 'userId', 'creator')
@@ -100,7 +103,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       })
     }
 
-    band.songs = merge(band.songs, songs, 'songId', 'song')
+    band.songs = songs
   } else band.songs = []
 
   if (hasSubstring(event.info.selectionSetList, "sets")) {
@@ -115,5 +118,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     band.admins = [] // TODO
   }
   
+  console.log(band)
   return band
 }

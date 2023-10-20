@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Email from "./(share)/email";
 import Friends from "./(share)/friend";
-import { Song, User } from "@/src/API";
+import { Song, User, Band } from "@/src/API";
 
 import { ShareIcon } from "@heroicons/react/24/solid"
+import Bands from "./(share)/band";
 
 export interface ShareSongProps {
   user: User,
@@ -27,7 +28,7 @@ export default function ShareSong(p: ShareSongProps) {
         className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2">
       <ShareIcon className="w-4 h-4 mt-1" />
     </button>
-    <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${open?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900/75`}>
+    <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${open?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-gray-900/75`}>
       <div className="relative w-full h-full max-w-md max-h-full mx-auto flex flex-col">
         <div className='flex-1' />
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -43,7 +44,8 @@ export default function ShareSong(p: ShareSongProps) {
             </div>
             <>
               { option === 0 && <Email user={p.user} song={p.song} setClose={() => setOpen(false)} /> }
-              { option === 1 && <Friends friends={[]} /> }
+              { option === 1 && <Friends friends={p.user.friends as User[] || []} /> }
+              { option === 2 && <Bands bands={p.user.bands as Band[] || []} song={p.song} setClose={() => setOpen(false)}  /> }
             </>
 
             <button type="button" onClick={() => setOpen(false)}

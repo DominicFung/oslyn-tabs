@@ -127,6 +127,13 @@ export const onSignInToJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -341,6 +348,73 @@ export const onSignInToJamSession = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       guests
@@ -438,6 +512,13 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             key
             order
           }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            policy
+          }
         }
         labelledRecording {
           recordingId
@@ -652,6 +733,73 @@ export const onSignOutFromJamSession = /* GraphQL */ `
             highlightOpacity
           }
           order
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          songs {
+            songId
+            title
+            artist
+            album
+            albumCover
+            isApproved
+            version
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          sets {
+            setListId
+            description
+          }
+          members {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          admins {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          owner {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+          }
+          policy
         }
       }
       guests

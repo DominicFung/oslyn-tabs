@@ -1,9 +1,9 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
-import { hasSubstring } from '../../util/dynamo'
+import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
 import { _User } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
@@ -56,6 +56,17 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!band.owner.editHistory) band.owner.editHistory = []
   if (!band.owner.likedSongs) band.owner.likedSongs = []
   if (!band.owner.friends) band.owner.friends = []
+
+  if (!band.owner.bandIds) band.owner.bands = []
+  
+
+  // add Band to User
+  const bandIds: string[] = band.owner.bandIds || []
+  bandIds.push(bandId)
+  const params = updateDynamoUtil({ table: USER_TABLE_NAME, item: { bandIds }, key: { userId: band.owner.userId } })
+  const res2 = await dynamo.send( new UpdateItemCommand(params) )
+
+  console.log(res2)
 
   if (hasSubstring(event.info.selectionSetList, "songs")) {
     band.songs = [] // this is a new band, no songs

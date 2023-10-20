@@ -3,9 +3,11 @@ import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { hasSubstring } from '../../util/dynamo'
 
-import { _User } from '../../type'
+import { _Band, _User } from '../../type'
+import { Band, User } from '../../API'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
+const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
   userId: string
@@ -27,6 +29,42 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   if (!res0 || !res0.Item) { console.error(`dynamo did not return a res0 for userId`); return }
   let user = unmarshall(res0.Item) as _User
+
+  if (hasSubstring(event.info.selectionSetList, "bands")) {
+    if (!user.bandIds || user.bandIds.length === 0) { user.bands = [] }
+    else {
+      console.log("getting bands ...")
+      const uniq = [...new Set(user.bandIds)]
+
+      const keys = uniq
+        .map((s) => { return { bandId: { S: s } } as { [bandId: string]: any } })
+        console.log(keys)
+
+      const res1 = await dynamo.send(new BatchGetItemCommand({
+        RequestItems: {[BAND_TABLE_NAME]: { Keys: keys }}
+      }))
+      console.log(res1)
+      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet bandId. ${res1.$metadata}`); return  } 
+
+      const bands: Band[] = res1.Responses![BAND_TABLE_NAME].map((u) => {
+        let band = unmarshall(u) as _Band
+
+        band.songs = []
+        band.sets = []
+        band.members = []
+        band.admins = []
+
+        band.owner = {
+          userId: band.userId, username: "", email: "dom@oslyn.io", providers: [], role: "USER",
+          friends: [], labelledRecording: [], songsCreated: [], editHistory: [], likedSongs: []
+        } as unknown as User
+
+        return band
+      })
+      console.log(bands)
+      user.bands = bands
+    }
+  }
 
   if (hasSubstring(event.info.selectionSetList, "friends")) {
     if (!user.friendIds || user.friendIds.length === 0) { user.friends = [] }
@@ -59,5 +97,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     }
   }
 
+  console.log(user)
   return user
 }

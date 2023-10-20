@@ -10,7 +10,7 @@ import awsConfig from '@/src/aws-exports'
 import * as q from '@/src/graphql/queries'
 
 import { _Session } from "@/core/utils/frontend"
-import { Band } from '@/src/API'
+import { Band, User } from '@/src/API'
 import Bands from './bands'
 import { BandContextProvider } from './context'
 import BandTabs from './(components)/bandTabs'
@@ -38,6 +38,19 @@ export default async function Band() {
     console.log(JSON.stringify(e, null, 2))
   }
 
+  let user: User|null = null 
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.getUserById, { userId }
+    )) as GraphQLResult<{ getUserById: User }>
+    if (data?.getUserById) user = data.getUserById
+    else throw new Error("data.getUserById is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
+
   return <>
     <BandContextProvider>
       <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
@@ -60,7 +73,7 @@ export default async function Band() {
           </a>
         </div>
       </section>
-      <Bands bands={d} />
+      { user && <Bands bands={d} user={user} /> }
     </BandContextProvider>
   </>
 }

@@ -72,8 +72,8 @@ type Mutation {
   updateBand(bandId: ID!, imageUrl: String, policy: String): Band @aws_iam
   addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
-  addSongsToBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
-  removeSongsFromBand(bandId: ID!, songIds: [ID]!): Band @aws_iam
+  shareSongWithBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
+  removeSongFromBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
 
   createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList @aws_iam
   updateSet(
@@ -280,6 +280,8 @@ type User {
   songsCreated: [Song]!
   editHistory: [RecordingHistory]! 
   likedSongs: [JamSong]!
+
+  bands: [Band] # bands that are associated to this user
 }
 
 enum role { USER, ADMIN }

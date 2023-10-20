@@ -1,11 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import ClickableCell from "../(components)/clikableCell"
+import ClickableCell from "@/app/(components)/clikableCell"
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
 import { Song, User } from "@/src/API"
 
-import Share from "./(edit)/(components)/share"
+import Share from "./share"
 import { useEffect, useState } from "react"
 
 export interface SongTableProps {

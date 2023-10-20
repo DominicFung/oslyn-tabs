@@ -1,7 +1,7 @@
 "use client"
 
 import { Song, User } from "@/src/API"
-import SongTable from "./table"
+import SongTable from "@/app/(components)/(song)/songTable"
 import { useSideBarContext } from "../context"
 
 interface SongsProps {
