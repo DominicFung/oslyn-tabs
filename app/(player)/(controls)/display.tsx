@@ -42,7 +42,9 @@ export default function Display(p: DisplayProps) {
   return <>
     <div className="ml-3 text-sm font-normal w-[calc(100vw-4rem)] sm:w-full">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</div>
-      <div className="pb-3 text-sm font-normal">Set your text size to make it easier to read! <span className="text-xs italic">(only affects you)</span></div> 
+      <div className="pb-3 text-sm font-normal">Set your text size to make it easier to read! 
+        <span className="text-xs italic">(only affects you)</span>
+      </div> 
 
       <div className="max-h-[calc(100vh-10rem)] overflow-auto">
         <div className='flex-0'>

@@ -6,7 +6,13 @@ import { GraphQLResult, GraphQLSubscription } from '@aws-amplify/api'
 
 import * as s from '@/src/graphql/subscriptions'
 import * as m from '@/src/graphql/mutations'
-import { JamSession, JamSessionSlideConfig, JamSong, NextKey, NextPage, OnNextPageSubscription, OnNextSongSubscription, OnSongKeySubscription, OnJamSlideConfigChangeSubscription } from "@/src/API"
+import { 
+  JamSession, JamSessionSlideConfig, JamSong, NextKey, NextPage, 
+  OnNextPageSubscription, OnNextSongSubscription, OnSongKeySubscription, 
+  OnJamSlideConfigChangeSubscription, 
+  Participant, User, JamSessionActiveUsers, OnEnterJamSubscription 
+} from "@/src/API"
+
 import { useEffect, useState } from "react"
 import { ChevronDoubleRightIcon, ArrowsPointingOutIcon } from '@heroicons/react/24/solid'
 import Controls from './controls'
@@ -15,24 +21,37 @@ import { useSideBarContext } from '../context'
 import { default as PSlides } from "./slides"
 import { default as SSlides } from '../(slides)/slides'
 import { useTheme } from 'next-themes'
+import { useSession } from 'next-auth/react'
+import SignInAsGuest from './signInAsGuest'
+
+import toast, { Toaster } from 'react-hot-toast'
 
 export interface PlayerProps {
-  jam: JamSession, isSlideShow?: boolean
+  jam: JamSession, 
+  isSlideShow?: boolean
+  user: User|null
 }
 
 Amplify.configure({ ...awsConfig, ssr: true });
 
-// http://192.168.68.128:3000/jam/95b1a549-127f-4a38-96c4-8dabfbb35bc1
 export default function Player(p: PlayerProps) {
   const theme = useTheme()
   const { setOpenSidebar } = useSideBarContext()
+  const { data: session, status } = useSession()
   
   const [ isFullScreenEnabled, setFullScreenEnabled ] = useState(false)
   useEffect(() => { setFullScreenEnabled(document?.fullscreenEnabled || (document as any)?.webkitFullscreenEnabled) }, [])
 
-  const [ song, setSong ] = useState(p.jam.currentSong || 0)
-  const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
-  const [ page, setPage ] = useState(p.jam.currentPage || 0)
+  // after onload, we need to sync jam manually
+  const [ jam, setJam ] = useState(p.jam) 
+  useEffect( () => { setJam(p.jam) }, [p.jam] )
+
+  const [ song, setSong ] = useState(jam.currentSong || 0)
+  const [ sKey, setSKey ] = useState(jam.setList.songs[jam.currentSong || 0]?.key || "C")
+  const [ page, setPage ] = useState(jam.currentPage || 0)
+
+  const [ latestJoinUsers, setLatestJoinUsers ] = useState<{user: Participant, status: "JOIN"|"EXIT"}[]>([])
+  const [ guestOpen, setGuestOpen ] = useState(false)
 
   const [ isLastPage, setLastPage ] = useState(false)
 
@@ -53,11 +72,11 @@ export default function Player(p: PlayerProps) {
   useEffect(() => { const a = localStorage.getItem('jam/headsUp') || "false"; if (a) { setHeadsUp(a === "true") } }, [])
   useEffect(() => { localStorage.setItem('jam/headsUp', JSON.stringify(headsUp)) }, [headsUp])
 
-  const [ slideTextSize, setSlideTextSize ] = useState(p.jam.slideTextSize || "text-3xl")
+  const [ slideTextSize, setSlideTextSize ] = useState(jam.slideTextSize || "text-3xl")
   useEffect(() => {
     console.log("subscribe text size")
-    if (p.jam.jamSessionId) { subscribeTextSize(p.jam.jamSessionId) }
-  }, [p.jam.slideTextSize, p.jam.jamSessionId])
+    if (jam.jamSessionId) { subscribeTextSize(jam.jamSessionId) }
+  }, [jam.slideTextSize, jam.jamSessionId])
 
   const subscribeTextSize = async (jamSessionId: string) => {
     const sub = API.graphql<GraphQLSubscription<OnJamSlideConfigChangeSubscription>>(
@@ -74,12 +93,13 @@ export default function Player(p: PlayerProps) {
   }
 
   useEffect(() => {
-    if (p.jam.jamSessionId) { 
-      subscribeNextPage(p.jam.jamSessionId)
-      subscribeNextSong(p.jam.jamSessionId)
-      subscribeKeyChange(p.jam.jamSessionId)
+    if (jam.jamSessionId) { 
+      subscribeUserJoin(jam.jamSessionId)
+      subscribeNextPage(jam.jamSessionId)
+      subscribeNextSong(jam.jamSessionId)
+      subscribeKeyChange(jam.jamSessionId)
     }
-  }, [page, p.jam.jamSessionId])
+  }, [page, jam.jamSessionId])
 
   const subscribeNextPage = async (jamSessionId: string) => {
     const sub = API.graphql<GraphQLSubscription<OnNextPageSubscription>>(
@@ -98,7 +118,7 @@ export default function Player(p: PlayerProps) {
     const sub = API.graphql<GraphQLSubscription<OnNextSongSubscription>>(
       graphqlOperation(s.onNextSong, { jamSessionId } )
     ).subscribe({
-      next: ({provider, value}) => {
+      next: ({ value }) => {
         const song = value.data?.onNextSong?.song
         const page = value.data?.onNextSong?.page
 
@@ -116,9 +136,8 @@ export default function Player(p: PlayerProps) {
     const sub = API.graphql<GraphQLSubscription<OnSongKeySubscription>>(
       graphqlOperation(s.onSongKey, { jamSessionId } )
     ).subscribe({
-      next: ({provider, value}) => {
+      next: ({ value }) => {
         console.log("=== On Key Change ===")
-        console.log(JSON.stringify(provider))
         console.log(JSON.stringify(value))
 
         const song = value.data?.onSongKey?.song
@@ -127,17 +146,53 @@ export default function Player(p: PlayerProps) {
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!key) { console.log(`No page value found, this can be OK. ${page}`) }
 
-        incomingKey(song||0, key || "C")
+        incomingKey(song || 0, key || "C")
+
+        let j = JSON.parse(JSON.stringify(jam)) as JamSession
+        j.setList.songs[song || 0]!.key = key || "C"
+        console.log(j)
+        setJam(j)
       },
-      error: (error) => console.error(error)
+      error: (error) => console.error(error),
+      complete: () => { console.log("=== complete onSongKey ===")}
     })
+    console.log(sub)
+  }
+
+  const subscribeUserJoin = async (jamSessionId: string) => {
+    console.log(`= ${jamSessionId}`)
+    const sub = API.graphql<GraphQLSubscription<OnEnterJamSubscription>>(
+      graphqlOperation(s.onEnterJam, { jamSessionId: jamSessionId } )
+    ).subscribe({
+      next: ({ value }) => {
+        console.log("=== On User Join ===")
+        console.log(JSON.stringify(value))
+
+        const active = value.data?.onEnterJam?.active
+        const guests = value.data?.onEnterJam?.guests
+        const latest = value.data?.onEnterJam?.latest
+
+        if (!active) { console.log(`subscribeUserJoin: No active value found, this can be OK. ${active}`) }
+        if (!guests) { console.log(`subscribeUserJoin: No guests value found, this can be OK. ${guests}`) }
+        if (!latest) { console.log(`subscribeUserJoin: No latest value found, this can be OK. ${latest}`) }
+
+        latestJoinUsers.push({user: latest as Participant, status: "JOIN"})
+        setLatestJoinUsers([...latestJoinUsers])
+
+        alert(`Welcome ${latest?.username}!`)
+        toast(`Welcome ${latest?.username}!`)
+      },
+      error: (error) => console.error(`=== ${JSON.stringify(error)}`),
+      complete: () => { console.log("=== complete onEnterJam ===")}
+    })
+    console.log("=== onEnterJam ===")
     console.log(sub)
   }
   
   const incomingNextPage = async (page: number) => { setPage(page) }
   const incomingNextSong = async (song: number, page: number) => { 
     setSong(song); setPage(page) 
-    setKey(p.jam.setList.songs[song]?.key || "C")
+    setKey(jam.setList.songs[song]?.key || "C")
   }
   const incomingKey = async (s: number, key: string) => {
     if (song === s) { setSKey(key) } 
@@ -146,49 +201,53 @@ export default function Player(p: PlayerProps) {
   
   const setNextPage = async (page: number) => {
     const d = await API.graphql(graphqlOperation(m.nextPage, {
-      jamSessionId: p.jam.jamSessionId, page
+      jamSessionId: jam.jamSessionId, page
     })) as GraphQLResult<{ nextPage: NextPage }>
     console.log(d)
   }
 
   const setNextSong = async (song: number) => {
-    if (p.jam.setList.songs.length > song) {
+    if (jam.setList.songs.length > song) {
       const d = await API.graphql(graphqlOperation(m.nextSong, {
-        jamSessionId: p.jam.jamSessionId, song
+        jamSessionId: jam.jamSessionId, song
       })) as GraphQLResult<{ nextPage: NextPage }>
       console.log(d)
-    } else { console.error(`Error: next song index "${song}" is greater than setlist.length "${p.jam.setList.songs.length}"`) }
+    } else { console.error(`Error: next song index "${song}" is greater than setlist.length "${jam.setList.songs.length}"`) }
   }
 
   const setKey = async (key: string) => {
     const d = await API.graphql(graphqlOperation(m.setSongKey, {
-      jamSessionId: p.jam.jamSessionId, song, key
+      jamSessionId: jam.jamSessionId, song, key
     })) as GraphQLResult<{ setSongKey: NextKey }>
     console.log(d)
+
+    // once key is changed, sync jam
+    // jam.setList.songs[song]!.key = key
+    // setJam(jam)
   }
 
   const setJamConfig = async (textSize: string) => {
     const d = await API.graphql(graphqlOperation(m.setJamSlideConfig, {
-      jamSessionId: p.jam.jamSessionId, textSize
+      jamSessionId: jam.jamSessionId, textSize
     })) as GraphQLResult<{ setJamSlideConfig: JamSessionSlideConfig }>
     console.log(d)
   }
   
   useEffect(() => {
-    if (!p.jam || p.jam.currentSong! <= -1 || p.jam.currentSong! >= p.jam.setList.songs.length) { 
-      console.warn(`currentSong not within range of setList: ${p.jam.currentPage}`); return 
+    if (!jam || jam.currentSong! <= -1 || jam.currentSong! >= jam.setList.songs.length) { 
+      console.warn(`currentSong not within range of setList: ${jam.currentPage}`); return 
     }
-    const cp = p.jam.currentSong!
-    if (!p.jam || p.jam.currentPage! <= -1) { 
-      console.warn(`currentPage not > 1. ${p.jam.currentPage}`); return 
+    const cp = jam.currentSong!
+    if (!jam || jam.currentPage! <= -1) { 
+      console.warn(`currentPage not > 1. ${jam.currentPage}`); return 
     }
 
-    if (!p.jam.setList.songs[cp]) { console.error(`song in setlist at ${cp} not found`); return }
+    if (!jam.setList.songs[cp]) { console.error(`song in setlist at ${cp} not found`); return }
     setSong(cp)
-    setSKey(p.jam.setList.songs[cp]!.key)
-    setPage(p.jam.currentPage || 0)
+    setSKey(jam.setList.songs[cp]!.key)
+    setPage(jam.currentPage || 0)
     console.log("all set")
-  }, [p.jam])
+  }, [jam])
 
   const openFullScreen = () => {
     let el = document.getElementById("player") as any
@@ -227,6 +286,35 @@ export default function Player(p: PlayerProps) {
     else closeFullScreen()
   }, [fullScreen])
 
+  const signInAsUser = async (u: User) => {
+
+  }
+  const signInAsGuest = async (name: string, colour: string): Promise<string> => {
+    try {
+      const data = await (await fetch(`/api/jam/${jam.jamSessionId}/add/guest`, {
+        method: "POST",
+        body: JSON.stringify({
+          name, colour
+        })
+      })).json() as JamSessionActiveUsers  
+      
+      if (typeof data === "string") { return data }
+      console.log(data)
+      setGuestOpen(false)
+    } catch (e) {
+      return JSON.stringify(e)
+    }
+    return ""
+  }
+
+  useEffect(() => {
+    if (session && status === "authenticated" && p.user) {
+      signInAsUser(p.user)  
+    } else if (status === "unauthenticated") {
+      setGuestOpen(true)
+    }
+  }, [session, status])
+
   const onFullScreenChange = (event: any) => { 
     if (document.fullscreenElement) setFullScreen(true)
     else setFullScreen(false)
@@ -237,28 +325,28 @@ export default function Player(p: PlayerProps) {
   }, [])
 
   return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${theme.theme || "light"}`} id="player">
-    { p.jam.setList.songs[song]?.song && 
+    { jam.setList.songs[song]?.song && 
       (p.isSlideShow ? 
         <SSlides
-          song={p.jam.setList.songs[song]!.song} page={page} 
+          song={jam.setList.songs[song]!.song} page={page} 
           setPage={setNextPage} setLastPage={setLastPage}
           textSize={slideTextSize || "text-3xl"}
         />:
         <PSlides 
-          song={p.jam.setList.songs[song]!.song} skey={sKey} page={page} 
+          song={jam.setList.songs[song]!.song} skey={sKey} page={page} 
           setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
           textSize={textSize} complex={complex} headsUp={headsUp}
         />)
     }
-    { !p.isSlideShow && isLastPage && p.jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
+    { !p.isSlideShow && isLastPage && jam.setList.songs.length > song+1 && <button onClick={() => setNextSong(song+1)}
         className='fixed bottom-4 right-10 bg-oslyn-600 dark:bg-gray-700 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300'
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
     </button> }
-    { p.jam.setList.songs && !p.isSlideShow &&
+    { jam.setList.songs && !p.isSlideShow &&
       <Controls 
         capo={{ capo:`${0-transpose}`, setCapo }} 
-        song={{ song, setSong: setNextSong, songs: p.jam.setList.songs as JamSong[] }} 
+        song={{ song, setSong: setNextSong, songs: jam.setList.songs as JamSong[] }} 
         sKey={{ skey: sKey, setKey }}
         display={{ textSize, setTextSize, 
           auto: false, setAuto: () => {}, 
@@ -277,5 +365,8 @@ export default function Player(p: PlayerProps) {
     >
       <ArrowsPointingOutIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />
     </button>}
+
+    <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={jam.jamSessionId} signInAsGuest={signInAsGuest} />
+    <Toaster />
   </div>
 }

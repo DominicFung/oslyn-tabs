@@ -18111,7 +18111,13 @@ export const getJamSession = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
       passcode
       currentSong
       currentPage
@@ -19549,7 +19555,13 @@ export const listPublicJamSessions = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
       passcode
       currentSong
       currentPage

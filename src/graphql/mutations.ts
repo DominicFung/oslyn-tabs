@@ -32539,7 +32539,13 @@ export const createJamSession = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
       passcode
       currentSong
       currentPage
@@ -33969,7 +33975,13 @@ export const endJamSession = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
       passcode
       currentSong
       currentPage
@@ -35399,7 +35411,13 @@ export const modifyJamSongs = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
       passcode
       currentSong
       currentPage
@@ -35455,16 +35473,20 @@ export const setJamSlideConfig = /* GraphQL */ `
     }
   }
 `;
-export const signInToJamSession = /* GraphQL */ `
-  mutation SignInToJamSession(
+export const enterJam = /* GraphQL */ `
+  mutation EnterJam(
     $jamSessionId: ID!
     $userId: ID
     $guestName: String
+    $colour: String
+    $ip: String
   ) {
-    signInToJamSession(
+    enterJam(
       jamSessionId: $jamSessionId
       userId: $userId
       guestName: $guestName
+      colour: $colour
+      ip: $ip
     ) {
       active {
         userId
@@ -35844,17 +35866,406 @@ export const signInToJamSession = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
+      latest {
+        ... on Guest {
+          userId
+          username
+          colour
+          joinTime
+          ip
+        }
+        ... on User {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+            friends {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            labelledRecording {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            songsCreated {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            editHistory {
+              recordingHistoryId
+              date
+              actionColumn
+              previousAction
+              newAction
+              comment
+            }
+            likedSongs {
+              key
+              order
+            }
+            bands {
+              bandId
+              imageUrl
+              name
+              description
+              policy
+            }
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            song {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            labeller {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            editHistory {
+              recordingHistoryId
+              date
+              actionColumn
+              previousAction
+              newAction
+              comment
+            }
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            beat {
+              count
+              note
+            }
+            isApproved
+            version
+            creator {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            editors {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            viewers {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            recordings {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            recording {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            labeller {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            song {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            defaultSlideConfig {
+              songId
+              backgroundImg
+              backgroundColor
+              textColor
+              highlightColor
+              highlightOpacity
+            }
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            songs {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            sets {
+              setListId
+              description
+            }
+            members {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            admins {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            owner {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            policy
+          }
+        }
+      }
     }
   }
 `;
-export const signOutFromJamSession = /* GraphQL */ `
-  mutation SignOutFromJamSession(
-    $jamSessionId: ID!
-    $userId: ID
-    $guestName: String
-  ) {
-    signOutFromJamSession(
+export const exitJam = /* GraphQL */ `
+  mutation ExitJam($jamSessionId: ID!, $userId: ID, $guestName: String) {
+    exitJam(
       jamSessionId: $jamSessionId
       userId: $userId
       guestName: $guestName
@@ -36237,7 +36648,400 @@ export const signOutFromJamSession = /* GraphQL */ `
           policy
         }
       }
-      guests
+      guests {
+        userId
+        username
+        colour
+        joinTime
+        ip
+      }
+      latest {
+        ... on Guest {
+          userId
+          username
+          colour
+          joinTime
+          ip
+        }
+        ... on User {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          friends {
+            userId
+            username
+            email
+            providers
+            firstName
+            lastName
+            imageUrl
+            recieveUpdatesFromOslyn
+            isActivated
+            createDate
+            role
+            friends {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            labelledRecording {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            songsCreated {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            editHistory {
+              recordingHistoryId
+              date
+              actionColumn
+              previousAction
+              newAction
+              comment
+            }
+            likedSongs {
+              key
+              order
+            }
+            bands {
+              bandId
+              imageUrl
+              name
+              description
+              policy
+            }
+          }
+          labelledRecording {
+            recordingId
+            songTitle
+            formId
+            song {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            key
+            tabLink
+            rawTabs
+            prelabelTool
+            prelabelToolVersion
+            labelTool
+            labelToolVersion
+            labeller {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            isLabelerRejected
+            labelerRejectionReason
+            singerName
+            singerEmail
+            gender
+            status
+            editHistory {
+              recordingHistoryId
+              date
+              actionColumn
+              previousAction
+              newAction
+              comment
+            }
+            comment
+            createDate
+            updateDate
+            lastOULGenerateDate
+          }
+          songsCreated {
+            songId
+            title
+            artist
+            album
+            albumCover
+            beat {
+              count
+              note
+            }
+            isApproved
+            version
+            creator {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            editors {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            viewers {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            recordings {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            chordSheet
+            chordSheetKey
+            originPlatorm
+            originLink
+            CCLISongTitle
+            CCLISongWriter
+            CCLICopyrightNotice
+            CCLILicenseNumber
+          }
+          editHistory {
+            recordingHistoryId
+            recording {
+              recordingId
+              songTitle
+              formId
+              key
+              tabLink
+              rawTabs
+              prelabelTool
+              prelabelToolVersion
+              labelTool
+              labelToolVersion
+              isLabelerRejected
+              labelerRejectionReason
+              singerName
+              singerEmail
+              gender
+              status
+              comment
+              createDate
+              updateDate
+              lastOULGenerateDate
+            }
+            labeller {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            date
+            actionColumn
+            previousAction
+            newAction
+            comment
+          }
+          likedSongs {
+            key
+            song {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            defaultSlideConfig {
+              songId
+              backgroundImg
+              backgroundColor
+              textColor
+              highlightColor
+              highlightOpacity
+            }
+            order
+          }
+          bands {
+            bandId
+            imageUrl
+            name
+            description
+            songs {
+              songId
+              title
+              artist
+              album
+              albumCover
+              isApproved
+              version
+              chordSheet
+              chordSheetKey
+              originPlatorm
+              originLink
+              CCLISongTitle
+              CCLISongWriter
+              CCLICopyrightNotice
+              CCLILicenseNumber
+            }
+            sets {
+              setListId
+              description
+            }
+            members {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            admins {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            owner {
+              userId
+              username
+              email
+              providers
+              firstName
+              lastName
+              imageUrl
+              recieveUpdatesFromOslyn
+              isActivated
+              createDate
+              role
+            }
+            policy
+          }
+        }
+      }
     }
   }
 `;

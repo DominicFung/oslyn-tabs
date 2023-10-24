@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useSideBarContext } from "@/app/context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import Login from "./login";
 export default function Sidebar () {
   const router = useRouter()
   const path = usePathname()
+  const searchParams = useSearchParams()
   
   const { openSidebar, setOpenSidebar } = useSideBarContext()
   const [ openLogin, setOpenLogin ] = useState(false)
@@ -29,10 +30,13 @@ export default function Sidebar () {
 
   useEffect(() => {
     if (session?.user) {
+      setOpenLogin(false)
       getSongCount()
       getSetCount()
+    } else if (status === "unauthenticated" && searchParams.get("login") === "true") { 
+      setOpenLogin(true)
     }
-  }, [session])
+  }, [session, status])
 
   const getSongCount = async () => {
     const d = await (await fetch(`/api/song/count`, { method: "GET" })).json() as { count: number }
@@ -102,7 +106,7 @@ export default function Sidebar () {
 
       {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
         <div className="flex items-center mb-3">
-          <span className="bg-coral-100 text-coral-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-coral-200 dark:text-coral-900">Alpha</span>
+          <span className="bg-coral-100 text-coral-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-coral-200 dark:text-coral-900">Beta</span>
             <button type="button" onClick={() => setNotice(false)} data-dismiss-target="#dropdown-cta" aria-label="Close"
               className="ml-auto -mx-1.5 -my-1.5 bg-oslyn-50 text-oslyn-900 rounded-lg focus:ring-2 focus:ring-oslyn-400 p-1 hover:bg-oslyn-200 inline-flex h-6 w-6 dark:bg-oslyn-900 dark:text-oslyn-400 dark:hover:bg-oslyn-800"
             >
@@ -111,7 +115,7 @@ export default function Sidebar () {
            </button>
         </div>
         <p className="mb-3 text-sm text-oslyn-800 dark:text-oslyn-200">
-           This App is currently in Alpha! Music brings people together and online tabs should reflect that! Help us make this app better by providing feedback.
+           This App is currently in Beta! Music brings people together and online tabs should reflect that! Help us make this app better by providing feedback.
         </p>
         <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="#">Give Feedback!</a>
       </div> }

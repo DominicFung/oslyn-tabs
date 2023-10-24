@@ -9,6 +9,7 @@ import Key from "./(controls)/key"
 import Display from "./(controls)/display"
 import QrCode from "./(controls)/qrcode"
 import Slides from "./(controls)/slides"
+import Users from "./(controls)/users"
 
 export interface ControlsProp {
   capo?: {
@@ -54,7 +55,8 @@ export default function Controls(p: ControlsProp) {
     { name: "Capo", disabled: false },
     { name: "Text", disabled: false },
     { name: "QR", disabled: false },
-    { name: "Slides", disabled: false }
+    { name: "Slides", disabled: false },
+    { name: "Users", disabled: false }
   ])
 
   useEffect(() => {
@@ -64,7 +66,8 @@ export default function Controls(p: ControlsProp) {
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
       { name: "QR", disabled: false },
-      { name: "Slides", disabled: false }
+      { name: "Slides", disabled: false },
+      { name: "Users", disabled: false }
     ])
   }, [p])
 
@@ -106,7 +109,8 @@ export default function Controls(p: ControlsProp) {
                                     headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
                                 /> }
               { option === 4 && <QrCode /> }
-              { option === 5 && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  />}
+              { option === 5 && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
+              { option === 6 && <Users /> }
             </>
             <button type="button" className="hidden sm:inline-flex ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOpen(false)}

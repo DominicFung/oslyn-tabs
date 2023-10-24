@@ -419,28 +419,28 @@ export class AppsyncStack extends Stack {
       fieldName: "listPublicJamSessions"
     })
 
-    const signInToJamSession = new NodejsFunction(this, `${props.name}-SignInToJamSession`, {
-      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'signInToJamSession.ts'),
+    const enterJam = new NodejsFunction(this, `${props.name}-EnterJam`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'enterJam.ts'),
       timeout: Duration.minutes(5),
       ...nodeJsFunctionProps
     })
 
-    appsync.addLambdaDataSource(`${props.name}SignInToJamSessionDS`, signInToJamSession)
-    .createResolver(`${props.name}-SignInToJamSessionResolver`, {
+    appsync.addLambdaDataSource(`${props.name}EnterJamDS`, enterJam)
+    .createResolver(`${props.name}-EnterJamResolver`, {
       typeName: "Mutation",
-      fieldName: "signInToJamSession"
+      fieldName: "enterJam"
     })
 
-    const signOutFromJamSession = new NodejsFunction(this, `${props.name}-SignOutFromJamSession`, {
-      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'signOutFromJamSession.ts'),
+    const exitJam = new NodejsFunction(this, `${props.name}-ExitJam`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'exitJam.ts'),
       timeout: Duration.minutes(5),
       ...nodeJsFunctionProps
     })
 
-    appsync.addLambdaDataSource(`${props.name}SignOutFromJamSessionDS`, signOutFromJamSession)
-    .createResolver(`${props.name}-SignOutFromJamSessionResolver`, {
+    appsync.addLambdaDataSource(`${props.name}ExitJamDS`, exitJam)
+    .createResolver(`${props.name}-ExitJamResolver`, {
       typeName: "Mutation",
-      fieldName: "signOutFromJamSession"
+      fieldName: "exitJam"
     })
 
     const nextPage = new NodejsFunction(this, `${props.name}-NextPage`, {

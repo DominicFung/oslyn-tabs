@@ -1,4 +1,3 @@
-# graphqlOperation
 schema {
   query: Query
   mutation: Mutation
@@ -97,8 +96,8 @@ type Mutation {
   setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
   setJamSlideConfig(jamSessionId:ID!, textSize: String): JamSessionSlideConfig 
 
-  signInToJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
-  signOutFromJamSession(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
+  enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String): JamSessionActiveUsers
+  exitJam(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
 }
 
 type Subscription {
@@ -107,8 +106,8 @@ type Subscription {
   onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
 
-  onSignInToJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signInToJamSession"])
-  onSignOutFromJamSession(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["signOutFromJamSession"])
+  onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
+  onExitJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["exitJam"])
 }
 
 enum recordingStatus { TOLABEL INAUDIT COMPLETE }
@@ -167,9 +166,12 @@ type SetList {
   band: Band
 }
 
+union Participant = Guest | User
+
 type JamSessionActiveUsers {
   active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
-  guests: [String]!     # used by non-login users (guests). Total will be the addition of active + guest.
+  guests: [Guest]!     # used by non-login users (guests). Total will be the addition of active + guest.
+  latest: Participant
 }
 
 type JamSession {
@@ -181,7 +183,7 @@ type JamSession {
   policy: policy!
   description: String
   active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
-  guests: [String]!     # used by non-login users (guests). Total will be the addition of active + guest.
+  guests: [Guest]!     # used by non-login users (guests). Total will be the addition of active + guest.
   passcode: String
 
   currentSong: Int
@@ -282,6 +284,15 @@ type User {
   likedSongs: [JamSong]!
 
   bands: [Band] # bands that are associated to this user
+}
+
+type Guest {
+  userId: ID!
+  username: String!
+  colour: String!
+  joinTime: AWSTimestamp!
+
+  ip: String
 }
 
 enum role { USER, ADMIN }

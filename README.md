@@ -61,6 +61,8 @@ cd aws && npm i
 npm run deploy
 ```
 
+maximum statement depth is **4**
+
 ### Running the frontend
 
 ```
