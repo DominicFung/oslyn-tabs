@@ -1,5 +1,7 @@
 "use client"
 
+import { ZenObservable } from "zen-observable-ts"
+
 import awsConfig from '@/src/aws-exports'
 import { Amplify, API, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult, GraphQLSubscription } from '@aws-amplify/api'
@@ -78,7 +80,7 @@ export default function Player(p: PlayerProps) {
     if (jam.jamSessionId) { subscribeTextSize(jam.jamSessionId) }
   }, [jam.slideTextSize, jam.jamSessionId])
 
-  const subscribeTextSize = async (jamSessionId: string) => {
+  const subscribeTextSize = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     const sub = API.graphql<GraphQLSubscription<OnJamSlideConfigChangeSubscription>>(
       graphqlOperation(s.onJamSlideConfigChange, { jamSessionId } )
     ).subscribe({
@@ -90,18 +92,25 @@ export default function Player(p: PlayerProps) {
       error: (error) => console.error(error)
     })
     console.log(sub)
+    return sub
   }
 
+  const [ subs, setSubs ] = useState<{ [key: string]: Promise<ZenObservable.Subscription>|null}>({ nextPage: null, nextSong: null, keyChange: null, userJoin: null })
   useEffect(() => {
-    if (jam.jamSessionId) { 
-      subscribeUserJoin(jam.jamSessionId)
-      subscribeNextPage(jam.jamSessionId)
-      subscribeNextSong(jam.jamSessionId)
-      subscribeKeyChange(jam.jamSessionId)
+    console.log("== sub? ==")
+    console.log(subs.userJoin)
+    if (jam.jamSessionId && !subs.nextPage && !subs.nextSong && !subs.keyChange && !subs.userJoin) { 
+      setSubs({
+        nextPage: subscribeNextPage(jam.jamSessionId),
+        nextSong: subscribeNextSong(jam.jamSessionId),
+        keyChange: subscribeKeyChange(jam.jamSessionId),
+        userJoin: subscribeUserJoin(jam.jamSessionId)
+      })
+      console.log("yes sub")
     }
-  }, [page, jam.jamSessionId])
+  }, [page, jam.jamSessionId, subs])
 
-  const subscribeNextPage = async (jamSessionId: string) => {
+  const subscribeNextPage = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     const sub = API.graphql<GraphQLSubscription<OnNextPageSubscription>>(
       graphqlOperation(s.onNextPage, { jamSessionId } )
     ).subscribe({
@@ -112,9 +121,10 @@ export default function Player(p: PlayerProps) {
       error: (error) => console.error(error)
     })
     console.log(sub)
+    return sub
   }
 
-  const subscribeNextSong = async (jamSessionId: string) => {
+  const subscribeNextSong = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     const sub = API.graphql<GraphQLSubscription<OnNextSongSubscription>>(
       graphqlOperation(s.onNextSong, { jamSessionId } )
     ).subscribe({
@@ -130,9 +140,10 @@ export default function Player(p: PlayerProps) {
       error: (error) => console.error(error)
     })
     console.log(sub)
+    return sub
   }
 
-  const subscribeKeyChange = async (jamSessionId: string) => {
+  const subscribeKeyChange = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     const sub = API.graphql<GraphQLSubscription<OnSongKeySubscription>>(
       graphqlOperation(s.onSongKey, { jamSessionId } )
     ).subscribe({
@@ -153,14 +164,15 @@ export default function Player(p: PlayerProps) {
         console.log(j)
         setJam(j)
       },
-      error: (error) => console.error(error),
-      complete: () => { console.log("=== complete onSongKey ===")}
+      error: (error) => console.error(error)
     })
     console.log(sub)
+    return sub
   }
 
-  const subscribeUserJoin = async (jamSessionId: string) => {
+  const subscribeUserJoin = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     console.log(`= ${jamSessionId}`)
+
     const sub = API.graphql<GraphQLSubscription<OnEnterJamSubscription>>(
       graphqlOperation(s.onEnterJam, { jamSessionId: jamSessionId } )
     ).subscribe({
@@ -169,24 +181,19 @@ export default function Player(p: PlayerProps) {
         console.log(JSON.stringify(value))
 
         const active = value.data?.onEnterJam?.active
-        const guests = value.data?.onEnterJam?.guests
         const latest = value.data?.onEnterJam?.latest
 
         if (!active) { console.log(`subscribeUserJoin: No active value found, this can be OK. ${active}`) }
-        if (!guests) { console.log(`subscribeUserJoin: No guests value found, this can be OK. ${guests}`) }
         if (!latest) { console.log(`subscribeUserJoin: No latest value found, this can be OK. ${latest}`) }
 
         latestJoinUsers.push({user: latest as Participant, status: "JOIN"})
         setLatestJoinUsers([...latestJoinUsers])
-
-        alert(`Welcome ${latest?.username}!`)
         toast(`Welcome ${latest?.username}!`)
       },
-      error: (error) => console.error(`=== ${JSON.stringify(error)}`),
-      complete: () => { console.log("=== complete onEnterJam ===")}
+      error: (error) => console.error(`=== ${JSON.stringify(error)}`)
     })
-    console.log("=== onEnterJam ===")
     console.log(sub)
+    return sub
   }
   
   const incomingNextPage = async (page: number) => { setPage(page) }
@@ -289,6 +296,7 @@ export default function Player(p: PlayerProps) {
   const signInAsUser = async (u: User) => {
 
   }
+
   const signInAsGuest = async (name: string, colour: string): Promise<string> => {
     try {
       const data = await (await fetch(`/api/jam/${jam.jamSessionId}/add/guest`, {

@@ -35,6 +35,7 @@ const nextConfig = {
       }
     ]
   },
+  reactStrictMode: false
 }
 
 module.exports = withInterceptStdout(nextConfig, (text) => (text.includes('Critical dependency: the request of a dependency is an expression') ? '' : text))

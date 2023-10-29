@@ -3,9 +3,9 @@ import { DynamoDBClient, GetItemCommand, BatchGetItemCommand, UpdateItemCommandI
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
-import { hasSubstring } from '../../util/dynamo'
+import { hasSubstring, merge } from '../../util/dynamo'
 
-import { Guest, JamSessionActiveUsers, Participant, User } from '../../API'
+import { JamSessionActiveUsers, Participant, User } from '../../API'
 import { _JamSession, _JamSong, _SetList } from '../../type'
 import { updateDynamoUtil } from '../../util/dynamo'
 
@@ -47,21 +47,36 @@ export const handler = async (event: AppSyncResolverEvent<{
     else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
     else { console.error(`This is a private jam session.`); return }
 
+    latest = {
+      userId: b.userId,
+      colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
+      joinTime: Date.now(),
+      lastPing: Date.now(),
+      participantType: "USER"
+    } as Participant
+
     param = updateDynamoUtil({
       table: JAM_TABLE_NAME,
-      item: { activeIds: [...new Set([ ...(jamSession.activeIds || []), b.userId ])] },
+      item: { active: [ ...(jamSession.active || []), latest ] },
       key: { jamSessionId: b.jamSessionId }
     })
   } else {
     if (b.userId) {
+      latest = {
+        userId: b.userId,
+        colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
+        joinTime: Date.now(),
+        lastPing: Date.now(),
+        participantType: "USER"
+      } as Participant
+  
       param = updateDynamoUtil({
         table: JAM_TABLE_NAME,
-        item: { activeIds: [...new Set([ ...(jamSession.activeIds || []), b.userId ])] },
+        item: { active: [ ...(jamSession.active || []), latest ] },
         key: { jamSessionId: b.jamSessionId }
       })
-    
     } else if (b.guestName) { 
-      const guestNames = (jamSession.guests || []).map((s) => s?.username)
+      const guestNames = (jamSession.active || []).map((s) => s?.username)
       const uniq = [...new Set(guestNames)]
 
       if (uniq.includes(b.guestName)) {
@@ -72,21 +87,21 @@ export const handler = async (event: AppSyncResolverEvent<{
       let colour = b.colour || COLORS[(Math.floor(Math.random() * COLORS.length))]
       if (colour === "random") colour = COLORS[(Math.floor(Math.random() * COLORS.length))]
 
-      const guest = {
+      latest = {
         userId: `${uuidv4()}_gst`,
+        participantType: "GUEST",
         username: b.guestName,
         colour: colour,
-        joinTime: Date.now()
-      } as Guest
+        
+        joinTime: Date.now(),
+        lastPing: Date.now()
+      } as Participant
 
-      latest = guest
-      latest.__typename = "Guest"
-
-      if (b.ip) guest.ip = b.ip
+      if (b.ip) latest.ip = b.ip
 
       param = updateDynamoUtil({
         table: JAM_TABLE_NAME,
-        item: { guests: [...(jamSession.guests || []), guest] },
+        item: { active: [...(jamSession.active || []), latest] },
         key: { jamSessionId: b.jamSessionId }
       })
     } else { console.error(`Neither guest name nor userId provided.`); return }
@@ -98,7 +113,11 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   if (hasSubstring(event.info.selectionSetList, "active")) {
-    const keys = (jamSession.activeIds || []).map((s) => { return { userId: { S: s } } as { [songId: string]: any } })
+    const keys = (jamSession.active || []).map((s) => { 
+      if (s?.participantType === "USER") return { userId: { S: s?.userId } }
+      return ""
+    }).filter((i) => { return i != "" }) as { [songId: string]: any }[]
+
     if (keys.length > 0) {
       const res1 = await dynamo.send(new BatchGetItemCommand({
         RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
@@ -117,18 +136,20 @@ export const handler = async (event: AppSyncResolverEvent<{
   
         return user
       })
-      jamSession.active = active
+      console.log(JSON.stringify(jamSession.active))
+
+      jamSession.active = merge(jamSession.active, active, "userId", "active") as Participant[]
+      console.log(JSON.stringify(jamSession.active))
     } else jamSession.active = [] 
   }
   
-  if (!jamSession.guests) jamSession.guests = []
   console.log(JSON.stringify(jamSession))
 
-  
-
-  return {
-    active: jamSession.active,
-    guests: jamSession.guests,
-    latest
+  const r = {
+    jamSessionId: jamSession.jamSessionId,
+    active: jamSession.active, latest
   } as JamSessionActiveUsers
+  console.log(r)
+
+  return r
 }

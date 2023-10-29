@@ -156,6 +156,7 @@ type Band {
 }
 
 enum policy { PRIVATE, PUBLIC_VIEW, PUBLIC_JOIN }
+enum participantType { USER, GUEST }
 
 type SetList {
   setListId: ID!
@@ -166,11 +167,22 @@ type SetList {
   band: Band
 }
 
-union Participant = Guest | User
+type Participant {
+  userId: ID!
+  participantType: participantType!
+  joinTime: AWSTimestamp!
+  lastPing: AWSTimestamp
+  
+  username: String
+  colour: String
+  ip: String
+
+  user: User # can be empty - then this is a guest
+}
 
 type JamSessionActiveUsers {
-  active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
-  guests: [Guest]!     # used by non-login users (guests). Total will be the addition of active + guest.
+  jamSessionId: ID!
+  active: [Participant]!
   latest: Participant
 }
 
@@ -182,8 +194,7 @@ type JamSession {
 
   policy: policy!
   description: String
-  active: [User]!       # if they are part of members or admin, they can edit/play ... else view only.
-  guests: [Guest]!     # used by non-login users (guests). Total will be the addition of active + guest.
+  active: [Participant]!
   passcode: String
 
   currentSong: Int
@@ -284,15 +295,6 @@ type User {
   likedSongs: [JamSong]!
 
   bands: [Band] # bands that are associated to this user
-}
-
-type Guest {
-  userId: ID!
-  username: String!
-  colour: String!
-  joinTime: AWSTimestamp!
-
-  ip: String
 }
 
 enum role { USER, ADMIN }
