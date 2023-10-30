@@ -3,7 +3,7 @@
 import { Cog6ToothIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
 import Capo from "./(controls)/capo"
-import { JamSong } from "@/src/API"
+import { JamSong, Participant } from "@/src/API"
 import Song from "./(controls)/song"
 import Key from "./(controls)/key"
 import Display from "./(controls)/display"
@@ -41,6 +41,11 @@ export interface ControlsProp {
   slides?: {
     textSize: string
     setTextSize:  (s: string) => void
+  }
+
+  users?: {
+    active: Participant[]
+    removeActive: (s: string) => void
   }
   
   pt?: boolean | undefined
@@ -110,7 +115,7 @@ export default function Controls(p: ControlsProp) {
                                 /> }
               { option === 4 && <QrCode /> }
               { option === 5 && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
-              { option === 6 && <Users /> }
+              { option === 6 && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
             </>
             <button type="button" className="hidden sm:inline-flex ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOpen(false)}

@@ -4,7 +4,7 @@ import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { hasSubstring, merge } from '../../util/dynamo'
 
-import { User } from '../../API'
+import { Participant, User } from '../../API'
 import { _JamSession, _JamSong, _SetList } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
@@ -111,12 +111,41 @@ export const handler = async (event: AppSyncResolverEvent<{
     jamSession.members = []
   }
 
-  // TODO: members
   if (hasSubstring(event.info.selectionSetList, "active")) {
-    jamSession.active = []
+    console.log("getting active ..")
+    const tmp = (jamSession.active || []).map((s) => { 
+      if (s?.participantType === "USER") return  s?.userId || ""
+      return ""
+    }).filter((i) => { return i != "" }) as string[]
+    const uniq = [...new Set(tmp)]
+
+    const keys = uniq.map((s) => { return { userId: { S: s } }})
+    
+    if (keys.length > 0) {
+      const res1 = await dynamo.send(new BatchGetItemCommand({
+        RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+      }))
+      console.log(res1)
+      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
+  
+      const active = res1.Responses![USER_TABLE_NAME].map((u) => {
+        let user = unmarshall(u) as User
+  
+        if (!user.labelledRecording) user.labelledRecording = []
+        if (!user.songsCreated) user.songsCreated = []
+        if (!user.editHistory) user.editHistory = []
+        if (!user.likedSongs) user.likedSongs = []
+        if (!user.friends) user.friends = []
+  
+        return user
+      })
+
+      console.log(JSON.stringify(jamSession.active))
+      jamSession.active = merge(jamSession.active, active, "userId", "user") as Participant[]
+      console.log(JSON.stringify(jamSession.active))
+    }
   }
   
-  if (!jamSession.guests) jamSession.guests = []
   console.log(JSON.stringify(jamSession))
   return jamSession
 }

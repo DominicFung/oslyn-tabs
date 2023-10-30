@@ -39,29 +39,20 @@ export const handler = async (event: AppSyncResolverEvent<{
   let param = null as UpdateItemCommandInput | null
   let latest = null as Participant | null
 
-  // check authorization
-  if (jamSession.policy === "PRIVATE") {
-    if (!b.userId) { console.error(`This is a private jam session. No guests allowed.`); return }
-    
-    if ((jamSession.adminIds || []).includes(b.userId)) { console.log("is an admin, athorized") }
-    else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
-    else { console.error(`This is a private jam session.`); return }
+  const userIds = (jamSession.active || []).map((s) => s?.userId)
+  const uniq = [...new Set(userIds)]
 
-    latest = {
-      userId: b.userId,
-      colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
-      joinTime: Date.now(),
-      lastPing: Date.now(),
-      participantType: "USER"
-    } as Participant
-
-    param = updateDynamoUtil({
-      table: JAM_TABLE_NAME,
-      item: { active: [ ...(jamSession.active || []), latest ] },
-      key: { jamSessionId: b.jamSessionId }
-    })
+  if (b.userId && uniq.includes(b.userId)) {
+    console.error(`${b.userId} is already a part of this session, continuing ...`); return
   } else {
-    if (b.userId) {
+    // check authorization
+    if (jamSession.policy === "PRIVATE") {
+      if (!b.userId) { console.error(`This is a private jam session. No guests allowed.`); return }
+      
+      if ((jamSession.adminIds || []).includes(b.userId)) { console.log("is an admin, athorized") }
+      else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
+      else { console.error(`This is a private jam session.`); return }
+
       latest = {
         userId: b.userId,
         colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
@@ -69,42 +60,58 @@ export const handler = async (event: AppSyncResolverEvent<{
         lastPing: Date.now(),
         participantType: "USER"
       } as Participant
-  
+
       param = updateDynamoUtil({
         table: JAM_TABLE_NAME,
         item: { active: [ ...(jamSession.active || []), latest ] },
         key: { jamSessionId: b.jamSessionId }
       })
-    } else if (b.guestName) { 
-      const guestNames = (jamSession.active || []).map((s) => s?.username)
-      const uniq = [...new Set(guestNames)]
+    } else {
+      if (b.userId) {
+        latest = {
+          userId: b.userId,
+          colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
+          joinTime: Date.now(),
+          lastPing: Date.now(),
+          participantType: "USER"
+        } as Participant
+    
+        param = updateDynamoUtil({
+          table: JAM_TABLE_NAME,
+          item: { active: [ ...(jamSession.active || []), latest ] },
+          key: { jamSessionId: b.jamSessionId }
+        })
+      } else if (b.guestName) { 
+        const guestNames = (jamSession.active || []).map((s) => s?.username)
+        const uniq = [...new Set(guestNames)]
 
-      if (uniq.includes(b.guestName)) {
-        console.error(`Guest name "${b.guestName}" already exists. Please use another.`); 
-        throw new Error(`Sorry, this guest name is already taken!`)
-      }
+        if (uniq.includes(b.guestName)) {
+          console.error(`Guest name "${b.guestName}" already exists. Please use another.`); 
+          throw new Error(`Sorry, this guest name is already taken!`)
+        }
 
-      let colour = b.colour || COLORS[(Math.floor(Math.random() * COLORS.length))]
-      if (colour === "random") colour = COLORS[(Math.floor(Math.random() * COLORS.length))]
+        let colour = b.colour || COLORS[(Math.floor(Math.random() * COLORS.length))]
+        if (colour === "random") colour = COLORS[(Math.floor(Math.random() * COLORS.length))]
 
-      latest = {
-        userId: `${uuidv4()}_gst`,
-        participantType: "GUEST",
-        username: b.guestName,
-        colour: colour,
-        
-        joinTime: Date.now(),
-        lastPing: Date.now()
-      } as Participant
+        latest = {
+          userId: `${uuidv4()}_gst`,
+          participantType: "GUEST",
+          username: b.guestName,
+          colour: colour,
+          
+          joinTime: Date.now(),
+          lastPing: Date.now()
+        } as Participant
 
-      if (b.ip) latest.ip = b.ip
+        if (b.ip) latest.ip = b.ip
 
-      param = updateDynamoUtil({
-        table: JAM_TABLE_NAME,
-        item: { active: [...(jamSession.active || []), latest] },
-        key: { jamSessionId: b.jamSessionId }
-      })
-    } else { console.error(`Neither guest name nor userId provided.`); return }
+        param = updateDynamoUtil({
+          table: JAM_TABLE_NAME,
+          item: { active: [...(jamSession.active || []), latest] },
+          key: { jamSessionId: b.jamSessionId }
+        })
+      } else { console.error(`Neither guest name nor userId provided.`); return }
+    }
   }
 
   if (param) {
@@ -136,11 +143,15 @@ export const handler = async (event: AppSyncResolverEvent<{
   
         return user
       })
-      console.log(JSON.stringify(jamSession.active))
 
+      console.log(JSON.stringify(jamSession.active))
       jamSession.active = merge(jamSession.active, active, "userId", "active") as Participant[]
       console.log(JSON.stringify(jamSession.active))
-    } else jamSession.active = [] 
+    }
+
+    // in case, the BatchGet did not include the latest addition.
+    const uniq = jamSession.active.map((s) => s?.userId)
+    if (uniq.includes(latest.userId)) jamSession.active.push(latest)
   }
   
   console.log(JSON.stringify(jamSession))

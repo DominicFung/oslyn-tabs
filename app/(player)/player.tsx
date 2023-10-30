@@ -38,7 +38,7 @@ Amplify.configure({ ...awsConfig, ssr: true });
 
 export default function Player(p: PlayerProps) {
   const theme = useTheme()
-  const { setOpenSidebar } = useSideBarContext()
+  const { setOpenSidebar, guestIdentity, addGuestIdentity } = useSideBarContext()
   const { data: session, status } = useSession()
   
   const [ isFullScreenEnabled, setFullScreenEnabled ] = useState(false)
@@ -52,7 +52,6 @@ export default function Player(p: PlayerProps) {
   const [ sKey, setSKey ] = useState(jam.setList.songs[jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(jam.currentPage || 0)
 
-  const [ latestJoinUsers, setLatestJoinUsers ] = useState<{user: Participant, status: "JOIN"|"EXIT"}[]>([])
   const [ guestOpen, setGuestOpen ] = useState(false)
 
   const [ isLastPage, setLastPage ] = useState(false)
@@ -180,15 +179,17 @@ export default function Player(p: PlayerProps) {
         console.log("=== On User Join ===")
         console.log(JSON.stringify(value))
 
-        const active = value.data?.onEnterJam?.active
+        const active = value.data?.onEnterJam?.active as Participant[]
         const latest = value.data?.onEnterJam?.latest
 
         if (!active) { console.log(`subscribeUserJoin: No active value found, this can be OK. ${active}`) }
         if (!latest) { console.log(`subscribeUserJoin: No latest value found, this can be OK. ${latest}`) }
 
-        latestJoinUsers.push({user: latest as Participant, status: "JOIN"})
-        setLatestJoinUsers([...latestJoinUsers])
-        toast(`Welcome ${latest?.username}!`)
+        jam.active = [...active]
+        setJam({...jam})
+
+        if (latest?.username) toast(`Welcome ${latest?.username}!`)
+        else if (latest?.user?.username) toast(`Welcome ${latest?.username}!`)
       },
       error: (error) => console.error(`=== ${JSON.stringify(error)}`)
     })
@@ -294,34 +295,51 @@ export default function Player(p: PlayerProps) {
   }, [fullScreen])
 
   const signInAsUser = async (u: User) => {
+    console.log("sign in as user ..")
+    try {
+      const data = await (await fetch(`/api/jam/${jam.jamSessionId}/add/user`, {
+        method: "POST", body: JSON.stringify({ userId: u.userId })
+      })).json() as JamSessionActiveUsers
 
+      if (typeof data === "string") { return data }
+      console.log(data)
+    } catch (e) { return JSON.stringify(e) }
+    return ""
   }
 
   const signInAsGuest = async (name: string, colour: string): Promise<string> => {
     try {
       const data = await (await fetch(`/api/jam/${jam.jamSessionId}/add/guest`, {
-        method: "POST",
-        body: JSON.stringify({
-          name, colour
-        })
+        method: "POST", body: JSON.stringify({ name, colour })
       })).json() as JamSessionActiveUsers  
       
       if (typeof data === "string") { return data }
       console.log(data)
-      setGuestOpen(false)
-    } catch (e) {
-      return JSON.stringify(e)
-    }
+
+      if (data.jamSessionId && data.latest?.userId) {
+        addGuestIdentity(data.jamSessionId, data.latest.userId)
+      }
+    } catch (e) { return JSON.stringify(e) }
     return ""
   }
 
   useEffect(() => {
+    console.log(guestIdentity)
+    const guestIds = jam.active.map((j) => j?.userId)
     if (session && status === "authenticated" && p.user) {
-      signInAsUser(p.user)  
+      console.log(`User is authenticated .. ${p.user.userId}`)
+      console.log(guestIds)
+      if (!guestIds.includes(p.user.userId)) signInAsUser(p.user)
     } else if (status === "unauthenticated") {
-      setGuestOpen(true)
+      console.log(guestIdentity)
+      console.log(jam.active)
+      if (guestIdentity[jam.jamSessionId]) {
+        const guestId = guestIdentity[jam.jamSessionId]
+        if (guestIds.includes(guestId)) { setGuestOpen(false) }
+        else setGuestOpen(true)
+      } else setGuestOpen(true)
     }
-  }, [session, status])
+  }, [session, status, guestIdentity, jam])
 
   const onFullScreenChange = (event: any) => { 
     if (document.fullscreenElement) setFullScreen(true)
@@ -366,6 +384,10 @@ export default function Player(p: PlayerProps) {
           textSize: slideTextSize,
           setTextSize: setJamConfig
         }}
+        users={{
+          active: jam.active as Participant[],
+          removeActive: () => {}
+        }}
       /> 
     }
     { isFullScreenEnabled && p.isSlideShow && !fullScreen && <button onClick={() => setFullScreen(true)}
@@ -375,6 +397,6 @@ export default function Player(p: PlayerProps) {
     </button>}
 
     <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={jam.jamSessionId} signInAsGuest={signInAsGuest} />
-    <Toaster />
+    <Toaster position="bottom-left" />
   </div>
 }

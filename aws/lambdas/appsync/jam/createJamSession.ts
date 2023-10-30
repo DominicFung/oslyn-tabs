@@ -61,7 +61,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       pageMax: 3, pageMin: 2
     },
 
-    active: true
+    active: []
   } as any
 
   const res2 = await dynamo.send(new PutItemCommand({

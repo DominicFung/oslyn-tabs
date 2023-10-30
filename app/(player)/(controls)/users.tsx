@@ -1,5 +1,6 @@
 "use client"
 
+import { getUsernameInitials } from "@/core/utils/frontend";
 import { Participant } from "@/src/API"
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -20,12 +21,12 @@ export default function Users(p: UsersProps) {
           if (e.participantType === "GUEST") {
             return <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.removeUser(e.userId) }}>
                   <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0">
-                      <span className="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                    <div className={`pt-1.5 w-8 h-8 rounded-full bg-${e.colour}-500 text-center`}>
+                      <span className="font-xl text-gray-600 dark:text-gray-300">{getUsernameInitials(e.username || "")}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                          {e.username}
+                          {e.username} <span className="italic text-xs">(guest)</span>
                         </p>
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                           {e.userId}
@@ -38,8 +39,9 @@ export default function Users(p: UsersProps) {
                 </li>
           }
 
-          if (e.user)
-          return <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.removeUser(e.userId) }}>
+          console.log(e)
+          if (e.user) {
+            return <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.removeUser(e.userId) }}>
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
                         {e.user.imageUrl && <img className="w-8 h-8 rounded-full" src={e.user.imageUrl} alt="Neil image" />}
@@ -57,6 +59,7 @@ export default function Users(p: UsersProps) {
                     </div>
                   </div>
                 </li>
+          }
         })}
       </ul>
     </div>

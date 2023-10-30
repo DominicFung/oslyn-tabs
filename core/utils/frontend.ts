@@ -139,3 +139,16 @@ export function getTimeDifferenceFromNowToEpoch(startTimeEpoch: number): string 
 
   return "moments"
 }
+
+export function getUsernameInitials(username: string): string {
+  const words = username.split(' ');
+  let initials = '';
+
+  for (const word of words) {
+    if (word.length > 0) {
+      initials += word[0].toUpperCase();
+    }
+  }
+
+  return initials;
+}
