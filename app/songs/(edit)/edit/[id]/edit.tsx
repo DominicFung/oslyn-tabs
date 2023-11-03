@@ -2,8 +2,8 @@
 
 import { Song } from "@/src/API"
 import { useState } from "react"
-import PasteTabs from "../../1.pasteTabs"
-import SongInfo from "../../2.songInfo"
+import PasteTabs from "../../pasteTabs"
+import SongInfo from "../../songInfo"
 
 import Slides from "@/app/(player)/slides"
 import Save from "../../(components)/save"

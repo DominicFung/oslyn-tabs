@@ -47,7 +47,7 @@ type Mutation {
 
   updateSong(
     songId: ID!
-    ownerId: ID!
+    userId: ID!
     title: String
     artist: String
     album: String

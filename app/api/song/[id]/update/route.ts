@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   console.log(`songId: ${songId}`)
 
   const d = await API.graphql(graphqlOperation(
-    m.updateSong, { ...b, ownerId: userId, songId }
+    m.updateSong, { ...b, userId, songId }
   )) as GraphQLResult<{ updateSong: Song }>
 
   if (!d.data?.updateSong) {

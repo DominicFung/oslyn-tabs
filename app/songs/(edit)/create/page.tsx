@@ -1,8 +1,8 @@
 "use client"
 import { useState } from 'react'
 
-import PasteTabs from "../1.pasteTabs"
-import SongInfo from '../2.songInfo'
+import PasteTabs from "../pasteTabs"
+import SongInfo from '../songInfo'
 import { Song } from '@/src/API'
 import { User } from '@/src/API'
 import Slides from '@/app/(player)/slides'

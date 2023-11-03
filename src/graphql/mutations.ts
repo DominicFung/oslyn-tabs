@@ -6186,7 +6186,7 @@ export const createSong = /* GraphQL */ `
 export const updateSong = /* GraphQL */ `
   mutation UpdateSong(
     $songId: ID!
-    $ownerId: ID!
+    $userId: ID!
     $title: String
     $artist: String
     $album: String
@@ -6200,7 +6200,7 @@ export const updateSong = /* GraphQL */ `
   ) {
     updateSong(
       songId: $songId
-      ownerId: $ownerId
+      userId: $userId
       title: $title
       artist: $artist
       album: $album

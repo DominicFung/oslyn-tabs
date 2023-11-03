@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTheme } from "next-themes"
 
 import Editor, { useMonaco, Monaco } from '@monaco-editor/react'
@@ -81,9 +81,9 @@ export default function PasteTabs(p: PasteTabsProps) {
   }
 
   // used in first monaco load ..
-  useEffect(() => {
-    if (monaco && monacoRef.current) { setup(monaco, monacoRef.current) }
-  }, [monaco, theme, monacoRef.current])
+  // useEffect(() => {
+  //   if (monaco && monacoRef.current) { setup(monaco, monacoRef.current) }
+  // }, [monaco, theme, monacoRef])
 
 
   // used in subsequent monaco loads
@@ -95,7 +95,9 @@ export default function PasteTabs(p: PasteTabsProps) {
     }
   }
 
-  return <Editor height="80vh" options={{ }} value={p.tabs} 
-    onChange={(e) => { e && p.setTabs(e) }} onMount={setEditorTheme} 
-  />
+  return <>
+  { window.navigator &&  <Editor height="80vh" options={{ }} value={p.tabs} 
+      onChange={(e) => { e && p.setTabs(e) }} onMount={setEditorTheme} 
+    /> }
+  </>
 }

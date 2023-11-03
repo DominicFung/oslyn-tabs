@@ -1,13 +1,12 @@
 "use client"
 
 import { Listbox, Transition } from '@headlessui/react'
-import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon, EyeIcon } from '@heroicons/react/24/solid'
+import { ArrowsUpDownIcon, EyeIcon } from '@heroicons/react/24/solid'
 
-import { SetRequest } from '@/app/api/set/create/route'
-import { JamSession, SetList, Song } from '@/src/API'
+import { Song } from '@/src/API'
 
 import { useState, Fragment } from 'react'
-import Review from '@/app/songs/(edit)/3.review'
+import Review from '@/app/songs/(edit)/review'
 
 export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 

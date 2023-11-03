@@ -2,6 +2,7 @@
 
 import { SongUpdateRequest } from "@/app/api/song/[id]/update/route"
 import { SongRequest } from "@/app/api/song/create/route"
+import { getArrayBufferFromObjectURL } from "@/core/utils/frontend"
 import { Song } from "@/src/API"
 import { InboxArrowDownIcon } from "@heroicons/react/24/solid"
 import { useRouter } from "next/navigation"
@@ -30,13 +31,26 @@ export default function Save(p: SaveProps) {
   const createSong = async () => {
     if (!p.song.title || !p.song.chordSheetKey) { console.error("title and key not available"); return }
 
+    let songRequest = {
+      title: p.song.title, chordSheetKey: p.song.chordSheetKey,
+      artist: p.song.artist, album: p.song.album, 
+      albumCover: p.song.albumCover, chordSheet: p.song.chordSheet
+    } as SongRequest
+
+    if (p.song.albumCover?.startsWith("blob")) {
+      let img = await getArrayBufferFromObjectURL(p.song.albumCover)
+      console.log(songRequest.albumCover)
+      console.log(img)
+
+      if (img) {
+        delete songRequest.albumCover
+        songRequest.arrayBuffer = new Uint8Array(img as ArrayBuffer)
+      }
+    }
+
     const data = await (await fetch(`/api/song/create`, {
       method: "POST",
-      body: JSON.stringify({
-        title: p.song.title, chordSheetKey: p.song.chordSheetKey,
-        artist: p.song.artist, album: p.song.album, 
-        albumCover: p.song.albumCover, chordSheet: p.song.chordSheet
-      } as SongRequest)
+      body: JSON.stringify(songRequest)
     })).json() as Song
     console.log(data)
     router.push(`/songs`)

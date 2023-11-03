@@ -6938,7 +6938,7 @@ export type CreateSongMutation = {
 
 export type UpdateSongMutationVariables = {
   songId: string,
-  ownerId: string,
+  userId: string,
   title?: string | null,
   artist?: string | null,
   album?: string | null,

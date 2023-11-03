@@ -15,10 +15,20 @@ interface SongProps {
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 
 export default function Song(p: SongProps) {
-  const onDrop = useCallback((acceptedFiles: any) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log(acceptedFiles)
+
+    let files = acceptedFiles.map(file => Object.assign(file, {
+      preview: URL.createObjectURL(file)
+    }))
+
+    console.log(files)
+
+    p.setSong({ ...p.song, albumCover: URL.createObjectURL(acceptedFiles[0]) })
   }, [])
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({onDrop})
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {'image/*': []}, onDrop
+  })
   
   const [ albumOpen, setAlbumOpen ] = useState(false)
   const [ albumLink, setAlbumLink ] = useState("")

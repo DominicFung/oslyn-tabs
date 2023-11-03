@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server'
 import { Amplify, API, graphqlOperation } from 'aws-amplify'
 import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
-import { fromIni } from '@aws-sdk/credential-provider-ini'
 
 import * as m from '@/src/graphql/mutations'
 import { Band } from '@/src/API'
@@ -16,6 +15,7 @@ import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3'
 
 import cdk from "@/cdk-outputs.json"
 import secret from "@/secret.json"
+import { uint8ArrayToArrayBuffer } from '@/core/utils/backend'
 
 export interface BandRequest {
   name: string,
@@ -101,14 +101,4 @@ export async function POST(request: Request){
 
   console.log(`${request.method} ${request.url} .. complete`)
   return NextResponse.json(d.data.createBand)
-}
-
-function uint8ArrayToArrayBuffer(serializedBuffer: {[key: number]: number}): ArrayBuffer {
-  const arrayBuffer = []
-
-  for (let i = 0; i < Object.keys(serializedBuffer).length; i++) {
-    arrayBuffer.push(serializedBuffer[i])
-  }
-
-  return Buffer.from(arrayBuffer);
 }

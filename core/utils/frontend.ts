@@ -152,3 +152,27 @@ export function getUsernameInitials(username: string): string {
 
   return initials;
 }
+
+export function getArrayBufferFromObjectURL(objectURL: string): Promise<string | ArrayBuffer | null | undefined> {
+  // Fetch the Blob data from the object URL.
+  return fetch(objectURL)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch Blob data from the object URL');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      // Convert the Blob to ArrayBuffer.
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = event => {
+          resolve(event.target?.result);
+        };
+        reader.onerror = error => {
+          reject(error);
+        };
+        reader.readAsArrayBuffer(blob);
+      });
+    });
+}
