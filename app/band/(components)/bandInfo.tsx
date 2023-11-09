@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { sleep } from '@/core/utils/frontend'
 
 interface BandProps {
+  standalone?: boolean
   band: Band
   setBand: (b: Band) => void
 }
@@ -71,7 +72,7 @@ export default function BandInfo(p: BandProps) {
   }
 
   return <>
-    <div className='mx-auto max-w-4xl cursor-pointer'>
+    <div className={p.standalone ? 'mx-auto max-w-4xl' : ''}>
       <div className='flex flex-row'>
         <div className='flex flex-col'>
           <div className='mx-4'>

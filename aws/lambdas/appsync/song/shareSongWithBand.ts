@@ -105,5 +105,23 @@ export const handler = async (event: AppSyncResolverEvent<{
     } else { band.admins = [] }
   }
 
+  if (hasSubstring(event.info.selectionSetList, "owner")) {
+    console.log("getting owner ...")
+    const res1 = await dynamo.send(
+      new GetItemCommand({TableName: USER_TABLE_NAME, Key: { userId: { S: band.userId } }})
+    )
+
+    if (!res1.Item) { console.error("ERROR: Could not find band owner."); return }
+    const owner = unmarshall(res1.Item) as _User
+
+    if (!owner.labelledRecording) owner.labelledRecording = []
+    if (!owner.songsCreated) owner.songsCreated = []
+    if (!owner.editHistory) owner.editHistory = []
+    if (!owner.likedSongs) owner.likedSongs = []
+    if (!owner.friends) owner.friends = []
+
+    band.owner = owner
+  }
+
   return band
 }

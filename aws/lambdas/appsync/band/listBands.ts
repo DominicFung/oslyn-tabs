@@ -3,7 +3,7 @@ import { BatchGetItemCommand, DynamoDBClient, GetItemCommand, QueryCommand } fro
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { _Band, _Song, _User } from '../../type'
-import { hasSubstring, merge } from '../../util/dynamo'
+import { hasSubstring, merge, multiMerge } from '../../util/dynamo'
 import { User } from '../../API'
 
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
@@ -84,7 +84,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
       console.log(songs)
 
-      if (hasSubstring(event.info.selectionSetList, "song/creator")) {
+      if (hasSubstring(event.info.selectionSetList, "songs/creator")) {
         console.log("getting songs/../song/creator ..")
 
         const creatorIds = songs.map((s) => { return s.userId })
@@ -98,21 +98,28 @@ export const handler = async (event: AppSyncResolverEvent<{
         if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
 
         console.log(JSON.stringify(res2.Responses))
-        const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]
+        let users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]
         console.log(users)
+
+        users = users.map((u) => {
+          let user = u
+          if (!user.friends) user.friends = []
+          return user
+        })
 
         songs = merge(songs, users, 'userId', 'creator')
         console.log(songs)
 
         songs = songs.map((s) => {
           if (!s.recordings) s.recordings = []
+          if (!s.editors) s.editors = []
+          if (!s.viewers) s.viewers = []
           return s
         })
       }
-      
-      for (let i=0; i<bands.length; i++) {
-        bands[i].songs = merge(bands[i].songs || [], songs, 'songId', 'song')
-      }
+
+      bands = multiMerge(bands || [], songs, 'songIds', 'songId', 'songs')
+      console.log(JSON.stringify(bands))
     } else { 
       console.log("NONE of this user's bands has songs, continue ..")
       for (let i=0; i<bands.length; i++) { bands[i].songs = [] }

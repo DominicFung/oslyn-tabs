@@ -10,7 +10,7 @@ import awsConfig from '@/src/aws-exports'
 import * as q from '@/src/graphql/queries'
 
 import { _Session } from "@/core/utils/frontend"
-import { Band, User } from '@/src/API'
+import { Band, Song, User } from '@/src/API'
 import Bands from './bands'
 import { BandContextProvider } from './context'
 import BandTabs from './(components)/bandTabs'
@@ -50,6 +50,27 @@ export default async function Band() {
     console.log(JSON.stringify(e, null, 2))
   }
 
+  let songs: Song[] = []
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.listSongs, { userId }
+    )) as GraphQLResult<{ listSongs: Song[] }>
+    if (data?.listSongs) songs = data?.listSongs
+    else throw new Error("data.listSongs is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
+
+  try {
+    const { data } = await SSR.API.graphql(graphqlOperation(
+      q.listSharedSongs, { userId }
+    )) as GraphQLResult<{ listSharedSongs: Song[] }>
+    if (data?.listSharedSongs) songs.push(...data?.listSharedSongs!)
+    else throw new Error("data.listSharedSongs is empty.")
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2))
+  }
 
   return <>
     <BandContextProvider>
@@ -73,7 +94,7 @@ export default async function Band() {
           </a>
         </div>
       </section>
-      { user && <Bands bands={d} user={user} /> }
+      { user && <Bands bands={d} user={user} songs={songs} /> }
     </BandContextProvider>
   </>
 }

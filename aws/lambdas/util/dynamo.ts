@@ -49,3 +49,37 @@ export const merge = (a1: any[], a2: any[], matchKey: string, outputKey?: string
     else return matchingObj ? { ...o1, [outputKey]: matchingObj } : o1
   })
 }
+
+/**
+ * @param a1 
+ * @param a2 
+ * @param mk1 Match Key 1 is a key in a1. The value MUST be a string array.
+ * @param mk2 Match Key 2 is a key in a2. if value of mk2 in a2 is in a2 mk1, then that object in a2 is added to a1.
+ * @param outputKey 
+ * @returns 
+ */
+export const multiMerge = (a1: any[], a2: any[], mk1: string, mk2: string, outputKey?: string) => {
+  console.log("enter multiMerge")
+  console.log(a1)
+  console.log(a2)
+  return a1.map((o1: any) => {
+    console.log(`multiMerge: ${o1[mk1]}`)
+
+    if (!Array.isArray(o1[mk1])) {
+      console.log(`multiMerge: no array matching key ${mk1}`)
+      if (!outputKey) return { ...o1 }
+      else { return { ...o1, [outputKey]: []} }
+    }
+
+    const mos = []
+    for (let i=0; i<o1[mk1].length; i++) {
+      console.log(`multiMerge: ${o1[mk1][i]}`)
+      const mo = a2.find((o2: any) => o1[mk1][i] === o2[mk2])
+      console.log(`multiMerge: ${JSON.stringify(mo)}`)
+      if (mo) mos.push(mo)
+    }
+    
+    if (!outputKey)  return mos ? { ...o1, [mk1]:mos } : { ...o1 }
+    else return mos ? { ...o1, [outputKey]: mos } : { ...o1 }
+  })
+}
