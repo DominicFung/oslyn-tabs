@@ -40,10 +40,10 @@ export default function Song(p: SongProps) {
         <div className='mx-4'>
           <ul className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
             <li className="w-full">
-                <span className="inline-block w-full p-4 text-gray-900 bg-gray-100 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white" aria-current="page">Album</span>
+                <span className="inline-block w-full p-4 text-gray-900 bg-gray-100 rounded-l-lg focus:ring-4 focus:ring-oslyn-300 active focus:outline-none dark:bg-gray-700 dark:text-white" aria-current="page">Album</span>
             </li>
             <li className="w-full hover:cursor-pointer" onClick={() => setAlbumOpen(true)}>
-                <span className="inline-block w-full p-4 bg-white rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Link</span>
+                <span className="inline-block w-full p-4 bg-white rounded-r-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Link</span>
             </li>
           </ul>
         </div>
@@ -52,9 +52,9 @@ export default function Song(p: SongProps) {
           <input {...getInputProps()} />
           { isDragActive ?
               <p>Drop the files here ...</p> :
-              <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500'>
+              <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500'>
                 { p.song.albumCover ? <Image src={p.song.albumCover} alt={''} width={192} height={192} 
-                    className='w-48 h-48 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500' />:
+                    className='w-48 h-48 rounded-lg border focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500' />:
                   <span><SparklesIcon className='h-12 w-12 mx-auto mt-20' /></span>
                 }
               </div>
@@ -64,18 +64,18 @@ export default function Song(p: SongProps) {
       <div className='flex-1 mt-20'>
         <div className="flex flex-row">
           <div className='flex-1 mr-2'>
-            <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+            <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
               value={p.song.title}  placeholder="Title" onChange={(e) => p.setSong({ ...p.song, title: e.currentTarget.value })}/>
           </div>
           <div className='flex-0'>
-            <Listbox as="div" value={p.song.chordSheetKey} onChange={(e) => p.setSong({...p.song, chordSheetKey: e})} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <Listbox as="div" value={p.song.chordSheetKey} onChange={(e) => p.setSong({...p.song, chordSheetKey: e})} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500">
             {({ open }) => (
               <>
               <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
                 <span className="p-1 px-4 text-sm truncate">{p.song.chordSheetKey}</span>
                 <span className="absolute flex items-center ml-3 pointer-events-none right-1">
                 <ArrowsUpDownIcon
-                  className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
+                  className={`"w-4 h-4 ${open ? "text-oslyn-500" : "text-gray-400"}`}
                 />
               </span>
               </Listbox.Button>
@@ -125,19 +125,19 @@ export default function Song(p: SongProps) {
           </div>
         </div>
         <div className="relative w-full mt-2">
-          <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+          <input type="search" id="search" className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
             value={p.song.artist || ""}  placeholder="Artist" onChange={(e) => p.setSong({ ...p.song, artist: e.currentTarget.value })}/>
-          <button type="submit" onClick={() => { }}
-            className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <button onClick={() => { p.setSong({ ...p.song, artist: ""}) }}
+            className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800"
           >
             <TrashIcon className="w-6 h-6" />
           </button>
         </div>
         <div className="relative w-full mt-2">
-          <input className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+          <input className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
             value={p.song.album || ""}  placeholder="Album" onChange={(e) => p.setSong({ ...p.song, album: e.currentTarget.value })}/>
-          <button type="submit" onClick={() => { }}
-            className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          <button onClick={() => { p.setSong({ ...p.song, album: ""}) }}
+            className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800"
           >
             <TrashIcon className="w-6 h-6" />
           </button>
@@ -162,14 +162,14 @@ export default function Song(p: SongProps) {
                 <div>
                     <label htmlFor="link" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link</label>
                     <input type="text" name="link" id="link" value={albumLink} onChange={ e => setAlbumLink(e.currentTarget.value) }
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="https://" 
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-oslyn-500 focus:border-oslyn-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="https://" 
                       required />
                 </div>
                 
                 <button onClick={() => { p.song.albumCover = albumLink; p.setSong({ ...p.song }); setAlbumOpen(false) }}
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
+                  className="w-full text-white bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">Save</button>
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                    How do I get a link? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
+                    How do I get a link? <a href="#" className="text-oslyn-700 hover:underline dark:text-oslyn-500">Instructions</a>
                 </div>
             </span>
           </div>

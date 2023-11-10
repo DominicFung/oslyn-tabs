@@ -4786,6 +4786,7 @@ export const createSong = /* GraphQL */ `
     $albumCover: String
     $chordSheet: String!
     $chordSheetKey: String!
+    $shareWithBand: ID
   ) {
     createSong(
       title: $title
@@ -4795,6 +4796,7 @@ export const createSong = /* GraphQL */ `
       albumCover: $albumCover
       chordSheet: $chordSheet
       chordSheetKey: $chordSheetKey
+      shareWithBand: $shareWithBand
     ) {
       songId
       title

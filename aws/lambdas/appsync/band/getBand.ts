@@ -11,13 +11,12 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  bandId: string, userId: string
+  bandId: string, userId?: string|null
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.bandId) { console.error(`b.bandId is empty`); return }
-  if (!b.userId) { console.error(`b.userId is empty`); return }
 
   const dynamo = new DynamoDBClient({})
 
@@ -33,6 +32,10 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   let band = unmarshall(res0.Item) as _Band
+
+  if (band.policy === "PRIVATE") {
+    if (!b.userId) { console.error(`b.userId is empty`); return }
+  }
   
   if (hasSubstring(event.info.selectionSetList, "owner")) {
     console.log("getting owner ...")

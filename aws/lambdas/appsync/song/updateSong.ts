@@ -46,7 +46,8 @@ export const handler = async (event: AppSyncResolverEvent<{
   
   if (!res0.Item) { console.error(`ERROR: songId not found: ${b.songId}`); return }
 
-  const updateSong = b
+  let updateSong = {...b} as any
+  if (updateSong.songId) delete updateSong.songId
 
   const params = updateDynamoUtil({ table: SONG_TABLE_NAME, item: updateSong, key: { songId: b.songId } })
   const res1 = await dynamo.send(new UpdateItemCommand(params))
@@ -70,7 +71,11 @@ export const handler = async (event: AppSyncResolverEvent<{
     if (!song.creator.songsCreated) song.creator.songsCreated = []
     if (!song.creator.editHistory) song.creator.editHistory = []
     if (!song.creator.likedSongs) song.creator.likedSongs = []
+    if (!song.creator.friends) song.creator.friends = []
   }
+
+  if (!song.editors) song.editors = []
+  if (!song.viewers) song.viewers = []
 
   return song
 }

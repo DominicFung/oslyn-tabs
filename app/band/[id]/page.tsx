@@ -5,7 +5,7 @@ import { GraphQLResult } from "@aws-amplify/api"
 import awsConfig from '@/src/aws-exports'
 
 import * as q from '@/src/graphql/queries'
-import { Band, User } from '@/src/API'
+import { Band, Song, User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
@@ -53,7 +53,32 @@ export default async function BandPage({ params }: { params: { id: string } }) {
     console.log(JSON.stringify(e, null, 2))
   }
 
+  let songs: Song[] = []
+
+  if (user) {
+    try {
+      const { data } = await SSR.API.graphql(graphqlOperation(
+        q.listSongs, { userId }
+      )) as GraphQLResult<{ listSongs: Song[] }>
+      if (data?.listSongs) songs = data?.listSongs
+      else throw new Error("data.listSongs is empty.")
+    } catch (e) {
+      console.log(JSON.stringify(e, null, 2))
+    }
+  
+    try {
+      const { data } = await SSR.API.graphql(graphqlOperation(
+        q.listSharedSongs, { userId }
+      )) as GraphQLResult<{ listSharedSongs: Song[] }>
+      if (data?.listSharedSongs) songs.push(...data?.listSharedSongs!)
+      else throw new Error("data.listSharedSongs is empty.")
+    } catch (e) {
+      console.log(JSON.stringify(e, null, 2))
+    }
+  }
+  
+
   return <>
-    { user && d && <BandComponent band={d} user={user} /> }
+    { d && <BandComponent band={d} user={user} songs={songs} /> }
   </>
 }

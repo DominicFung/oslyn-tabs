@@ -3,7 +3,8 @@ import { BatchGetItemCommand, DynamoDBClient, GetItemCommand, UpdateItemCommand 
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { _Band, _Song, _User } from '../../type'
-import { hasSubstring, updateDynamoUtil } from '../../util/dynamo'
+import { hasSubstring, merge, updateDynamoUtil } from '../../util/dynamo'
+import { User } from '../../API'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
@@ -62,12 +63,45 @@ export const handler = async (event: AppSyncResolverEvent<{
       }))
 
       console.log(res1)
-      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
+      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return }
 
-      band.songs = res1.Responses![SONG_TABLE_NAME].map((u) => {
-        let song = unmarshall(u) as _Song
-        return song
-      })
+      let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
+      console.log(songs)
+
+      // finding all creators ..
+      if (hasSubstring(event.info.selectionSetList, "songs/creator")) {
+        console.log("getting songs/../song/creator ..")
+  
+        const creatorIds = songs.map((s) => { return s.userId })
+        const uniq = [...new Set(creatorIds)]
+        
+        const keys = uniq.map((s) => { return { userId: { S: s } } })
+        const res2 = await dynamo.send(new BatchGetItemCommand({
+          RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+        }))
+        console.log(res2)
+        if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
+  
+        console.log(JSON.stringify(res2.Responses))
+        const users = res2.Responses![USER_TABLE_NAME].map((s) => {
+          let user = unmarshall(s) as User
+          user.friends = []
+          return user
+        }) as User[]
+        console.log(users)
+  
+        songs = merge(songs, users, 'userId', 'creator')
+        console.log(songs)
+
+        songs = songs.map((s) => {
+          if (!s.recordings) s.recordings = []
+          if (!s.editors) s.editors = []
+          if (!s.viewers) s.viewers = []
+          return s
+        })
+      }
+
+      band.songs = songs
     } else { band.songs = [] }
   }
 

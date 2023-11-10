@@ -24,8 +24,8 @@ export const updateDynamoUtil = (db: { table: string, item: { [key: string]: any
     }
   }
 
-  params.Key = marshall(params.Key)
-  params.ExpressionAttributeValues = marshall(params.ExpressionAttributeValues)
+  params.Key = marshall(params.Key, { removeUndefinedValues: true })
+  params.ExpressionAttributeValues = marshall(params.ExpressionAttributeValues, { removeUndefinedValues: true })
 
   console.log(params)
   return params

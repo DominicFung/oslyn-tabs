@@ -3,15 +3,15 @@
 import { Band, User, Song } from "@/src/API"
 import Image from "next/image"
 
-import BandInfo from "../(components)/bandInfo"
-import Save from "../(components)/save"
 import SongTable from "../../(components)/(song)/songTable"
 
 import { useSideBarContext } from "@/app/context"
+import ShareSongs from "../(components)/share"
 
 interface BandProps {
-  user: User
+  user: User|null
   band: Band
+  songs: Song[]
 }
 
 export default function BandComponent(p: BandProps) {
@@ -31,12 +31,13 @@ export default function BandComponent(p: BandProps) {
         </div>
     </div>
     <div className="flex flex-row-reverse z-10 relative">
-      <a href="/songs/create">
-        <button type="submit" className="text-white mx-5 my-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">Add Song</button>
-      </a>
+      { p.user ? <ShareSongs user={p.user} band={p.band} songs={p.songs}/> : 
+      <button disabled
+        className="text-white mx-5 my-2 bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-700 dark:focus:ring-oslyn-800"
+      >Add Song</button> }
     </div>
   </section>
-  { p.user && <SongTable user={p.user} songs={p.band.songs as Song[] || []} type="own" />}
+  <SongTable user={p.user} songs={p.band.songs as Song[] || []} type="own" />
   <div className="mx-5 z-10 relative">
     <p className="mt-8 mb-1 mx-5 text-xs text-gray-500 font-semibold dark:text-gray-400 uppercase">
       Admins

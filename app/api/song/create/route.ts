@@ -14,7 +14,6 @@ import { _Session } from '@/core/utils/frontend'
 import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3'
 
 import cdk from "@/cdk-outputs.json"
-import secret from "@/secret.json"
 import { uint8ArrayToArrayBuffer } from '@/core/utils/backend'
 
 export interface SongRequest {
@@ -25,6 +24,7 @@ export interface SongRequest {
   arrayBuffer?: Uint8Array,
   chordSheet: string,
   chordSheetKey: string,
+  shareWithBand?: string
 }
 
 export async function POST(request: Request) {
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 
     console.log(song.songId)
     const d = await API.graphql(graphqlOperation(
-      m.updateSong, { songId: song.songId, albumCover: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/song/${song.songId}/cover.jpg` }
+      m.updateSong, { userId, songId: song.songId, albumCover: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/song/${song.songId}/cover.jpg` }
     )) as GraphQLResult<{ updateSong: Song }>
 
     if (!d.data?.updateSong) {

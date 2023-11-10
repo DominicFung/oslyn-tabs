@@ -69,7 +69,7 @@ export async function POST(request: Request){
     }
 
     let s3 = new S3Client(s3Config)
-    let img = uint8ArrayToArrayBuffer(b.arrayBuffer as any)
+    let img = b.arrayBuffer ? uint8ArrayToArrayBuffer(b.arrayBuffer as any) : null
 
     if (!img && b.imageUrl!.indexOf("replicate.delivery") > -1) {
       img = await (await fetch(b.imageUrl!, {

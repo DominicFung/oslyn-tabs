@@ -5436,6 +5436,7 @@ export type CreateSongMutationVariables = {
   albumCover?: string | null,
   chordSheet: string,
   chordSheetKey: string,
+  shareWithBand?: string | null,
 };
 
 export type CreateSongMutation = {
@@ -47802,7 +47803,7 @@ export type ListUsersQuery = {
 
 export type GetBandQueryVariables = {
   bandId: string,
-  userId: string,
+  userId?: string | null,
 };
 
 export type GetBandQuery = {

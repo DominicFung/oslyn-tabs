@@ -10,7 +10,10 @@ import { useState } from "react"
 
 export interface SaveProps {
   song: Song,
-  type: "create" | "update"
+  type: "create" | "update",
+  shareWithBand?: string,
+
+  goToReviewTab?: () => void
 }
 
 export default function Save(p: SaveProps) {
@@ -34,8 +37,10 @@ export default function Save(p: SaveProps) {
     let songRequest = {
       title: p.song.title, chordSheetKey: p.song.chordSheetKey,
       artist: p.song.artist, album: p.song.album, 
-      albumCover: p.song.albumCover, chordSheet: p.song.chordSheet
+      albumCover: p.song.albumCover, chordSheet: p.song.chordSheet,
     } as SongRequest
+
+    if (p.shareWithBand) songRequest.shareWithBand = p.shareWithBand
 
     if (p.song.albumCover?.startsWith("blob")) {
       let img = await getArrayBufferFromObjectURL(p.song.albumCover)
@@ -60,7 +65,7 @@ export default function Save(p: SaveProps) {
   { saveMenu && <div id="toast-bottom-right" className="fixed flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-5 bottom-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
         <div className="text-sm font-normal">
           <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:text-blue-300 dark:bg-blue-900">
+            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-oslyn-500 bg-oslyn-100 rounded-lg dark:text-oslyn-300 dark:bg-oslyn-900">
               <InboxArrowDownIcon className="w-5 h-5" />
             </div>
             <div className="ml-3 text-sm font-normal">
@@ -69,12 +74,15 @@ export default function Save(p: SaveProps) {
               <div className="grid grid-cols-2 gap-2">
                   <div>
                       <button disabled={p.song.chordSheet === "" || p.song.title === "" || p.song.chordSheetKey === "" } onClick={p.type === "create" ? createSong : updateSong}
-                        className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 disabled:bg-gray-600">
+                        className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-oslyn-600 rounded-lg hover:bg-oslyn-700 focus:ring-4 focus:outline-none focus:ring-oslyn-300 dark:bg-oslyn-500 dark:hover:bg-oslyn-600 dark:focus:ring-oslyn-800 disabled:bg-gray-600">
                           Submit
                       </button>
                   </div>
                   <div>
-                      <button className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Not now</button> 
+                      <button onClick={() => {if (p.goToReviewTab) p.goToReviewTab()}}
+                        className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
+                          Review
+                      </button> 
                   </div>
               </div>    
             </div>
@@ -87,10 +95,13 @@ export default function Save(p: SaveProps) {
           </div>
         </div>
     </div> }
-    {!saveMenu && <button onClick={() => setSaveMenu(true)}
-      className="fixed z-90 bottom-10 right-8 bg-coral-400 w-16 h-16 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl"
+    {!saveMenu && <button onClick={() => setSaveMenu(true)} disabled={
+      p.song.title === "" || p.song.albumCover === "" || p.song.artist === "" || 
+      p.song.album === "" || p.song.chordSheet === "" || p.song.albumCover === ""
+    }
+      className="fixed z-90 bottom-8 right-8 disabled:text-gray-600 text-oslyn-800 hover:text-oslyn-900 disabled:bg-gray-400 bg-coral-400 w-16 h-16 rounded-full p-4 drop-shadow-lg flex justify-center items-center text-4xl hover:bg-coral-300 hover:drop-shadow-2xl"
     >
-      <InboxArrowDownIcon className="w-8 h-8 text-oslyn-800 hover:text-oslyn-900" />
+      <InboxArrowDownIcon className="w-8 h-8" />
     </button>}
   </>
 

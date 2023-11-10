@@ -2,6 +2,7 @@
 import { Song, User, Band } from "@/src/API";
 import { useState } from "react";
 import Songs from "./(share)/songs";
+import Create from "./(share)/create";
 
 export interface ShareSongsProps {
   user: User,
@@ -40,6 +41,7 @@ export default function ShareSongs(p: ShareSongsProps) {
 
             <div className="py-5">
             { option === 0 && <Songs songs={p.songs} band={p.band} setClose={() => { setOpen(false) }} /> }
+            { option === 1 && <Create bandId={p.band.bandId} setClose={() => { setOpen(false) }} />}
             </div>
 
             <button type="button" onClick={() => setOpen(false)}

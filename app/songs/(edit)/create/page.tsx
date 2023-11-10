@@ -1,5 +1,6 @@
 "use client"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import PasteTabs from "../pasteTabs"
 import SongInfo from '../songInfo'
@@ -12,7 +13,15 @@ import Tabs from '../(components)/tabs'
 const _tabs = ``
 
 export default function CreateSong() {
+  const searchParams = useSearchParams()
+  
   const [ step, setStep ] = useState(0)
+  const [ shareWithBand, setShareWithBand ] = useState("")
+
+  useEffect(() => {
+    let swb = searchParams.get("share")
+    if (swb) setShareWithBand(swb)
+  }, [searchParams])
 
   const [ song, setSong ] = useState({
     songId: "", title: "", chordSheetKey: "C", albumCover: "",
@@ -30,6 +39,6 @@ export default function CreateSong() {
       { step === 1 && <SongInfo song={song} setSong={setSong}/>}
       { step === 2 && <Slides song={song} pt={true} /> }
     </div>
-    <Save song={song} type="create" />
+    <Save song={song} type="create" shareWithBand={shareWithBand} goToReviewTab={() => setStep(2)} />
   </div>
 }

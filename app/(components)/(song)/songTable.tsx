@@ -9,7 +9,7 @@ import Share from "./share"
 import { useEffect, useState } from "react"
 
 export interface SongTableProps {
-  user: User
+  user: User|null
   songs?: Song[]
   type: "own" | "share"
 }

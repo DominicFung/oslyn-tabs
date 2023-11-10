@@ -1,15 +1,19 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
+import { updateDynamoUtil } from '../../util/dynamo'
+
 import { v4 as uuidv4 } from 'uuid'
+import { _Band } from '../../type'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
+const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
   title: string, userId: string, chordSheetKey: string, chordSheet: string, 
-  artist?: string, album?: string, albumCover?: string
+  artist?: string, album?: string, albumCover?: string, shareWithBand?: string,
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -65,6 +69,24 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!song.creator.editHistory) song.creator.editHistory = []
   if (!song.creator.likedSongs) song.creator.likedSongs = []
   if (!song.creator.friendsIds) song.creator.friends = []
+
+  if (b.shareWithBand) {
+    const bandId = b.shareWithBand
+    const res1 = await dynamo.send(
+      new GetItemCommand({ TableName: BAND_TABLE_NAME, Key: { bandId: { S: bandId } } })
+    )
+    if (!res1.Item) { console.error(`ERROR: bandId not found ${bandId}`); return }
+    let band = unmarshall(res1.Item) as _Band
+
+    let songs = band.songIds || []
+    if (!songs.includes(songId)) songs.push(songId)
+    else return song // this is generally not possible
+
+    console.log(`Adding ${songId} to ${bandId} 's songs ..`)
+    const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { songIds: songs }, key: { bandId: bandId } })
+    const res2 = await dynamo.send(new UpdateItemCommand(params))
+    console.log(res2)
+  }
   
   return song
 }
