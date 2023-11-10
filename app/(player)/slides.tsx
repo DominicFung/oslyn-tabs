@@ -115,12 +115,12 @@ export default function Slides(p: SlidesProps) {
   }
 
   const requestWakeLock = async () => {
-    if ("wakeLock" in navigator) {
+    if (window.navigator && "wakeLock" in window.navigator) {
       let wakeLock = null
 
       // create an async function to request a wake lock
       try {
-        wakeLock = await (navigator.wakeLock as any).request("screen")
+        wakeLock = await (window.navigator.wakeLock as any).request("screen")
         console.log("wake lock activated.")
       } catch (err) { console.error(err) }
     } else {

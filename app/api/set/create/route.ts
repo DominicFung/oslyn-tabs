@@ -9,7 +9,7 @@ import * as m from '@/src/graphql/mutations'
 import { JamSongInput, SetList } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 
 export interface SetRequest {
   description: string,

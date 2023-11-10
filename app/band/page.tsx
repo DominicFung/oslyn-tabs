@@ -4,7 +4,7 @@ import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
 import { GraphQLResult } from "@aws-amplify/api"
 import { getServerSession } from "next-auth/next"
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import Unauth from "@/app/unauthorized"
 import awsConfig from '@/src/aws-exports'
 import * as q from '@/src/graphql/queries'

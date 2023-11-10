@@ -8,7 +8,7 @@ import * as m from '@/src/graphql/mutations'
 import { User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 
 export interface AddFriendRequest {

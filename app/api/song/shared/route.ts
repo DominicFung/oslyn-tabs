@@ -8,7 +8,7 @@ import * as q from '@/src/graphql/queries'
 import { Song } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { Session } from "next-auth"
 
 type _Session = Session & {

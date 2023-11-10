@@ -9,7 +9,7 @@ import * as q from '@/src/graphql/queries'
 import { SetList, User } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 import Sets from './sets'

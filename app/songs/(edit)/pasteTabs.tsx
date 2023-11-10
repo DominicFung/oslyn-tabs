@@ -1,9 +1,9 @@
 "use client"
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useTheme } from "next-themes"
 
 import Editor, { useMonaco, Monaco } from '@monaco-editor/react'
-import { editor, languages } from 'monaco-editor'
+import type { editor } from 'monaco-editor'
 
 const darktheme = {
   base: 'vs-dark',
@@ -39,7 +39,7 @@ export default function PasteTabs(p: PasteTabsProps) {
   const monaco = useMonaco()
   const monacoRef = useRef(null)
 
-  const setup = (monaco: Monaco, editor: editor.IStandaloneCodeEditor) => {
+  const setup = (monaco: Monaco, editor: any /*editor.IStandaloneCodeEditor*/) => {
     monaco.editor.defineTheme("myTheme", theme === 'dark' ? darktheme : lighttheme)
     
     monaco.languages.register({ id: 'mylang' })
@@ -61,7 +61,7 @@ export default function PasteTabs(p: PasteTabsProps) {
           ...keywords.map( k => {
             return {
               label: k,
-              kind: languages.CompletionItemKind.Keyword,
+              kind: monaco.languages.CompletionItemKind.Keyword,
               insertText: k,
               range: { 
                 startLineNumber: position.lineNumber, 
@@ -75,18 +75,10 @@ export default function PasteTabs(p: PasteTabsProps) {
     })
     monaco.editor.setTheme("myTheme")
     
-
     const model = editor?.getModel()
     if (model) monaco.editor.setModelLanguage(model, "mylang")
   }
 
-  // used in first monaco load ..
-  // useEffect(() => {
-  //   if (monaco && monacoRef.current) { setup(monaco, monacoRef.current) }
-  // }, [monaco, theme, monacoRef])
-
-
-  // used in subsequent monaco loads
   const setEditorTheme = (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
     if (monaco) {
       console.log("mounted")
@@ -96,8 +88,8 @@ export default function PasteTabs(p: PasteTabsProps) {
   }
 
   return <>
-  { window.navigator &&  <Editor height="80vh" options={{ }} value={p.tabs} 
+    <Editor height="80vh" options={{ }} value={p.tabs} 
       onChange={(e) => { e && p.setTabs(e) }} onMount={setEditorTheme} 
-    /> }
+    />
   </>
 }

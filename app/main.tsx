@@ -66,7 +66,7 @@ export default function Main(p: MainProps) {
                         { a.active.map((a, i) => {
                           if (i < 5) 
                             return  <div className="m-auto w-16">
-                                      { a?.imageUrl &&  <Image src={a?.imageUrl} alt={""} width={40} height={40} className="w-10 m-2"/> }
+                                      { a && a?.user && a?.user?.imageUrl &&  <Image src={a!.user!.imageUrl} alt={""} width={40} height={40} className="w-10 m-2"/> }
                                     </div>
                           else return <></>
                         })}

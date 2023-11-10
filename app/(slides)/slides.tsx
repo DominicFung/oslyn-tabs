@@ -2,17 +2,13 @@
 
 import { chordSheetToSlides } from "@/core/oslyn"
 import { OslynSlide } from "@/core/types"
-import { OnJamSlideConfigChangeSubscription, Song } from "@/src/API"
+import { Song } from "@/src/API"
 import { useEffect, useState } from "react"
 import Line from "./line"
 import { calcMaxWidthTailwindClass } from "@/core/utils/frontend"
 import Image from "next/image"
 
 import { useSideBarContext } from "@/app/context"
-
-import { API, graphqlOperation } from 'aws-amplify'
-import { GraphQLSubscription } from '@aws-amplify/api'
-import * as s from '@/src/graphql/subscriptions'
 
 interface SlidesProps {
   song: Song  
@@ -92,12 +88,12 @@ export default function Slides(p: SlidesProps) {
   }
 
   const requestWakeLock = async () => {
-    if ("wakeLock" in navigator) {
+    if (window.navigator && "wakeLock" in window.navigator) {
       let wakeLock = null
 
       // create an async function to request a wake lock
       try {
-        wakeLock = await (navigator.wakeLock as any).request("screen")
+        wakeLock = await (window.navigator.wakeLock as any).request("screen")
         console.log("wake lock activated.")
       } catch (err) { console.error(err) }
     } else {

@@ -8,7 +8,7 @@ import awsConfig from '@/src/aws-exports'
 import * as m from '@/src/graphql/mutations'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 import { JamSessionActiveUsers } from '@/src/API'
 

@@ -24,7 +24,7 @@ export default function QrCode() {
         </div>
         <div className="ml-2 text-sm">
           <label htmlFor="helper-checkbox" className="font-medium text-gray-900 dark:text-gray-300">Add Login</label>
-          <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">This will prompt users to login right away, minimizing "guests". This feature only applies to Jam.</p>
+          <p id="helper-checkbox-text" className="text-xs font-normal text-gray-500 dark:text-gray-300">This will prompt users to login right away, minimizing &quot;guests&quot;. This feature only applies to Jam.</p>
         </div>
       </div>
 

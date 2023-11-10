@@ -8,7 +8,7 @@ import * as m from '@/src/graphql/mutations'
 import { Song } from '@/src/API'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 
 import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3'

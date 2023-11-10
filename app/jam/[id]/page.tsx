@@ -10,7 +10,7 @@ import { JamSession, User } from '@/src/API'
 import Player from '@/app/(player)/player'
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 import Unauth from "@/app/unauthorized"
 

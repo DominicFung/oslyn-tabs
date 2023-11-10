@@ -9,7 +9,7 @@ import { Song } from '@/src/API'
 import Edit from "./edit"
 
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/core/auth"
 import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 
