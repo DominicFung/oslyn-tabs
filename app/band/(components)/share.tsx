@@ -25,7 +25,7 @@ export default function ShareSongs(p: ShareSongsProps) {
         className="text-white mx-5 my-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">Add Song</button>
     </div>
     <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${open?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-gray-900/75`}>
-      <div className="relative w-full h-full max-w-md max-h-full mx-auto flex flex-col">
+      <div className="relative w-full h-full max-w-xl xl:max-w-2xl max-h-full mx-auto flex flex-col">
         <div className='flex-1' />
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
 

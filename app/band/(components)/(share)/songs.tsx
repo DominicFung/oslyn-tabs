@@ -34,9 +34,9 @@ export default function Songs(p: SongProps) {
       <div className="pb-3 text-sm font-normal">Choose a new Song! <br /><span className="text-xs italic">Note: this affects everyone in the session.</span></div> 
 
       <div className="max-h-[calc(100vh-10rem)] overflow-auto">
-        <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+        <ul className="max-w-sm md:max-w-xl xl:max-w-2xl divide-y divide-gray-200 dark:divide-gray-700">
           { p.songs.map((e, i) => 
-            <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { shareSong(e) }}>
+            <li className="max-w-xs md:max-w-md xl:max-w-lg py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { shareSong(e) }}>
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0">
                     {e.albumCover && <img className="w-8 h-8 rounded-full" src={e.albumCover} alt="Neil image" />}
