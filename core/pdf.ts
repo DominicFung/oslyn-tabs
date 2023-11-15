@@ -16,6 +16,8 @@ const titlePaddingTop = 20
 const sectionFontSize = 12
 const sectionPaddingTop = 20
 
+interface Note { note: string }
+
 export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Promise<PDFDocument> {
   const pdfDoc = doc || await PDFDocument.create()
 
@@ -44,23 +46,43 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
   })
 
   const estimatedPLimit = (height - titlePaddingTop) / (fontSize + lyricPadding)
-  const simp = oslynSimplifier(timesRomanFont, song, estimatedPLimit, width - (2 * paddingLeft) ).song
+  const simp = oslynSimplifier(timesRomanFont, song.song, estimatedPLimit, width - (2 * paddingLeft) )
 
   let currentSection = ""
   for (let i=0; i<simp.length; i++) {
-    if (currentSection !== simp[i].section) {
-      currentSection = simp[i].section
-      h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize)
-      page.drawText(currentSection, {
+    // TODO: add page if hight is too long ..
+
+    if ((simp[i] as Note).note) {
+      let note = (simp[i] as Note).note
+      h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize) - sectionPaddingTop/2
+      page.drawText(note, {
         size: sectionFontSize,
         font: timesRomanItalicFont,
         x: paddingLeft,
         y: h,
         color: rgb(31/255, 41/255, 55/255)
       })
+      if (i < simp.length-1 && (simp[i+1] as OslynPhrase).section && (simp[i] as Note).note.indexOf((simp[i+1] as OslynPhrase).section) === -1) {
+        h = h - sectionPaddingTop/2
+      } else console.warn("next section is the same .. reducing padding")
+      continue
     }
 
-    const phrase = simp[i]
+    const phrase = simp[i] as OslynPhrase
+    if (currentSection !== phrase.section) {
+      if ( i == 0 || (i>0 && (!(simp[i-1] as Note).note || ((simp[i-1] as Note).note && (simp[i-1] as Note).note.indexOf(phrase.section) === -1)))) {
+        currentSection = phrase.section
+        h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize)
+        page.drawText(currentSection, {
+          size: sectionFontSize,
+          font: timesRomanItalicFont,
+          x: paddingLeft,
+          y: h,
+          color: rgb(31/255, 41/255, 55/255)
+        })        
+      } else { console.warn(`not printing ${(simp[i-1] as Note).note} because "${phrase.lyric}" is ${phrase.section}`) }
+    }
+
     let lyric = phrase.lyric.replace(/[\u2005]/g, ' ')
 
     h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
@@ -108,46 +130,170 @@ export async function save(doc: PDFDocument): Promise<string> {
  * @param similarity number between 0 - 1, default 0.9
  * @returns 
  */
-function oslynSimplifier(font: PDFFont, song: OslynSong, plimit: number, xlimit: number, similarity=0.9): OslynSong {
-  let s = {
-    meta: song.meta,
-    song: []
-  } as OslynSong
+function oslynSimplifier(font: PDFFont, song: OslynPhrase[], ylimit: number, xlimit: number, similarity=0.9): (OslynPhrase|Note)[] {
+  let s =  [] as OslynPhrase[]
 
   let currentSection = ""
   let sectionStart = 0
-  for (let i=0; i<song.song.length; i++) {
-    if (currentSection !== song.song[i].section) {
-      currentSection = song.song[i].section
-      const phrases = combineSections(font, song.song.slice(sectionStart, i), xlimit)
-      console.log(phrases)
-      s.song.push(...phrases)
+
+  let sectionCount = 0
+  let sectionSearch = {} as {[s:string]: number[]}
+
+  for (let i=0; i<song.length; i++) {
+    if (currentSection !== song[i].section) {
+      currentSection = song[i].section
+      const phrases = combineSections(font, song.slice(sectionStart, i), xlimit)
+      s.push(...JSON.parse(JSON.stringify(phrases)))
+      
       sectionStart = i
+      sectionCount = sectionCount + 1
+
+      sectionSearch[currentSection] ? sectionSearch[currentSection].push(i) : sectionSearch[currentSection] = [i]
     }
   }
 
-  console.log(s)
-  return s
+  if (willFitOnPage(font, ylimit, s.length, sectionCount)) { console.log(s); return s }
+  else console.log(`oslynSimplifier: PDF Chordsheet is still too long: .. ${ylimit}`)
+
+  // based on section search, incomentally reduce line numbers until desired length is achieved.
+
+  const dataArray = Object.keys(sectionSearch).map(key => ({ key, value: sectionSearch[key].length }));
+  dataArray.sort((a, b) => b.value - a.value)
+
+  const lyrics = song.map(s => s.lyric.trim())
+  let collapsible: ({ score: number, section: string, id: number }|null)[] = Array(song.length).fill(null)
+
+  console.log(lyrics)
+  console.log(song)
+  console.log(dataArray)
+
+  let oldPositions = []
+  for (let d of dataArray) {
+    if (d.value <= 1) continue
+    //let latest = [] as { start: number, end: number, score: number }[]
+    
+    //console.log(sectionSearch[d.key])
+    let i = sectionSearch[d.key][0]
+    
+    while (song[i].section === d.key) {
+      oldPositions.push(i)
+      //console.log(`${i} ${song[i].section} ${d.key}`)
+      //console.log(song[i].lyric.trim())
+      let scores = findMatchingLines(song[i].lyric.trim(), lyrics, similarity)
+      //console.log(scores)
+
+      for (let score of scores) {
+        console.log(`score position ${score.position} ${i} ${JSON.stringify(oldPositions)} ${oldPositions.includes(score.position)} ${song[i].section} ${d.key}`)
+        if (oldPositions.includes(score.position) || song[i].section !== song[score.position].section) { 
+          // skip first instance, keep in chordsheet. Also want to skip if later lines rematch ..
+          collapsible[score.position] = null
+          continue 
+        } 
+
+        if (
+          score.position-1 < collapsible.length && score.position-1 >= 0 && collapsible[score.position-1] && 
+          collapsible[score.position-1]?.section === d.key 
+        ) {
+          collapsible[score.position] = { score: score.score, section: d.key, id: collapsible[score.position-1]!.id }
+        } else {
+          console.log(`${score.position-1 < collapsible.length} ${score.position-1 >= 0} ${collapsible[score.position-1]} ${collapsible[score.position-1]?.section === d.key}`)
+          collapsible[score.position] = { score: score.score, section: d.key, id: score.position }
+        }
+      }
+
+      // latest = findContinuations(latest, scores, latest.length === 0)
+      // console.log(latest)
+
+      console.log(collapsible)
+      i ++
+    }
+
+    //collapsible.push(...latest)
+  }
+
+  // Remove repeating sections
+  let s2 = [] as (OslynPhrase|Note)[]
+  let cs = ""; let csn = 0; let csnCount = 1
+  for (let i=0; i<song.length; i++) {
+    if (collapsible[i]) {
+      console.log(`${i} ${JSON.stringify(collapsible[i])}`)
+      if (cs !== collapsible[i]!.section && csn !== collapsible[i]!.id) {
+        cs = collapsible[i]!.section; csn = collapsible[i]!.id
+        s2.push({ note: `${cs}`})
+      } else if ((cs === collapsible[i]!.section && csn !== collapsible[i]!.id)) {
+        console.log(`removing ${JSON.stringify(s2.pop())} .. should be a note`)
+        csn = collapsible[i]!.id; csnCount = csnCount + 1
+        s2.push({ note: `${cs} x${csnCount}` })
+      }
+    } else {
+      cs = ""; csn = 0; csnCount = 1
+      s2.push({...song[i]})
+    }
+  }
+
+  console.log(s2)
+
+  // TODO: if a section (say bridge) is repeating itself, we can also remove repeatsOh 
+
+  // condense lines
+  let s3 = [] as (OslynPhrase|Note)[]
+  currentSection = ""
+  sectionStart = 0
+  for (let i=0; i<s2.length; i++) {
+    console.log(` === ${i} === ${song[i].section}`)
+    if (((s2[i] as OslynPhrase).section && currentSection !== (s2[i] as OslynPhrase).section) || (s2[i] as Note).note) {
+      currentSection = (s2[i] as OslynPhrase).section
+
+      // potential bug, should be phrase or note  ..
+      const phrases = combineSections(font, s2.slice(sectionStart, i) as OslynPhrase[], xlimit)
+      s3.push(...JSON.parse(JSON.stringify(phrases)))
+      sectionStart = i
+    }
+    if ((s2[i] as Note).note) { s3.push(s2[i]); sectionStart = i + 1 }
+  }
+
+  console.log(collapsible)
+  console.log(s3)
+  return s3
+}
+
+function willFitOnPage(font: PDFFont, ylimit: number, lyricCount: number, sectionCount: number): boolean {
+  let yestimate = lyricCount * 2 * font.heightAtSize(fontSize) +     // chords + lyric lines
+    lyricCount * lyricPadding +                        // lyric padding
+    sectionCount * font.heightAtSize(sectionFontSize) +   // sections
+    sectionCount * sectionPaddingTop +
+    font.heightAtSize(titleFontSize) + titlePaddingTop    // title & title padding
+
+  return yestimate <= ylimit
 }
 
 function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number): OslynPhrase[] {
   if (phrases.length <= 0) return []
-  console.log(`combineSections ${xlimit}`)
-  console.log(phrases)
+  //console.log(`combineSections ${xlimit}`)
+  //console.log(phrases)
   
   const space = "      "
   let ps: OslynPhrase[] = []
 
+  /**
+   * generally - sections bias towards a 1/2 way breakpoint.
+   * We will force a breakpoint at the halfway mark. 
+   * Useing "breakpoints" we can expand on this algo in the future.
+   */
+  const breakpoints = [Math.floor(phrases.length / 2)]
+
   console.log(ps)
+  let j = -1
   for (let phrase of phrases) {
+    j = j + 1
     if (ps.length === 0) { 
       ps.push(JSON.parse(JSON.stringify(phrase))); 
       continue 
     }
 
     let i = ps.length - 1
-    console.log(`modifying phrase: ${i}`)
-    console.log(ps)
+    //console.log(`modifying phrase: ${i}`)
+    //console.log(ps)
 
     let lyric = ps[i].lyric.trim()
     if (ps[i].chords[ps[i].chords.length - 1].position > lyric.length) {
@@ -155,7 +301,7 @@ function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number):
     }
     let lyricSize = font.widthOfTextAtSize(lyric + space + phrase.lyric.trim(), fontSize)
 
-    if (lyricSize > xlimit) { 
+    if (lyricSize > xlimit || breakpoints.includes(j)) { 
       console.log(`lyric size is greater than xlimit: ${lyricSize} > ${xlimit}`)
       ps.push(JSON.parse(JSON.stringify(phrase)))
       continue
@@ -171,7 +317,7 @@ function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number):
       ps[i].chords.push(c)
     }
 
-    console.log(ps)
+    //console.log(ps)
   }
 
   return ps
@@ -186,4 +332,48 @@ function writeChordLine(font: PDFFont, page: PDFPage, options: PDFPageDrawTextOp
     options.x = padding + width
     page.drawText(chord, options)
   }
+}
+
+function findMatchingLines(query: string, lines: string[], accuracy: number): { position: number, score: number }[] {
+  const similarLines: { position: number, score: number }[] = [];
+
+  lines.forEach((line, i) => {
+      const distance = levenshteinDistance(query, line);
+      const lineLength = Math.max(query.length, line.length);
+      const similarity = 1 - distance / lineLength;
+
+      if (similarity >= accuracy) {
+          similarLines.push({ position: i, score: similarity });
+      }
+  });
+
+  return similarLines;
+}
+
+function levenshteinDistance(str1: string, str2: string): number {
+  const len1 = str1.length;
+  const len2 = str2.length;
+
+  const matrix: number[][] = [];
+
+  for (let i = 0; i <= len1; i++) {
+      matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= len2; j++) {
+      matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= len1; i++) {
+      for (let j = 1; j <= len2; j++) {
+          const cost = str1.charAt(i - 1) === str2.charAt(j - 1) ? 0 : 1;
+          matrix[i][j] = Math.min(
+              matrix[i - 1][j] + 1,
+              matrix[i][j - 1] + 1,
+              matrix[i - 1][j - 1] + cost
+          );
+      }
+  }
+
+  return matrix[len1][len2];
 }
