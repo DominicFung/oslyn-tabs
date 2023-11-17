@@ -104,8 +104,6 @@ export function capitalizeFirstLetter(str: string) {
 }
 
 export function getTimeDifferenceFromNowToEpoch(startTimeEpoch: number): string {
-  console.log(`converting - ${startTimeEpoch}`)
-
   const currentTimeEpoch = Math.floor(Date.now() / 1000); // Convert current time to epoch format (in seconds)
   const timeDifferenceSeconds = currentTimeEpoch - Math.floor(startTimeEpoch / 1000);
 

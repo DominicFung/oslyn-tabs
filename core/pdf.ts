@@ -1,6 +1,6 @@
 import { PDFDocument, StandardFonts, rgb, PDFFont, PDFPage, PDFPageDrawTextOptions } from 'pdf-lib'
 import { chordSheetToOslynSong, getChordByNumber } from './oslyn'
-import { OslynChord, OslynPhrase, OslynSong } from './types'
+import { OslynChord, OslynPhrase } from './types'
 import { Song } from '@/src/API'
 
 // lyric
@@ -37,6 +37,7 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
   const titlePaddingLeft = (width - titleW) / 2
 
   let h = height - titlePaddingTop - titleH
+  
   page.drawText(title, {
     size: titleFontSize,
     font: timesRomanFont,
@@ -48,36 +49,117 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
   const estimatedPLimit = (height - titlePaddingTop) / (fontSize + lyricPadding)
   const simp = oslynSimplifier(timesRomanFont, song.song, estimatedPLimit, width - (2 * paddingLeft) )
 
-  let currentSection = ""
+  // dw is the longest line in a section or note accumulated. 
+  // We accumulate UNITL we MIGHT exceed page width (this means we're constantly looking forward ..)
+  let cs = 0; const maxWidthPerSection = {} as { [sectionId: string]: { max: number, lastline: number} }
+  for (let i=0; i<simp.length; i++) {
+    if ((simp[i] as OslynPhrase).section) {
+      const phrase = simp[i] as OslynPhrase
+      if (maxWidthPerSection[`${phrase.section}-${cs}`]) {
+        maxWidthPerSection[`${phrase.section}-${cs}`].max = Math.max(maxWidthPerSection[`${phrase.section}-${cs}`].max, timesRomanItalicFont.widthOfTextAtSize(phrase.lyric, sectionFontSize))
+        maxWidthPerSection[`${phrase.section}-${cs}`].lastline = i
+      } else {
+        cs = i
+        maxWidthPerSection[`${phrase.section}-${cs}`] = {
+          max: timesRomanItalicFont.widthOfTextAtSize(phrase.lyric.trim(), sectionFontSize) || paddingLeft * 2,
+          lastline: i
+        }
+      }
+    }
+  }
+
+  // remove empty sections
+
+  console.warn(maxWidthPerSection)
+
+  // if ((simp[j] as Note).note) {
+  //   // if (j !== i && (simp[j-1] as OslynPhrase).section) { dw = dw + max } // only happens after OslynPhrase
+  //   let note = (simp[j] as Note).note
+    
+  //   if (dw + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) > width ) { dw = paddingLeft; h = h - dh }
+  //   else { dw = dw + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) + paddingLeft; dh = 0 }
+  //   break
+  // } else {
+  //   const phrase = simp[j] as OslynPhrase
+  //   if (cs !== phrase.section) { dw = dw + max; dh = 0; break }
+    
+  //   if (max < timesRomanItalicFont.widthOfTextAtSize(phrase.lyric, sectionFontSize)) max = timesRomanItalicFont.widthOfTextAtSize(phrase.lyric, sectionFontSize)
+  //   if (dw + max > width ) { dw = paddingLeft; break }        
+  // }
+
+  //console.log(`dw: ${dw}, dh: ${dh}`)
+
+  let dh = 0            // current delta height
+  let dw = paddingLeft  // current delta width
+  
+  let dhMax = 0
+  let dwMax = paddingLeft
+
+  let currentSection = ""; cs = 0;
   for (let i=0; i<simp.length; i++) {
     // TODO: add page if hight is too long ..
-
+    
     if ((simp[i] as Note).note) {
       let note = (simp[i] as Note).note
-      h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize) - sectionPaddingTop/2
+
+      console.log(`${note} ${dwMax} ${width} ${h} ${dh} -- note`)
+
+      if ( dwMax + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) + 100 < width ) dw = dwMax
+      else { dw = paddingLeft; dwMax = paddingLeft; h = h - dh }
+
+      dwMax = dwMax + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) + 100 + paddingLeft
+      dh = 0
+
+      //if (dw + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) + 100 > width ) { dw = paddingLeft; h = h - dh }
+      //else { dw = dw + timesRomanItalicFont.widthOfTextAtSize(note, sectionFontSize) + paddingLeft }
+      
+      dh = 0
+      console.log(`${note} ${dw} ${dwMax} ${width} ${h} -- note`)
+
+      //h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize) - sectionPaddingTop/2
+      dhMax = Math.max(sectionPaddingTop + timesRomanItalicFont.heightAtSize(sectionFontSize) + sectionPaddingTop/2, dh)
+      dh = sectionPaddingTop + timesRomanItalicFont.heightAtSize(sectionFontSize) + sectionPaddingTop/2
+      
       page.drawText(note, {
         size: sectionFontSize,
         font: timesRomanItalicFont,
-        x: paddingLeft,
-        y: h,
+        x: dw,
+        y: h - dh,
         color: rgb(31/255, 41/255, 55/255)
       })
       if (i < simp.length-1 && (simp[i+1] as OslynPhrase).section && (simp[i] as Note).note.indexOf((simp[i+1] as OslynPhrase).section) === -1) {
-        h = h - sectionPaddingTop/2
-      } else console.warn("next section is the same .. reducing padding")
+        //h = h - sectionPaddingTop/2
+        dhMax = Math.max(dh + sectionPaddingTop/2, dh)
+        dh = dh + sectionPaddingTop/2
+      } else console.log("next section is the same .. reducing padding")
       continue
     }
 
     const phrase = simp[i] as OslynPhrase
     if (currentSection !== phrase.section) {
+      if (maxWidthPerSection[`${phrase.section}-${i}`]) {
+        
+        if ( dwMax + maxWidthPerSection[`${phrase.section}-${i}`].max < width ) dw = dwMax
+        else { dw = paddingLeft; h = h - dh }
+
+        dwMax = dwMax + maxWidthPerSection[`${phrase.section}-${i}`].max + paddingLeft
+        dh = 0
+
+        console.log(`${phrase.section} ${dw} ${dwMax} ${width} ${maxWidthPerSection[`${phrase.section}-${i}`].max} ${h}`)
+      } else {
+        console.warn(`${phrase.section}-${i} SHOULD EXIST. This might be a bug. ${currentSection} ${phrase.section}`)
+      }
+
       if ( i == 0 || (i>0 && (!(simp[i-1] as Note).note || ((simp[i-1] as Note).note && (simp[i-1] as Note).note.indexOf(phrase.section) === -1)))) {
         currentSection = phrase.section
-        h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize)
+        //h = h - sectionPaddingTop - timesRomanItalicFont.heightAtSize(sectionFontSize)
+        dhMax = Math.max(sectionPaddingTop + timesRomanItalicFont.heightAtSize(sectionFontSize), dh)
+        dh = dh + sectionPaddingTop + timesRomanItalicFont.heightAtSize(sectionFontSize)
         page.drawText(currentSection, {
           size: sectionFontSize,
           font: timesRomanItalicFont,
-          x: paddingLeft,
-          y: h,
+          x: dw,
+          y: h - dh,
           color: rgb(31/255, 41/255, 55/255)
         })        
       } else { console.warn(`not printing ${(simp[i-1] as Note).note} because "${phrase.lyric}" is ${phrase.section}`) }
@@ -85,21 +167,27 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
 
     let lyric = phrase.lyric.replace(/[\u2005]/g, ' ')
 
-    h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
+    //h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
+    dhMax = dhMax = Math.max(lyricPadding + timesRomanFont.heightAtSize(fontSize), dh)
+    dh = dh + lyricPadding + timesRomanFont.heightAtSize(fontSize)
+
     writeChordLine(timesRomanFont, page, {
       size: fontSize,
       font: timesRomanBoldFont,
-      x: paddingLeft,
-      y: h,
+      x: dw,
+      y: h - dh,
       color: rgb(17/255, 24/255, 39/255)
     }, lyric, phrase.chords, key || s.chordSheetKey || "C")
 
-    h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
+    //h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
+    dhMax = dhMax = Math.max(lyricPadding + timesRomanFont.heightAtSize(fontSize), dh)
+    dh = dh + lyricPadding + timesRomanFont.heightAtSize(fontSize)
+
     page.drawText(lyric, {
       size: fontSize,
       font: timesRomanFont,
-      x: paddingLeft,
-      y: h,
+      x: dw,
+      y: h - dh,
       color: rgb(31/255, 41/255, 55/255)
     })
   }
@@ -323,15 +411,18 @@ function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number):
   return ps
 }
 
-function writeChordLine(font: PDFFont, page: PDFPage, options: PDFPageDrawTextOptions, lyric: string, chords: OslynChord[], key: string) {
+function writeChordLine(font: PDFFont, page: PDFPage, options: PDFPageDrawTextOptions, lyric: string, chords: OslynChord[], key: string): number {
   const padding = options.x || 0
+  let w = 0
   for (let c of chords) {
     const width = font.widthOfTextAtSize(lyric.substring(0, c.position), fontSize)
     const chord = getChordByNumber(c.chord, c.isMinor, key) || ""
 
     options.x = padding + width
     page.drawText(chord, options)
+    w = width + font.widthOfTextAtSize(chord, fontSize)
   }
+  return w
 }
 
 function findMatchingLines(query: string, lines: string[], accuracy: number): { position: number, score: number }[] {
