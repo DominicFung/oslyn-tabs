@@ -104,7 +104,7 @@ export default function Controls(p: ControlsProp) {
             </div>
 
             <>
-              { option === 0 && <Song song={p.song!.song} setSong={p.song!.setSong} songs={p.song!.songs}  /> }
+              { option === 0 && <Song song={p.song!.song} setSong={(n) => {p.song!.setSong(n); setOpen(false)}} songs={p.song!.songs}  /> }
               { option === 1 && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} /> }
               { option === 2 && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
               { option === 3 && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 

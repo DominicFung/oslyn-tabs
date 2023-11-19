@@ -158,10 +158,10 @@ export default function Player(p: PlayerProps) {
 
         incomingKey(song || 0, key || "C")
 
-        let j = JSON.parse(JSON.stringify(jam)) as JamSession
-        j.setList.songs[song || 0]!.key = key || "C"
-        console.log(j)
-        setJam(j)
+        // let j = JSON.parse(JSON.stringify(jam)) as JamSession
+        // j.setList.songs[song || 0]!.key = key || "C"
+        // console.log(j)
+        // setJam(j)
       },
       error: (error) => console.error(error)
     })
@@ -188,8 +188,8 @@ export default function Player(p: PlayerProps) {
         jam.active = [...active]
         setJam({...jam})
 
-        if (latest?.username) toast(`Welcome ${latest?.username}!`)
-        else if (latest?.user?.username) toast(`Welcome ${latest?.username}!`)
+        let username = latest?.username || latest?.user?.username
+        toast(`Welcome ${username}!`)
       },
       error: (error) => console.error(`=== ${JSON.stringify(error)}`)
     })
@@ -320,6 +320,7 @@ export default function Player(p: PlayerProps) {
         addGuestIdentity(data.jamSessionId, data.latest.userId)
       }
     } catch (e) { return JSON.stringify(e) }
+    setGuestOpen(false)
     return ""
   }
 
