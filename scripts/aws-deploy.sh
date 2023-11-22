@@ -11,17 +11,17 @@ echo "tsc & cdk deploy ..."
 tsc & cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
 
 echo "copying cdk-outputs.json ..."
-cp -f cdk-outputs.json ../cdk-outputs.json 
+cp -f cdk-outputs.json ../web/cdk-outputs.json 
 
 echo "copying schema.graphql"
 cp -f schema.graphql ../schema.graphql
 
-cd ../ 
+cd ../
 
 echo "uploading secrets / cdk-outputs to AWS ..."
 ./scripts/update-secret.sh 
 
-NEWAPPSYNC=$( cat cdk-outputs.json | python3 -c "import sys, json; print(json.load(sys.stdin)['$PROJECT-AppsyncStack']['${PROJECT}AppsyncId'])" )
+NEWAPPSYNC=$( cat web/cdk-outputs.json | python3 -c "import sys, json; print(json.load(sys.stdin)['$PROJECT-AppsyncStack']['${PROJECT}AppsyncId'])" )
 echo $NEWAPPSYNC
 echo
 

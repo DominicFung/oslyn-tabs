@@ -1,7 +1,7 @@
 #!/bin/zsh
 
-SECRETJSON=$( cat secret.json )
-CDKOUTJSON=$( cat cdk-outputs.json )
+SECRETJSON=$( cat web/secret.json )
+CDKOUTJSON=$( cat web/cdk-outputs.json )
 AWSEXPORTS=$( cat src/aws-exports.js )
 
 aws secretsmanager create-secret --name oslynstudio/secret \

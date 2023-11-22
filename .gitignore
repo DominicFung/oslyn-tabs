@@ -9,7 +9,7 @@
 /coverage
 
 # next.js
-/.next/
+.next/
 /out/
 
 # production
@@ -44,7 +44,8 @@ cdk.out
 cdk-outputs.json
 examples
 dist
-/schema.graphql
+/web/schema.graphql
 aws-exports.js
 
 .graphqlconfig.yml
+/schema.graphql
