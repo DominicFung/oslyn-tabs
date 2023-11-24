@@ -37,20 +37,34 @@ export interface PlayerProps {
 Amplify.configure({ ...awsConfig, ssr: true });
 
 export default function Player(p: PlayerProps) {
-  const theme = useTheme()
+  const { theme } = useTheme()
+  const [ localTheme, setLocalTheme ] = useState("light")
+  useEffect(() => {
+    if (theme) setLocalTheme(theme)
+    else {
+      const a = localStorage.getItem('oslynTheme') || "light"
+      if (a && a != "false") { setLocalTheme(a) }
+    }
+    
+  } , [theme])
+
   const { setOpenSidebar, guestIdentity, addGuestIdentity } = useSideBarContext()
   const { data: session, status } = useSession()
   
+  const [ isLogin, setIsLogin ] = useState(false)
+
   const [ isFullScreenEnabled, setFullScreenEnabled ] = useState(false)
   useEffect(() => { setFullScreenEnabled(document?.fullscreenEnabled || (document as any)?.webkitFullscreenEnabled) }, [])
 
   // after onload, we need to sync jam manually
   const [ jam, setJam ] = useState(p.jam) 
-  useEffect( () => { setJam(p.jam) }, [p.jam] )
+  useEffect( () => { setJam(p.jam); setActive(p.jam.active as Participant[]) }, [p.jam] )
 
+  // these are being SUBSCRIBED to, so needs to be moved out of the main JAM object.
   const [ song, setSong ] = useState(jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(jam.setList.songs[jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(jam.currentPage || 0)
+  const [ active, setActive ] = useState<Participant[]>([])
 
   const [ guestOpen, setGuestOpen ] = useState(false)
 
@@ -185,8 +199,7 @@ export default function Player(p: PlayerProps) {
         if (!active) { console.log(`subscribeUserJoin: No active value found, this can be OK. ${active}`) }
         if (!latest) { console.log(`subscribeUserJoin: No latest value found, this can be OK. ${latest}`) }
 
-        jam.active = [...active]
-        setJam({...jam})
+        setActive([...active])
 
         let username = latest?.username || latest?.user?.username
         toast(`Welcome ${username}!`)
@@ -213,12 +226,12 @@ export default function Player(p: PlayerProps) {
     else { console.error("TODO: handle case where we are modifying NOT current song's key.") }
   }
 
-  useEffect(() => {
-    let j = JSON.parse(JSON.stringify(jam)) as JamSession
-    j.setList.songs[song || 0]!.key = sKey || "C"
-    console.log(j)
-    setJam(j)
-  }, [sKey, song, jam])
+  // useEffect(() => {
+  //   let j = JSON.parse(JSON.stringify(jam)) as JamSession
+  //   j.setList.songs[song || 0]!.key = sKey || "C"
+  //   console.log(j)
+  //   setJam(j)
+  // }, [sKey, song, jam])
   
   const setNextPage = async (page: number) => {
     const d = await API.graphql(graphqlOperation(m.nextPage, {
@@ -316,6 +329,7 @@ export default function Player(p: PlayerProps) {
 
       if (typeof data === "string") { return data }
       console.log(data)
+      setIsLogin(true)
     } catch (e) { return JSON.stringify(e) }
     return ""
   }
@@ -332,28 +346,31 @@ export default function Player(p: PlayerProps) {
       if (data.jamSessionId && data.latest?.userId) {
         addGuestIdentity(data.jamSessionId, data.latest.userId)
       }
+
+      setGuestOpen(false)
+      setIsLogin(true)
     } catch (e) { return JSON.stringify(e) }
-    setGuestOpen(false)
     return ""
   }
 
   useEffect(() => {
     console.log(guestIdentity)
-    const guestIds = jam.active.map((j) => j?.userId)
-    if (session && status === "authenticated" && p.user) {
-      console.log(`User is authenticated .. ${p.user.userId}`)
-      console.log(guestIds)
-      if (!guestIds.includes(p.user.userId)) signInAsUser(p.user)
-    } else if (status === "unauthenticated") {
-      console.log(guestIdentity)
-      console.log(jam.active)
-      if (guestIdentity[jam.jamSessionId]) {
-        const guestId = guestIdentity[jam.jamSessionId]
-        if (guestIds.includes(guestId)) { setGuestOpen(false) }
-        else setGuestOpen(true)
-      } else setGuestOpen(true)
+    const guestIds = active.map((j) => j?.userId)
+    if (!isLogin) {
+      if (session && status === "authenticated" && p.user) {
+        console.log(`User is authenticated .. ${p.user.userId}`)
+        console.log(guestIds)
+        if (!guestIds.includes(p.user.userId)) { signInAsUser(p.user) }
+        else setIsLogin(true)
+      } else if (status === "unauthenticated") {
+        if (guestIdentity[jam.jamSessionId]) {
+          const guestId = guestIdentity[jam.jamSessionId]
+          if (guestIds.includes(guestId)) { setGuestOpen(false) }
+          else setGuestOpen(true)
+        } else setGuestOpen(true)
+      }
     }
-  }, [session, status, guestIdentity, jam])
+  }, [session, status, guestIdentity, jam, active, isLogin])
 
   const onFullScreenChange = (event: any) => { 
     if (document.fullscreenElement) setFullScreen(true)
@@ -364,7 +381,7 @@ export default function Player(p: PlayerProps) {
     return () => removeEventListener("fullscreenchange", onFullScreenChange)
   }, [])
 
-  return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${theme.theme || "light"}`} id="player">
+  return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
     { jam.setList.songs[song]?.song && 
       (p.isSlideShow ? 
         <SSlides
