@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && rm -rf ../.next && mkdir ../.next/ && mv ./.next/* ../.next/",
+    "bak:build": "next build && rm -rf ../.next && mkdir ../.next/ && mv ./.next/* ../.next/",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
