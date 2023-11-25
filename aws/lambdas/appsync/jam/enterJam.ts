@@ -5,12 +5,13 @@ import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { v4 as uuidv4 } from 'uuid'
 import { hasSubstring, merge } from '../../util/dynamo'
 
-import { JamSessionActiveUsers, Participant, User } from '../../API'
-import { _JamSession, _JamSong, _SetList } from '../../type'
+import { Band, JamSessionActiveUsers, Participant, User } from '../../API'
+import { _Band, _JamSession, _JamSong, _SetList, _User } from '../../type'
 import { updateDynamoUtil } from '../../util/dynamo'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
+const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 const COLORS = [ 
   "red", "orange", "amber", "yellow", "lime", 
@@ -81,6 +82,87 @@ export const handler = async (event: AppSyncResolverEvent<{
           item: { active: [ ...(jamSession.active || []), latest ] },
           key: { jamSessionId: b.jamSessionId }
         })
+
+        const res1 = await dynamo.send(
+          new GetItemCommand({
+            TableName: USER_TABLE_NAME,
+            Key: { userId: { S: b.userId } }
+          })
+        )
+
+        if (!res1.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
+        let user = unmarshall(res1.Item) as _User
+
+        if (hasSubstring(event.info.selectionSetList, "bands")) {
+          if (!user.bandIds || user.bandIds.length === 0) { user.bands = [] }
+          else {
+            console.log("getting bands ...")
+            const uniq = [...new Set(user.bandIds)]
+      
+            const keys = uniq
+              .map((s) => { return { bandId: { S: s } } as { [bandId: string]: any } })
+              console.log(keys)
+      
+            const res1 = await dynamo.send(new BatchGetItemCommand({
+              RequestItems: {[BAND_TABLE_NAME]: { Keys: keys }}
+            }))
+            console.log(res1)
+            if (!res1.Responses) { console.error(`ERROR: unable to BatchGet bandId. ${res1.$metadata}`); return  } 
+      
+            const bands: Band[] = res1.Responses![BAND_TABLE_NAME].map((u) => {
+              let band = unmarshall(u) as _Band
+      
+              band.songs = []
+              band.sets = []
+              band.members = []
+              band.admins = []
+      
+              band.owner = {
+                userId: band.userId, username: "", email: "dom@oslyn.io", providers: [], role: "USER",
+                friends: [], labelledRecording: [], songsCreated: [], editHistory: [], likedSongs: []
+              } as unknown as User
+      
+              return band
+            })
+            console.log(bands)
+            user.bands = bands
+          }
+        }
+      
+        if (hasSubstring(event.info.selectionSetList, "friends")) {
+          if (!user.friendIds || user.friendIds.length === 0) { user.friends = [] }
+          else {
+            console.log("getting friends ...")
+            const uniq = [...new Set(user.friendIds)]
+      
+            const keys = uniq
+              .map((s) => { return { userId: { S: s } } as { [userId: string]: any } })
+              console.log(keys)
+      
+            const res1 = await dynamo.send(new BatchGetItemCommand({
+              RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
+            }))
+            console.log(res1)
+            if (!res1.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return  } 
+      
+            const friends = res1.Responses![USER_TABLE_NAME].map((u) => {
+              let user = unmarshall(u) as _User
+        
+              if (!user.labelledRecording) user.labelledRecording = []
+              if (!user.songsCreated) user.songsCreated = []
+              if (!user.editHistory) user.editHistory = []
+              if (!user.likedSongs) user.likedSongs = []
+              if (!user.friends) user.friends = []
+              return user
+            })
+            console.log(friends)
+            user.friends = friends
+          }
+        }
+      
+        console.log(user)
+        latest.user = user
+
       } else if (b.guestName) { 
         const guestNames = (jamSession.active || []).map((s) => s?.username)
         const uniq = [...new Set(guestNames)]
