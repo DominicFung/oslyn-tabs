@@ -132,6 +132,7 @@ type NextSong {
   jamSessionId: ID!
   song: Int
   page: Int
+  key: String
 }
 
 type NextKey {

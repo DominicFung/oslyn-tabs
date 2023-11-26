@@ -34579,6 +34579,7 @@ export const nextSong = /* GraphQL */ `
       jamSessionId
       song
       page
+      key
     }
   }
 `;

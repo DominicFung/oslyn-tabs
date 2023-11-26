@@ -16,6 +16,7 @@ export const onNextSong = /* GraphQL */ `
       jamSessionId
       song
       page
+      key
     }
   }
 `;

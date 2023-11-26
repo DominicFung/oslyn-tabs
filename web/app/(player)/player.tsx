@@ -151,7 +151,7 @@ export default function Player(p: PlayerProps) {
       next: ({ value }) => {
         console.log("=== On NextPage Change ===")
         const page = value.data?.onNextPage?.page
-        incomingNextPage(page || 0)
+        setPage(page||0)
       },
       error: (error) => console.error(error)
     })
@@ -168,12 +168,13 @@ export default function Player(p: PlayerProps) {
         console.log("=== On NextSong Change ===")
         const song = value.data?.onNextSong?.song
         const page = value.data?.onNextSong?.page
+        const key = value.data?.onNextSong?.key
 
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!page) { console.log(`No page value found, this can be OK. ${page}`) }
 
         // needs to be fixed to add key!
-        incomingNextSong(song||0, page||0)
+        setSong(song||0); setPage(page||0); setKey(key||"C")
       },
       error: (error) => console.error(error)
     })
@@ -230,11 +231,6 @@ export default function Player(p: PlayerProps) {
     })
     console.log(sub)
     return sub
-  }
-  
-  const incomingNextPage = async (page: number) => { setPage(page) }
-  const incomingNextSong = async (song: number, page: number) => { 
-    setSong(song); setPage(page) 
   }
 
   useEffect(() => { // when key or song index changes, we need to update songs

@@ -245,6 +245,7 @@ export type NextSong = {
   jamSessionId: string,
   song?: number | null,
   page?: number | null,
+  key?: string | null,
 };
 
 export type NextKey = {
@@ -37659,6 +37660,7 @@ export type NextSongMutation = {
     jamSessionId: string,
     song?: number | null,
     page?: number | null,
+    key?: string | null,
   } | null,
 };
 
@@ -58692,6 +58694,7 @@ export type OnNextSongSubscription = {
     jamSessionId: string,
     song?: number | null,
     page?: number | null,
+    key?: string | null,
   } | null,
 };
 
