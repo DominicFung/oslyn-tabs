@@ -39,7 +39,7 @@ export default function BandComponent(p: BandProps) {
       <button disabled
         className="text-white mx-5 my-2 bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-700 dark:focus:ring-oslyn-800"
       >Add Song</button> }
-      { p.user ? <CreateJam bandName={p.band.name} songs={p.songs} /> : 
+      { p.user ? <CreateJam bandName={p.band.name} songs={p.band.songs as Song[] || []} /> : 
       <button disabled
         className="text-white ml-5 my-2 bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-500 dark:focus:ring-oslyn-800">
         Start Jam

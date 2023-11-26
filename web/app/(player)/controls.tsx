@@ -71,7 +71,7 @@ export default function Controls(p: ControlsProp) {
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
       { name: "QR", disabled: false },
-      { name: "Slides", disabled: false },
+      { name: "Slides", disabled: p.users ? false : true },
       { name: "Users", disabled: false }
     ])
   }, [p])
