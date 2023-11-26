@@ -159,6 +159,7 @@ export default function Player(p: PlayerProps) {
     return sub
   }
 
+  //useEffect(() => { if (songs[song]) setSKey(songs[song].key) }, [songs, song])
   const subscribeNextSong = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     const sub = API.graphql<GraphQLSubscription<OnNextSongSubscription>>(
       graphqlOperation(s.onNextSong, { jamSessionId } )
@@ -171,6 +172,7 @@ export default function Player(p: PlayerProps) {
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!page) { console.log(`No page value found, this can be OK. ${page}`) }
 
+        // needs to be fixed to add key!
         incomingNextSong(song||0, page||0)
       },
       error: (error) => console.error(error)
@@ -193,7 +195,9 @@ export default function Player(p: PlayerProps) {
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!key) { console.log(`No page value found, this can be OK. ${page}`) }
 
-        incomingKey(song || 0, key || "C")
+        // its possible for song to not equal the current song ..
+        // however, we cannot access the STATE of song here .. so theres no way to know ..
+        setSKey(key || "C") 
       },
       error: (error) => console.error(error)
     })
@@ -231,10 +235,6 @@ export default function Player(p: PlayerProps) {
   const incomingNextPage = async (page: number) => { setPage(page) }
   const incomingNextSong = async (song: number, page: number) => { 
     setSong(song); setPage(page) 
-  }
-  const incomingKey = async (s: number, key: string) => {
-    if (song === s) { setSKey(key) } 
-    else { console.error("TODO: handle case where we are modifying NOT current song's key.") }
   }
 
   useEffect(() => { // when key or song index changes, we need to update songs
