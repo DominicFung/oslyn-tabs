@@ -1,7 +1,6 @@
 "use client"
 import { PhotoIcon, BoltIcon, ArrowsUpDownIcon } from '@heroicons/react/24/solid'
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment } from "react"
 
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -135,7 +134,6 @@ export default function BandInfo(p: BandProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

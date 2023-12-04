@@ -2,7 +2,7 @@
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment, useState } from "react"
+import { useState } from "react"
 import { User, Song } from "@/../src/API"
 import { InviteRequest } from "@/app/api/invite/create/route"
 
@@ -59,7 +59,6 @@ export default function Email(p: EmailProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

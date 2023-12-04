@@ -2,7 +2,6 @@
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment } from "react"
 
 export interface KeyProps {
   skey: string
@@ -31,7 +30,6 @@ export default function Key(p: KeyProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

@@ -3,11 +3,9 @@
 
 
 import { View } from 'react-native'
-
-import * as ScreenOrientation from 'expo-screen-orientation'
 import { useEffect, useState } from 'react'
 
-import Slides from './app/(player)/slides2'
+import Slides from './app/(player)/slides'
 import { Song, User } from '../src/API';
 import Calc from './app/(player)/util/calc';
 import { OslynSlide } from 'oslyn-core/types';
@@ -18,7 +16,6 @@ import Line from './app/(player)/line';
 const localTheme = "light"
 
 export default function App() {
-  //useEffect(() => { changeScreenOrientation() }, [])
   Logs.enableExpoCliLogging()
 
   const [ song, _setSong ] = useState<Song>({
@@ -52,8 +49,7 @@ export default function App() {
 
   return (
     <View className={`text-black bg-purple-400 w-full h-screen flex flex-col overflow-hidden pt-20 ${localTheme || "light"}`} id='player'>
-      { slides && <Line phrase={slides.pages[2].lines[0]} skey={song.chordSheetKey || "C"} transpose={0} onMaxWidth={() => {}}/> }
-      { slides && <Line phrase={slides.pages[2].lines[0]} skey={song.chordSheetKey || "C"} transpose={0} onMaxWidth={() => {}}/> }
+      <Slides song={song} />
     </View>
   )
 }
@@ -68,7 +64,3 @@ export default function App() {
 
 // { slides && <Line phrase={slides.pages[2].lines[0]} skey={song.chordSheetKey || "C"} transpose={0} onMaxWidth={() => {}}/> }
 /*<Slides song={song} />*/
-
-async function changeScreenOrientation() {
-  await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
-}

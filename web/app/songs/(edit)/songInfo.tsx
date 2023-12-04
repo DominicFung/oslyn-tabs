@@ -1,7 +1,7 @@
 "use client"
 import { TrashIcon, ArrowsUpDownIcon, SparklesIcon } from '@heroicons/react/24/solid'
 
-import { Fragment, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Listbox, Transition } from '@headlessui/react'
 import { Song } from '@/../src/API'
@@ -81,7 +81,6 @@ export default function Song(p: SongProps) {
               </Listbox.Button>
               <Transition
                 show={open}
-                as={Fragment}
                 enter="transition ease-in-out duration-100"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"

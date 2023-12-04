@@ -2,19 +2,16 @@
 
 import { ZenObservable } from "zen-observable-ts"
 
-import awsConfig from '@/../src/aws-exports'
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult, GraphQLSubscription } from '@aws-amplify/api'
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from 'aws-amplify/api'
 
 import * as s from '@/../src/graphql/subscriptions'
 import * as m from '@/../src/graphql/mutations'
 import { 
-  JamSession, JamSessionSlideConfig, JamSong, NextPage, 
-  OnNextPageSubscription, OnNextSongSubscription, 
-  OnSongKeySubscription, NextKey,
-
-  OnJamSlideConfigChangeSubscription, 
-  Participant, User, JamSessionActiveUsers, OnEnterJamSubscription 
+  JamSession, JamSong, Participant, User, 
+  JamSessionActiveUsers, NextPageMutation, 
+  SetSongKeyMutation, SetJamSlideConfigMutation 
 } from "@/../src/API"
 
 import { useEffect, useState } from "react"
@@ -36,7 +33,7 @@ export interface PlayerProps {
   user: User|null
 }
 
-Amplify.configure({ ...awsConfig, ssr: true });
+Amplify.configure(amplifyconfig, { ssr: true })
 
 export default function Player(p: PlayerProps) {
   const { theme } = useTheme()
@@ -47,11 +44,11 @@ export default function Player(p: PlayerProps) {
       const a = localStorage.getItem('oslynTheme') || "light"
       if (a && a != "false") { setLocalTheme(a) }
     }
-    
   } , [theme])
 
   const { setOpenSidebar, guestIdentity, addGuestIdentity } = useSideBarContext()
   const { data: session, status } = useSession()
+  const client = generateClient()
   
   const [ isLogin, setIsLogin ] = useState(false)
 
@@ -115,11 +112,11 @@ export default function Player(p: PlayerProps) {
   }, [p.isSlideShow, p.jam.jamSessionId])
 
   const subscribeTextSize = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
-    const sub = API.graphql<GraphQLSubscription<OnJamSlideConfigChangeSubscription>>(
-      graphqlOperation(s.onJamSlideConfigChange, { jamSessionId } )
-    ).subscribe({
-      next: ({ value }) => {
-        const ts = value.data?.onJamSlideConfigChange?.textSize
+    const sub = client.graphql({
+      query: s.onJamSlideConfigChange,  variables: { jamSessionId }
+    }).subscribe({
+      next: ({ data }) => {
+        const ts = data?.onJamSlideConfigChange?.textSize
         console.log(ts)
         setSlideTextSize(ts || "text-3xl")
       },
@@ -145,12 +142,12 @@ export default function Player(p: PlayerProps) {
   }, [page, p.jam.jamSessionId, subs])
 
   const subscribeNextPage = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
-    const sub = API.graphql<GraphQLSubscription<OnNextPageSubscription>>(
-      graphqlOperation(s.onNextPage, { jamSessionId } )
-    ).subscribe({
-      next: ({ value }) => {
+    const sub = client.graphql({
+      query: s.onNextPage, variables: { jamSessionId } 
+    }).subscribe({
+      next: ({ data }) => {
         console.log("=== On NextPage Change ===")
-        const page = value.data?.onNextPage?.page
+        const page = data?.onNextPage?.page
         setPage(page||0)
       },
       error: (error) => console.error(error)
@@ -161,14 +158,14 @@ export default function Player(p: PlayerProps) {
 
   //useEffect(() => { if (songs[song]) setSKey(songs[song].key) }, [songs, song])
   const subscribeNextSong = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
-    const sub = API.graphql<GraphQLSubscription<OnNextSongSubscription>>(
-      graphqlOperation(s.onNextSong, { jamSessionId } )
-    ).subscribe({
-      next: ({ value }) => {
+    const sub = client.graphql({
+      query: s.onNextSong, variables: { jamSessionId } 
+    }).subscribe({
+      next: ({ data }) => {
         console.log("=== On NextSong Change ===")
-        const song = value.data?.onNextSong?.song
-        const page = value.data?.onNextSong?.page
-        const key = value.data?.onNextSong?.key
+        const song = data?.onNextSong?.song
+        const page = data?.onNextSong?.page
+        const key = data?.onNextSong?.key
 
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!page) { console.log(`No page value found, this can be OK. ${page}`) }
@@ -183,15 +180,15 @@ export default function Player(p: PlayerProps) {
   }
 
   const subscribeKeyChange = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
-    const sub = API.graphql<GraphQLSubscription<OnSongKeySubscription>>(
-      graphqlOperation(s.onSongKey, { jamSessionId } )
-    ).subscribe({
-      next: ({ value }) => {
+    const sub = client.graphql({
+      query: s.onSongKey, variables: { jamSessionId }
+    }).subscribe({
+      next: ({ data }) => {
         console.log("=== On Key Change ===")
-        console.log(JSON.stringify(value))
+        console.log(JSON.stringify(data))
 
-        const song = value.data?.onSongKey?.song
-        const key = value.data?.onSongKey?.key
+        const song = data?.onSongKey?.song
+        const key = data?.onSongKey?.key
 
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!key) { console.log(`No page value found, this can be OK. ${page}`) }
@@ -209,15 +206,15 @@ export default function Player(p: PlayerProps) {
   const subscribeUserJoin = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
     console.log(`= ${jamSessionId}`)
 
-    const sub = API.graphql<GraphQLSubscription<OnEnterJamSubscription>>(
-      graphqlOperation(s.onEnterJam, { jamSessionId: jamSessionId } )
-    ).subscribe({
-      next: ({ value }) => {
+    const sub = client.graphql({
+      query: s.onEnterJam, variables: { jamSessionId: jamSessionId }
+    }).subscribe({
+      next: ({ data }) => {
         console.log("=== On User Join ===")
-        console.log(JSON.stringify(value))
+        console.log(JSON.stringify(data))
 
-        const active = value.data?.onEnterJam?.active as Participant[]
-        const latest = value.data?.onEnterJam?.latest
+        const active = data?.onEnterJam?.active as Participant[]
+        const latest = data?.onEnterJam?.latest
 
         if (!active) { console.log(`subscribeUserJoin: No active value found, this can be OK. ${active}`) }
         if (!latest) { console.log(`subscribeUserJoin: No latest value found, this can be OK. ${latest}`) }
@@ -244,33 +241,35 @@ export default function Player(p: PlayerProps) {
   }, [sKey, song])
   
   const setNextPage = async (page: number) => {
-    const d = await API.graphql(graphqlOperation(m.nextPage, {
+    const d = await client.graphql({
+      query: m.nextPage, variables: {
       jamSessionId: p.jam.jamSessionId, page
-    })) as GraphQLResult<{ nextPage: NextPage }>
+    }}) as GraphQLResult<NextPageMutation>
     console.log(d)
   }
 
   const setNextSong = async (song: number) => {
     if (songs.length > song) {
-      const d = await API.graphql(graphqlOperation(m.nextSong, {
+      const d = await client.graphql({
+        query: m.nextSong, variables: {
         jamSessionId: p.jam.jamSessionId, song
-      })) as GraphQLResult<{ nextPage: NextPage }>
+      }}) as GraphQLResult<NextPageMutation>
       console.log(d)
     } else { console.error(`Error: next song index "${song}" is greater than setlist.length "${songs.length}"`) }
   }
 
   const setKey = async (key: string) => {
     console.error(`setKey Fired ${key}`)
-    const d = await API.graphql(graphqlOperation(m.setSongKey, {
+    const d = await client.graphql({ query: m.setSongKey, variables: {
       jamSessionId: p.jam.jamSessionId, song, key
-    })) as GraphQLResult<{ setSongKey: NextKey }>
+    }}) as GraphQLResult<SetSongKeyMutation>
     console.log(d)
   }
 
   const setJamConfig = async (textSize: string) => {
-    const d = await API.graphql(graphqlOperation(m.setJamSlideConfig, {
+    const d = await client.graphql({ query: m.setJamSlideConfig, variables: {
       jamSessionId: p.jam.jamSessionId, textSize
-    })) as GraphQLResult<{ setJamSlideConfig: JamSessionSlideConfig }>
+    }}) as GraphQLResult<SetJamSlideConfigMutation>
     console.log(d)
   }
 

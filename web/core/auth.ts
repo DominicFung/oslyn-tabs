@@ -2,9 +2,9 @@ import { NextAuthOptions } from "next-auth"
 import FacebookProvider from "next-auth/providers/facebook"
 import GoogleProvider from "next-auth/providers/google"
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { User } from '@/../src/API'
@@ -30,7 +30,8 @@ export const authOptions: NextAuthOptions = {
       // console.log(profile)
 
       if (account && profile) {
-        Amplify.configure(awsConfig)
+        Amplify.configure(amplifyconfig)
+        const client = generateClient()
 
         // create user only creates if EMAIL does not exist ..
         if (profile.email && profile.name) {
@@ -49,7 +50,9 @@ export const authOptions: NextAuthOptions = {
             if ((profile as any).picture && (profile as any).picture.data.url) u.imageUrl = (profile as any).picture.data.url
           }
           
-          const d = await API.graphql(graphqlOperation(m.createUser, u)) as GraphQLResult<{ createUser: User }>
+          const d = await client.graphql({ 
+            query: m.createUser, variables: u 
+          }) as GraphQLResult<{ createUser: User }>
           //console.log(d)
 
           //console.log("User updated.")

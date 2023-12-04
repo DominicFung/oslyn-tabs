@@ -1,9 +1,9 @@
 
 import { headers } from 'next/headers'
 
-import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
 import { SetList, User } from '@/../src/API'
@@ -14,7 +14,7 @@ import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 import Sets from './sets'
 
-Amplify.configure({...awsConfig, ssr: true })
+Amplify.configure(amplifyconfig, { ssr: true })
 
 type _Session = Session & {
   userId: string
@@ -28,13 +28,13 @@ export default async function _Sets() {
   const userId = (session?.user as _Session)?.userId
 
   const req = { headers: { cookie: headers().get('cookie') }}
-  const SSR = withSSRContext({ req })
+  const client = generateClient()
   let d = [] as SetList[]
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSets, { userId }
-    )) as GraphQLResult<{ listSets: SetList[] }>
+    const { data } = await client.graphql({ 
+      query: q.listSets, variables: { userId }
+    }) as GraphQLResult<{ listSets: SetList[] }>
 
     console.log(JSON.stringify(data, null, 2))
     if (data?.listSets) d = data?.listSets

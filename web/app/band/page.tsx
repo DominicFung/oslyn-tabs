@@ -1,12 +1,12 @@
 import { headers } from 'next/headers'
 
-import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
 import { getServerSession } from "next-auth/next"
 
 import { authOptions } from "@/core/auth"
 import Unauth from "@/app/unauthorized"
-import awsConfig from '@/../src/aws-exports'
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 import * as q from '@/../src/graphql/queries'
 
 import { _Session } from "@/core/utils/frontend"
@@ -15,7 +15,7 @@ import Bands from './bands'
 import { BandContextProvider } from './context'
 import BandTabs from './(components)/bandTabs'
 
-Amplify.configure({...awsConfig, ssr: true })
+Amplify.configure(amplifyconfig, { ssr: true })
 
 export default async function Band() {
   const session = await getServerSession(authOptions)
@@ -25,13 +25,13 @@ export default async function Band() {
   const userId = (session?.user as _Session)?.userId
 
   const req = { headers: { cookie: headers().get('cookie') } }
-  const SSR = withSSRContext({ req })
+  const client = generateClient()
   let d = [] as Band[]
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listBands, { userId }
-    )) as GraphQLResult<{ listBands: Band[] }>
+    const { data } = await client.graphql({ 
+      query: q.listBands, variables: { userId }
+    }) as GraphQLResult<{ listBands: Band[] }>
     if (data?.listBands) d = data?.listBands
     else throw new Error("data.listBands is empty.")
   } catch (e) {
@@ -41,9 +41,9 @@ export default async function Band() {
   let user: User|null = null 
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.getUserById, { userId }
-    )) as GraphQLResult<{ getUserById: User }>
+    const { data } = await client.graphql({ 
+      query: q.getUserById, variables: { userId }
+    }) as GraphQLResult<{ getUserById: User }>
     if (data?.getUserById) user = data.getUserById
     else throw new Error("data.getUserById is empty.")
   } catch (e) {
@@ -53,9 +53,9 @@ export default async function Band() {
   let songs: Song[] = []
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSongs, { userId }
-    )) as GraphQLResult<{ listSongs: Song[] }>
+    const { data } = await client.graphql({ 
+      query: q.listSongs, variables: { userId }
+    }) as GraphQLResult<{ listSongs: Song[] }>
     if (data?.listSongs) songs = data?.listSongs
     else throw new Error("data.listSongs is empty.")
   } catch (e) {
@@ -63,9 +63,9 @@ export default async function Band() {
   }
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSharedSongs, { userId }
-    )) as GraphQLResult<{ listSharedSongs: Song[] }>
+    const { data } = await client.graphql({ 
+      query: q.listSharedSongs, variables: { userId }
+    }) as GraphQLResult<{ listSharedSongs: Song[] }>
     if (data?.listSharedSongs) songs.push(...data?.listSharedSongs!)
     else throw new Error("data.listSharedSongs is empty.")
   } catch (e) {

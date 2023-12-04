@@ -5,7 +5,6 @@ import { ChromePicker } from 'react-color'
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment } from "react"
 
 const OP = ["0", "5", "10", "20", "25", "30", "40", "50", "60", "70", "75", "80", "90", "95", "100"]
 
@@ -43,7 +42,6 @@ export default function Text() {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

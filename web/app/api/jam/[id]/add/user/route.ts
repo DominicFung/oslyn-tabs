@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import { GraphQLError } from 'graphql'
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
-import { JamSessionActiveUsers } from '@/../src/API'
+import { EnterJamMutation } from '@/../src/API'
 
 export interface AddUserRequest {}
 
@@ -21,7 +20,8 @@ export async function POST(request: NextRequest) {
   const forwarded = request.headers.get("x-forwarded-for")
   console.log(forwarded)
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
   console.log(b)
 
   const jamId = request.url.split("jam/")[1].split("/add/user")[0]
@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
   console.log(`ip of "${userId}": ${ip}`)
 
   try {
-    const d = await API.graphql(graphqlOperation(
-      m.enterJam, { jamSessionId: jamId, userId, ip }
-    )) as GraphQLResult<{ enterJam: JamSessionActiveUsers }>
+    const d = await client.graphql({ 
+      query: m.enterJam, variables: { jamSessionId: jamId, userId, ip }
+    }) as GraphQLResult<EnterJamMutation>
 
     if (!d.data?.enterJam) {
       console.error(`enterJam data is empty: ${JSON.stringify(d.data)}`)

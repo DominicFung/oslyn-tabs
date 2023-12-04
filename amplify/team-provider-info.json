@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-oslynstudiov3-dev-191005-authRole",
+      "UnauthRoleArn": "arn:aws:iam::006033392195:role/amplify-oslynstudiov3-dev-191005-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::006033392195:role/amplify-oslynstudiov3-dev-191005-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-oslynstudiov3-dev-191005-deployment",
+      "UnauthRoleName": "amplify-oslynstudiov3-dev-191005-unauthRole",
+      "StackName": "amplify-oslynstudiov3-dev-191005",
+      "StackId": "arn:aws:cloudformation:us-east-1:006033392195:stack/amplify-oslynstudiov3-dev-191005/7bc6ee90-9239-11ee-b5d5-0a9923416cf1",
+      "AmplifyAppId": "d1g4kmtrf03nry"
+    }
+  }
+}

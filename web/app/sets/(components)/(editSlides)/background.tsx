@@ -54,9 +54,9 @@ export default function Background(p: BackgroundProps) {
 
     <div className='mx-auto'>
       <ChromePicker
-          color={backgroundColor}
-          onChange={(c) => { setBackgroundColor(c.hex) }}
-        />
+        color={backgroundColor}
+        onChange={(c: any) => { setBackgroundColor(c.hex) }}
+      />
     </div>
   </>
 }

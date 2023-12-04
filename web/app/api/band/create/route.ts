@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
-import { Band } from '@/../src/API'
+import { Band, CreateBandMutation, UpdateBandMutation } from '@/../src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
@@ -42,12 +42,13 @@ export async function POST(request: Request){
     return NextResponse.json({ error: `Improper Body` }, { status: 400 })
   }
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
   //console.log(JSON.stringify(b))
 
-  const d = await API.graphql(graphqlOperation(
-    m.createBand, { ...b, userId }
-  )) as GraphQLResult<{ createBand: Band }>
+  const d = await client.graphql({ 
+    query: m.createBand, variables: { ...b, userId }
+  }) as GraphQLResult<CreateBandMutation>
 
   if (!d.data?.createBand) {
     console.error(`createBand data is empty: ${JSON.stringify(d.data)}`)
@@ -88,9 +89,9 @@ export async function POST(request: Request){
     console.log(res1)
 
     console.log(band.bandId)
-    const d = await API.graphql(graphqlOperation(
-      m.updateBand, { bandId: band.bandId, imageUrl: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/band/${band.bandId}/latest.jpg` }
-    )) as GraphQLResult<{ updateBand: Band }>
+    const d = await client.graphql({ 
+      query: m.updateBand, variables: { bandId: band.bandId, imageUrl: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/band/${band.bandId}/latest.jpg` }
+    }) as GraphQLResult<UpdateBandMutation>
   
     if (!d.data?.updateBand) {
       console.error(`createBand data is empty: ${JSON.stringify(d.data)}`)

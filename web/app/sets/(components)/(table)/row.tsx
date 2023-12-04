@@ -4,7 +4,6 @@ import { Song } from "@/../src/API"
 
 import { Listbox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
-import { Fragment } from "react"
 
 interface RowProps {
   song: Song
@@ -53,7 +52,6 @@ export default function Row(p: RowProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

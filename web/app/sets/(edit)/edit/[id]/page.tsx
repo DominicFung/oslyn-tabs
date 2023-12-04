@@ -1,8 +1,8 @@
 import { headers } from 'next/headers'
 
-import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
 import { SetList, Song } from '@/../src/API'
@@ -17,7 +17,7 @@ type _Session = Session & {
   userId: string
 }
 
-Amplify.configure({...awsConfig, ssr: true })
+Amplify.configure(amplifyconfig, { ssr: true })
 
 export default async function EditSets({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -26,15 +26,15 @@ export default async function EditSets({ params }: { params: { id: string } }) {
   const userId = (session?.user as _Session)?.userId
 
   const req = { headers: { cookie: headers().get('cookie') } }
-  const SSR = withSSRContext({ req })
+  const client = generateClient()
   
   let d1 = [] as Song[]
   let d2: SetList|null = null
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.getSet, { setListId: params.id, userId: userId }
-    )) as GraphQLResult<{ getSet: SetList }>
+    const { data } = await client.graphql({ 
+      query: q.getSet, variables: { setListId: params.id, userId: userId }
+    }) as GraphQLResult<{ getSet: SetList }>
 
     if (data?.getSet) d2 = data?.getSet
     else throw new Error("data.getSet is empty.")
@@ -44,9 +44,9 @@ export default async function EditSets({ params }: { params: { id: string } }) {
   }
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listSongs, { userId: userId }
-    )) as GraphQLResult<{ listSongs: Song[] }>
+    const { data } = await client.graphql({ 
+      query: q.listSongs, variables: { userId: userId }
+    }) as GraphQLResult<{ listSongs: Song[] }>
 
     if (data?.listSongs) d1 = data?.listSongs
     else throw new Error("data.listSongs is empty.")

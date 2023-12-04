@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import { _Session } from '@/core/utils/frontend'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { JamSongInput, SetList } from '@/../src/API'
@@ -24,12 +24,13 @@ export async function POST(request: Request) {
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
   console.log(JSON.stringify(b))
 
-  const d = await API.graphql(graphqlOperation(
-    m.createSet, { ...b, userId: userId }
-  )) as GraphQLResult<{ createSet: SetList }>
+  const d = await client.graphql({ 
+    query: m.createSet, variables: { ...b, userId: userId }
+  }) as GraphQLResult<{ createSet: SetList }>
 
   if (!d.data?.createSet) {
     console.error(`createSet data is empty: ${JSON.stringify(d.data)}`)

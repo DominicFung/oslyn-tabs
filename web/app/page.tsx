@@ -9,28 +9,28 @@
 
 
 import { headers } from 'next/headers'
-import { Band, JamSession } from "@/../src/API"
+import { Band, JamSession, ListPublicBandsQuery, ListPublicJamSessionsQuery } from "@/../src/API"
 
-import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
 import Main from './main'
 
-Amplify.configure({...awsConfig, ssr: true })
+Amplify.configure(amplifyconfig, { ssr: true })
 
 export default async function Home() {
   const req = { headers: { cookie: headers().get('cookie') } }
-  const SSR = withSSRContext({ req })
+  const client = generateClient()
 
   let d = [] as JamSession[]
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listPublicJamSessions, {}
-    )) as GraphQLResult<{ listPublicJamSessions: JamSession[] }>
-    if (data?.listPublicJamSessions) d = data?.listPublicJamSessions
+    const { data } = await client.graphql({ 
+      query: q.listPublicJamSessions
+  }) as GraphQLResult<ListPublicJamSessionsQuery>
+    if (data?.listPublicJamSessions) d = data?.listPublicJamSessions as JamSession[]
     else throw new Error("data.listPublicJamSessions is empty.")
   } catch (e) {
     console.log(JSON.stringify(e, null, 2))
@@ -39,10 +39,10 @@ export default async function Home() {
   let d2 = [] as Band[]
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.listPublicBands, {}
-    )) as GraphQLResult<{ listPublicBands: Band[] }>
-    if (data?.listPublicBands) d2 = data?.listPublicBands
+    const { data } = await client.graphql({ 
+      query: q.listPublicBands
+    }) as GraphQLResult<ListPublicBandsQuery>
+    if (data?.listPublicBands) d2 = data?.listPublicBands as Band[]
     else throw new Error("data.listPublicBands is empty.")
   } catch (e) {
     console.log(JSON.stringify(e, null, 2))

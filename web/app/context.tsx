@@ -5,6 +5,7 @@ const Context = createContext({
   openSidebar: true, setOpenSidebar: (b: any) => {},
   guestIdentity: {} as {[key: string]: string}, addGuestIdentity: (jamId: string, guestId: string) => {}, removeGuestIdentity: (jamId: string) => {}
 })
+const Provider = Context.Provider as any
 
 export const ContextProvider = ({ children }: any) => {
   const [openSidebar, setOpenSidebar] = useState(true)
@@ -28,11 +29,11 @@ export const ContextProvider = ({ children }: any) => {
   }
 
   return (
-    <Context.Provider value={{ openSidebar, setOpenSidebar, guestIdentity, addGuestIdentity, removeGuestIdentity }}>
+    <Provider value={{ openSidebar, setOpenSidebar, guestIdentity, addGuestIdentity, removeGuestIdentity }}>
       <div className={`${openSidebar?"ml-64":"ml-0 overflow-x-hidden"}`}>
         {children}
       </div>
-    </Context.Provider>
+    </Provider>
   )
 }
 

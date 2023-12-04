@@ -162,7 +162,7 @@ export default function Slides(p: SlidesProps) {
     </View>
     {page === 0 && <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <View className="flex flex-row hover:cursor-pointer">
-        {p.song.albumCover && <Image source={{ uri: p.song.albumCover }} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
+        {p.song.albumCover && <Image source={{ uri: p.song.albumCover }} alt={p.song.album || ""} style={{width: 200, height: 200}} className="w-20 m-2"/> }
         <View className="m-2">
           <Text className="text-gray-500 bold">{p.song.title}</Text>
           <Text className="text-gray-600 text-xs">{p.song.artist}</Text>

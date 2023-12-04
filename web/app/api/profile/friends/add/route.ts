@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { User } from '@/../src/API'
@@ -23,11 +23,12 @@ export async function POST(request: Request) {
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
 
-  const d = await API.graphql(graphqlOperation(
-    m.addFriendByEmail, { ...b, userId }
-  )) as GraphQLResult<{ addFriendByEmail: User }>
+  const d = await client.graphql({ 
+    query: m.addFriendByEmail, variables: { ...b, userId }
+  }) as GraphQLResult<{ addFriendByEmail: User }>
 
   if (!d.data?.addFriendByEmail) {
     console.error(`addFriendByEmail data is empty: ${JSON.stringify(d.data)}`)

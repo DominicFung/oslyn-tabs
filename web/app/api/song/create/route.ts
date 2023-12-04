@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { Song } from '@/../src/API'
@@ -40,11 +40,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: `Improper Body` }, { status: 400 })
   }
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
 
-  const d = await API.graphql(graphqlOperation(
-    m.createSong, { ...b, userId }
-  )) as GraphQLResult<{ createSong: Song }>
+  const d = await client.graphql({ 
+    query: m.createSong, variables: { ...b, userId }
+  }) as GraphQLResult<{ createSong: Song }>
 
   if (!d.data?.createSong) {
     console.error(`createSong data is empty: ${JSON.stringify(d.data)}`)
@@ -78,9 +79,12 @@ export async function POST(request: Request) {
     console.log(res1)
 
     console.log(song.songId)
-    const d = await API.graphql(graphqlOperation(
-      m.updateSong, { userId, songId: song.songId, albumCover: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/song/${song.songId}/cover.jpg` }
-    )) as GraphQLResult<{ updateSong: Song }>
+    const d = await client.graphql({ 
+      query: m.updateSong, variables: { 
+        userId, songId: song.songId, 
+        albumCover: `https://${cdk['oslynstudio-S3Stack']["bucketName"]}.s3.amazonaws.com/song/${song.songId}/cover.jpg` 
+      }
+    }) as GraphQLResult<{ updateSong: Song }>
 
     if (!d.data?.updateSong) {
       console.error(`updateSong data is empty: ${JSON.stringify(d.data)}`)

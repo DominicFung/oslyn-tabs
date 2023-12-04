@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { chordSheetPlatform, Song } from '@/../src/API'
@@ -33,15 +33,16 @@ export async function POST(request: Request) {
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
   console.log(b)
 
   const songId = request.url.split("song/")[1].split("/update")[0]
   console.log(`songId: ${songId}`)
 
-  const d = await API.graphql(graphqlOperation(
-    m.updateSong, { ...b, userId, songId }
-  )) as GraphQLResult<{ updateSong: Song }>
+  const d = await client.graphql({ 
+    query: m.updateSong, variables: { ...b, userId, songId }
+  }) as GraphQLResult<{ updateSong: Song }>
 
   if (!d.data?.updateSong) {
     console.error(`updateSong data is empty: ${JSON.stringify(d.data)}`)

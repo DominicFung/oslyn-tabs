@@ -1,8 +1,8 @@
 import { headers } from 'next/headers'
 
-import { Amplify, graphqlOperation, withSSRContext } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
 import { Song } from '@/../src/API'
@@ -17,7 +17,7 @@ type _Session = Session & {
   userId: string
 }
 
-Amplify.configure({...awsConfig, ssr: true })
+Amplify.configure(amplifyconfig, { ssr: true })
 
 export default async function EditSong({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -26,13 +26,13 @@ export default async function EditSong({ params }: { params: { id: string } }) {
   const userId = (session?.user as _Session)?.userId
 
   const req = { headers: { cookie: headers().get('cookie') } }
-  const SSR = withSSRContext({ req })
+  const client = generateClient()
   let d = null as Song | null
 
   try {
-    const { data } = await SSR.API.graphql(graphqlOperation(
-      q.getSong, { songId: params.id as string, userId }
-    )) as GraphQLResult<{  getSong: Song }>
+    const { data } = await client.graphql({ 
+      query: q.getSong, variables: { songId: params.id as string, userId }
+    }) as GraphQLResult<{  getSong: Song }>
     
     console.log(data)
     if (data?.getSong) d = data.getSong

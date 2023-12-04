@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
 import { Song } from '@/../src/API'
@@ -22,11 +22,12 @@ export async function GET(request: Request) {
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
 
-  const d = await API.graphql(graphqlOperation(
-    q.listSharedSongs, { userId, optimize: true }
-  )) as GraphQLResult<{ listSharedSongs: Song[] }>
+  const d = await client.graphql({ 
+    query: q.listSharedSongs, variables: { userId, optimize: true }
+  }) as GraphQLResult<{ listSharedSongs: Song[] }>
 
   if (!d.data?.listSharedSongs) {
     console.error(`listSharedSongs data is empty: ${JSON.stringify(d.data)}`)

@@ -1,5 +1,6 @@
 import { App, CfnOutput, Duration, Expiration, Fn, Stack } from 'aws-cdk-lib'
-import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
+// import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
+import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
@@ -31,20 +32,28 @@ export class AppsyncStack extends Stack {
     const inviteDynamoName = Fn.importValue(`${props.name}-InviteTable-Name`)
     const inviteDynamoArn = Fn.importValue(`${props.name}-InviteTable-Arn`)
 
-    const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
-      name: `${props.name}`,
-      schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
-      authorizationConfig: {
-        defaultAuthorization: {
-          authorizationType: AuthorizationType.API_KEY,
-          apiKeyConfig: {
-            expires: Expiration.after(Duration.days(365))
-          }
-        },
-      },
-      xrayEnabled: true,
-      logConfig: { excludeVerboseContent: true, fieldLogLevel: FieldLogLevel.ALL }, // remove later
+    const appsync = new AmplifyGraphqlApi(this, `${props.name}-Appsync`, {
+      apiName: `${props.name}`,
+      definition: AmplifyGraphqlDefinition.fromFiles(path.join(__dirname, "../", 'schema.graphql')),
+      authorizationModes: {
+        apiKeyConfig: { expires: Duration.days(365) }
+      }
     })
+
+    // const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {
+    //   name: `${props.name}`,
+    //   schema: SchemaFile.fromAsset(path.join(__dirname, "../", 'schema.graphql')),
+    //   authorizationConfig: {
+    //     defaultAuthorization: {
+    //       authorizationType: AuthorizationType.API_KEY,
+    //       apiKeyConfig: {
+    //         expires: Expiration.after(Duration.days(365))
+    //       }
+    //     },
+    //   },
+    //   xrayEnabled: true,
+    //   logConfig: { excludeVerboseContent: true, fieldLogLevel: FieldLogLevel.ALL }, // remove later
+    // })
 
     new CfnOutput(this, "GraphQLAPIURL", { value: appsync.graphqlUrl })
     new CfnOutput(this, "GraphQLAPIKey", { value: appsync.apiKey || '' })
@@ -52,7 +61,7 @@ export class AppsyncStack extends Stack {
     new CfnOutput(this, `${props.name}-AppsyncId`, { value: appsync.apiId })
 
     new CfnOutput(this, `${props.name}-AppsyncArn`, {
-      value: appsync.arn,
+      value: appsync.resources.graphqlApi.arn,
       exportName: `${props.name}-AppsyncArn`
     })
 

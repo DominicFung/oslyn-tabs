@@ -5,7 +5,7 @@ import { ArrowsUpDownIcon, EyeIcon } from '@heroicons/react/24/solid'
 
 import { Song } from '@/../src/API'
 
-import { useState, Fragment } from 'react'
+import { useState } from 'react'
 import Review from '@/app/songs/(edit)/review'
 
 export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
@@ -33,7 +33,6 @@ export default function KeySelector(p: KeySelectorProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

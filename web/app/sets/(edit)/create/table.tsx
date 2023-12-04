@@ -5,7 +5,7 @@ import { JamSong, SetList, Song, User } from "@/../src/API"
 import { Listbox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/solid'
 
-import { useEffect, useState, Fragment } from "react"
+import { useEffect, useState } from "react"
 import Save from "../../(components)/save"
 import EditSlides from "../../(components)/editSlides"
 
@@ -138,7 +138,6 @@ export default function CreateSetTable(p: CreateSetTableProps) {
                         </Listbox.Button>
                         <Transition
                           show={open}
-                          as={Fragment}
                           enter="transition ease-in-out duration-100"
                           enterFrom="opacity-0"
                           enterTo="opacity-100"

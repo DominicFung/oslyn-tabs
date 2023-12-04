@@ -2,7 +2,6 @@
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment, useState, useEffect } from "react"
 
 export interface SlidesProps {
   textSize: string
@@ -31,7 +30,6 @@ export default function Slides(p: SlidesProps) {
           </Listbox.Button>
           <Transition
             show={open}
-            as={Fragment}
             enter="transition ease-in-out duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"

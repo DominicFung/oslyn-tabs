@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-import { Amplify, API, graphqlOperation } from 'aws-amplify'
-import { GraphQLResult } from "@aws-amplify/api"
-import awsConfig from '@/../src/aws-exports'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from "aws-amplify/api"
+import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
 import { SetList } from '@/../src/API'
@@ -18,14 +18,15 @@ export async function POST(request: Request) {
   console.log(`${request.method} ${request.url}`)
   const b = await request.json() as UpdateSetRequest
 
-  Amplify.configure(awsConfig)
+  Amplify.configure(amplifyconfig)
+  const client = generateClient()
 
   const setListId = request.url.split("set/")[1].split("/update")[0]
   console.log(`setListId: ${setListId}`)
 
-  const d = await API.graphql(graphqlOperation(
-    m.updateSet, { ...b, setListId }
-  )) as GraphQLResult<{ updateSet: SetList }>
+  const d = await client.graphql({ 
+    query: m.updateSet, variables: { ...b, setListId }
+  }) as GraphQLResult<{ updateSet: SetList }>
 
   if (!d.data?.updateSet) {
     console.error(`updateSet data is empty: ${JSON.stringify(d.data)}`)

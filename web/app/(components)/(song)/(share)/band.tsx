@@ -4,7 +4,7 @@ import { Band, Song } from "@/../src/API"
 
 import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
-import { Fragment, useState } from "react"
+import { useState } from "react"
 
 import Image from "next/image"
 import { ShareBandRequest } from "@/app/api/share/song/route"
@@ -62,7 +62,6 @@ export default function Bands(p: BandProps) {
             </Listbox.Button>
             <Transition
               show={open}
-              as={Fragment}
               enter="transition ease-in-out duration-100"
               enterFrom="opacity-0"
               enterTo="opacity-100"
