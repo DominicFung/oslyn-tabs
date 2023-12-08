@@ -1,7 +1,6 @@
 import { OslynPhrase } from "oslyn-core/types"
 import { getChordByNumber } from "oslyn-core/oslyn"
-import { findVowels, insert, locations, substituteString } from "oslyn-core/utils/frontend"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'
 import { randomUUID } from "expo-crypto"

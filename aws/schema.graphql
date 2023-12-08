@@ -5,7 +5,7 @@ schema {
 }
 
 type Query {
-  getSong(songId: ID!, userId: ID!): Song @aws_iam
+  getSong(songId: ID!, userId: ID!, bandId: ID): Song @aws_iam
   getSongCount(userId: ID!, addSharedCount:Boolean): Int! @aws_iam
   listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   listSharedSongs(userId: ID!, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam

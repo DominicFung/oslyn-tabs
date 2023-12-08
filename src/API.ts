@@ -38127,6 +38127,7 @@ export type ExitJamMutation = {
 export type GetSongQueryVariables = {
   songId: string,
   userId: string,
+  bandId?: string | null,
 };
 
 export type GetSongQuery = {

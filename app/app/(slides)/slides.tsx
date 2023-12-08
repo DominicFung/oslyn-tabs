@@ -1,6 +1,6 @@
 import { chordSheetToSlides } from "oslyn-core/oslyn"
 import { OslynSlide } from "oslyn-core/types"
-import { Song } from "@src/API"
+import { Song } from "oslyn-src/API"
 import { useEffect, useState } from "react"
 import Line from "./line"
 

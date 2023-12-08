@@ -8,8 +8,8 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
-export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!) {
-  getSong(songId: $songId, userId: $userId) {
+export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, $bandId: ID) {
+  getSong(songId: $songId, userId: $userId, bandId: $bandId) {
     songId
     title
     artist

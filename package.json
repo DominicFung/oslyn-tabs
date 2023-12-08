@@ -1,4 +1,4 @@
 {
   "private": true,
-  "workspaces": ["app", "aws", "web", "oslyn-core"]
+  "workspaces": ["app", "aws", "web", "oslyn-core", "src"]
 }

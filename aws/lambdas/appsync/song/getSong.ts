@@ -3,13 +3,14 @@ import { BatchGetItemCommand, DynamoDBClient, GetItemCommand } from '@aws-sdk/cl
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring } from '../../util/dynamo'
 
-import { _User, _Song } from '../../type'
+import { _User, _Song, _Band } from '../../type'
 
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
+const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  songId: string, userId: string
+  songId: string, userId: string, bandId?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -34,7 +35,22 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (song.userId === b.userId) authorized = true
   else if (song.editorIds && song.editorIds.includes(b.userId)) authorized = true
   else if (song.viewerIds && song.viewerIds.includes(b.userId)) authorized = true
-  
+
+  if (b.bandId) {
+    const res0 = await dynamo.send(
+      new GetItemCommand({
+        TableName: BAND_TABLE_NAME,
+        Key: { bandId: { S: b.bandId } }
+      })
+    )
+    if (!res0.Item) { console.error(`ERROR: band for bandId not found: ${b.bandId}`); return }
+    const band = unmarshall(res0.Item!) as _Band
+    
+    // either, this band is PUBLIC_VIEW / PUBLIC_JOIN and so you can SEE the song.
+    // OR you are an admin of this band, PRIVATE
+    if (band.policy === "PUBLIC_VIEW" || band.policy === "PUBLIC_JOIN") authorized = true
+  }
+
   if (!authorized) { console.error("unauthorized"); return }
 
   if (hasSubstring(event.info.selectionSetList, "creator")) {
