@@ -36,7 +36,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   else if (song.editorIds && song.editorIds.includes(b.userId)) authorized = true
   else if (song.viewerIds && song.viewerIds.includes(b.userId)) authorized = true
 
-  if (b.bandId) {
+  if (b.bandId && !authorized) {
     const res0 = await dynamo.send(
       new GetItemCommand({
         TableName: BAND_TABLE_NAME,

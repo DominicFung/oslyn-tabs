@@ -10,12 +10,9 @@ import Edit from "./edit"
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
-import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
 
-type _Session = Session & {
-  userId: string
-}
+import { _Session } from '@/core/utils/frontend'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 

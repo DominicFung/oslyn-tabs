@@ -18,33 +18,34 @@ import { SongPreviewContextProvider } from "./context"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function CreateJam({ params }: { params: { id: string } }) {
+export default async function CreateJam(context: any) {
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
   const userId = (session?.user as _Session)?.userId
 
-  if (!params.id) { throw `Jam Submission SongId: ${params.id} Not Provided.` }
-  const songId = params.id
+  if (!context.params.id) { throw `Jam Submission SongId: ${context.params.id} Not Provided.` }
+  const songId = context.params.id
   console.log(`PAGE: /jam/start/song/${songId}`)
 
-  const req = {
-    headers: {
-      cookie: headers().get('cookie'),
-    },
-  }
+  const bandId = context.searchParams.band || ""
+  const req = { headers: { cookie: headers().get('cookie') } }
   const client = generateClient()
   let d = null as Song | null
 
   try {
     const { data } = await client.graphql({ 
-      query: q.getSong, variables: { songId: params.id as string, userId }
+      query: q.getSong, variables: { 
+        songId: context.params.id as string, userId,
+        bandId: bandId
+      }
     }) as GraphQLResult<{  getSong: Song }>
     console.log(data)
     if (data?.getSong) d = data.getSong
     else throw new Error("No song found")
   } catch (e) {
     console.log(JSON.stringify(e, null, 2))
+    return <Unauth />
   }
 
   return <>

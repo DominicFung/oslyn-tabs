@@ -46,7 +46,7 @@ export default function BandComponent(p: BandProps) {
       </button> }
     </div>
   </section>
-  <SongTable user={p.user} songs={p.band.songs as Song[] || []} type="own" />
+  <SongTable bandId={p.band.bandId} user={p.user} songs={p.band.songs as Song[] || []} type="own" />
   <div className="mx-5 z-10 relative">
     <p className="mt-8 mb-1 mx-5 text-xs text-gray-500 font-semibold dark:text-gray-400 uppercase">
       Admins

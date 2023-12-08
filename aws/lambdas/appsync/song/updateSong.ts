@@ -48,6 +48,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   let updateSong = {...b} as any
   if (updateSong.songId) delete updateSong.songId
+  if (updateSong.userId) delete updateSong.userId
 
   const params = updateDynamoUtil({ table: SONG_TABLE_NAME, item: updateSong, key: { songId: b.songId } })
   const res1 = await dynamo.send(new UpdateItemCommand(params))
