@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import { save, createSheet } from "@/core/pdf"
 
 export interface SongTableProps {
-  bandId: string,
+  bandId?: string,
   user: User|null
   songs?: Song[]
   type: "own" | "share"
@@ -76,7 +76,7 @@ export default function SongTable(p: SongTableProps) {
                     {i+1}
                   </ClickableCell>
                 
-                  <ClickableCell href={`/songs/edit/${a.songId}?band=${p.bandId}`} className="px-6 py-4 text-ellipsis">
+                  <ClickableCell href={`/songs/edit/${a.songId}${p.bandId?`?band=${p.bandId}`:""}`} className="px-6 py-4 text-ellipsis">
                     <div className="flex flex-row">
                       { a.albumCover && <div className="m-auto w-16">
                           <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> 
@@ -88,16 +88,16 @@ export default function SongTable(p: SongTableProps) {
                       </div>
                     </div>
                   </ClickableCell>
-                  <ClickableCell href={`/songs/edit/${a.songId}?band=${p.bandId}`} className="px-6 py-4 hidden sm:table-cell">
+                  <ClickableCell href={`/songs/edit/${a.songId}${p.bandId?`?band=${p.bandId}`:""}`} className="px-6 py-4 hidden sm:table-cell">
                     {a.chordSheetKey}
                   </ClickableCell>
-                  <ClickableCell href={`/songs/edit/${a.songId}?band=${p.bandId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
+                  <ClickableCell href={`/songs/edit/${a.songId}${p.bandId?`?band=${p.bandId}`:""}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
                     {a.album}
                   </ClickableCell>
                 
                 <td className="px-6 py-4">
                   <div className="flex flex-row">
-                    <a href={`/songs/preview/${a.songId}?band=${p.bandId}`}>
+                    <a href={`/songs/preview/${a.songId}${p.bandId?`?band=${p.bandId}`:""}`}>
                       <button type="button" className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2 hidden">
                         <EyeIcon className="w-4 h-4 mt-1" />
                       </button>
