@@ -55,6 +55,8 @@ export async function POST(request: Request) {
   const song = d.data.createSong as Song 
   const needStorage = b.arrayBuffer != undefined
 
+  console.log("at Needs Storage")
+
   if (needStorage) {
     let s3Config = { region: "us-east-1" } as S3ClientConfig
     if (process.env.NODE_ENV === 'development') { 
@@ -67,6 +69,8 @@ export async function POST(request: Request) {
 
     let s3 = new S3Client(s3Config)
     let img = uint8ArrayToArrayBuffer(b.arrayBuffer as any)
+
+    console.log(img)
 
     const res1 = await s3.send(
       new PutObjectCommand({
