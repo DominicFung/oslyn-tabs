@@ -8,6 +8,9 @@
     "build": "webpack --progress --config webpack.prod.js"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "aws-amplify": "^6.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "ts-loader": "^9.5.1"

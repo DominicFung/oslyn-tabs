@@ -7,9 +7,15 @@
     "48": "icon.png",
     "128": "icon.png"
   },
+  "host_permissions": [
+    "http://localhost:3000/*", "https://tabs.oslyn.io/*"
+  ],
   "action": {
     "default_title": "Click Me",
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "options_page": "options.html",
   "content_scripts": [

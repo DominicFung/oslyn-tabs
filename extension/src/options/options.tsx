@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
-import '../assets/popup.css'
+import '../assets/tailwind.css'
 
 const test = <div>
   <h1 className='text-3xl text-purple-200'>Options</h1>

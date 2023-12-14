@@ -1,13 +1,33 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import React, { useEffect, useState } from "react"
+import Login from "./components/login"
+import { Session } from './types'
+import CreateSong from "./components/create";
 
-import '../assets/popup.css'
+const Popup = () => {
+  const [ session, setSession ] = useState<Session>()
 
-const test = <div>
-  <h1 className='text-3xl text-purple-200'>Hello World</h1>
-</div>
+  useEffect(() => {
+    chrome.runtime.sendMessage(
+      {action: 'AUTH_CHECK'},
+      (session) => {    
+          if (session) {
+              //user is logged in
+              console.log(session)
+              setSession(session)
+          } else {
+              //no session means user not logged in
+              chrome.tabs.create({
+                  url: 'http://localhost:3000/login'
+                }); 
+          }
+      }
+  )
+  }, [])
 
-const container = document.createElement('div')
-document.body.appendChild(container)
-const root = createRoot(container)
-root.render(test)
+  return <div style={{width: 448}} className="bg-white shadow dark:bg-gray-700">
+    {!session && <Login /> }
+    { session && <CreateSong session={session} /> }
+  </div>
+};
+
+export default Popup;
