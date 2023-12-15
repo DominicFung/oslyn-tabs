@@ -14,8 +14,7 @@ export default function Sidebar () {
   const path = usePathname()
   const searchParams = useSearchParams()
   
-  const { openSidebar, setOpenSidebar } = useSideBarContext()
-  const [ openLogin, setOpenLogin ] = useState(false)
+  const { openSidebar, setOpenSidebar, openLogin, setOpenLogin } = useSideBarContext()
   const [ notice, setNotice ] = useState(true)
 
   const [ songCount, setSongCount ] = useState(0)

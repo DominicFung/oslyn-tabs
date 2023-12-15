@@ -7,9 +7,6 @@ import amplifyconfig from '@/../src/amplifyconfiguration.json'
 import * as m from '@/../src/graphql/mutations'
 import { SetList } from '@/../src/API'
 
-// TODO Remove
-const _generalUserId = "3d7fbd91-14fa-41da-935f-704ef74d7488"
-
 export interface UpdateSetRequest {
  description?: string, songs?: { key: string, songId: string }[]
 }

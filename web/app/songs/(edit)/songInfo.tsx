@@ -1,5 +1,5 @@
 "use client"
-import { TrashIcon, ArrowsUpDownIcon, SparklesIcon } from '@heroicons/react/24/solid'
+import { TrashIcon, ArrowsUpDownIcon, SparklesIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -10,6 +10,7 @@ import Image from 'next/image'
 interface SongProps {
   song: Song,
   setSong: (s: Song) => void
+  searchSpotify?: (title: string, artist: string) => void
 }
 
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
@@ -135,10 +136,10 @@ export default function Song(p: SongProps) {
         <div className="relative w-full mt-2">
           <input className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
             value={p.song.album || ""}  placeholder="Album" onChange={(e) => p.setSong({ ...p.song, album: e.currentTarget.value })}/>
-          <button onClick={() => { p.setSong({ ...p.song, album: ""}) }}
+          <button onClick={() => { if (p.searchSpotify) p.searchSpotify(p.song.title, p.song.artist || "") }}
             className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800"
           >
-            <TrashIcon className="w-6 h-6" />
+            <MagnifyingGlassIcon className="w-6 h-6" />
           </button>
         </div>
       </div>
