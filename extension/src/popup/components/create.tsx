@@ -4,26 +4,54 @@ import { Session, SongRequest } from '../types'
 import { Listbox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon } from '@heroicons/react/24/solid'
 
+import amplifyconfig from '../../../../src/amplifyconfiguration.json'
+import * as m from '../../../../src/graphql/mutations'
+import { Amplify } from 'aws-amplify'
+import { GraphQLResult, generateClient } from 'aws-amplify/api'
+
 interface CreateProps {
   session: Session
 }
 
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
+const supported = [
+  "https://tabs.ultimate-guitar.com/tab/"
+]
+
+Amplify.configure(amplifyconfig)
 
 export default function CreateSong(p: CreateProps) {
 
-  const [ loading, setLoading ] = useState(false)
-
-  // song
+  const [ currentTab, setCurrentTab ] = useState<chrome.tabs.Tab>()
   const [ song, setSong ] = useState<SongRequest>({ title: "", chordSheet: "", chordSheetKey: "C", artist: "" })
+  const [ isSupported, setSupported ] = useState(false)
+  const client = generateClient()
+
+  useEffect(() => { getCurrentTab() }, [p.session])
 
   useEffect(() => {
-    
-  }, [])
+    if (!currentTab) return
+    console.log(currentTab)
 
-  const createSong = async () => {
-    console.log("createSong")
-    setLoading(true)
+    const url = currentTab.url
+    console.log(url)
+    if (!url) return
+
+    for (const s of supported) {
+      if (url.startsWith(s)) { 
+        setSupported(true); getSong(); return 
+      }
+    }
+    setSupported(false)
+  }, [currentTab])
+
+  const getCurrentTab = async () => {
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true})
+    setCurrentTab(tab)
+  }
+
+  const getSong = async () => {
+    console.log("getSong")
 
     const tabs = await chrome.tabs.query({active: true, currentWindow: true})
     console.log(tabs)
@@ -41,9 +69,30 @@ export default function CreateSong(p: CreateProps) {
           chordSheetKey: "C",
           artist: s.artist
         }) }
-
       }
     )
+  }
+
+  const createSong = async () => {
+    if (!p.session.user.userId || !song.chordSheet) { console.error("userId or chordsheet not found."); return }
+    const data = await client.graphql({
+      query: m.createSong, variables: {
+        title: song.title,
+        userId: p.session.user.userId,
+        chordSheet: song.chordSheet,
+        chordSheetKey: song.chordSheetKey,
+        artist: song.artist
+      }
+    })
+
+    if (!data) { console.error('gql did not return'); return }
+    console.log(data)
+
+    const songId = data.data.createSong.songId
+    if (!songId) { console.error('songId not available'); return }
+    console.log(songId)
+
+    chrome.tabs.create({ url : `https://tabs.oslyn.io/songs/edit/${songId}?new=true`})
   }
 
 
@@ -133,15 +182,23 @@ export default function CreateSong(p: CreateProps) {
             </code>
 
           <span className="space-y-2">
-            <button onClick={createSong}
-                className="w-full flex flex-row text-white bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
-                  <div className='flex-1' />
-                  <div className="px-10 py-2.5" >Copy</div>
-                  <div className='flex-1' />
-            </button>
+            { !song.chordSheet ? 
+              <button onClick={getSong} disabled={!isSupported}
+                  className="w-full flex flex-row text-oslyn-600 dark:text-white dark:disabled:text-gray-400 bg-oslyn-700 hover:bg-oslyn-800 disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:disabled:bg-gray-800  dark:focus:ring-oslyn-800">
+                    <div className='flex-1' />
+                    <div className="px-10 py-2.5" >Copy</div>
+                    <div className='flex-1' />
+              </button>:
+              <button onClick={createSong} disabled={!isSupported || song.chordSheet === "" || song.title === ""}
+                  className="w-full flex flex-row text-oslyn-600 dark:text-white dark:disabled:text-gray-400 bg-oslyn-700 hover:bg-oslyn-800 disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:disabled:bg-gray-800 dark:focus:ring-oslyn-800">
+                    <div className='flex-1' />
+                    <div className="px-10 py-2.5">Create</div>
+                    <div className='flex-1' />
+              </button>
+            }
 
             <div className="pt-4 text-sm font-medium text-gray-500 dark:text-gray-300">
-                How does this work? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
+                Not copying the right stuff anymore? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Report</a>
             </div>
 
           </span>

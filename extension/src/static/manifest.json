@@ -10,6 +10,7 @@
   "host_permissions": [
     "http://localhost:3000/*", "https://tabs.oslyn.io/*"
   ],
+  "permissions": [ "activeTab" ], 
   "action": {
     "default_title": "Click Me",
     "default_popup": "popup.html"

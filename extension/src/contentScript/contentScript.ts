@@ -35,7 +35,9 @@ function getChordSheetText(url: string) {
 
 function getSongTitle(url: string) {
   if (url.startsWith("https://tabs.ultimate-guitar.com/tab/")){
-    return document.getElementsByTagName("h1")[0].textContent
+    let title = document.getElementsByTagName("h1")[0].textContent
+    if (title.trim().endsWith("Chords")) title = title.split("Chords")[0]
+    return title
   }
 
   return ""
