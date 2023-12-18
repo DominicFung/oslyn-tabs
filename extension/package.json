@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack --watch --progress --config webpack.dev.js",
-    "build": "webpack --progress --config webpack.prod.js"
+    "build": "webpack --progress --config webpack.prod.js && zip -vr oslyn.zip dist/"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",

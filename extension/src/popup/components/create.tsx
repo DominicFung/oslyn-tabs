@@ -13,6 +13,8 @@ interface CreateProps {
   session: Session
 }
 
+const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://tabs.oslyn.io"
+
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 const supported = [
   "https://tabs.ultimate-guitar.com/tab/"
@@ -92,7 +94,7 @@ export default function CreateSong(p: CreateProps) {
     if (!songId) { console.error('songId not available'); return }
     console.log(songId)
 
-    chrome.tabs.create({ url : `https://tabs.oslyn.io/songs/edit/${songId}?new=true`})
+    chrome.tabs.create({ url : `${host}/songs/edit/${songId}?new=true`})
   }
 
 
@@ -177,7 +179,7 @@ export default function CreateSong(p: CreateProps) {
 
             <code className="block w-full mb-4 text-xs space-x-4 bg-gray-800 text-white rounded-lg p-4 pl-6">
               <pre style={{ fontFamily: `"Roboto Mono", "Courier New", monospace;`}}>
-              {song.chordSheet.split("\n").map(str => <p className="min-h-[1.5em]">{str}</p>)}
+              {song.chordSheet.split("\n").map((str, i) => <p key={i} className="min-h-[1.5em]">{str}</p>)}
               </pre>
             </code>
 

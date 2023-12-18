@@ -1,8 +1,10 @@
+const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://tabs.oslyn.io"
+
 chrome.runtime.onMessage.addListener(
   function (request, sender, onSuccess) {
     if (request.action === "AUTH_CHECK") {
-      console.log("running check")
-      fetch("http://localhost:3000/api/auth/session", {
+      console.log(`Oslyn AUTH_CHECK on ${host}`)
+      fetch(`${host}/api/auth/session`, {
           mode: 'cors',
       })
         .then(response => response.json())

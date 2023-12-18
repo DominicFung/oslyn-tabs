@@ -3,6 +3,8 @@ import Login from "./components/login"
 import { Session } from './types'
 import CreateSong from "./components/create";
 
+const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://tabs.oslyn.io"
+
 const Popup = () => {
   const [ session, setSession ] = useState<Session>()
 
@@ -17,7 +19,7 @@ const Popup = () => {
           } else {
               //no session means user not logged in
               chrome.tabs.create({
-                  url: 'http://localhost:3000/login'
+                  url: `${host}/songs?login=true`
                 }); 
           }
       }
