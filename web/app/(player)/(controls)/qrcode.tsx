@@ -13,7 +13,7 @@ export default function QrCode() {
   const [ addLogin, setAddLogin ] = useState(true)
 
   return <>
-    <div className="ml-3 text-sm font-normal">
+    <div className="ml-3 text-sm font-normal overflow-auto">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">QR Code</div>
       <div className="pb-3 text-sm font-normal">Quickly share this jam sessions with your friends!</div> 
 
@@ -28,7 +28,7 @@ export default function QrCode() {
         </div>
       </div>
 
-      <div className="max-h-[calc(100vh-10rem)] overflow-auto pl-2 pr-6">
+      <div className="max-h-[calc(100vh-20rem)] pl-2 pr-6">
         {mounted && <div className='mx-auto w-[170px] flex flex-row'>
         <div className="mt-16 mr-6 text-lg font-normal text-gray-900 dark:text-gray-50">Slides</div>
           <QRCode value={`${window.location.href}/slides`}

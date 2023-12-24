@@ -11,11 +11,11 @@ export interface UsersProps {
 
 export default function Users(p: UsersProps) {
   return <>
-    <div className="ml-3 text-sm font-normal">
+    <div className="ml-3 text-sm font-normal overflow-auto">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Active Users</div>
       <div className="pb-3 text-sm font-normal">Use this to monitor active users.</div> 
 
-      <div className="max-h-[calc(100vh-10rem)] overflow-auto">
+      <div className="max-h-[calc(100vh-10rem)]">
       <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         { p.users.map((e, i) => {
           if (e.participantType === "GUEST") {

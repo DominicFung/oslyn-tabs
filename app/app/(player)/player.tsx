@@ -1,7 +1,7 @@
 import { ZenObservable } from "zen-observable-ts"
 
 import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 
 import { default as PlayerSlides } from "./slides"
 
@@ -18,7 +18,23 @@ import {
 } from "oslyn-src/API"
 
 import amplifyconfig from 'oslyn-src/amplifyconfiguration.json'
+import Controls from "./controls"
 Amplify.configure(amplifyconfig)
+
+const chordsData = [
+  { label: 'A', value: 'A' },
+  { label: 'Bb', value: 'Bb' },
+  { label: 'B', value: 'B' },
+  { label: 'C', value: 'C' },
+  { label: 'C#', value: 'C#' },
+  { label: 'D', value: 'D' },
+  { label: 'Eb', value: 'Eb' },
+  { label: 'E', value: 'E' },
+  { label: 'F', value: 'F' },
+  { label: 'F#', value: 'F#' },
+  { label: 'G', value: 'G' },
+  { label: 'Ab', value: 'Ab' },
+]
 
 export interface PlayerProps {
   jam: JamSession, 
@@ -265,5 +281,27 @@ export default function Player(p: PlayerProps){
         textSize={textSize} complex={complex} headsUp={headsUp}
       />
     }
-    </View>
+
+    { songs && !p.isSlideShow &&
+      <Controls 
+        jamSessionId={p.jam.jamSessionId}
+        capo={{ capo:`${0-transpose}`, setCapo }} 
+        song={{ song, setSong: setNextSong, songs: songs as JamSong[] }} 
+        sKey={{ skey: sKey, setKey }}
+        display={{ textSize, setTextSize, 
+          auto: false, setAuto: () => {}, 
+          complex, setComplex,
+          headsUp, setHeadsUp
+        }}
+        slides={{
+          textSize: slideTextSize,
+          setTextSize: setJamConfig
+        }}
+        users={{
+          active: active as Participant[],
+          removeActive: () => {}
+        }}
+      /> 
+    }
+  </View>
 }

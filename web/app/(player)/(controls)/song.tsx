@@ -8,11 +8,11 @@ interface SongProps {
 }
 
 export default function Song(p: SongProps) {
-  return <div className="ml-3 text-sm font-normal">
+  return <div className="ml-3 text-sm font-normal overflow-auto">
     <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Song</div>
     <div className="pb-3 text-sm font-normal">Choose a new Song! <br /><span className="text-xs italic">Note: this affects everyone in the session.</span></div> 
 
-    <div className="max-h-[calc(100vh-10rem)] overflow-auto">
+    <div className="max-h-[calc(100vh-10rem)]">
       <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         { p.songs.map((e, i) => 
           <li className="max-w-xs py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i} onClick={() => { console.log("clicked"); p.setSong(i) }}>
