@@ -359,6 +359,8 @@ PODS:
   - React-jsinspector (0.72.6)
   - React-logger (0.72.6):
     - glog
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-get-random-values (1.9.0):
     - React-Core
   - react-native-netinfo (9.5.0):
@@ -530,6 +532,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-blur (from `../../node_modules/@react-native-community/blur`)"
   - react-native-get-random-values (from `../../node_modules/react-native-get-random-values`)
   - "react-native-netinfo (from `../../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
@@ -638,6 +641,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../../node_modules/react-native/ReactCommon/logger"
+  react-native-blur:
+    :path: "../../node_modules/@react-native-community/blur"
   react-native-get-random-values:
     :path: "../../node_modules/react-native-get-random-values"
   react-native-netinfo:
@@ -727,6 +732,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3bf18ff7cb03cd8dfdce08fbbc0d15058c1d71ae
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
   react-native-netinfo: 48c5f79a84fbc3ba1d28a8b0d04adeda72885fa8
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89

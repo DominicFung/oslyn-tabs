@@ -10,6 +10,7 @@ export interface LineProps {
   skey: string
   transpose: number
   onMaxWidth: (w: number) => void
+  loaded: boolean
 
   secondary?: boolean
   textSize?: string
@@ -63,7 +64,7 @@ export default function Line(p: LineProps) {
   return <>
     { phrase && phrase.lyric.trim() != "" && <View className="relative h-12 mt-6">
       <View>
-        { phrase.chords.map((c, i) => { 
+        {p.loaded && phrase.chords.map((c, i) => { 
           const chord = getChordByNumber(c.chord, c.isMinor, p.skey) || ""
           const s = sum(widths, i);
 
@@ -96,7 +97,6 @@ export default function Line(p: LineProps) {
           }
         </Text>
       </View>
-
     </View> }
   </>
 }

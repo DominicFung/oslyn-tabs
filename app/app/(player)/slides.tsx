@@ -13,6 +13,10 @@ import Svg, { Path } from 'react-native-svg'
 import Constants from 'expo-constants'
 import { addOrientationChangeListener, lockAsync, Orientation, OrientationLock, removeOrientationChangeListener } from 'expo-screen-orientation'
 
+import { BlurView } from "@react-native-community/blur"
+
+const AVERAGE_LINE_H = 45
+
 interface SlidesProps {
   song: Song
   skey?: string
@@ -41,8 +45,11 @@ export default function Slides(p: SlidesProps) {
   const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
-  const setPage = (n: number) => { setMaxWidth(0); if (p.setPage) p.setPage(n); else _setPage(n) }
-  useEffect(() => { setMaxWidth(0); _setPage(p.page || 0) }, [p.page])
+  const [ loading, setLoading ] = useState(false)
+  const setPage = (n: number) => { if (p.setPage) p.setPage(n); else _setPage(n); }
+  useEffect(() => { _setPage(p.page || 0); setLoading(true) }, [p.page])
+  /** NOTE: DELAY needed to wait for page to render, THEN fix width. This is an ugly solution, but I cannot find a better one :( */
+  useEffect(() => { setTimeout(() => { setMaxWidth(0); setLoading(false) }, 500) }, [page])
 
   const [maxWidth, setMaxWidth] = useState(0)
   
@@ -51,9 +58,6 @@ export default function Slides(p: SlidesProps) {
   const [ o, setO ] = useState(Orientation.PORTRAIT_UP as Orientation)
 
   useEffect(() => { 
-    // setW(Dimensions.get('window').width)
-    // setH(Dimensions.get('window').height)
-
     changeScreenOrientation()
     const sub = addOrientationChangeListener((e) => {
       setO(e.orientationInfo.orientation || 0)
@@ -98,19 +102,21 @@ export default function Slides(p: SlidesProps) {
   
 
   return <>
-    <View className="bg-blue-400 flex flex-row align-middle justify-center"
+    <View className="flex flex-row align-middle justify-center"
       style={{ height: h, width: w }}
     >
-      <View className="flex-1 bg-blue-200" />
-      <View className={`bg-purple-300`} style={{
-        width: maxWidth ? maxWidth : w
+      <View className="flex-1" />
+      <View /*className={`bg-purple-300`}*/ style={{
+        width: maxWidth ? maxWidth : w, paddingTop: (h/2) - 
+        (AVERAGE_LINE_H * (slides?.pages ? slides?.pages[page]?.lines.length : 0) ) -
+        ( p.headsUp ?  AVERAGE_LINE_H  : 0 )
       }}>
         { slides?.pages[page] && <View>
           { slides?.pages && slides?.pages[page]?.lines[0] && <Text className="text-gray-500 text-sm italic bold">
             {slides?.pages && slides?.pages[page].lines[0].section}
           </Text> }
           { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => 
-            <Line key={i} onMaxWidth={onMaxWidth} phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
+            <Line key={i} onMaxWidth={onMaxWidth} phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"} decorate={p.complex || false} loaded={!loading}/>
           )}
 
           { p.headsUp && <View className="h-20" /> }
@@ -119,12 +125,12 @@ export default function Slides(p: SlidesProps) {
             {slides?.pages && slides?.pages[page].extra?.section}
           </Text> }
           { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <View>
-            <Line onMaxWidth={onMaxWidth} phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false}/>
+            <Line onMaxWidth={onMaxWidth} phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false} loaded={!loading}/>
           </View> }
         </View> }
 
       </View>
-      <View className="flex-1 bg-blue-200" />
+      <View className="flex-1" />
     </View>
 
     {/* Buttons */}
@@ -176,6 +182,11 @@ export default function Slides(p: SlidesProps) {
       </View> }
 
     </View>
+    { loading && <BlurView
+      style={{ width: w, height: h, position: "absolute" }}
+      blurType="dark"
+      blurAmount={3}
+    /> }
   </>
 }
 
