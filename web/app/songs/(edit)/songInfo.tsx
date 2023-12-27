@@ -1,5 +1,5 @@
 "use client"
-import { TrashIcon, ArrowsUpDownIcon, SparklesIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { TrashIcon, ArrowsUpDownIcon, SparklesIcon } from '@heroicons/react/24/solid'
 
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -136,14 +136,21 @@ export default function Song(p: SongProps) {
         <div className="relative w-full mt-2">
           <input className="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500" 
             value={p.song.album || ""}  placeholder="Album" onChange={(e) => p.setSong({ ...p.song, album: e.currentTarget.value })}/>
-          <button onClick={() => { if (p.searchSpotify) p.searchSpotify(p.song.title, p.song.artist || "") }}
+          <button onClick={() => { p.setSong({ ...p.song, album: "" }) }}
             className="hidden sm:block text-white absolute right-2.5 bottom-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800"
           >
-            <MagnifyingGlassIcon className="w-6 h-6" />
+            <TrashIcon className="w-6 h-6" />
           </button>
         </div>
       </div>
     </div>
+    <button onClick={() => { if (p.searchSpotify) p.searchSpotify(p.song.title, p.song.artist || "") } }
+        disabled={ !p.song.title || !p.song.artist }
+        className="mx-4 w-[calc(100%-1rem)] flex flex-row text-white bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800 disabled:bg-gray-400 disabled:dark:bg-gray-600">
+          <div className='flex-1' />
+          <div className="px-10 py-2.5" >Auto Populate</div>
+          <div className='flex-1' />
+    </button>
   </div>
 
   <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${albumOpen?"":"hidden"} fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-gray-900/75`}>

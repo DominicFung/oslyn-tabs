@@ -1,11 +1,12 @@
 "use client"
 
-import { ArrowsUpDownIcon } from "@heroicons/react/24/solid"
+import { ArrowsUpDownIcon, EyeIcon } from "@heroicons/react/24/solid"
 import { Listbox, Transition } from '@headlessui/react'
 
 export interface KeyProps {
   skey: string
   setKey:  (capo: string) => void
+  togglePreview?: () => void
 }
 
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
@@ -69,7 +70,17 @@ export default function Key(p: KeyProps) {
           </>
         )}
         </Listbox>
-      </div>  
+      </div>
+        
+      { p.togglePreview && <div className="py-5">
+        <button onClick={p.togglePreview}
+          className="w-full flex flex-row text-white bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-0.5 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
+            <div className='flex-1' />
+            <EyeIcon className="ml-10 m-2 w-6 h-6" />
+            <div className="pr-10 py-2.5" >Toggle View</div>
+            <div className='flex-1' />
+        </button>
+      </div> }
     </div>
   </>
 }

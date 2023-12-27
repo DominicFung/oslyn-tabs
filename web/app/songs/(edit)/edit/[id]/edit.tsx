@@ -44,18 +44,32 @@ export default function Edit(p: EditProps) {
     if (tracks.items.length < 1) return
     const album = tracks.items[0].album
 
-    let s = {...song}
-    if (!song.album) s.album = album.name
-    if (!song.albumCover) s.albumCover = album.images[0].url
+    setSong((song) => {
+      let s = { ...song }
+      if (!song.album) s.album = album.name
+      if (!song.albumCover) s.albumCover = album.images[0].url
+      return s
+    })
+  }
 
-    setSong(s)
+  const cleanChordSheet = async (id: string) => {
+    const cs = await (await fetch(`/api/song/${id}/clean/chordsheet`)).json()
+    console.log(`NEW CHORD SHEET`)
+    console.log(cs)
+    if (cs.choices[0]) {
+      if (cs.choices[0].message.content) 
+        setSong((song) => { 
+          return {...song, chordSheet: cs.choices[0].message.content}
+        })
+    }
   }
 
   useEffect(() => {
     console.log("in useEffect")
     if (searchParams.get("new") != "true") return
-    if (!song.title || !song.artist) return
+    if (!song.title || !song.artist || !song.songId) return
     searchSpotify(song.title, song.artist)
+    cleanChordSheet(song.songId)
   }, [])
 
   return <div className="text-white w-full h-screen flex flex-col">

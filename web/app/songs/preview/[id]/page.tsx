@@ -14,7 +14,7 @@ import { authOptions } from "@/core/auth"
 import Unauth from "@/app/unauthorized"
 
 import { _Session } from "@/core/utils/frontend"
-import { SongPreviewContextProvider } from "./context"
+import Views from "./views"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
@@ -49,22 +49,6 @@ export default async function CreateJam(context: any) {
   }
 
   return <>
-    <SongPreviewContextProvider>
-      <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
-        <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
-            <Image src={d?.albumCover || ""} alt={""} width={192} height={192} className="w-48 m-2 mx-auto" />
-            <div className="mt-6">
-              <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-gray-100">{d?.title}</h1>
-              <p className="mb-4 text-lg font-normal text-gray-500 lg:text-lg dark:text-blue-300">
-                {d?.artist} - {d?.album}
-              </p>
-            </div>
-        </div>
-        <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-0 left-0 z-0"></div>
-      </section>
-      <div>
-        {d && <KeySelector song={d} />}
-      </div>
-    </SongPreviewContextProvider>
+      { d && <Views song={d} /> }
   </>
 }

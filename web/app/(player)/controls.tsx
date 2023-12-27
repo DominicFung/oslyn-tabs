@@ -24,6 +24,7 @@ export interface ControlsProp {
   sKey?: {
     skey: string
     setKey: (s: string) => void
+    togglePreview?: () => void
   }
   display?: {
     textSize: string
@@ -48,6 +49,7 @@ export interface ControlsProp {
     removeActive: (s: string) => void
   }
   
+  qrCode?: boolean
   pt?: boolean | undefined
 }
 
@@ -61,19 +63,24 @@ export default function Controls(p: ControlsProp) {
     { name: "Text", disabled: false },
     { name: "QR", disabled: false },
     { name: "Slides", disabled: false },
-    { name: "Users", disabled: false }
+    { name: "Users", disabled: false },
   ])
 
   useEffect(() => {
-    setOptions([
+    const ops = [
       { name: "Song", disabled: !p.song || !p.song.songs || !p.song.setSong },
       { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
-      { name: "QR", disabled: false },
+      { name: "QR", disabled: p.qrCode || true },
       { name: "Slides", disabled: p.users ? false : true },
-      { name: "Users", disabled: false }
-    ])
+      { name: "Users", disabled: !p.users }
+    ]
+    setOptions(ops)
+
+    for (let i=0; i<ops.length; i++) {
+      if (!ops[i].disabled) { setOption(i); return }
+    }
   }, [p])
 
   const [ option, setOption ] = useState(0)
@@ -86,7 +93,7 @@ export default function Controls(p: ControlsProp) {
           <div className="flex flex-col sm:flex-row">
             <div className="flex-shrink-0 sm:flex hidden flex-col space-y-2 mr-4">
               {options.map((o, i) => 
-                <button key={i} disabled={o.disabled} onClick={() => setOption(i)}
+                o.disabled ? <></> : <button key={i} disabled={o.disabled} onClick={() => setOption(i)}
                   className={`px-4 py-2 shadow-md text-oslyn-500 bg-oslyn-100 rounded-md ${option === i ? "dark:text-white dark:bg-oslyn-800" : "dark:text-oslyn-300 dark:bg-oslyn-900"} dark:disabled:text-gray-400 dark:disabled:bg-gray-600`}>
                   {o.name}
                 </button>
@@ -104,18 +111,18 @@ export default function Controls(p: ControlsProp) {
             </div>
 
             <>
-              { option === 0 && <Song song={p.song!.song} setSong={(n) => {p.song!.setSong(n); setOpen(false)}} songs={p.song!.songs}  /> }
-              { option === 1 && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} /> }
-              { option === 2 && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
-              { option === 3 && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 
+              { option === 0 && p.song && <Song song={p.song!.song} setSong={(n) => {p.song!.setSong(n); setOpen(false)}} songs={p.song!.songs}  /> }
+              { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
+              { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
+              { option === 3 && p.display && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 
                                     auto={p.display!.auto} setAuto={p.display!.setAuto} 
                                     complex={p.display!.complex} setComplex={p.display!.setComplex}
                                     fullScreen={p.display!.fullScreen} setFullScreen={p.display!.setFullScreen}
                                     headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
                                 /> }
-              { option === 4 && <QrCode /> }
-              { option === 5 && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
-              { option === 6 && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
+              { option === 4 && p.qrCode && <QrCode /> }
+              { option === 5 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
+              { option === 6 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
             </>
             <button type="button" className="hidden sm:inline-flex ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => setOpen(false)}

@@ -409,6 +409,7 @@ export default function Player(p: PlayerProps) {
           active: active as Participant[],
           removeActive: () => {}
         }}
+        qrCode={true}
       /> 
     }
     { isFullScreenEnabled && p.isSlideShow && !fullScreen && <button onClick={() => setFullScreen(true)}

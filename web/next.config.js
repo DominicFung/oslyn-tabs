@@ -1,26 +1,15 @@
 /** @type {import('next').NextConfig} */
-const withInterceptStdout = require('next-intercept-stdout');
+// const withInterceptStdout = require('next-intercept-stdout');
 const path = require("path")
+
+const withMDX = require('@next/mdx')()
 
 const nextConfig = {
   webpack: (config, options) => {
     config.resolve.alias['aws-crt'] = path.resolve(__dirname, 'node_modules/aws-crt')
     return config
   },
-  // async headers() {
-  //   return [
-  //     {
-  //         // matching all API routes
-  //         source: "/api/:path*",
-  //         headers: [
-  //             { key: "Access-Control-Allow-Credentials", value: "true" },
-  //             { key: "Access-Control-Allow-Origin", value: "chrome-extension://*" }, // replace this your actual origin
-  //             { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT" },
-  //             { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
-  //         ]
-  //     }
-  //   ]
-  // },
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
@@ -52,4 +41,5 @@ const nextConfig = {
   reactStrictMode: false
 }
 
-module.exports = withInterceptStdout(nextConfig, (text) => (text.includes('Critical dependency: the request of a dependency is an expression') ? '' : text))
+// module.exports = withInterceptStdout(nextConfig, (text) => (text.includes('Critical dependency: the request of a dependency is an expression') ? '' : text))
+module.exports = withMDX(nextConfig)
