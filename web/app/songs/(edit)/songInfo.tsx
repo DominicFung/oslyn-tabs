@@ -32,7 +32,7 @@ export default function Song(p: SongProps) {
   })
   
   const [ albumOpen, setAlbumOpen ] = useState(false)
-  const [ albumLink, setAlbumLink ] = useState("")
+  const [ albumLink, setAlbumLink ] = useState(p.song.albumCover || "")
 
   return <>
   <div className='mx-auto max-w-4xl cursor-pointer'>

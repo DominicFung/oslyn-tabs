@@ -1,12 +1,15 @@
 "use client"
 
+import { useSideBarContext } from "@/app/context"
+
 export interface TabsProps {
   step: number
   setStep: (step: number) => void
 }
 
 export default function Tabs({ step, setStep}: TabsProps ) {
-  return <>
+  const { openSidebar } = useSideBarContext()
+  return <div className={!openSidebar ? "ml-20":"ml-2"}>
     <ol className="m-4 flex items-center p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4">
       <li className={`flex items-center ${step === 0 && "text-oslyn-600 dark:text-oslyn-400"}`}>
           <button className='flex flex-row' onClick={() => setStep(0)}>
@@ -29,5 +32,5 @@ export default function Tabs({ step, setStep}: TabsProps ) {
         </button>
       </li>
     </ol>
-  </>
+  </div>
 }

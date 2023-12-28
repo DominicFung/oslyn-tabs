@@ -150,22 +150,23 @@ export default function Slides(p: SlidesProps) {
       </div> }
     </div>
     <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden sm:flex sm:flex-row":"ml-0 w-full flex flex-row"}`}>
-      { page > 0 ? <button className="flex-1" onClick={() => setPage(page-1)}>
-        <div className={`w-32 flex justify-center items-center ${p.pt?"h-[calc(100%-90px)]":"h-screen"}`} style={{
+      { page > 0 ? <button className={`flex-1 ${p.pt && "fixed left-0 top-0 mt-24 h-[calc(100%-90px)]"} ${p.pt && openSidebar && "ml-64"}`}
+      onClick={() => setPage(page-1)}>
+        <div className={`w-32 flex justify-center items-center ${p.pt?"h-full":"h-screen"}`} style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))"
         }}>
           <ChevronLeftIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> : <div className="flex-1" /> }
-      { slides && slides?.pages.length-1 > page ? <button className="flex-1 flex flex-row-reverse" onClick={() => setPage(page+1)}>
-        <div className={`w-32 flex justify-center items-center ${p.pt?"h-[calc(100%-90px)]":"h-screen"}`} style={{
+      { slides && slides?.pages.length-1 > page ? <button className={`flex-1 flex flex-row-reverse ${p.pt && "fixed right-0 top-0 mt-24 h-[calc(100%-90px)]"}`} onClick={() => setPage(page+1)}>
+        <div className={`w-32 flex justify-center items-center ${p.pt?"h-full":"h-screen"}`} style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0), rgba(95,40,212,0.5))"
         }}>
           <ChevronRightIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> : <div className="flex-1" /> }
     </div>
-    {page === 0 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
+    {page <= 7 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">
         {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
         <div className="m-2">

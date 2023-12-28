@@ -2,10 +2,11 @@
 
 import { Song } from "@/../src/API"
 import { useEffect, useState } from "react"
+
 import PasteTabs from "../../pasteTabs"
 import SongInfo from "../../songInfo"
+import Review from "../../review"
 
-import Slides from "@/app/(player)/slides"
 import Save from "../../(components)/save"
 import Tabs from "../../(components)/tabs"
 
@@ -33,6 +34,8 @@ export default function Edit(p: EditProps) {
   const [ step, setStep ] = useState(0)
   const [ song, setSong ] = useState(p.song)
 
+  const [ loading, setLoading ] = useState(false)
+
   const searchSpotify = async (title: string, artist: string) => {
     if (!title || !artist) return
     const { tracks } = await (await fetch(`/api/spotify`, {
@@ -53,12 +56,14 @@ export default function Edit(p: EditProps) {
   }
 
   const cleanChordSheet = async (id: string) => {
+    setLoading(true)
     const cs = await (await fetch(`/api/song/${id}/clean/chordsheet`)).json()
     console.log(`NEW CHORD SHEET`)
     console.log(cs)
     if (cs.choices[0]) {
       if (cs.choices[0].message.content) 
         setSong((song) => { 
+          setLoading(false)
           return {...song, chordSheet: cs.choices[0].message.content}
         })
     }
@@ -68,9 +73,11 @@ export default function Edit(p: EditProps) {
     console.log("in useEffect")
     if (searchParams.get("new") != "true") return
     if (!song.title || !song.artist || !song.songId) return
+
+    window.history.pushState("", "", `/songs/edit/${p.song.songId}`)
     searchSpotify(song.title, song.artist)
     cleanChordSheet(song.songId)
-  }, [])
+  }, [p.song])
 
   return <div className="text-white w-full h-screen flex flex-col">
     <div className="flex-0">
@@ -80,8 +87,8 @@ export default function Edit(p: EditProps) {
     <div className="flex-1 p-4">
       { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { console.log(t); setSong({ ...song, chordSheet: t }) }} /> }
       { step === 1 && <SongInfo song={song} setSong={setSong} searchSpotify={searchSpotify}/>}
-      { step === 2 && <Slides song={song} pt={true} /> }
+      { step === 2 && <Review song={song} /> }
     </div>
-    <Save song={song} type="update"/>
+    <Save song={song} type="update" loading={loading}/>
   </div>
 }

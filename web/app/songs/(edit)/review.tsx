@@ -4,7 +4,8 @@ import { chordSheetToOslynSong, convertOslynSongToPages } from "@/core/oslyn"
 import { OslynSong } from "@/core/types"
 import { Song } from "@/../src/API"
 import { useEffect, useState } from "react"
-import Line from "../../(player)/line"
+import Slides from "@/app/(player)/slides"
+import { useTheme } from "next-themes"
 
 interface ReviewProps {
   song: Song
@@ -12,6 +13,16 @@ interface ReviewProps {
 }
 
 export default function Review(p: ReviewProps) {
+  const { theme } = useTheme()
+  const [ localTheme, setLocalTheme ] = useState("light")
+  useEffect(() => {
+    if (theme) setLocalTheme(theme)
+    else {
+      const a = localStorage.getItem('oslynTheme') || "light"
+      if (a && a != "false") { setLocalTheme(a) }
+    }
+  } , [theme])
+
   const [oslynSong, setOslynSong] = useState<OslynSong>()
   
   useEffect(() => {
@@ -27,9 +38,9 @@ export default function Review(p: ReviewProps) {
     }
   }, [p.song])
 
-  return <div>
-    { oslynSong?.song && oslynSong?.song.map((a, i) => <div key={i}>
-      <Line key={i} phrase={a} skey={p.skey || p.song.chordSheetKey || "C"} transpose={0}/>
-    </div>)}
-  </div>
+  return <>
+    { oslynSong?.song && <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
+      { p.song && <Slides song={p.song} pt={true} /> }
+    </div> }
+  </>
 }
