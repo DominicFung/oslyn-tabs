@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { getUsernameInitials } from "oslyn-core/utils/frontend";
-import { Participant } from "oslyn-src/API"
+import { getUsernameInitials } from "../../../core/utils/frontend";
+import { Participant } from "../../../src/API"
 import {Text, View, Image, Pressable, ScrollView } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 // import { Cog6ToothIcon } from "@heroicons/react/24/solid"
-import { JamSong, Participant } from "oslyn-src/API"
+import { JamSong, Participant } from "../../src/API"
 
 import Songs from "./(controls)/song"
 import Key from "./(controls)/key"

@@ -1,8 +1,7 @@
 import React from 'react'
 
 import { useState, useEffect } from "react"
-import { useTheme } from "next-themes"
-import { capitalizeFirstLetter } from "oslyn-core/utils/frontend"
+import { capitalizeFirstLetter } from "../../../core/utils/frontend"
 
 import {Text, View, Pressable, StyleSheet } from 'react-native'
 
@@ -38,10 +37,10 @@ const textSizes = [
 const MODE = ["dark", "light", "system"]
 
 export default function Display(p: DisplayProps) {
-  const { theme, setTheme } = useTheme()
   const [isFocus, setIsFocus] = useState(true)
 
   //const [mounted, setMounted] = useState(false)
+  const theme = "light"; const setTheme = (m: string) => {  }
   const [ mode, setMode ] = useState(theme || "dark")
 
   //useEffect(() => { setMounted(true) }, [])

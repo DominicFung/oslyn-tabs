@@ -1,5 +1,5 @@
 import React from 'react'
-import { JamSong, Song } from "oslyn-src/API"
+import { JamSong, Song } from "../../../src/API"
 import {Text, View, Image, Pressable, Dimensions, ScrollView } from 'react-native'
 
 interface SongProps {

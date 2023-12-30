@@ -6,7 +6,8 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "bitcode":false,
+    "bitcode": false,
+    "entryPoint": "./index.js",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
-      "bundleIdentifier": "com.oslyn.tabs"
+      "bundleIdentifier": "TJR9Q2Q4KU.com.oslyn.tabs"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.oslyn.tabs"
     },
     "web": {
       "favicon": "./assets/favicon.png"

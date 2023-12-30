@@ -18,3 +18,9 @@ npx expo run:ios --device
 ```
 fastlane beta
 ```
+
+### Prebuild
+
+```
+npx expo prebuild --platform ios
+```

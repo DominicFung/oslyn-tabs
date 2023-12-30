@@ -1,7 +1,7 @@
-import { ZenObservable } from "zen-observable-ts"
+import ZenObservable from "zen-observable-ts"
 
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View } from 'react-native'
 
 import { default as PlayerSlides } from "./slides"
 
@@ -10,14 +10,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from 'aws-amplify/api'
 
-import * as s from 'oslyn-src/graphql/subscriptions'
-import * as m from 'oslyn-src/graphql/mutations'
+import * as s from '../../src/graphql/subscriptions'
+import * as m from '../../src/graphql/mutations'
 import { 
   JamSession, JamSong, Participant, User, NextPageMutation, 
   SetSongKeyMutation, SetJamSlideConfigMutation 
-} from "oslyn-src/API"
+} from "@/src/API"
 
-import amplifyconfig from 'oslyn-src/amplifyconfiguration.json'
+import amplifyconfig from '../../src/amplifyconfiguration.json'
 import Controls from "./controls"
 Amplify.configure(amplifyconfig)
 

@@ -5,10 +5,10 @@ import React, { View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 
-import { JamSession, Song, User } from '../src/API';
-import * as q from 'oslyn-src/graphql/queries'
+import { JamSession } from './src/API'
+import * as q from './src/graphql/queries'
 
-import Player from './app/(player)/player';
+import Player from './app/(player)/player'
 
 import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from 'aws-amplify/api'
@@ -16,10 +16,10 @@ import { GraphQLResult, generateClient } from 'aws-amplify/api'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ThemeProvider, createTheme } from '@rneui/themed'
 
-import amplifyconfig from 'oslyn-src/amplifyconfiguration.json'
+import amplifyconfig from './src/amplifyconfiguration.json'
 Amplify.configure(amplifyconfig)
 
-const localTheme = "light"
+// const localTheme = "light"
 
 const theme = createTheme({
   components: {
@@ -60,6 +60,7 @@ export default function App() {
       </LinearGradient>
     </ThemeProvider>
   </SafeAreaProvider>)
+  //return <View></View>
 }
 
 

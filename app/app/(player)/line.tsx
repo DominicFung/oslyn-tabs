@@ -1,5 +1,5 @@
-import { OslynPhrase } from "oslyn-core/types"
-import { getChordByNumber } from "oslyn-core/oslyn"
+import { OslynPhrase } from "../../core/types"
+import { getChordByNumber } from "../../core/oslyn"
 import React, { useEffect, useState } from "react"
 
 import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'

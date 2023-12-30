@@ -1,10 +1,10 @@
-import { chordSheetToSlides } from "oslyn-core/oslyn"
-import { OslynSlide } from "oslyn-core/types"
-import { Song } from "oslyn-src/API"
+import { chordSheetToSlides } from "../../core/oslyn"
+import { OslynSlide } from "../../core/types"
+import { Song } from "../../src/API"
 import React, { useEffect, useState } from "react"
 import Line from "./line"
 
-import { transpose as trans } from "oslyn-core/oslyn"
+import { transpose as trans } from "../../core/oslyn"
 import {Text, View, Image, Pressable, Dimensions } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 

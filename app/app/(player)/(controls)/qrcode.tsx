@@ -1,7 +1,6 @@
 import React from 'react'
 
 import QRCode from 'react-native-qrcode-svg'
-import { useTheme } from "next-themes"
 import { useEffect, useState } from 'react'
 
 import {Text, View, Image, Pressable, Dimensions, ScrollView } from 'react-native'
@@ -14,7 +13,7 @@ interface QrCodeProps {
 }
 
 export default function QrCode(p: QrCodeProps) {
-  const { theme } = useTheme()
+  let theme = "light"; const setTheme = (m: string) => {  }
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => { setMounted(true) }, [])
