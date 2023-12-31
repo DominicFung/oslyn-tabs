@@ -1,4 +1,4 @@
-import { App, CfnOutput, Duration, Expiration, Fn, Stack } from 'aws-cdk-lib'
+import { App, CfnOutput, Duration, Fn, Stack } from 'aws-cdk-lib'
 // import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
@@ -37,7 +37,8 @@ export class AppsyncStack extends Stack {
       definition: AmplifyGraphqlDefinition.fromFiles(path.join(__dirname, "../", 'schema.graphql')),
       authorizationModes: {
         apiKeyConfig: { expires: Duration.days(365) }
-      }
+      },
+      
     })
 
     // const appsync = new GraphqlApi(this, `${props.name}-Appsync`, {

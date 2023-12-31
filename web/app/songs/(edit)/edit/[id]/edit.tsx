@@ -2,6 +2,7 @@
 
 import { Song } from "@/../src/API"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 import PasteTabs from "../../pasteTabs"
 import SongInfo from "../../songInfo"
@@ -11,6 +12,9 @@ import Save from "../../(components)/save"
 import Tabs from "../../(components)/tabs"
 
 import { useSearchParams } from "next/navigation"
+import { SongUpdateRequest } from "@/app/api/song/[id]/update/route"
+
+import Revert from "../../(components)/revert"
 
 export interface EditProps {
   song: Song
@@ -30,10 +34,13 @@ interface SpotifyTracks {
 }
 
 export default function Edit(p: EditProps) {
+  const router = useRouter()
   const searchParams = useSearchParams()
+
   const [ step, setStep ] = useState(0)
   const [ song, setSong ] = useState(p.song)
 
+  const [ oldChordSheet, setOldChordSheet ] = useState("")
   const [ loading, setLoading ] = useState(false)
 
   const searchSpotify = async (title: string, artist: string) => {
@@ -64,9 +71,25 @@ export default function Edit(p: EditProps) {
       if (cs.choices[0].message.content) 
         setSong((song) => { 
           setLoading(false)
+          setOldChordSheet(song.chordSheet || "")
           return {...song, chordSheet: cs.choices[0].message.content}
         })
     }
+  }
+
+  const updateSong = async () => {
+    if (!song.songId) { console.error("songId not available"); return }
+    const data = await (await fetch(`/api/song/${song?.songId}/update`, {
+      method: "POST",
+      body: JSON.stringify({...p.song} as SongUpdateRequest)
+    })).json() as Song
+    console.log(data)
+    router.push(`/songs`)
+  }
+
+  const setChordSheet = async (chordSheet: string) => {
+    setSong((prev) => { return { ...prev, chordSheet } })
+    setOldChordSheet("")
   }
 
   useEffect(() => {
@@ -90,5 +113,6 @@ export default function Edit(p: EditProps) {
       { step === 2 && <Review song={song} /> }
     </div>
     <Save song={song} type="update" loading={loading}/>
+    <Revert oldChordSheet={oldChordSheet} newChordSheet={p.song.chordSheet||""} setChordSheet={setChordSheet} />
   </div>
 }
