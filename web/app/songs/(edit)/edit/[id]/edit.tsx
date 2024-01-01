@@ -71,8 +71,11 @@ export default function Edit(p: EditProps) {
       if (cs.choices[0].message.content) 
         setSong((song) => { 
           setLoading(false)
+          const content = cs.choices[0].message.content as string
           setOldChordSheet(song.chordSheet || "")
-          return {...song, chordSheet: cs.choices[0].message.content}
+          if (content.length < 20 && content.toLowerCase().includes("no change")) {
+            return song
+          } else return {...song, chordSheet: content}
         })
     }
   }

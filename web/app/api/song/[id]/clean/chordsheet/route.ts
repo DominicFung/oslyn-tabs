@@ -50,21 +50,30 @@ export async function GET(request: Request) {
   const song = d.data.getSong
   const csText = song.chordSheet || ""
 
-  const chordsheet = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages: [
-      { 
-        role: "system", 
-        content: `User will be providing text that represent lyrics and chords of a song. 
-        The text also contain section headers (ie. Intro, Verse 1, Chorus, etc.). 
-        Make sure that all section headers start and end with square brackets.
-        Remove all comments in the text, (these may be in the form of commentary or description of musical dynamics.)` 
-      },
-      { role: "user",   content: csText }
-    ]
-  })
+  let chordsheet = null
 
-  console.log(chordsheet)
+  try {
+    chordsheet = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        { 
+          role: "system", 
+          content: `User will be providing text that represent lyrics and chords of a song. 
+          The text also contain section headers (ie. Intro, Verse 1, Chorus, etc.). 
+          Make sure that all section headers start and end with square brackets.
+          Remove all comments in the text, (these may be in the form of commentary or description of musical dynamics.)
+          If there is an "X" at the end, remove it. If theres nothing to change, say "no change".`
+        },
+        { role: "user",   content: csText }
+      ]
+    })
+  
+    console.log(chordsheet)
+  } catch (e) {
+    console.error("ChatGPT Error")
+    console.error(e)
+    return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
+  }
 
   console.log(`${request.method} ${request.url} .. complete`)
   return NextResponse.json(chordsheet)
