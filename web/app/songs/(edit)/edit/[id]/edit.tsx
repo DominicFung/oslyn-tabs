@@ -64,7 +64,16 @@ export default function Edit(p: EditProps) {
 
   const cleanChordSheet = async (id: string) => {
     setLoading(true)
-    const cs = await (await fetch(`/api/song/${id}/clean/chordsheet`)).json()
+    let cs:any = null
+    
+    try {
+      cs = await (await fetch(`/api/song/${id}/clean/chordsheet`)).json()
+    } catch(e) {
+      console.error(e)
+      setLoading(false)
+      return
+    }
+    
     console.log(`NEW CHORD SHEET`)
     console.log(cs)
     if (cs.choices[0]) {
@@ -78,16 +87,6 @@ export default function Edit(p: EditProps) {
           } else return {...song, chordSheet: content}
         })
     }
-  }
-
-  const updateSong = async () => {
-    if (!song.songId) { console.error("songId not available"); return }
-    const data = await (await fetch(`/api/song/${song?.songId}/update`, {
-      method: "POST",
-      body: JSON.stringify({...p.song} as SongUpdateRequest)
-    })).json() as Song
-    console.log(data)
-    router.push(`/songs`)
   }
 
   const setChordSheet = async (chordSheet: string) => {
