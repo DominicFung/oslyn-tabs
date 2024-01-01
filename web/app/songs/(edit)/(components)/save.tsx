@@ -174,7 +174,7 @@ export default function Save(p: SaveProps) {
                 {...attributes.popper}
               >
                 <div
-                  className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                  className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 text-gray-700 dark:text-gray-100"
                   onMouseEnter={onMouseEnter.bind(null, open)}
                   onMouseLeave={onMouseLeave.bind(null, open)}
                 >
