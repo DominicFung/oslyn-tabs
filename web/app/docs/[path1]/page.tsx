@@ -1,7 +1,8 @@
 "use client"
 import { usePathname } from 'next/navigation'
 
-import Login from './login.mdx'
+import Introduction from './introduction.mdx'
+import FirstSong from './first-song.mdx'
 
 
 export default function DocsMain() {
@@ -10,7 +11,8 @@ export default function DocsMain() {
   return <main className="p-5">
     <div className='article container mx-auto max-w-4xl mt-10 mb-20'>
       <article className='prose dark:prose-invert max-w-none prose-xl'>
-        { pathname === "/docs/login" && <Login /> }
+        { pathname === "/docs/introduction" && <Introduction /> }
+        { pathname === "/docs/first-song" && <FirstSong /> }
       </article>
     </div>
   </main>
