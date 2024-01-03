@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 
 import Introduction from './introduction.mdx'
 import FirstSong from './first-song.mdx'
-
+import SetList from './set-list.mdx'
 
 export default function DocsMain() {
   const pathname = usePathname()
@@ -13,6 +13,7 @@ export default function DocsMain() {
       <article className='prose dark:prose-invert max-w-none prose-xl'>
         { pathname === "/docs/introduction" && <Introduction /> }
         { pathname === "/docs/first-song" && <FirstSong /> }
+        { pathname === "/docs/set-list" && <SetList />}
       </article>
     </div>
   </main>
