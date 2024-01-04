@@ -72,7 +72,7 @@ export default function Controls(p: ControlsProp) {
       { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
       { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
-      { name: "QR", disabled: p.qrCode || true },
+      { name: "QR", disabled: p.qrCode ? false : true },
       { name: "Slides", disabled: p.users ? false : true },
       { name: "Users", disabled: !p.users }
     ]
