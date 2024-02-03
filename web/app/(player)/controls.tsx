@@ -78,8 +78,16 @@ export default function Controls(p: ControlsProp) {
     ]
     setOptions(ops)
 
-    for (let i=0; i<ops.length; i++) {
-      if (!ops[i].disabled) { setOption(i); return }
+    // if option is disabled, we want to choose a new option
+    if (ops[option].disabled) {
+      for (let i=option; i<ops.length; i++) {
+        if (!ops[i].disabled) { setOption(i); return }
+      }
+
+      // if you make it here, it means everything in front was disabled, lets try backwards
+      for (let i=option; i>=0; i--) {
+        if (!ops[i].disabled) { setOption(i); return }
+      }
     }
   }, [p])
 

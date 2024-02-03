@@ -9,7 +9,7 @@ interface BandCardProps {
 
 export default function BandCard(p: BandCardProps) {
   return <div className="bg-white border w-full border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-  <a href={`/band/${p.band.bandId}`}>
+  <a href={`/bands/${p.band.bandId}`}>
       <Image className="p-4 rounded-t-lg" src={p.band.imageUrl||""} width={500} height={500} alt="product image" />
   </a>
   <div className="px-4 pb-4 w-full">

@@ -11,6 +11,7 @@ import Image from "next/image"
 
 import { transpose as trans } from "@/core/oslyn"
 import { useSideBarContext } from "@/app/context"
+import Recorder from "./recorder2"
 
 interface SlidesProps {
   song: Song
@@ -44,9 +45,7 @@ export default function Slides(p: SlidesProps) {
     else _setPage(n)
   }
 
-  useEffect(() => {
-    _setPage(p.page || 0)
-  }, [p.page])
+  useEffect(() => { _setPage(p.page || 0) }, [p.page])
 
   useEffect(() => {
     let baseKey = p.skey || p.song.chordSheetKey || "C"
@@ -175,5 +174,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
+    { slides && <Recorder slides={slides} page={page} /> }
   </>
 }

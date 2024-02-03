@@ -30,6 +30,14 @@ export class DynamoStack extends Stack {
       }
     })
 
+    recordingTable.addGlobalSecondaryIndex({
+      indexName: 'userId',
+      partitionKey: {
+        name: 'userId',
+        type: AttributeType.STRING
+      }
+    })
+
     new CfnOutput(this, `${props.name}-RecordingTable-Name`, {
       value: recordingTable.tableName,
       exportName: `${props.name}-RecordingTable-Name`
@@ -125,6 +133,43 @@ export class DynamoStack extends Stack {
     new CfnOutput(this, `${props.name}-BandTable-Arn`, {
       value: bandTable.tableArn,
       exportName: `${props.name}-BandTable-Arn`
+    })
+
+    const bandUserRoleTable = new Table(this, `${props.name}-BandUserRoleTable`, {
+      tableName: `${props.name}-BandUserRoleTable`,
+      partitionKey: {
+        name: `roleId`,
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    bandUserRoleTable.addGlobalSecondaryIndex({
+      indexName: 'band',
+      partitionKey: {
+        name: 'bandId',
+        type: AttributeType.STRING
+      }
+    })
+
+    bandUserRoleTable.addGlobalSecondaryIndex({
+      indexName: 'user',
+      partitionKey: {
+        name: "userId",
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-BandUserRoleTable-Name`, {
+      value: bandUserRoleTable.tableName,
+      exportName: `${props.name}-BandUserRoleTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-BandUserRoleTable-Arn`, {
+      value: bandUserRoleTable.tableArn,
+      exportName: `${props.name}-BandUserRoleTable-Arn`
     })
 
     const setListTable = new Table(this, `${props.name}-SetListTable`, {

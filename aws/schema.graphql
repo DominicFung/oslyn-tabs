@@ -16,6 +16,7 @@ type Query {
   
   getBand(bandId: ID!, userId: ID): Band @aws_iam
   listBands(userId: ID!, limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
+  listSharedBands(userId: ID!, limit: Int, filter: String, nextToken: String): [UserBandRole]! @aws_iam
   listPublicBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
   getSet(setListId: ID!, userId: ID!): SetList @aws_iam
@@ -100,6 +101,12 @@ type Mutation {
 
   enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String): JamSessionActiveUsers
   exitJam(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
+
+  createRecording(
+    userId: ID!
+    songId: ID!
+    samplingRate: Int
+  ): Recording @aws_iam
 }
 
 type Subscription {
@@ -112,7 +119,6 @@ type Subscription {
   onExitJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["exitJam"])
 }
 
-enum recordingStatus { TOLABEL INAUDIT COMPLETE }
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
 enum provider { google, facebook }
@@ -151,15 +157,23 @@ type Band {
   songs: [Song]!
   sets: [SetList]!
 
-  members: [User]!
-  admins: [User]!  
+  # members: [User]!
+  # admins: [User]!  
   owner: User!
-
   policy: policy!
+  userRoles: [UserBandRole]
+}
+
+type UserBandRole {
+  roleId: ID!
+  user: User!
+  band: Band!
+  role: bandRole!
 }
 
 enum policy { PRIVATE, PUBLIC_VIEW, PUBLIC_JOIN }
 enum participantType { USER, GUEST }
+enum bandRole { MEMBER, ADMIN }
 
 type SetList {
   setListId: ID!
@@ -294,54 +308,26 @@ type User {
   friends: [User]!
   labelledRecording: [Recording]!
   songsCreated: [Song]!
-  editHistory: [RecordingHistory]! 
   likedSongs: [JamSong]!
 
   bands: [Band] # bands that are associated to this user
 }
 
 enum role { USER, ADMIN }
-
-type RecordingHistory {
-  recordingHistoryId: ID!
-  recording: Recording!
-  labeller: User! 
-  date: AWSDateTime!
-  actionColumn: String!
-  previousAction: String!
-  newAction: String!
-  comment: String
-}
+enum labelStatus { REJECTED, INPROGRESS, DONE, TOLABEL, INAUDIT }
 
 type Recording {
   recordingId: ID!
-  songTitle: String
-  formId: String
-  song: Song
-  key: String
-
-  tabLink: String
-  rawTabs: String
+  songId: ID!
+  userId: ID!
   
-  prelabelTool: String
-  prelabelToolVersion: String
-  
-  labelTool: String
-  labelToolVersion: String
-  
-  labeller: User
-  isLabelerRejected: Boolean!
-  labelerRejectionReason: String
-
-  singerName: String
-  singerEmail: AWSEmail
-  gender: gender
-
-  status: recordingStatus!
-  editHistory: [RecordingHistory]!
+  status: labelStatus!
+  audioFile: String!
+  samplingRate: Int!
+  lyric: String!
   comment: String
 
-  createDate: String # This date comes from Google Forms
-  updateDate: AWSDateTime
-  lastOULGenerateDate: AWSDateTime
+  createDate: AWSTimestamp!
+  updateDate: AWSTimestamp
 }
+
