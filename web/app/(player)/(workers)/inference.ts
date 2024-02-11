@@ -33,8 +33,8 @@ class Whisper {
 
     const opt = {
         executionProviders: ["wasm"],
-        logSeverityLevel: 0,
-        logVerbosityLevel: 0
+        //logSeverityLevel: 0,
+        //logVerbosityLevel: 0
     } as ort.InferenceSession.SessionOptions
 
     console.log(`${self.location.protocol}//${self.location.hostname}${self.location.port?`:${self.location.port}`:""}/${url}`)
@@ -95,11 +95,9 @@ const ready = () => { }
 const update_status = (d: number) => {  }
 
 self.onmessage = async (e: MessageEvent<string>) => {
-  // if (!context) { console.error("audio context not initiated."); return }
   const p = JSON.parse(e.data) as Message
   console.log(p)
 
-  //transcribe_file(payload.audio, context, payload.oslynSlides, payload.page)
   transcribeAudio(decodeFloat32Str(p.buffer), p.oslynSlides, p.page)
 }
 
@@ -131,13 +129,6 @@ async function process_audio(audio: Float32Array, starttime: number, idx: number
       const ret = await sess.run(new ort.Tensor(xa, [1, xa.length]));
       const diff = performance.now() - start;
       update_status(diff);
-
-      // append results to textarea 
-      // setText((a) => { 
-      //   console.log(`page: ${p.page}`)
-      //   let ans = placementInSlide(ret.str.data[0] as string, p.slides, p.page)
-      //   return `${a}${ret.str.data[0]} ${JSON.stringify(ans)}\n` 
-      // })
 
       log(`TRANSCRIBED: ${ret.str.data[0]}`)
 

@@ -3,26 +3,32 @@
 import { MicrophoneIcon } from '@heroicons/react/24/solid'
 import { useMemo, useEffect, useState } from 'react'
 import { OslynSlide } from '@/core/types'
-import { Message } from './(workers)/ai';
+import { Message } from './(workers)/inference'
+
+import { S3Client, S3ClientConfig, PutObjectCommand } from '@aws-sdk/client-s3'
+import cdk from "@/cdk-outputs.json"
 
 const kSampleRate = 16000;
 const kIntervalAudio_ms = 1000;
-const kSteps = kSampleRate * 30;
-const kDelay = 100;
-const kModel = "models/onnx/v3/whisper_cpu_int8_cpu-cpu_model.onnx"
-
 const chunkLen = 4
 
+const pageTurnId = "page-turn"
+
 interface RecorderProps {
+  songId: string,
   slides: OslynSlide,
   page: number
 }
 
 export default function Recorder(p: RecorderProps) {
-  const aiWorker: Worker = useMemo(() => new Worker(new URL("./(workers)/ai.ts", import.meta.url )), [])
+  const aiWorker: Worker = useMemo(() => new Worker(new URL("./(workers)/inference.ts", import.meta.url )), [])
 
+  const sessionId = crypto.randomUUID()
   const [context, setContext] = useState<AudioContext|null>(null)
+
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder|null>(null)
+  const [mediaRecorder2, setMediaRecorder2] = useState<MediaRecorder|null>(null)
+
   const [timerStart, setTimerStart] = useState<number>(0)
   const [isRecording, setIsRecording] = useState(false)
   const [logText, setLogText] = useState("")
@@ -31,16 +37,73 @@ export default function Recorder(p: RecorderProps) {
   const log = (i: string) => { console.log(`[${performance.now().toFixed(2)}] ${i}`); setLogText((p) => { return `${p}\n[${performance.now().toFixed(2)}] ${i}` }) }
   const sleep = (ms: number) => { return new Promise(resolve => setTimeout(resolve, ms)) }
 
+  useEffect(() => {
+    if (mediaRecorder2 != null) { 
+      console.log(`adding event listener "${pageTurnId}"`)
+      document.body.addEventListener(pageTurnId, handlePageTurn) }
+    return document.body.removeEventListener(pageTurnId, handlePageTurn)
+  }, [mediaRecorder2])
+
+  const handlePageTurn = async (e: Event) => {
+    console.log("PAGE TURN!")
+    console.log(e)
+    if (!mediaRecorder2) { console.error("no media recorder 2, used to save audio for fine tuning"); return }
+    mediaRecorder2.stop()
+    await sleep(500)
+    mediaRecorder2.start()
+  }
+
   const getMicrophone = async () => {
-    if (mediaRecorder === null) {
+    if (mediaRecorder === null || mediaRecorder2 === null) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         setMediaRecorder(new MediaRecorder(stream))
+        setMediaRecorder2(new MediaRecorder(stream))
       } catch (e) {
         setIsRecording(false)
         log(`Access to Microphone, ${e}`);
       }
     }
+  }
+
+  const startRecord2 = async () => {
+    if (mediaRecorder2 === null) { log("ERROR no media recorder 2 found."); return }
+    if (!context) { log("ERROR no audio context found."); return }
+    setIsRecording(true)
+
+    let recording_start = performance.now();
+    setTimerStart(recording_start)
+    let chunks: BlobPart[] = [];
+
+    mediaRecorder2.ondataavailable = async (e) => { chunks.push(e.data) }
+
+    mediaRecorder2.onstop = async () => {
+      console.log("recorder 2 stop call")
+      const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+      log(`recorded ${((performance.now() - recording_start) / 1000).toFixed(1)}sec audio`);
+      saveAudio(p.songId, sessionId, blob)
+      chunks = []
+    }
+  }
+
+  const saveAudio = async (songId: string, sessionId: string, blob: Blob):Promise<any> => {
+    const s3 = new S3Client({
+      region: "us-east-1",
+      credentials: {
+        accessKeyId: cdk["oslynstudio-IamStack"].AccessKey, 
+        secretAccessKey: cdk["oslynstudio-IamStack"].SecretKey 
+      }
+    } as S3ClientConfig)
+
+    const file = new File([blob], "recording.opus", { type: 'audio/ogg; codecs=opus'})
+
+    const res1 = await s3.send(new PutObjectCommand({
+      Bucket: cdk["oslynstudio-S3Stack"].bucketName,
+      Key: `recordings/${songId}/${sessionId}/raw/recording.opus`,
+      Body: file
+    }))
+
+    return res1
   }
 
   const startRecord = async () => {
@@ -97,7 +160,9 @@ export default function Recorder(p: RecorderProps) {
 
     if (window.Worker) {
       getMicrophone()
-      startRecord()
+      //startRecord()
+
+      startRecord2()
     }
   }, [aiWorker])
 

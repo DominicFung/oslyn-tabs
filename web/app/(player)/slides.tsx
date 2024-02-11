@@ -13,6 +13,8 @@ import { transpose as trans } from "@/core/oslyn"
 import { useSideBarContext } from "@/app/context"
 import Recorder from "./recorder2"
 
+const pageTurnId = "page-turn"
+
 interface SlidesProps {
   song: Song
   skey?: string
@@ -41,6 +43,13 @@ export default function Slides(p: SlidesProps) {
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
   const setPage = (n: number) => {
+    console.log("call next page")
+    document.body.dispatchEvent(
+      new CustomEvent(pageTurnId, {
+        detail: { page: n }
+      })
+    )
+
     if (p.setPage) p.setPage(n)
     else _setPage(n)
   }
@@ -174,6 +183,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
-    { slides && <Recorder slides={slides} page={page} /> }
+    {/* slides && <Recorder songId={p.song.songId} slides={slides} page={page} /> */}
   </>
 }
