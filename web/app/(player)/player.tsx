@@ -26,6 +26,7 @@ import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 
 import toast, { Toaster } from 'react-hot-toast'
+import Recorder from "./recorder"
 
 export interface PlayerProps {
   jam: JamSession, 

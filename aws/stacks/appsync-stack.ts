@@ -23,6 +23,9 @@ export class AppsyncStack extends Stack {
     const bandDynamoName = Fn.importValue(`${props.name}-BandTable-Name`)
     const bandDynamoArn = Fn.importValue(`${props.name}-BandTable-Arn`)
 
+    const userBandRoleDynamoName = Fn.importValue(`${props.name}-BandUserRoleTable-Name`)
+    const userBandRoleDynamoArn = Fn.importValue(`${props.name}-BandUserRoleTable-Arn`)
+
     const setListDynamoName = Fn.importValue(`${props.name}-SetListTable-Name`)
     const setListDynamoArn = Fn.importValue(`${props.name}-SetListTable-Arn`)
 
@@ -91,7 +94,8 @@ export class AppsyncStack extends Stack {
             actions: [ "dynamodb:*" ],
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
-              `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`
+              `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`,
+              `${userBandRoleDynamoArn}*`
             ]
           }),
           new PolicyStatement({
@@ -112,7 +116,8 @@ export class AppsyncStack extends Stack {
         SONG_TABLE_NAME: songDynamoName,
         SETLIST_TABLE_NAME: setListDynamoName,
         JAM_TABLE_NAME: jamDynamoName,
-        INVITE_TABLE_NAME: inviteDynamoName
+        INVITE_TABLE_NAME: inviteDynamoName,
+        USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -307,6 +312,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-ListBandsResolver`, {
       typeName: "Query",
       fieldName: "listBands"
+    })
+
+    const listSharedBands = new NodejsFunction(this, `${props.name}-ListSharedBands`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listSharedBands.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListSharedBandsDS`, listSharedBands)
+    .createResolver(`${props.name}-ListSharedBandsResolver`, {
+      typeName: "Query",
+      fieldName: "listSharedBands"
     })
 
     const listPublicBands = new NodejsFunction(this, `${props.name}-ListPublicBands`, {

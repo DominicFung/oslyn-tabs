@@ -11,6 +11,9 @@ import Image from "next/image"
 
 import { transpose as trans } from "@/core/oslyn"
 import { useSideBarContext } from "@/app/context"
+import Recorder from "./recorder2"
+
+const pageTurnId = "page-turn"
 
 interface SlidesProps {
   song: Song
@@ -40,13 +43,18 @@ export default function Slides(p: SlidesProps) {
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
   const setPage = (n: number) => {
+    console.log("call next page")
+    document.body.dispatchEvent(
+      new CustomEvent(pageTurnId, {
+        detail: { page: n }
+      })
+    )
+
     if (p.setPage) p.setPage(n)
     else _setPage(n)
   }
 
-  useEffect(() => {
-    _setPage(p.page || 0)
-  }, [p.page])
+  useEffect(() => { _setPage(p.page || 0) }, [p.page])
 
   useEffect(() => {
     let baseKey = p.skey || p.song.chordSheetKey || "C"
@@ -175,5 +183,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
+    {/* slides && <Recorder songId={p.song.songId} slides={slides} page={page} /> */}
   </>
 }

@@ -95,7 +95,7 @@ export default function Sidebar () {
            </button>
         </li>
         <li>
-          <button onClick={() => router.push("/band")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
+          <button onClick={() => router.push("/bands")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
             path.startsWith('/band') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
           } disabled:dark:text-gray-500 disabled:text-gray-300`} disabled={status != "authenticated"}>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Bands</span>
@@ -116,7 +116,7 @@ export default function Sidebar () {
         <p className="mb-3 text-sm text-oslyn-800 dark:text-oslyn-200">
            This App is currently in Beta! Music brings people together and online tabs should reflect that! Help us make this app better by providing feedback.
         </p>
-        <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="#">Give Feedback!</a>
+        <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="https://github.com/DominicFung/oslyn-tabs/issues/new">Give Feedback!</a>
       </div> }
 
       <div className="flex-1" />
