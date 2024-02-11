@@ -180,7 +180,7 @@ export default function Recorder(p: RecorderProps) {
           <div className="px-6 py-6 lg:px-8">
               <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">Enable Audio for AI!</h3>
               <p className="mb-6 text-sm font-normal dark:text-gray-400 text-gray-800">
-                We're using AI to help you turn the page automatically! Please let us listen to your beautiful voice! 😊
+                We&apos;re using AI to help you turn the page automatically! Please let us listen to your beautiful voice! 😊
               </p>
               <span className="space-y-2">
 
@@ -193,7 +193,7 @@ export default function Recorder(p: RecorderProps) {
                 </button>
 
                 <div className="pt-4 text-sm font-medium text-gray-500 dark:text-gray-300">
-                  Why can't I use this tool without AI? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
+                  Why can&apos;t I use this tool without AI? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Instructions</a>
                 </div>
 
               </span>
