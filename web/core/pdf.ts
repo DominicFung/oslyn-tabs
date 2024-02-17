@@ -22,8 +22,7 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
   const pdfDoc = doc || await PDFDocument.create()
 
   const page = pdfDoc.addPage()
-  const song = chordSheetToOslynSong(s.chordSheet || "", key || s.chordSheetKey || "C")
-  console.log(song)
+  const song = chordSheetToOslynSong(s.chordSheet || "", s.chordSheetKey || "C")
 
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
   const timesRomanBoldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
@@ -48,6 +47,7 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
 
   const estimatedPLimit = (height - titlePaddingTop) / (fontSize + lyricPadding)
   const simp = oslynSimplifier(timesRomanFont, song.song, estimatedPLimit, width - (2 * paddingLeft) )
+  console.log(simp)
 
   // dw is the longest line in a section or note accumulated. 
   // We accumulate UNITL we MIGHT exceed page width (this means we're constantly looking forward ..)
@@ -55,6 +55,7 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
   for (let i=0; i<simp.length; i++) {
     if ((simp[i] as OslynPhrase).section) {
       const phrase = simp[i] as OslynPhrase
+      phrase.lyric = phrase.lyric.replaceAll(/\x0D/g, '')
       if (maxWidthPerSection[`${phrase.section}-${cs}`]) {
         maxWidthPerSection[`${phrase.section}-${cs}`].max = Math.max(maxWidthPerSection[`${phrase.section}-${cs}`].max, timesRomanItalicFont.widthOfTextAtSize(phrase.lyric, sectionFontSize))
         maxWidthPerSection[`${phrase.section}-${cs}`].lastline = i
@@ -171,13 +172,23 @@ export async function createSheet(s: Song, key?: string, doc?: PDFDocument): Pro
     dhMax = dhMax = Math.max(lyricPadding + timesRomanFont.heightAtSize(fontSize), dh)
     dh = dh + lyricPadding + timesRomanFont.heightAtSize(fontSize)
 
-    writeChordLine(timesRomanFont, page, {
-      size: fontSize,
-      font: timesRomanBoldFont,
-      x: dw,
-      y: h - dh,
-      color: rgb(17/255, 24/255, 39/255)
-    }, lyric, phrase.chords, key || s.chordSheetKey || "C")
+    console.log(key)
+    if (lyric.trim() != "")
+      writeChordLine(timesRomanFont, page, {
+        size: fontSize,
+        font: timesRomanBoldFont,
+        x: dw,
+        y: h - dh,
+        color: rgb(17/255, 24/255, 39/255)
+      }, lyric, phrase.chords, key || s.chordSheetKey || "C")
+    else 
+      writeChordLineNoLyric(timesRomanFont, page, {
+        size: fontSize,
+        font: timesRomanBoldFont,
+        x: dw,
+        y: h - dh,
+        color: rgb(17/255, 24/255, 39/255)
+      }, phrase.chords, key || s.chordSheetKey || "C")
 
     //h = h - lyricPadding - timesRomanFont.heightAtSize(fontSize)
     dhMax = dhMax = Math.max(lyricPadding + timesRomanFont.heightAtSize(fontSize), dh)
@@ -244,7 +255,6 @@ function oslynSimplifier(font: PDFFont, song: OslynPhrase[], ylimit: number, xli
   else console.log(`oslynSimplifier: PDF Chordsheet is still too long: .. ${ylimit}`)
 
   // based on section search, incomentally reduce line numbers until desired length is achieved.
-
   const dataArray = Object.keys(sectionSearch).map(key => ({ key, value: sectionSearch[key].length }));
   dataArray.sort((a, b) => b.value - a.value)
 
@@ -370,7 +380,6 @@ function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number):
    */
   const breakpoints = [Math.floor(phrases.length / 2)]
 
-  console.log(ps)
   let j = -1
   for (let phrase of phrases) {
     j = j + 1
@@ -384,6 +393,8 @@ function combineSections(font: PDFFont, phrases: OslynPhrase[], xlimit: number):
     //console.log(ps)
 
     let lyric = ps[i].lyric.trim()
+    lyric = lyric.replaceAll(/\x0D/g, '')
+
     if (ps[i].chords[ps[i].chords.length - 1].position > lyric.length) {
       lyric = lyric + " ".repeat(ps[i].chords[ps[i].chords.length - 1].position - lyric.length)
     }
@@ -417,12 +428,25 @@ function writeChordLine(font: PDFFont, page: PDFPage, options: PDFPageDrawTextOp
   for (let c of chords) {
     const width = font.widthOfTextAtSize(lyric.substring(0, c.position), fontSize)
     const chord = getChordByNumber(c.chord, c.isMinor, key) || ""
+    //console.log(`${key} ${c.chord} ${chord}`)
 
     options.x = padding + width
     page.drawText(chord, options)
     w = width + font.widthOfTextAtSize(chord, fontSize)
   }
   return w
+}
+
+function writeChordLineNoLyric(font: PDFFont, page: PDFPage, options: PDFPageDrawTextOptions, chords: OslynChord[], key: string): number {
+  let chordline = ""
+  for (let c of chords) {
+    let diff = c.position - chordline.length
+    chordline = chordline +" ".repeat(diff)+ (getChordByNumber(c.chord, c.isMinor, key) || "")
+  }
+  console.log(`ONLY CHORDS: ${chordline}`)
+  page.drawText(chordline, options)
+
+  return font.widthOfTextAtSize(chordline, fontSize)
 }
 
 function findMatchingLines(query: string, lines: string[], accuracy: number): { position: number, score: number }[] {
