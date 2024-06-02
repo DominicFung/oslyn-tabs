@@ -89,6 +89,11 @@ export default function Edit(p: EditProps) {
     }
   }
 
+  const addSpacesAtEnd = () => {
+    let cs = (song.chordSheet || "").replace(/[\r\n]+/g, "  \n")
+    setSong({...song, chordSheet: cs})
+  }
+
   const setChordSheet = async (chordSheet: string) => {
     setSong((prev) => { return { ...prev, chordSheet } })
     setOldChordSheet("")
@@ -101,7 +106,8 @@ export default function Edit(p: EditProps) {
 
     window.history.pushState("", "", `/songs/edit/${p.song.songId}`)
     searchSpotify(song.title, song.artist)
-    cleanChordSheet(song.songId)
+    //cleanChordSheet(song.songId)
+    addSpacesAtEnd()
   }, [p.song])
 
   return <div className="text-white w-full h-screen flex flex-col">
