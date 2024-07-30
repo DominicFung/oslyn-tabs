@@ -23,9 +23,9 @@ export class DynamoStack extends Stack {
     })
 
     recordingTable.addGlobalSecondaryIndex({
-      indexName: 'songId',
+      indexName: 'sessionId',
       partitionKey: {
-        name: 'songId',
+        name: 'sessionId',
         type: AttributeType.STRING
       }
     })

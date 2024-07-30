@@ -75,13 +75,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -121,13 +121,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -189,13 +189,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -296,13 +296,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     }
     labelledRecording {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -348,13 +348,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -420,13 +420,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -492,13 +492,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -538,13 +538,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -618,13 +618,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -713,13 +713,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -808,13 +808,13 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -942,13 +942,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -988,13 +988,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -1056,13 +1056,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1163,13 +1163,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
     }
     labelledRecording {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -1215,13 +1215,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1287,13 +1287,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1359,13 +1359,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1405,13 +1405,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -1485,13 +1485,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1580,13 +1580,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1675,13 +1675,13 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1809,13 +1809,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -1855,13 +1855,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -1923,13 +1923,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2030,13 +2030,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
     }
     labelledRecording {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -2082,13 +2082,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2154,13 +2154,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2226,13 +2226,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2272,13 +2272,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -2352,13 +2352,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2447,13 +2447,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2542,13 +2542,13 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2695,13 +2695,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2741,13 +2741,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -2809,13 +2809,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -2954,13 +2954,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3000,13 +3000,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -3068,13 +3068,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3213,13 +3213,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3259,13 +3259,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -3327,13 +3327,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3434,13 +3434,13 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -3540,13 +3540,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3586,13 +3586,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -3654,13 +3654,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3799,13 +3799,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -3845,13 +3845,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -3913,13 +3913,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4058,13 +4058,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4104,13 +4104,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -4172,13 +4172,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4279,13 +4279,13 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -4369,13 +4369,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4415,13 +4415,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -4483,13 +4483,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4628,13 +4628,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4674,13 +4674,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -4742,13 +4742,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4887,13 +4887,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -4933,13 +4933,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -5001,13 +5001,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5108,13 +5108,13 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -5192,13 +5192,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5238,13 +5238,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -5306,13 +5306,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5451,13 +5451,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5497,13 +5497,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -5565,13 +5565,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5710,13 +5710,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5756,13 +5756,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -5824,13 +5824,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -5931,13 +5931,13 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -6011,13 +6011,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6057,13 +6057,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -6125,13 +6125,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6270,13 +6270,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6316,13 +6316,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -6384,13 +6384,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6529,13 +6529,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6575,13 +6575,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -6643,13 +6643,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6750,13 +6750,13 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -6830,13 +6830,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -6876,13 +6876,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -6944,13 +6944,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7089,13 +7089,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7135,13 +7135,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -7203,13 +7203,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7348,13 +7348,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7394,13 +7394,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -7462,13 +7462,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7569,13 +7569,13 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
     }
     recordings {
       recordingId
-      songId
+      sessionId
       userId
-      status
-      audioFile
+      pageturns
+      fileName
       samplingRate
-      lyric
       comment
+      status
       createDate
       updateDate
       __typename
@@ -7656,13 +7656,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7728,13 +7728,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7800,13 +7800,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -7846,13 +7846,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -7930,13 +7930,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8002,13 +8002,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8138,13 +8138,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8184,13 +8184,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -8252,13 +8252,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8388,13 +8388,13 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8539,13 +8539,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8611,13 +8611,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8683,13 +8683,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8729,13 +8729,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -8813,13 +8813,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -8885,13 +8885,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9021,13 +9021,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9067,13 +9067,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -9135,13 +9135,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9271,13 +9271,13 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9422,13 +9422,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9494,13 +9494,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9566,13 +9566,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9612,13 +9612,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -9696,13 +9696,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9768,13 +9768,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9904,13 +9904,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -9950,13 +9950,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -10018,13 +10018,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10154,13 +10154,13 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10305,13 +10305,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10377,13 +10377,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10449,13 +10449,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10495,13 +10495,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -10579,13 +10579,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10651,13 +10651,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10787,13 +10787,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -10833,13 +10833,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -10901,13 +10901,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11037,13 +11037,13 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11188,13 +11188,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11260,13 +11260,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11332,13 +11332,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11378,13 +11378,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -11462,13 +11462,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11534,13 +11534,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11670,13 +11670,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11716,13 +11716,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -11784,13 +11784,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -11920,13 +11920,13 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12071,13 +12071,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12143,13 +12143,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12215,13 +12215,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12261,13 +12261,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
       }
       recordings {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -12345,13 +12345,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12417,13 +12417,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12553,13 +12553,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12599,13 +12599,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -12667,13 +12667,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12803,13 +12803,13 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -12974,13 +12974,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13047,13 +13047,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13093,13 +13093,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -13161,13 +13161,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13306,13 +13306,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13352,13 +13352,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -13420,13 +13420,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13587,13 +13587,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13682,13 +13682,13 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13836,13 +13836,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13909,13 +13909,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -13955,13 +13955,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -14023,13 +14023,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14168,13 +14168,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14214,13 +14214,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -14282,13 +14282,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14449,13 +14449,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14544,13 +14544,13 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14688,13 +14688,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14761,13 +14761,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -14807,13 +14807,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -14875,13 +14875,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15020,13 +15020,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15066,13 +15066,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -15134,13 +15134,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15301,13 +15301,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15396,13 +15396,13 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15540,13 +15540,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15613,13 +15613,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15659,13 +15659,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -15727,13 +15727,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15872,13 +15872,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -15918,13 +15918,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -15986,13 +15986,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16153,13 +16153,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16248,13 +16248,13 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16392,13 +16392,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16465,13 +16465,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16511,13 +16511,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -16579,13 +16579,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16724,13 +16724,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -16770,13 +16770,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -16838,13 +16838,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17005,13 +17005,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17100,13 +17100,13 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17244,13 +17244,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17317,13 +17317,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17363,13 +17363,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -17431,13 +17431,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17576,13 +17576,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17622,13 +17622,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -17690,13 +17690,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17857,13 +17857,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -17952,13 +17952,13 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18109,13 +18109,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18181,13 +18181,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18317,13 +18317,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18363,13 +18363,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -18431,13 +18431,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18576,13 +18576,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18622,13 +18622,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -18690,13 +18690,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18833,13 +18833,13 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -18972,13 +18972,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19044,13 +19044,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19180,13 +19180,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19226,13 +19226,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -19294,13 +19294,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19439,13 +19439,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19485,13 +19485,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -19553,13 +19553,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19696,13 +19696,13 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19835,13 +19835,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -19907,13 +19907,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20043,13 +20043,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20089,13 +20089,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -20157,13 +20157,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20302,13 +20302,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20348,13 +20348,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
       }
       labelledRecording {
         recordingId
-        songId
+        sessionId
         userId
-        status
-        audioFile
+        pageturns
+        fileName
         samplingRate
-        lyric
         comment
+        status
         createDate
         updateDate
         __typename
@@ -20416,13 +20416,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         recordings {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20559,13 +20559,13 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20730,13 +20730,13 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20812,13 +20812,13 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20904,13 +20904,13 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -20986,13 +20986,13 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -21039,20 +21039,30 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
   APITypes.ExitJamMutationVariables,
   APITypes.ExitJamMutation
 >;
-export const createRecording = /* GraphQL */ `mutation CreateRecording($userId: ID!, $songId: ID!, $samplingRate: Int) {
+export const createRecording = /* GraphQL */ `mutation CreateRecording(
+  $userId: ID!
+  $sessionId: ID!
+  $recordingId: ID!
+  $samplingRate: Int!
+  $pageturns: [String]!
+  $fileName: String!
+) {
   createRecording(
     userId: $userId
-    songId: $songId
+    sessionId: $sessionId
+    recordingId: $recordingId
     samplingRate: $samplingRate
+    pageturns: $pageturns
+    fileName: $fileName
   ) {
     recordingId
-    songId
+    sessionId
     userId
-    status
-    audioFile
+    pageturns
+    fileName
     samplingRate
-    lyric
     comment
+    status
     createDate
     updateDate
     __typename

@@ -94,13 +94,13 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -176,13 +176,13 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -268,13 +268,13 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename
@@ -350,13 +350,13 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          songId
+          sessionId
           userId
-          status
-          audioFile
+          pageturns
+          fileName
           samplingRate
-          lyric
           comment
+          status
           createDate
           updateDate
           __typename

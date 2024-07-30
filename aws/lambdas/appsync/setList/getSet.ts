@@ -104,7 +104,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     setList.creator = unmarshall(res1.Item)as User
     if (!setList.creator.labelledRecording) setList.creator.labelledRecording = []
     if (!setList.creator.songsCreated) setList.creator.songsCreated = []
-    if (!setList.creator.editHistory) setList.creator.editHistory = []
     if (!setList.creator.likedSongs) setList.creator.likedSongs = []
     if (!setList.creator.friends) setList.creator.friends = []
   }

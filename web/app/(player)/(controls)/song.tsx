@@ -7,7 +7,7 @@ interface SongProps {
   songs: JamSong[]
 }
 
-export default function Song(p: SongProps) {
+export default function SongControl(p: SongProps) {
   return <div className="ml-3 text-sm font-normal overflow-auto">
     <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Song</div>
     <div className="pb-3 text-sm font-normal">Choose a new Song! <br /><span className="text-xs italic">Note: this affects everyone in the session.</span></div> 

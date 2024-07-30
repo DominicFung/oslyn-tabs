@@ -35,6 +35,9 @@ export class AppsyncStack extends Stack {
     const inviteDynamoName = Fn.importValue(`${props.name}-InviteTable-Name`)
     const inviteDynamoArn = Fn.importValue(`${props.name}-InviteTable-Arn`)
 
+    const recordingDynamoName = Fn.importValue(`${props.name}-RecordingTable-Name`)
+    const recordingDynamoArn = Fn.importValue(`${props.name}-RecordingTable-Arn`)
+
     const appsync = new AmplifyGraphqlApi(this, `${props.name}-Appsync`, {
       apiName: `${props.name}`,
       definition: AmplifyGraphqlDefinition.fromFiles(path.join(__dirname, "../", 'schema.graphql')),
@@ -95,7 +98,7 @@ export class AppsyncStack extends Stack {
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
               `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`,
-              `${userBandRoleDynamoArn}*`
+              `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`
             ]
           }),
           new PolicyStatement({
@@ -117,7 +120,8 @@ export class AppsyncStack extends Stack {
         SETLIST_TABLE_NAME: setListDynamoName,
         JAM_TABLE_NAME: jamDynamoName,
         INVITE_TABLE_NAME: inviteDynamoName,
-        USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName
+        USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName,
+        RECORDING_TABLE_NAME: recordingDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -516,6 +520,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-SetJamSlideConfigResolver`, {
       typeName: "Mutation",
       fieldName: "setJamSlideConfig"
+    })
+
+    const createRecording = new NodejsFunction(this, `${props.name}-CreateRecording`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'recording', 'createRecording.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CreateRecordingDS`, createRecording)
+    .createResolver(`${props.name}-CreateRecordingResolver`, {
+      typeName: "Mutation",
+      fieldName: "createRecording"
     })
   }
 }

@@ -104,8 +104,11 @@ type Mutation {
 
   createRecording(
     userId: ID!
-    songId: ID!
-    samplingRate: Int
+    sessionId: ID!
+    recordingId: ID!
+    samplingRate: Int!
+    pageturns: [String]!
+    fileName: String!
   ): Recording @aws_iam
 }
 
@@ -318,14 +321,14 @@ enum labelStatus { REJECTED, INPROGRESS, DONE, TOLABEL, INAUDIT }
 
 type Recording {
   recordingId: ID!
-  songId: ID!
+  sessionId: ID!
   userId: ID!
+  pageturns: [Int]!
   
-  status: labelStatus!
-  audioFile: String!
+  fileName: String!
   samplingRate: Int!
-  lyric: String!
   comment: String
+  status: String
 
   createDate: AWSTimestamp!
   updateDate: AWSTimestamp

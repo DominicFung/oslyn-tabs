@@ -87,7 +87,6 @@ export const handler = async (event: AppSyncResolverEvent<{
 
       if (!creator.labelledRecording) creator.labelledRecording = []
       if (!creator.songsCreated) creator.songsCreated = []
-      if (!creator.editHistory) creator.editHistory = []
       if (!creator.likedSongs) creator.likedSongs = []
       if (!creator.friends) creator.friends = []
       
@@ -133,7 +132,6 @@ export const handler = async (event: AppSyncResolverEvent<{
   
         if (!user.labelledRecording) user.labelledRecording = []
         if (!user.songsCreated) user.songsCreated = []
-        if (!user.editHistory) user.editHistory = []
         if (!user.likedSongs) user.likedSongs = []
         if (!user.friends) user.friends = []
   

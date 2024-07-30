@@ -26,7 +26,6 @@ import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 
 import toast, { Toaster } from 'react-hot-toast'
-import Recorder from "./recorder"
 
 export interface PlayerProps {
   jam: JamSession, 
@@ -380,7 +379,7 @@ export default function Player(p: PlayerProps) {
           setPage={setNextPage} setLastPage={setLastPage}
           textSize={slideTextSize || "text-3xl"}
         />:
-        <PSlides 
+        <PSlides jamId={p.jam.jamSessionId} userId={p.user?.userId || guestIdentity[p.jam.jamSessionId] || ""}
           song={songs[song]!.song} skey={sKey} page={page} 
           setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
           textSize={textSize} complex={complex} headsUp={headsUp}

@@ -16,6 +16,8 @@ import Recorder from "./recorder2"
 const pageTurnId = "page-turn"
 
 interface SlidesProps {
+  jamId?: string
+  userId?: string
   song: Song
   skey?: string
 
@@ -174,7 +176,7 @@ export default function Slides(p: SlidesProps) {
         </div>
       </button> : <div className="flex-1" /> }
     </div>
-    {page <= 7 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
+    {<div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">
         {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
         <div className="m-2">
@@ -183,6 +185,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
-    {/* slides && <Recorder songId={p.song.songId} slides={slides} page={page} /> */}
+    { slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} /> }
   </>
 }
