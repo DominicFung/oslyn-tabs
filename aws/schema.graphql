@@ -323,7 +323,7 @@ type Recording {
   recordingId: ID!
   sessionId: ID!
   userId: ID!
-  pageturns: [Int]!
+  pageturns: [String]!
   
   fileName: String!
   samplingRate: Int!

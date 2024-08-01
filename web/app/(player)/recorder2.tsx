@@ -23,6 +23,8 @@ interface RecorderProps {
   page: number
 }
 
+const uiLog = false // change this to true during local debugging
+
 export default function Recorder(p: RecorderProps) {
   const aiWorker: Worker = useMemo(() => new Worker(new URL("./(workers)/inference.ts", import.meta.url )), [])
 
@@ -32,34 +34,12 @@ export default function Recorder(p: RecorderProps) {
   const [mediaRecorderForAI, setMediaRecorderForAI] = useState<MediaRecorder|null>(null)
   const [mediaRecorderForS3, setMediaRecorderForS3] = useState<MediaRecorder|null>(null)
 
-  const [timerStart, setTimerStart] = useState<number>(Date.now())
   const [isRecording, setIsRecording] = useState(false)
   const [logText, setLogText] = useState("")
 
-  // help train the AI later
-  const [pageturns, setPageturns] = useState<number[]>([])
-
   // helpers
-  const log = (i: string) => { console.log(`[${performance.now().toFixed(2)}] ${i}`); setLogText((p) => { return `${p}\n[${performance.now().toFixed(2)}] ${i}` }) }
+  const log = (i: string) => { console.log(`[${performance.now().toFixed(2)}] ${i}`); if (uiLog) setLogText((p) => { return `${p}\n[${performance.now().toFixed(2)}] ${i}` }) }
   const sleep = (ms: number) => { return new Promise(resolve => setTimeout(resolve, ms)) }
-
-  useEffect(() => {
-    if (mediaRecorderForAI != null) { 
-      console.log(`adding event listener "${pageTurnId}"`)
-      document.body.addEventListener(pageTurnId, handlePageTurn) }
-    return document.body.removeEventListener(pageTurnId, handlePageTurn)
-  }, [mediaRecorderForAI])
-
-  const handlePageTurn = async (e: Event) => {
-    console.log(`PAGE TURN! start time: ${timerStart}`)
-    console.log(e)
-    // if (!mediaRecorderForAI) { console.error("no media recorder for AI, used to save audio for fine tuning"); return }
-    // mediaRecorderForAI.stop()
-    // await sleep(500)
-    // mediaRecorderForAI.start()
-
-    setPageturns([...pageturns, Date.now() - timerStart])
-  }
 
   const getMicrophone = async () => {
     if (mediaRecorderForS3 === null || mediaRecorderForAI === null) {
@@ -84,7 +64,6 @@ export default function Recorder(p: RecorderProps) {
     setIsRecording(true)
 
     let recording_start = performance.now();
-    setTimerStart(recording_start)
     let chunks: BlobPart[] = [];
 
     mediaRecorderForAI.ondataavailable = async (e) => { chunks.push(e.data) }
@@ -148,10 +127,20 @@ export default function Recorder(p: RecorderProps) {
     let recording_start = performance.now()
     // const duration = 1000 * 60 * 3 // 3 mins
     const duration = 1000 * 10 // 10 seconds
-    setTimerStart(recording_start)
 
     let chunks: BlobPart[] = [];
     let count = 1
+
+    let pts = [] as number[]
+
+    // register listeners
+    const handlePageTurn = async (e: Event) => {
+      console.log(`PAGE TURN! start time: ${recording_start}`)
+      pts.push(performance.now() - recording_start)
+    }
+
+    console.log(`adding event listener "${pageTurnId}"`)
+    document.body.addEventListener(pageTurnId, handlePageTurn) 
 
     mediaRecorderForS3.ondataavailable = async (e) => { 
       chunks.push(e.data)
@@ -166,7 +155,6 @@ export default function Recorder(p: RecorderProps) {
         }
         
         recording_start = performance.now()
-        setTimerStart(performance.now())
         mediaRecorderForS3.start(kIntervalAudio_ms);
       }
     }
@@ -180,8 +168,8 @@ export default function Recorder(p: RecorderProps) {
       let fileName = `recordings/${p.jamId}/${recordingId}/${String(count). padStart(3, '0')}_${d}.wav`
 
       saveAudio(blob, fileName)
-      saveTrainingData(recordingId, p.jamId, p.userId, fileName, kSampleRate, pageturns)
-      setPageturns([]); setTimerStart(performance.now()); recording_start = performance.now()
+      saveTrainingData(recordingId, p.jamId, p.userId, fileName, kSampleRate, pts)
+      pts = []; recording_start = performance.now()
       chunks=[];
       return
     }
