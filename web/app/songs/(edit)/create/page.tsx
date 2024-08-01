@@ -1,6 +1,7 @@
 "use client"
+
 import { useEffect, useState } from 'react'
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 
 import PasteTabs from "../pasteTabs"
 import SongInfo from '../songInfo'
@@ -30,15 +31,15 @@ export default function CreateSong() {
   } as Song)
 
   return <div className="text-white w-full h-screen flex flex-col">
-    <div className="flex-0">
-      <Tabs step={step} setStep={setStep}  />
+      <div className="flex-0">
+        <Tabs step={step} setStep={setStep}  />
+      </div>
+      
+      <div className="flex-1 p-4">
+        { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { setSong({ ...song, chordSheet: t }) }} /> }
+        { step === 1 && <SongInfo song={song} setSong={setSong}/>}
+        { step === 2 && <Slides song={song} pt={true} /> }
+      </div>
+      <Save song={song} type="create" shareWithBand={shareWithBand} goToReviewTab={() => setStep(2)} />
     </div>
-    
-    <div className="flex-1 p-4">
-      { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { setSong({ ...song, chordSheet: t }) }} /> }
-      { step === 1 && <SongInfo song={song} setSong={setSong}/>}
-      { step === 2 && <Slides song={song} pt={true} /> }
-    </div>
-    <Save song={song} type="create" shareWithBand={shareWithBand} goToReviewTab={() => setStep(2)} />
-  </div>
 }

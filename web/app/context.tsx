@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, Suspense } from "react"
+
 const Context = createContext({
   openSidebar: true, setOpenSidebar: (b: any) => {},
   openLogin: false, setOpenLogin: (b: any) => {},
@@ -35,9 +36,11 @@ export const ContextProvider = ({ children }: any) => {
       openSidebar, setOpenSidebar,
       openLogin, setOpenLogin,
       guestIdentity, addGuestIdentity, removeGuestIdentity }}>
-      <div className={`${openSidebar?"ml-64":"ml-0 overflow-x-hidden"}`}>
-        {children}
-      </div>
+        <Suspense>
+          <div className={`${openSidebar?"ml-64":"ml-0 overflow-x-hidden"}`}>
+            {children}
+          </div>
+        </Suspense>
     </Provider>
   )
 }
