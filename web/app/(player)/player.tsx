@@ -368,8 +368,24 @@ export default function Player(p: PlayerProps) {
   }
   useEffect(() => {
     addEventListener("fullscreenchange", onFullScreenChange)
-    return () => removeEventListener("fullscreenchange", onFullScreenChange)
+    window.addEventListener('keydown', keydown)
+
+    return () => { 
+      removeEventListener("fullscreenchange", onFullScreenChange)
+      window.removeEventListener('keydown', keydown)
+    }
   }, [])
+
+  const keydown = (event: KeyboardEvent) => {
+    console.log(event.code)
+    if (event.code === "ArrowRight") {
+      event.preventDefault()
+      if (!p.isSlideShow && isLastPage && songs.length > song+1) {
+        setNextSong(song+1)
+        return
+      } else console.log(`cannot turn to go to next song using ${event.code}`)
+    }
+  }
 
   return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
     { songs[song]?.song && 

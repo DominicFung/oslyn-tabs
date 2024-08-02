@@ -28,7 +28,6 @@ const uiLog = false // change this to true during local debugging
 export default function Recorder(p: RecorderProps) {
   const aiWorker: Worker = useMemo(() => new Worker(new URL("./(workers)/inference.ts", import.meta.url )), [])
 
-  const recordingId = crypto.randomUUID()
   const [context, setContext] = useState<AudioContext|null>(null)
 
   const [mediaRecorderForAI, setMediaRecorderForAI] = useState<MediaRecorder|null>(null)
@@ -126,7 +125,7 @@ export default function Recorder(p: RecorderProps) {
       
     let recording_start = performance.now()
     // const duration = 1000 * 60 * 3 // 3 mins
-    const duration = 1000 * 10 // 10 seconds
+    const duration = 1000 * 30 // 30 seconds
 
     let chunks: BlobPart[] = [];
     let count = 1
@@ -165,6 +164,7 @@ export default function Recorder(p: RecorderProps) {
       const blob = new Blob(chunks, { type: 'audio/wav' });
       log(`recorded ${((performance.now() - recording_start) / 1000).toFixed(1)}sec audio`);
       let d = new Date().toISOString()
+      const recordingId = crypto.randomUUID()
       let fileName = `recordings/${p.jamId}/${recordingId}/${String(count). padStart(3, '0')}_${d}.wav`
 
       saveAudio(blob, fileName)

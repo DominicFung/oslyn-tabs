@@ -76,11 +76,32 @@ export default function Slides(p: SlidesProps) {
     window.addEventListener("resize", updateWindowDimensions)
     window.addEventListener("orientationchange", updateWindowDimensions)
 
+    window.addEventListener('keydown', keydown)
+
     return () => { 
       window.removeEventListener("resize", updateWindowDimensions)
       window.removeEventListener("orientationchange", updateWindowDimensions)
+      window.removeEventListener('keydown', keydown)
     }
   }, [])
+
+  const keydown = (event: KeyboardEvent) => {
+    console.log(event.code)
+    if (event.code === "ArrowLeft") {
+      event.preventDefault()
+      if (page > 0) { setPage(page-1) } 
+      else console.log(`cannot turn to previous page using ${event.code}`)
+      return
+    }
+
+    if (event.code === "ArrowRight" || "Space") {
+      event.preventDefault()
+      if (slides && slides?.pages.length-1 > page) {
+        setPage(page+1)
+        return
+      } else console.log(`cannot turn to next page using ${event.code}`)
+    }
+  }
 
   useEffect(() => {
     if (p.setLastPage) {
