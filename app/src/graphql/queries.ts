@@ -62,25 +62,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -101,15 +91,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -127,66 +108,21 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -246,25 +182,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -275,52 +201,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -383,34 +263,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -426,6 +278,11 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -470,25 +327,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -509,15 +356,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -535,66 +373,21 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -654,25 +447,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -683,52 +466,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -791,34 +528,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -834,6 +543,11 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -878,25 +592,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -917,15 +621,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -943,66 +638,21 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -1062,25 +712,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -1091,52 +731,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -1199,34 +793,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -1242,256 +808,32 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     recordings {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     chordSheet
@@ -1577,25 +919,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -1616,15 +948,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -1642,66 +965,21 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -1761,25 +1039,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -1790,52 +1058,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -1898,34 +1120,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -1941,6 +1135,11 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -1985,25 +1184,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -2024,15 +1213,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -2050,66 +1230,21 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -2169,25 +1304,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -2198,52 +1323,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -2306,34 +1385,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -2349,6 +1400,11 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -2393,25 +1449,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -2432,15 +1478,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -2458,66 +1495,21 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -2577,25 +1569,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -2606,52 +1588,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -2714,34 +1650,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -2757,256 +1665,32 @@ export const listSongs = /* GraphQL */ `query ListSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     recordings {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     chordSheet
@@ -3087,25 +1771,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -3126,15 +1800,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -3152,66 +1817,21 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -3271,25 +1891,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -3300,52 +1910,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -3408,34 +1972,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -3451,6 +1987,11 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -3495,25 +2036,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -3534,15 +2065,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -3560,66 +2082,21 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -3679,25 +2156,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -3708,52 +2175,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -3816,34 +2237,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -3859,6 +2252,11 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -3903,25 +2301,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -3942,15 +2330,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -3968,66 +2347,21 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -4087,25 +2421,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -4116,52 +2440,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -4224,34 +2502,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -4267,256 +2517,32 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     recordings {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     chordSheet
@@ -4587,25 +2613,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -4626,15 +2642,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -4652,66 +2659,21 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -4771,25 +2733,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -4800,52 +2752,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -4908,34 +2814,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -4951,256 +2829,32 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     labelledRecording {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     songsCreated {
@@ -5244,25 +2898,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -5281,15 +2925,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -5335,25 +2970,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -5372,15 +2997,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -5426,25 +3042,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -5463,15 +3069,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -5491,66 +3088,21 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -5561,170 +3113,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       CCLISongWriter
       CCLICopyrightNotice
       CCLILicenseNumber
-      __typename
-    }
-    editHistory {
-      recordingHistoryId
-      recording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      date
-      actionColumn
-      previousAction
-      newAction
-      comment
       __typename
     }
     likedSongs {
@@ -5786,25 +3174,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -5891,25 +3269,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -5968,188 +3336,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         __typename
       }
-      members {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      admins {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
       owner {
         userId
         username
@@ -6178,25 +3364,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -6217,15 +3393,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -6242,6 +3409,33 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         __typename
       }
       policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
       __typename
     }
     __typename
@@ -6304,25 +3498,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -6343,15 +3527,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -6369,66 +3544,21 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -6488,25 +3618,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -6517,52 +3637,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -6625,34 +3699,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -6668,256 +3714,32 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     labelledRecording {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     songsCreated {
@@ -6961,25 +3783,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -6998,15 +3810,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -7052,25 +3855,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -7089,15 +3882,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -7143,25 +3927,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -7180,15 +3954,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -7208,66 +3973,21 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -7278,170 +3998,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       CCLISongWriter
       CCLICopyrightNotice
       CCLILicenseNumber
-      __typename
-    }
-    editHistory {
-      recordingHistoryId
-      recording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      date
-      actionColumn
-      previousAction
-      newAction
-      comment
       __typename
     }
     likedSongs {
@@ -7503,25 +4059,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -7608,25 +4154,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -7685,188 +4221,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         __typename
       }
-      members {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      admins {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
       owner {
         userId
         username
@@ -7895,25 +4249,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -7934,15 +4278,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -7959,6 +4294,33 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         __typename
       }
       policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
       __typename
     }
     __typename
@@ -8021,25 +4383,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -8060,15 +4412,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -8086,66 +4429,21 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -8205,25 +4503,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -8234,52 +4522,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -8342,34 +4584,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -8385,256 +4599,32 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
     }
     labelledRecording {
       recordingId
-      songTitle
-      formId
-      song {
+      jamId
+      userId
+      sessionId
+      songs {
         songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
+        startTime
+        pageturns
         __typename
       }
-      key
-      tabLink
-      rawTabs
-      prelabelTool
-      prelabelToolVersion
-      labelTool
-      labelToolVersion
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      isLabelerRejected
-      labelerRejectionReason
-      singerName
-      singerEmail
-      gender
-      status
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
+      fileName
+      samplingRate
       comment
+      status
       createDate
       updateDate
-      lastOULGenerateDate
       __typename
     }
     songsCreated {
@@ -8678,25 +4668,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -8715,15 +4695,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -8769,25 +4740,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -8806,15 +4767,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -8860,25 +4812,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -8897,15 +4839,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -8925,66 +4858,21 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -8995,170 +4883,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       CCLISongWriter
       CCLICopyrightNotice
       CCLILicenseNumber
-      __typename
-    }
-    editHistory {
-      recordingHistoryId
-      recording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      labeller {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      date
-      actionColumn
-      previousAction
-      newAction
-      comment
       __typename
     }
     likedSongs {
@@ -9220,25 +4944,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -9325,25 +5039,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -9402,188 +5106,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         __typename
       }
-      members {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      admins {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
       owner {
         userId
         username
@@ -9612,25 +5134,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -9651,15 +5163,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -9676,6 +5179,33 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         __typename
       }
       policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
       __typename
     }
     __typename
@@ -9729,25 +5259,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -9766,15 +5286,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -9820,25 +5331,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -9857,15 +5358,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -9911,25 +5403,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -9950,15 +5432,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -9976,66 +5449,21 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -10111,25 +5539,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -10148,15 +5566,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -10202,25 +5611,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -10239,15 +5638,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -10293,34 +5683,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -10336,822 +5698,11 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           __typename
         }
         policy
-        __typename
-      }
-      __typename
-    }
-    members {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
+        userRoles {
+          roleId
           role
           __typename
         }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
-        __typename
-      }
-      __typename
-    }
-    admins {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
         __typename
       }
       __typename
@@ -11196,25 +5747,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -11235,15 +5776,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -11261,66 +5793,21 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -11380,25 +5867,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -11409,52 +5886,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -11517,7 +5948,7 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           description
           __typename
         }
-        members {
+        owner {
           userId
           username
           email
@@ -11531,7 +5962,32 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           role
           __typename
         }
-        admins {
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    policy
+    userRoles {
+      roleId
+      user {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
           userId
           username
           email
@@ -11543,6 +5999,80 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           isActivated
           createDate
           role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      band {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
           __typename
         }
         owner {
@@ -11560,11 +6090,16 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
+      role
       __typename
     }
-    policy
     __typename
   }
 }
@@ -11626,25 +6161,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -11663,15 +6188,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -11717,25 +6233,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -11754,15 +6260,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -11808,25 +6305,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -11847,15 +6334,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -11873,66 +6351,21 @@ export const listBands = /* GraphQL */ `query ListBands(
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -12008,25 +6441,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -12045,15 +6468,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -12099,25 +6513,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -12136,15 +6540,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -12190,34 +6585,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -12233,822 +6600,11 @@ export const listBands = /* GraphQL */ `query ListBands(
           __typename
         }
         policy
-        __typename
-      }
-      __typename
-    }
-    members {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
+        userRoles {
+          roleId
           role
           __typename
         }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
-        __typename
-      }
-      __typename
-    }
-    admins {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
         __typename
       }
       __typename
@@ -13093,25 +6649,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -13132,15 +6678,6 @@ export const listBands = /* GraphQL */ `query ListBands(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -13158,66 +6695,21 @@ export const listBands = /* GraphQL */ `query ListBands(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -13277,25 +6769,15 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -13306,52 +6788,6 @@ export const listBands = /* GraphQL */ `query ListBands(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -13414,7 +6850,7 @@ export const listBands = /* GraphQL */ `query ListBands(
           description
           __typename
         }
-        members {
+        owner {
           userId
           username
           email
@@ -13428,7 +6864,32 @@ export const listBands = /* GraphQL */ `query ListBands(
           role
           __typename
         }
-        admins {
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    policy
+    userRoles {
+      roleId
+      user {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
           userId
           username
           email
@@ -13440,6 +6901,80 @@ export const listBands = /* GraphQL */ `query ListBands(
           isActivated
           createDate
           role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      band {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
           __typename
         }
         owner {
@@ -13457,15 +6992,537 @@ export const listBands = /* GraphQL */ `query ListBands(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
+      role
       __typename
     }
-    policy
     __typename
   }
 }
 ` as GeneratedQuery<APITypes.ListBandsQueryVariables, APITypes.ListBandsQuery>;
+export const listSharedBands = /* GraphQL */ `query ListSharedBands(
+  $userId: ID!
+  $limit: Int
+  $filter: String
+  $nextToken: String
+) {
+  listSharedBands(
+    userId: $userId
+    limit: $limit
+    filter: $filter
+    nextToken: $nextToken
+  ) {
+    roleId
+    user {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+      friends {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      labelledRecording {
+        recordingId
+        jamId
+        userId
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
+        fileName
+        samplingRate
+        comment
+        status
+        createDate
+        updateDate
+        __typename
+      }
+      songsCreated {
+        songId
+        title
+        artist
+        album
+        albumCover
+        beat {
+          count
+          note
+          __typename
+        }
+        isApproved
+        version
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        viewers {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        recordings {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        __typename
+      }
+      likedSongs {
+        key
+        song {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          __typename
+        }
+        order
+        __typename
+      }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
+          __typename
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    band {
+      bandId
+      imageUrl
+      name
+      description
+      songs {
+        songId
+        title
+        artist
+        album
+        albumCover
+        beat {
+          count
+          note
+          __typename
+        }
+        isApproved
+        version
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        viewers {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        recordings {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        __typename
+      }
+      sets {
+        setListId
+        description
+        songs {
+          key
+          order
+          __typename
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      owner {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
+      __typename
+    }
+    role
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListSharedBandsQueryVariables,
+  APITypes.ListSharedBandsQuery
+>;
 export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int, $filter: String, $nextToken: String) {
   listPublicBands(limit: $limit, filter: $filter, nextToken: $nextToken) {
     bandId
@@ -13513,25 +7570,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -13550,15 +7597,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -13604,25 +7642,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -13641,15 +7669,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -13695,25 +7714,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -13734,15 +7743,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -13760,66 +7760,21 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
       }
       recordings {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       chordSheet
@@ -13895,25 +7850,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -13932,15 +7877,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -13986,25 +7922,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -14023,15 +7949,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -14077,34 +7994,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -14120,822 +8009,11 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           __typename
         }
         policy
-        __typename
-      }
-      __typename
-    }
-    members {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
+        userRoles {
+          roleId
           role
           __typename
         }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
-        __typename
-      }
-      __typename
-    }
-    admins {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-      friends {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      labelledRecording {
-        recordingId
-        songTitle
-        formId
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        comment
-        createDate
-        updateDate
-        lastOULGenerateDate
-        __typename
-      }
-      songsCreated {
-        songId
-        title
-        artist
-        album
-        albumCover
-        beat {
-          count
-          note
-          __typename
-        }
-        isApproved
-        version
-        creator {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        editors {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        viewers {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        recordings {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
-        __typename
-      }
-      likedSongs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-          __typename
-        }
-        order
-        __typename
-      }
-      bands {
-        bandId
-        imageUrl
-        name
-        description
-        songs {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        sets {
-          setListId
-          description
-          __typename
-        }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        owner {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        policy
         __typename
       }
       __typename
@@ -14980,25 +8058,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -15019,15 +8087,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -15045,66 +8104,21 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -15164,25 +8178,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -15193,52 +8197,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -15301,7 +8259,7 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           description
           __typename
         }
-        members {
+        owner {
           userId
           username
           email
@@ -15315,7 +8273,32 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           role
           __typename
         }
-        admins {
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    policy
+    userRoles {
+      roleId
+      user {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
           userId
           username
           email
@@ -15327,6 +8310,80 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           isActivated
           createDate
           role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      band {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
           __typename
         }
         owner {
@@ -15344,11 +8401,16 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
+      role
       __typename
     }
-    policy
     __typename
   }
 }
@@ -15419,25 +8481,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -15502,25 +8554,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -15541,15 +8583,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -15567,66 +8600,21 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -15686,25 +8674,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -15715,52 +8693,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -15823,34 +8755,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -15866,6 +8770,11 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -15910,25 +8819,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -15949,15 +8848,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -15975,66 +8865,21 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -16094,25 +8939,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -16123,52 +8958,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -16231,34 +9020,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -16274,6 +9035,11 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -16340,25 +9106,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -16417,188 +9173,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         __typename
       }
-      members {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      admins {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
       owner {
         userId
         username
@@ -16627,25 +9201,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -16666,15 +9230,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -16691,6 +9246,33 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         __typename
       }
       policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
       __typename
     }
     __typename
@@ -16772,25 +9354,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -16855,25 +9427,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -16894,15 +9456,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -16920,66 +9473,21 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -17039,25 +9547,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -17068,52 +9566,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -17176,34 +9628,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -17219,6 +9643,11 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -17263,25 +9692,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -17302,15 +9721,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -17328,66 +9738,21 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -17447,25 +9812,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -17476,52 +9831,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -17584,34 +9893,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -17627,6 +9908,11 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -17693,25 +9979,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -17770,188 +10046,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         __typename
       }
-      members {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
-      admins {
-        userId
-        username
-        email
-        providers
-        firstName
-        lastName
-        imageUrl
-        recieveUpdatesFromOslyn
-        isActivated
-        createDate
-        role
-        friends {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        labelledRecording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        songsCreated {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
-        likedSongs {
-          key
-          order
-          __typename
-        }
-        bands {
-          bandId
-          imageUrl
-          name
-          description
-          policy
-          __typename
-        }
-        __typename
-      }
       owner {
         userId
         username
@@ -17980,25 +10074,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -18019,15 +10103,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -18044,6 +10119,33 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         __typename
       }
       policy
+      userRoles {
+        roleId
+        user {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        band {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        role
+        __typename
+      }
       __typename
     }
     __typename
@@ -18116,25 +10218,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -18153,15 +10245,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -18207,25 +10290,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -18244,15 +10317,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -18298,34 +10362,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -18341,6 +10377,11 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -18385,25 +10426,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -18424,15 +10455,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -18450,66 +10472,21 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -18569,25 +10546,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -18598,52 +10565,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -18706,34 +10627,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -18749,6 +10642,11 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -18793,25 +10691,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -18832,15 +10720,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -18858,66 +10737,21 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -18977,25 +10811,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -19006,52 +10830,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -19114,34 +10892,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -19157,6 +10907,11 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -19199,25 +10954,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -19236,15 +10981,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -19357,25 +11093,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -19394,15 +11120,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -19448,25 +11165,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -19485,15 +11192,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -19539,34 +11237,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -19582,6 +11252,11 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -19626,25 +11301,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -19665,15 +11330,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -19691,66 +11347,21 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -19810,25 +11421,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -19839,52 +11440,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -19947,34 +11502,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -19990,6 +11517,11 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -20034,25 +11566,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -20073,15 +11595,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           CCLILicenseNumber
           __typename
         }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
         likedSongs {
           key
           order
@@ -20099,66 +11612,21 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       }
       labelledRecording {
         recordingId
-        songTitle
-        formId
-        song {
+        jamId
+        userId
+        sessionId
+        songs {
           songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
+          startTime
+          pageturns
           __typename
         }
-        key
-        tabLink
-        rawTabs
-        prelabelTool
-        prelabelToolVersion
-        labelTool
-        labelToolVersion
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        isLabelerRejected
-        labelerRejectionReason
-        singerName
-        singerEmail
-        gender
-        status
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
-          __typename
-        }
+        fileName
+        samplingRate
         comment
+        status
         createDate
         updateDate
-        lastOULGenerateDate
         __typename
       }
       songsCreated {
@@ -20218,25 +11686,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         recordings {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         chordSheet
@@ -20247,52 +11705,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         CCLISongWriter
         CCLICopyrightNotice
         CCLILicenseNumber
-        __typename
-      }
-      editHistory {
-        recordingHistoryId
-        recording {
-          recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
-          comment
-          createDate
-          updateDate
-          lastOULGenerateDate
-          __typename
-        }
-        labeller {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        date
-        actionColumn
-        previousAction
-        newAction
-        comment
         __typename
       }
       likedSongs {
@@ -20355,34 +11767,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           description
           __typename
         }
-        members {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
-        admins {
-          userId
-          username
-          email
-          providers
-          firstName
-          lastName
-          imageUrl
-          recieveUpdatesFromOslyn
-          isActivated
-          createDate
-          role
-          __typename
-        }
         owner {
           userId
           username
@@ -20398,6 +11782,11 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           __typename
         }
         policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
         __typename
       }
       __typename
@@ -20440,25 +11829,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -20477,15 +11856,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {

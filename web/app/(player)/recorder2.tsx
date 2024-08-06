@@ -7,7 +7,7 @@ import { Message } from './(workers)/inference'
 
 import { S3Client, S3ClientConfig, PutObjectCommand } from '@aws-sdk/client-s3'
 import cdk from "@/cdk-outputs.json"
-import { Recording } from '../../../src/API'
+import { Recording, RecordingSongSegmentInput } from '../../../src/API'
 import { SaveRecordingRequest } from '../api/recording/[id]/route'
 
 const kSampleRate = 16000;
@@ -15,17 +15,20 @@ const kIntervalAudio_ms = 1000;
 const chunkLen = 4
 
 const pageTurnId = "page-turn"
+const nextSongEventId = "next-song"
 
 interface RecorderProps {
   jamId: string,
   userId: string,
   slides: OslynSlide,
-  page: number
+  page: number,
+  currentSongId: string
 }
 
 const uiLog = false // change this to true during local debugging
 
 export default function Recorder(p: RecorderProps) {
+  const sessionId = crypto.randomUUID()
   const aiWorker: Worker = useMemo(() => new Worker(new URL("./(workers)/inference.ts", import.meta.url )), [])
 
   const [context, setContext] = useState<AudioContext|null>(null)
@@ -105,19 +108,20 @@ export default function Recorder(p: RecorderProps) {
     return res1
   }
 
-  const saveTrainingData = async (recordingId: string, sessionId: string, userId: string, fileName: string, sampleRate: number, pageturns: number[]) => {
+  const saveTrainingData = async (
+    recordingId: string, sessionId: string, userId: string, jamId: string,
+    fileName: string, sampleRate: number, songs: RecordingSongSegmentInput[]) => {
     const data = await (await fetch(`/api/recording/${recordingId}`, {
       method: "POST",
       body: JSON.stringify({
-        sessionId, userId, fileName,
-        samplingRate: sampleRate,
-        pageturns: pageturns.map(String)
+        sessionId, userId, fileName, jamId,
+        samplingRate: sampleRate, songs
       } as SaveRecordingRequest)
     })).json() as Recording
     console.log(data)
   }
 
-  const startRecord = async () => {
+  const startRecord = async (songId: string) => {
     console.log("recording started ...")
     if (mediaRecorderForS3 === null) { log("ERROR no media recorder found."); return }
     if (!context) { log("ERROR no audio context found."); return }
@@ -130,12 +134,34 @@ export default function Recorder(p: RecorderProps) {
     let chunks: BlobPart[] = [];
     let count = 1
 
-    let pts = [] as number[]
+    let recordingSongs = [] as RecordingSongSegmentInput[]
+    let currentRecordingSong = {
+      songId, startTime: "0", pageturns: []
+    } as RecordingSongSegmentInput
+
+    const reset = () => {
+      recordingSongs = [] as RecordingSongSegmentInput[]
+      currentRecordingSong = {
+        songId, startTime: "0", pageturns: []
+      } as RecordingSongSegmentInput
+    }
+
+    const handleNextSong = ((e: CustomEvent<{songId: string}>) => {
+      console.log(`New Song Id: ${e.detail.songId}`)
+
+      recordingSongs.push(currentRecordingSong)
+      currentRecordingSong = {
+        songId: e.detail.songId, startTime: String(performance.now() - recording_start), pageturns: []
+      }
+    }) as EventListener
+
+    console.log(`adding event listener "${nextSongEventId}"`)
+    document.body.addEventListener(nextSongEventId, handleNextSong)
 
     // register listeners
     const handlePageTurn = async (e: Event) => {
       console.log(`PAGE TURN! start time: ${recording_start}`)
-      pts.push(performance.now() - recording_start)
+      currentRecordingSong.pageturns.push(String(performance.now() - recording_start))
     }
 
     console.log(`adding event listener "${pageTurnId}"`)
@@ -165,12 +191,11 @@ export default function Recorder(p: RecorderProps) {
       log(`recorded ${((performance.now() - recording_start) / 1000).toFixed(1)}sec audio`);
       let d = new Date().toISOString()
       const recordingId = crypto.randomUUID()
-      let fileName = `recordings/${p.jamId}/${recordingId}/${String(count). padStart(3, '0')}_${d}.wav`
+      let fileName = `recordings/${p.jamId}/${sessionId}/${String(count).padStart(3, '0')}_${recordingId}_${d}.wav`
 
       saveAudio(blob, fileName)
-      saveTrainingData(recordingId, p.jamId, p.userId, fileName, kSampleRate, pts)
-      pts = []; recording_start = performance.now()
-      chunks=[];
+      saveTrainingData(recordingId, sessionId, p.userId, p.jamId, fileName, kSampleRate, recordingSongs)
+      reset(); chunks=[];
       return
     }
     
@@ -188,7 +213,7 @@ export default function Recorder(p: RecorderProps) {
 
     if (window.Worker) {
       getMicrophone()
-      startRecord()
+      startRecord(p.currentSongId)
       //startRecordforAI()
     }
   }, [aiWorker])
@@ -210,7 +235,7 @@ export default function Recorder(p: RecorderProps) {
               </p>
               <span className="space-y-2">
 
-                <button onClick={() => { startRecord() }} disabled={ !context || !mediaRecorderForS3}
+                <button onClick={() => { startRecord(p.currentSongId) }} disabled={ !context || !mediaRecorderForS3}
                     className="w-full flex flex-row text-white bg-oslyn-700 hover:bg-oslyn-800 disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">
                       <div className='flex-1' />
                       <MicrophoneIcon className='ml-2.5 w-6 h-6' />

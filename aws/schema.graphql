@@ -103,12 +103,9 @@ type Mutation {
   exitJam(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
 
   createRecording(
-    userId: ID!
-    sessionId: ID!
-    recordingId: ID!
-    samplingRate: Int!
-    pageturns: [String]!
-    fileName: String!
+    userId: ID!, jamId: ID!, sessionId: ID!, recordingId: ID!
+    samplingRate: Int!, fileName: String!
+    songs: [RecordingSongSegmentInput]!
   ): Recording @aws_iam
 }
 
@@ -320,10 +317,13 @@ enum role { USER, ADMIN }
 enum labelStatus { REJECTED, INPROGRESS, DONE, TOLABEL, INAUDIT }
 
 type Recording {
-  recordingId: ID!
-  sessionId: ID!
-  userId: ID!
-  pageturns: [String]!
+  recordingId: ID!  # unique for every recording
+  jamId: ID!        # jam session identifier
+  userId: ID!       # user identifier
+  sessionId: ID!    # per device, per refording identifier,
+                    #   be useful to group audio files by recording session.
+  
+  songs: [RecordingSongSegment]!
   
   fileName: String!
   samplingRate: Int!
@@ -334,3 +334,14 @@ type Recording {
   updateDate: AWSTimestamp
 }
 
+type RecordingSongSegment {
+  songId: ID!
+  startTime: String!
+  pageturns: [String]!
+}
+
+input RecordingSongSegmentInput {
+  songId: ID!
+  startTime: String!
+  pageturns: [String]!
+}

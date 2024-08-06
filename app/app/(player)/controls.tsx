@@ -83,9 +83,6 @@ export default function Controls(p: ControlsProp) {
   return <>
       <Pressable id="authentication-modal" aria-hidden={true} className={`${open?"":"hidden"} absolute top-0 left-0 right-0 z-40 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-gray-900/75`} 
         onPress={() => { setOpen(false) }} />
-      { /*open && <View id="toast-bottom-right" className={`z-50 absolute sm:max-w-lg w-full max-h-[calc(100vh-20rem)] flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-0 sm:right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
-
-      </View> */ }
 
       <Modal isVisible={open} onBackdropPress={() => {setOpen(false)}} className='absolute sm:max-w-lg w-full max-h-80 flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-0 sm:right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800'>
         <View className="text-sm font-normal bg-white">

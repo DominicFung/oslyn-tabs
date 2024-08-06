@@ -10,10 +10,9 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import { useKeepAwake } from 'expo-keep-awake'
 import Svg, { Path } from 'react-native-svg'
-import Constants from 'expo-constants'
-import { addOrientationChangeListener, lockAsync, Orientation, OrientationLock, removeOrientationChangeListener } from 'expo-screen-orientation'
-
 import { BlurView } from "@react-native-community/blur"
+
+import { addOrientationChangeListener, removeOrientationChangeListener } from 'expo-screen-orientation'
 
 const AVERAGE_LINE_H = 45
 
@@ -35,6 +34,7 @@ interface SlidesProps {
 
   /**  */
   setLastPage?: (b: boolean) => void
+  resetJam: () => void
 }
 
 //const _STARTMAX = 500
@@ -55,12 +55,9 @@ export default function Slides(p: SlidesProps) {
   
   const [ w, setW ] = useState(Dimensions.get('window').width)
   const [ h, setH ] = useState(Dimensions.get('window').height)
-  const [ o, setO ] = useState(Orientation.PORTRAIT_UP as Orientation)
 
   useEffect(() => { 
-    changeScreenOrientation()
     const sub = addOrientationChangeListener((e) => {
-      setO(e.orientationInfo.orientation || 0)
       setW(Dimensions.get('window').width)
       setH(Dimensions.get('window').height)
     })
@@ -71,10 +68,6 @@ export default function Slides(p: SlidesProps) {
 
     return () => { removeOrientationChangeListener(sub); sub2?.remove() }
   }, [])
-
-  const changeScreenOrientation = async () => {
-    await lockAsync(OrientationLock.LANDSCAPE_LEFT)
-  }
 
   useEffect(() => {
     let baseKey = p.skey || p.song.chordSheetKey || "C"
@@ -171,7 +164,7 @@ export default function Slides(p: SlidesProps) {
         </LinearGradient>
       </Pressable> : <View style={{ width: p.pt?(w/2)-90:w/2, height: h }} /> }
 
-      { page < 8 && <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`}>
+      <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`}>
         <View className="flex flex-row hover:cursor-pointer">
           {p.song.albumCover && <Image source={{ uri: p.song.albumCover }} alt={p.song.album || ""} style={{width: 100, height: 100}} className="w-20 m-2"/> }
           <View className="m-2">
@@ -179,7 +172,7 @@ export default function Slides(p: SlidesProps) {
             <Text className="text-gray-600 text-xs">{p.song.artist}</Text>
           </View>
         </View>
-      </View> }
+      </View>
 
     </View>
     { loading && <BlurView
@@ -187,6 +180,12 @@ export default function Slides(p: SlidesProps) {
       blurType="dark"
       blurAmount={3}
     /> }
+
+    <Pressable className="absolute z-90 left-4 top-4" onPress={p.resetJam}>
+      <Svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-8 h-8 text-oslyn-800">
+        <Path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </Svg>
+    </Pressable>
   </>
 }
 

@@ -9,6 +9,9 @@
 ### iOS (Development)
 
 ```
+npm run ios
+
+# old
 cd app/ios
 npx expo run:ios --device
 ```
@@ -16,6 +19,7 @@ npx expo run:ios --device
 ### iOS (Deploy to TestFlight)
 
 ```
+cd ios
 fastlane beta
 ```
 

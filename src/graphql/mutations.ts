@@ -75,9 +75,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -121,9 +121,15 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -189,9 +195,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -296,9 +302,15 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -348,9 +360,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -420,9 +432,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -492,9 +504,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -538,9 +550,15 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -618,9 +636,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -713,9 +731,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -808,9 +826,9 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -942,9 +960,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -988,9 +1006,15 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1056,9 +1080,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1163,9 +1187,15 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -1215,9 +1245,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1287,9 +1317,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1359,9 +1389,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1405,9 +1435,15 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1485,9 +1521,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1580,9 +1616,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1675,9 +1711,9 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1809,9 +1845,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1855,9 +1891,15 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1923,9 +1965,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2030,9 +2072,15 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -2082,9 +2130,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2154,9 +2202,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2226,9 +2274,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2272,9 +2320,15 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -2352,9 +2406,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2447,9 +2501,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2542,9 +2596,9 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2695,9 +2749,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2741,9 +2795,15 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -2809,9 +2869,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2954,9 +3014,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3000,9 +3060,15 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3068,9 +3134,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3213,9 +3279,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3259,9 +3325,15 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3327,9 +3399,9 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3434,9 +3506,15 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -3540,9 +3618,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3586,9 +3664,15 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3654,9 +3738,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3799,9 +3883,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3845,9 +3929,15 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3913,9 +4003,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4058,9 +4148,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4104,9 +4194,15 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -4172,9 +4268,9 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4279,9 +4375,15 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -4369,9 +4471,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4415,9 +4517,15 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -4483,9 +4591,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4628,9 +4736,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4674,9 +4782,15 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -4742,9 +4856,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4887,9 +5001,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4933,9 +5047,15 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5001,9 +5121,9 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5108,9 +5228,15 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -5192,9 +5318,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5238,9 +5364,15 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5306,9 +5438,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5451,9 +5583,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5497,9 +5629,15 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5565,9 +5703,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5710,9 +5848,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5756,9 +5894,15 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5824,9 +5968,9 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5931,9 +6075,15 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -6011,9 +6161,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6057,9 +6207,15 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6125,9 +6281,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6270,9 +6426,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6316,9 +6472,15 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6384,9 +6546,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6529,9 +6691,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6575,9 +6737,15 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6643,9 +6811,9 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6750,9 +6918,15 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -6830,9 +7004,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6876,9 +7050,15 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6944,9 +7124,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7089,9 +7269,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7135,9 +7315,15 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -7203,9 +7389,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7348,9 +7534,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7394,9 +7580,15 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -7462,9 +7654,9 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7569,9 +7761,15 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -7656,9 +7854,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7728,9 +7926,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7800,9 +7998,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7846,9 +8044,15 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -7930,9 +8134,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8002,9 +8206,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8138,9 +8342,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8184,9 +8388,15 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -8252,9 +8462,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8388,9 +8598,9 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8539,9 +8749,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8611,9 +8821,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8683,9 +8893,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8729,9 +8939,15 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -8813,9 +9029,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8885,9 +9101,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9021,9 +9237,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9067,9 +9283,15 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -9135,9 +9357,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9271,9 +9493,9 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9422,9 +9644,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9494,9 +9716,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9566,9 +9788,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9612,9 +9834,15 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -9696,9 +9924,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9768,9 +9996,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9904,9 +10132,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9950,9 +10178,15 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -10018,9 +10252,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10154,9 +10388,9 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10305,9 +10539,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10377,9 +10611,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10449,9 +10683,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10495,9 +10729,15 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -10579,9 +10819,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10651,9 +10891,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10787,9 +11027,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10833,9 +11073,15 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -10901,9 +11147,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11037,9 +11283,9 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11188,9 +11434,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11260,9 +11506,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11332,9 +11578,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11378,9 +11624,15 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -11462,9 +11714,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11534,9 +11786,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11670,9 +11922,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11716,9 +11968,15 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -11784,9 +12042,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11920,9 +12178,9 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12071,9 +12329,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12143,9 +12401,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12215,9 +12473,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12261,9 +12519,15 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -12345,9 +12609,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12417,9 +12681,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12553,9 +12817,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12599,9 +12863,15 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -12667,9 +12937,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12803,9 +13073,9 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -12974,9 +13244,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13047,9 +13317,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13093,9 +13363,15 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -13161,9 +13437,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13306,9 +13582,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13352,9 +13628,15 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -13420,9 +13702,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13587,9 +13869,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13682,9 +13964,9 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13836,9 +14118,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13909,9 +14191,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -13955,9 +14237,15 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -14023,9 +14311,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14168,9 +14456,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14214,9 +14502,15 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -14282,9 +14576,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14449,9 +14743,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14544,9 +14838,9 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14688,9 +14982,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14761,9 +15055,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -14807,9 +15101,15 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -14875,9 +15175,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15020,9 +15320,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15066,9 +15366,15 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -15134,9 +15440,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15301,9 +15607,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15396,9 +15702,9 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15540,9 +15846,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15613,9 +15919,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15659,9 +15965,15 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -15727,9 +16039,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15872,9 +16184,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -15918,9 +16230,15 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -15986,9 +16304,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16153,9 +16471,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16248,9 +16566,9 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16392,9 +16710,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16465,9 +16783,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16511,9 +16829,15 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -16579,9 +16903,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16724,9 +17048,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -16770,9 +17094,15 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -16838,9 +17168,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17005,9 +17335,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17100,9 +17430,9 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17244,9 +17574,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17317,9 +17647,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17363,9 +17693,15 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -17431,9 +17767,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17576,9 +17912,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17622,9 +17958,15 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -17690,9 +18032,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17857,9 +18199,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -17952,9 +18294,9 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18109,9 +18451,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18181,9 +18523,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18317,9 +18659,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18363,9 +18705,15 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -18431,9 +18779,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18576,9 +18924,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18622,9 +18970,15 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -18690,9 +19044,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18833,9 +19187,9 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -18972,9 +19326,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19044,9 +19398,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19180,9 +19534,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19226,9 +19580,15 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -19294,9 +19654,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19439,9 +19799,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19485,9 +19845,15 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -19553,9 +19919,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19696,9 +20062,9 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19835,9 +20201,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -19907,9 +20273,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20043,9 +20409,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20089,9 +20455,15 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -20157,9 +20529,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20302,9 +20674,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20348,9 +20720,15 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -20416,9 +20794,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20559,9 +20937,9 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20730,9 +21108,9 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20812,9 +21190,9 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20904,9 +21282,9 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -20986,9 +21364,9 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -21041,24 +21419,32 @@ export const exitJam = /* GraphQL */ `mutation ExitJam($jamSessionId: ID!, $user
 >;
 export const createRecording = /* GraphQL */ `mutation CreateRecording(
   $userId: ID!
+  $jamId: ID!
   $sessionId: ID!
   $recordingId: ID!
   $samplingRate: Int!
-  $pageturns: [String]!
   $fileName: String!
+  $songs: [RecordingSongSegmentInput]!
 ) {
   createRecording(
     userId: $userId
+    jamId: $jamId
     sessionId: $sessionId
     recordingId: $recordingId
     samplingRate: $samplingRate
-    pageturns: $pageturns
     fileName: $fileName
+    songs: $songs
   ) {
     recordingId
-    sessionId
+    jamId
     userId
-    pageturns
+    sessionId
+    songs {
+      songId
+      startTime
+      pageturns
+      __typename
+    }
     fileName
     samplingRate
     comment

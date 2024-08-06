@@ -94,9 +94,9 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -176,9 +176,9 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -268,9 +268,9 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -350,9 +350,9 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment

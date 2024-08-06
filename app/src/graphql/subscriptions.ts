@@ -94,25 +94,15 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -131,15 +121,6 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -195,25 +176,15 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -232,15 +203,6 @@ export const onEnterJam = /* GraphQL */ `subscription OnEnterJam($jamSessionId: 
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -306,25 +268,15 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -343,15 +295,6 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {
@@ -407,25 +350,15 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
         }
         labelledRecording {
           recordingId
-          songTitle
-          formId
-          key
-          tabLink
-          rawTabs
-          prelabelTool
-          prelabelToolVersion
-          labelTool
-          labelToolVersion
-          isLabelerRejected
-          labelerRejectionReason
-          singerName
-          singerEmail
-          gender
-          status
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
           comment
+          status
           createDate
           updateDate
-          lastOULGenerateDate
           __typename
         }
         songsCreated {
@@ -444,15 +377,6 @@ export const onExitJam = /* GraphQL */ `subscription OnExitJam($jamSessionId: ID
           CCLISongWriter
           CCLICopyrightNotice
           CCLILicenseNumber
-          __typename
-        }
-        editHistory {
-          recordingHistoryId
-          date
-          actionColumn
-          previousAction
-          newAction
-          comment
           __typename
         }
         likedSongs {

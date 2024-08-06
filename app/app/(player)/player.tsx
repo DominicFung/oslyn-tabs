@@ -40,6 +40,7 @@ export interface PlayerProps {
   jam: JamSession, 
   isSlideShow?: boolean
   user: User|null
+  resetJam: () => void
 }
 
 export default function Player(p: PlayerProps){
@@ -279,6 +280,7 @@ export default function Player(p: PlayerProps){
         song={songs[song]!.song} skey={sKey} page={page} 
         setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
         textSize={textSize} complex={complex} headsUp={headsUp}
+        resetJam={p.resetJam}
       />
     }
 

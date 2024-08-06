@@ -35,6 +35,8 @@ export interface PlayerProps {
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
+const nextSongEventId = "next-song"
+
 export default function Player(p: PlayerProps) {
   const { theme } = useTheme()
   const [ localTheme, setLocalTheme ] = useState("light")
@@ -78,7 +80,7 @@ export default function Player(p: PlayerProps) {
   }, [p.jam])
 
   // these are being SUBSCRIBED to, so needs to be moved out of the main JAM object.
-  const [ song, setSong ] = useState(p.jam.currentSong || 0)
+  const [ song, _setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
   const [ active, setActive ] = useState<Participant[]>([])
@@ -90,6 +92,19 @@ export default function Player(p: PlayerProps) {
 
   const [transpose, setTranspose] = useState(0)
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
+
+  // do not use _setSong direct, we need to dispatch an Event for recording/labelling 
+  const setSong = (i: number) => {
+    if (songs.length > 0) {
+      console.log(`setSong: ${i} ${songs[i].song.songId}`)
+      document.body.dispatchEvent(
+        new CustomEvent(nextSongEventId, { 
+          detail: { songId: songs[i].song.songId } 
+        })
+      )
+      _setSong(i)
+    } else console.warn("PLAYER - songs list not set yet.")
+  }
 
   const [ textSize, setTextSize ] = useState("text-lg")
   useEffect(() => { const a = localStorage.getItem('jam/textSize') || "text-lg"; if (a && a != "false") { setTextSize(a) } }, [])

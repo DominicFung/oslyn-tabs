@@ -62,9 +62,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -108,9 +108,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -176,9 +182,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -321,9 +327,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -367,9 +373,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -435,9 +447,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -580,9 +592,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -626,9 +638,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -694,9 +712,9 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -801,9 +819,15 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -895,9 +919,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -941,9 +965,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1009,9 +1039,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1154,9 +1184,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1200,9 +1230,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1268,9 +1304,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1413,9 +1449,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1459,9 +1495,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1527,9 +1569,9 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1634,9 +1676,15 @@ export const listSongs = /* GraphQL */ `query ListSongs(
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -1723,9 +1771,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1769,9 +1817,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -1837,9 +1891,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -1982,9 +2036,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2028,9 +2082,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -2096,9 +2156,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2241,9 +2301,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2287,9 +2347,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -2355,9 +2421,9 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2462,9 +2528,15 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
     }
     recordings {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -2541,9 +2613,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2587,9 +2659,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -2655,9 +2733,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2762,9 +2840,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -2814,9 +2898,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2886,9 +2970,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -2958,9 +3042,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3004,9 +3088,15 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3084,9 +3174,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3179,9 +3269,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3274,9 +3364,9 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3408,9 +3498,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3454,9 +3544,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3522,9 +3618,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3629,9 +3725,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -3681,9 +3783,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3753,9 +3855,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3825,9 +3927,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -3871,9 +3973,15 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -3951,9 +4059,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4046,9 +4154,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4141,9 +4249,9 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4275,9 +4383,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4321,9 +4429,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -4389,9 +4503,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4496,9 +4610,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
     }
     labelledRecording {
       recordingId
-      sessionId
+      jamId
       userId
-      pageturns
+      sessionId
+      songs {
+        songId
+        startTime
+        pageturns
+        __typename
+      }
       fileName
       samplingRate
       comment
@@ -4548,9 +4668,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4620,9 +4740,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4692,9 +4812,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4738,9 +4858,15 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -4818,9 +4944,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -4913,9 +5039,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5008,9 +5134,9 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5133,9 +5259,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5205,9 +5331,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5277,9 +5403,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5323,9 +5449,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5407,9 +5539,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5479,9 +5611,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5615,9 +5747,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5661,9 +5793,15 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -5729,9 +5867,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -5865,9 +6003,9 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6023,9 +6161,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6095,9 +6233,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6167,9 +6305,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6213,9 +6351,15 @@ export const listBands = /* GraphQL */ `query ListBands(
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6297,9 +6441,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6369,9 +6513,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6505,9 +6649,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6551,9 +6695,15 @@ export const listBands = /* GraphQL */ `query ListBands(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -6619,9 +6769,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6755,9 +6905,9 @@ export const listBands = /* GraphQL */ `query ListBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6909,9 +7059,9 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -6955,9 +7105,15 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -7023,9 +7179,9 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7190,9 +7346,9 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7285,9 +7441,9 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7414,9 +7570,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7486,9 +7642,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7558,9 +7714,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7604,9 +7760,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
       }
       recordings {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -7688,9 +7850,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7760,9 +7922,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7896,9 +8058,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -7942,9 +8104,15 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -8010,9 +8178,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8146,9 +8314,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8313,9 +8481,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8386,9 +8554,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8432,9 +8600,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -8500,9 +8674,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8645,9 +8819,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8691,9 +8865,15 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -8759,9 +8939,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -8926,9 +9106,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9021,9 +9201,9 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9174,9 +9354,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9247,9 +9427,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9293,9 +9473,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -9361,9 +9547,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9506,9 +9692,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9552,9 +9738,15 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -9620,9 +9812,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9787,9 +9979,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -9882,9 +10074,9 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10026,9 +10218,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10098,9 +10290,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10234,9 +10426,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10280,9 +10472,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -10348,9 +10546,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10493,9 +10691,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10539,9 +10737,15 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -10607,9 +10811,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10750,9 +10954,9 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10889,9 +11093,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -10961,9 +11165,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11097,9 +11301,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11143,9 +11347,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -11211,9 +11421,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11356,9 +11566,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11402,9 +11612,15 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       }
       labelledRecording {
         recordingId
-        sessionId
+        jamId
         userId
-        pageturns
+        sessionId
+        songs {
+          songId
+          startTime
+          pageturns
+          __typename
+        }
         fileName
         samplingRate
         comment
@@ -11470,9 +11686,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         recordings {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment
@@ -11613,9 +11829,9 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         }
         labelledRecording {
           recordingId
-          sessionId
+          jamId
           userId
-          pageturns
+          sessionId
           fileName
           samplingRate
           comment

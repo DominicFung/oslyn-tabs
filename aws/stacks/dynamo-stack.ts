@@ -38,6 +38,14 @@ export class DynamoStack extends Stack {
       }
     })
 
+    recordingTable.addGlobalSecondaryIndex({
+      indexName: 'jamId',
+      partitionKey: {
+        name: 'jamId',
+        type: AttributeType.STRING
+      }
+    })
+
     new CfnOutput(this, `${props.name}-RecordingTable-Name`, {
       value: recordingTable.tableName,
       exportName: `${props.name}-RecordingTable-Name`

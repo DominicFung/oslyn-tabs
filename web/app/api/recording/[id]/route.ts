@@ -5,14 +5,15 @@ import { GraphQLResult, generateClient } from "aws-amplify/api"
 import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as m from '@/../src/graphql/mutations'
-import { Recording } from '@/../src/API'
+import { Recording, RecordingSongSegmentInput } from '@/../src/API'
 
 export interface SaveRecordingRequest {
+  jamId: string
   sessionId: string
   userId: string
   fileName: string
   samplingRate: number
-  pageturns: string[]
+  songs: RecordingSongSegmentInput[]
 }
 
 export async function POST(request: Request) {

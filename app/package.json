@@ -5,7 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios -d",
+    "ios": "./scripts/prebuild.sh && expo run:ios -d",
     "web": "expo start --web",
     "ts:check": "tsc",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
