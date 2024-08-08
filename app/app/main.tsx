@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import {Text, View, Image, Pressable, ScrollView } from 'react-native'
 import { Band, JamSession } from "../src/API"
 

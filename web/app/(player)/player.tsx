@@ -80,7 +80,7 @@ export default function Player(p: PlayerProps) {
   }, [p.jam])
 
   // these are being SUBSCRIBED to, so needs to be moved out of the main JAM object.
-  const [ song, _setSong ] = useState(p.jam.currentSong || 0)
+  const [ song, setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
   const [ active, setActive ] = useState<Participant[]>([])
@@ -92,19 +92,6 @@ export default function Player(p: PlayerProps) {
 
   const [transpose, setTranspose] = useState(0)
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
-
-  // do not use _setSong direct, we need to dispatch an Event for recording/labelling 
-  const setSong = (i: number) => {
-    if (songs.length > 0) {
-      console.log(`setSong: ${i} ${songs[i].song.songId}`)
-      document.body.dispatchEvent(
-        new CustomEvent(nextSongEventId, { 
-          detail: { songId: songs[i].song.songId } 
-        })
-      )
-      _setSong(i)
-    } else console.warn("PLAYER - songs list not set yet.")
-  }
 
   const [ textSize, setTextSize ] = useState("text-lg")
   useEffect(() => { const a = localStorage.getItem('jam/textSize') || "text-lg"; if (a && a != "false") { setTextSize(a) } }, [])
@@ -383,24 +370,35 @@ export default function Player(p: PlayerProps) {
   }
   useEffect(() => {
     addEventListener("fullscreenchange", onFullScreenChange)
-    window.addEventListener('keydown', keydown)
-
-    return () => { 
-      removeEventListener("fullscreenchange", onFullScreenChange)
-      window.removeEventListener('keydown', keydown)
-    }
+    return () => { removeEventListener("fullscreenchange", onFullScreenChange) }
   }, [])
 
   const keydown = (event: KeyboardEvent) => {
     console.log(event.code)
     if (event.code === "ArrowRight") {
-      event.preventDefault()
       if (!p.isSlideShow && isLastPage && songs.length > song+1) {
         setNextSong(song+1)
         return
       } else console.log(`cannot turn to go to next song using ${event.code}`)
     }
   }
+
+  useEffect(() => {
+    if (songs) window.addEventListener('keydown', keydown)
+    return () => window.removeEventListener('keydown', keydown)
+  }, [p.isSlideShow, isLastPage, songs, song])
+
+  useEffect(() => {
+    if (songs.length > 0) {
+      let sid = songs[song].song.songId
+      console.log(`setSong: ${songs[song].song.title} ${sid}`)
+      document.body.dispatchEvent(
+        new CustomEvent(nextSongEventId, { 
+          detail: { songId: sid } 
+        })
+      )
+    } else console.warn("PLAYER - songs list not set yet.")
+  } , [songs, song])
 
   return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
     { songs[song]?.song && 

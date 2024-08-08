@@ -134,24 +134,28 @@ export default function Recorder(p: RecorderProps) {
     let chunks: BlobPart[] = [];
     let count = 1
 
-    let recordingSongs = [] as RecordingSongSegmentInput[]
-    let currentRecordingSong = {
+    let recordingSongs = [{
       songId, startTime: "0", pageturns: []
-    } as RecordingSongSegmentInput
+    }] as RecordingSongSegmentInput[]
+    let cri = 0
 
     const reset = () => {
-      recordingSongs = [] as RecordingSongSegmentInput[]
-      currentRecordingSong = {
+      recordingSongs = [{
         songId, startTime: "0", pageturns: []
-      } as RecordingSongSegmentInput
+      }] as RecordingSongSegmentInput[]
+      cri = 0
     }
 
     const handleNextSong = ((e: CustomEvent<{songId: string}>) => {
-      console.log(`New Song Id: ${e.detail.songId}`)
-
-      recordingSongs.push(currentRecordingSong)
-      currentRecordingSong = {
-        songId: e.detail.songId, startTime: String(performance.now() - recording_start), pageturns: []
+      console.log(`songId: ${e.detail.songId} ??? recordingSongs[${cri}].songId: ${recordingSongs[cri].songId}`)
+      if (e.detail.songId !== recordingSongs[cri].songId ) {
+        console.log(`New Song Id: ${e.detail.songId}`)
+        recordingSongs.push({
+          songId: e.detail.songId, startTime: String(performance.now() - recording_start), pageturns: []
+        })
+        cri = recordingSongs.length - 1
+        console.log(`NEW RECORDING SONGS LIST: ${cri}`)
+        console.log(recordingSongs)
       }
     }) as EventListener
 
@@ -161,7 +165,7 @@ export default function Recorder(p: RecorderProps) {
     // register listeners
     const handlePageTurn = async (e: Event) => {
       console.log(`PAGE TURN! start time: ${recording_start}`)
-      currentRecordingSong.pageturns.push(String(performance.now() - recording_start))
+      recordingSongs[cri].pageturns.push(String(performance.now() - recording_start))
     }
 
     console.log(`adding event listener "${pageTurnId}"`)
@@ -194,7 +198,7 @@ export default function Recorder(p: RecorderProps) {
       let fileName = `recordings/${p.jamId}/${sessionId}/${String(count).padStart(3, '0')}_${recordingId}_${d}.wav`
 
       saveAudio(blob, fileName)
-      saveTrainingData(recordingId, sessionId, p.userId, p.jamId, fileName, kSampleRate, recordingSongs)
+      await saveTrainingData(recordingId, sessionId, p.userId, p.jamId, fileName, kSampleRate, recordingSongs)
       reset(); chunks=[];
       return
     }
