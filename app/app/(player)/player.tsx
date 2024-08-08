@@ -260,7 +260,7 @@ export default function Player(p: PlayerProps){
   }
 
   const setKey = async (key: string) => {
-    console.error(`setKey Fired ${key}`)
+    console.log(`setKey Fired ${key}`)
     const d = await client.graphql({ query: m.setSongKey, variables: {
       jamSessionId: p.jam.jamSessionId, song, key
     }}) as GraphQLResult<SetSongKeyMutation>

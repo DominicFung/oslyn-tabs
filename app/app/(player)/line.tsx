@@ -48,7 +48,7 @@ export default function Line(p: LineProps) {
 
   const onMaxWidth = (event: NativeSyntheticEvent<TextLayoutEventData>, e: "line"|"chord") => {
     const w = event.nativeEvent?.lines[0]?.width || 0
-    console.log(`ON MAX WIDTH - ${ w } , ${e}`)
+    console.log(`ON MAX WIDTH - ${ w } , ${e} "${event.nativeEvent?.lines[0].text}"`)
     if (e === "line") { setMaxWidth((prev) => { return { ...prev, lineWidth: w } }) }
     if (e === "chord") { setMaxWidth((prev) => { return { ...prev, lastChordWidth: w } }) }
   }
@@ -61,7 +61,66 @@ export default function Line(p: LineProps) {
     p.onMaxWidth(Math.max(maxWidth.lineWidth, maxWidth.lastChordWidth) + 8 /* to account for px-1 */)
   }, [maxWidth])
 
+  // this is ONLY used for substring with spaces.
+  const calculateWidth = (position: number, textSize: string) => {
+    switch (textSize) {
+      case "text-xs":   return position * 2
+      case "text-sm":   return position * 4
+      case "text-base": return position * 6
+      case "text-lg":   return position * 8
+      case "text-xl":   return position * 10
+      case "text-2xl":  return position * 12
+      case "text-3xl":  return position * 14
+      default: return position * 6
+    }
+  }
+
+  const combineChordLyricForWidthCalculation = () => {
+    const lyric = phrase.lyric.trim()
+    if (phrase.chords[phrase.chords.length-1].position < lyric.length) {
+      let s = lyric.slice(0, phrase.chords[phrase.chords.length-1].position + 1) + 
+              getChordByNumber(phrase.chords[phrase.chords.length-1].chord, phrase.chords[phrase.chords.length-1].isMinor, p.skey) +
+              (p.decorate && phrase.chords[phrase.chords.length-1].decorator)
+
+      console.log(`^_^ ${s}`)
+      return s
+    } else {
+      console.log("here")
+      let i = 0 // is the index of the FIRST chord outside the max lyric length
+      while (i < phrase.chords.length) {
+        if (phrase.chords[i].position > lyric.length-1) break;
+        i=i+1
+      }
+
+      let s = lyric
+      for (let j=i; j<phrase.chords.length; j++) {
+        console.log(`CHORD WORK: ${getChordByNumber(phrase.chords[j].chord, phrase.chords[j].isMinor, p.skey)} ${phrase.chords[j].position-s.length}`)
+        s = s + " ".repeat(phrase.chords[j].position+1-s.length) + 
+        getChordByNumber(phrase.chords[j].chord, phrase.chords[j].isMinor, p.skey) +
+        (p.decorate && phrase.chords[j].decorator)
+      }
+      return s
+    }
+  }
+
   return <>
+    {p.loaded && phrase.lyric.trim() === "" && <View className="relative h-12 mt-6">
+      { phrase.chords.map((c, i) => { 
+        const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
+        const width = calculateWidth(c.position, p.textSize  || "text-lg")
+
+        if (i < phrase.chords.length - 1)
+          return <Text key={`${uuid}-a${i}`} className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
+                    style={{ marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}}>
+                      {chord}{p.decorate && c.decorator}
+                  </Text>
+        else 
+          return <Text key={`${uuid}-a${i}`} className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
+                    style={{ marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}} onTextLayout={onMaxChordWidth}>
+                      {chord}{p.decorate && c.decorator}
+                  </Text>
+      })}
+    </View> }
     { phrase && phrase.lyric.trim() != "" && <View className="relative h-12 mt-6">
       <View>
         {p.loaded && phrase.chords.map((c, i) => { 
@@ -72,7 +131,6 @@ export default function Line(p: LineProps) {
             style={{ marginLeft: s || 0, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}}>
               {chord}{p.decorate && c.decorator}
             </Text>
-
         })}
       </View>
 
@@ -91,10 +149,7 @@ export default function Line(p: LineProps) {
 
         {/** FOR CALCULATIONS ONLY - last chord length */}
         <Text className={`absolute h-0 opacity-0 ${p.textSize || "text-lg"}`} key={`${uuid}-bs`} numberOfLines={1} onTextLayout={onMaxChordWidth}>
-          {phrase.lyric.slice(0, phrase.chords[phrase.chords.length-1].position < phrase.lyric.length-1 ? phrase.chords[phrase.chords.length-1].position + 1 : phrase.chords[phrase.chords.length-1].position) + 
-            getChordByNumber(phrase.chords[phrase.chords.length-1].chord, phrase.chords[phrase.chords.length-1].isMinor, p.skey) +
-            (p.decorate && phrase.chords[phrase.chords.length-1].decorator)
-          }
+          { combineChordLyricForWidthCalculation() }
         </Text>
       </View>
     </View> }
