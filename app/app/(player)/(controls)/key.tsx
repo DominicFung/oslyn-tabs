@@ -27,19 +27,7 @@ const chords = [
 
 export default function Key(p: KeyProps) {
 
-  const [value, setValue] = useState("C")
   const [isFocus, setIsFocus] = useState(true)
-
-  const renderLabel = () => {
-    if (value || isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-          Dropdown label
-        </Text>
-      );
-    }
-    return null;
-  }
 
   return <>
     <View className="ml-3 text-sm font-normal max-w-sm">
@@ -60,12 +48,12 @@ export default function Key(p: KeyProps) {
           valueField="value"
           placeholder={!isFocus ? 'Select item' : '...'}
           searchPlaceholder="Search..."
-          value={value}
+          value={p.skey}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
-            setValue(item.value);
-            setIsFocus(false);
+            p.setKey(item.value)
+            setIsFocus(false)
           }}
           renderLeftIcon={() => (
             <Ionicons
@@ -76,8 +64,6 @@ export default function Key(p: KeyProps) {
             />
           )}
         />
-
-
       </View>
     </View>
   </>

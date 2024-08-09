@@ -32,8 +32,6 @@ const capos = [
 export default function Capo(p: CapoProps) {
 
   const [ isLead, setIsLead ] = useState(true)
-
-  const [value, setValue] = useState("0")
   const [isFocus, setIsFocus] = useState(true)
 
   return <>
@@ -57,11 +55,11 @@ export default function Capo(p: CapoProps) {
           valueField="value"
           placeholder={!isFocus ? 'Select item' : '...'}
           searchPlaceholder="Search..."
-          value={value}
+          value={p.capo}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
-            setValue(item.value);
+            p.setCapo(item.value);
             setIsFocus(false);
           }}
           renderLeftIcon={() => (

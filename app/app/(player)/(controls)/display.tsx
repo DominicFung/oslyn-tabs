@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useEffect } from "react"
 import { capitalizeFirstLetter } from "../../../core/utils/frontend"
 
-import {Text, View, Pressable, StyleSheet } from 'react-native'
+import {Text, View, Pressable, StyleSheet, ScrollView } from 'react-native'
 
 import { Dropdown } from 'react-native-element-dropdown'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -48,13 +48,13 @@ export default function Display(p: DisplayProps) {
   useEffect(() => { if (theme && theme != mode) { setMode(theme) }}, [theme])
 
   return <>
-    <View className="ml-3 text-sm font-normal max-w-sm">
+    <View className="ml-3 text-sm font-normal max-w-sm h-full">
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</Text>
       <Text className="pb-3 text-sm font-normal">Set your text size to make it easier to read! 
         <Text className="text-xs italic">(only affects you)</Text>
       </Text> 
 
-      <View className="max-h-[calc(100vh-10rem)]">
+      <ScrollView className="max-h-[calc(100vh-10rem)]">
         <View className=''>
           <Dropdown
             style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
@@ -87,8 +87,8 @@ export default function Display(p: DisplayProps) {
           />
         </View>
 
-        <View className="flex flex-row mt-10 mb-5">
-          <View className="h-24">
+        <View className="flex flex-row mt-6 mb-5">
+          <View className="h-16">
             <CheckBox
               checked={p.complex}
               onPress={() => { p.setComplex(!p.complex) }}
@@ -97,14 +97,14 @@ export default function Display(p: DisplayProps) {
               uncheckedIcon={'checkbox-blank-outline'}
             /> 
           </View>
-          <Pressable className="ml-2 text-sm" onPress={() => { p.setComplex(!p.complex) }}>
+          <Pressable className="ml-2 mt-4 text-sm" onPress={() => { p.setComplex(!p.complex) }}>
             <Text className="font-medium text-gray-900 dark:text-gray-300">Chord Complexity</Text>
             <Text className="text-xs font-normal text-gray-500 dark:text-gray-300">Check this off for chord decorators. Uncheck to simplify.</Text>
           </Pressable>
         </View>
 
-        <View className={`flex flex-row mt-10 mb-5`}>
-          <View className="h-24">
+        <View className={`flex flex-row mb-5`}>
+          <View className="h-16">
             <CheckBox
               checked={p.headsUp}
               onPress={() => p.setHeadsUp(!p.headsUp) }
@@ -113,34 +113,32 @@ export default function Display(p: DisplayProps) {
               uncheckedIcon={'checkbox-blank-outline'}
             />
           </View>
-          <Pressable className="ml-2 text-sm" onPress={() => { p.setHeadsUp(!p.headsUp) }}>
+          <Pressable className="ml-2 mt-4 text-sm" onPress={() => { p.setHeadsUp(!p.headsUp) }}>
             <Text className="font-medium text-gray-900 dark:text-gray-300">Heads Up!</Text>
             <Text className="text-xs font-normal text-gray-500 dark:text-gray-300">Have the application show the first line of the next slide.</Text>
           </Pressable>
         </View>
 
-        <View className="flex mt-10 mb-5">
-          <View className="mt-6 w-full mx-2 max-w-sm relative z-10">
-            <View className="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
-              { MODE.map((m,i) => {
-                let selected = m === mode
-                let first = i === 0
-                let last = i === MODE.length - 1
+        <View className="mt-6 w-full mx-2 max-w-sm relative z-10">
+          <View className="flex w-full flex-row text-sm font-medium text-center text-gray-500 divide-x-3 divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+            { MODE.map((m,i) => {
+              let selected = m === mode
+              let first = i === 0
+              let last = i === MODE.length - 1
 
-                return <View className="w-full" key={i}>
-                  <Pressable onPress={() => setMode(m)} disabled={theme === undefined}
-                    className={`inline-block w-full p-4 ${
-                      selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
-                        first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none focus:z-10 relative`} aria-current="page">
-                    <Text>{m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}</Text>
-                  </Pressable>
-                </View>
-              }) }
-            </View>
+              return <View className="" key={i}>
+                <Pressable onPress={() => setMode(m)} disabled={theme === undefined}
+                  className={`p-4 ${
+                    selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
+                      first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none focus:z-10 relative`} aria-current="page">
+                  <Text>{m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}</Text>
+                </Pressable>
+              </View>
+            }) }
           </View>
         </View>
 
-      </View>
+      </ScrollView>
     </View>
   </>
 }

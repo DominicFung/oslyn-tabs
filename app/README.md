@@ -18,6 +18,9 @@ npx expo run:ios --device
 
 ### iOS (Deploy to TestFlight)
 
+Step 1: Update the version number in line 22 of app/ios/Oslyn/info.plist
+
+Step 2:
 ```
 cd ios
 fastlane beta
