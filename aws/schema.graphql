@@ -337,11 +337,24 @@ type Recording {
 type RecordingSongSegment {
   songId: ID!
   startTime: String!
-  pageturns: [String]!
+  pageturns: [RecordingPageTurn]!
 }
 
 input RecordingSongSegmentInput {
   songId: ID!
   startTime: String!
-  pageturns: [String]!
+  pageturns: [RecordingPageTurnInput]!
+}
+
+enum turn { FORWARD, BACK, SKIP, START }
+
+type RecordingPageTurn {
+  turn: turn!,
+  page: Int!
+  time: String!
+}
+
+input RecordingPageTurnInput {
+  page: Int!
+  time: String!
 }

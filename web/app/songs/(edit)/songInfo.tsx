@@ -15,7 +15,7 @@ interface SongProps {
 
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
 
-export default function Song(p: SongProps) {
+export default function SongInfo(p: SongProps) {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log(acceptedFiles)
 
@@ -33,6 +33,54 @@ export default function Song(p: SongProps) {
   
   const [ albumOpen, setAlbumOpen ] = useState(false)
   const [ albumLink, setAlbumLink ] = useState(p.song.albumCover || "")
+
+  function estimateKey(chords: string[]): string {
+    // Define the keys with their corresponding chords
+    const circleOfFifths: { [key: string]: string[] } = {
+        "C": ["C", "Dm", "Em", "F", "G", "Am", "Bdim"],
+        "G": ["G", "Am", "Bm", "C", "D", "Em", "F#dim"],
+        "D": ["D", "Em", "F#m", "G", "A", "Bm", "C#dim"],
+        "A": ["A", "Bm", "C#m", "D", "E", "F#m", "G#dim"],
+        "E": ["E", "F#m", "G#m", "A", "B", "C#m", "D#dim"],
+        "B": ["B", "C#m", "D#m", "E", "F#", "G#m", "A#dim"],
+        "F#": ["F#", "G#m", "A#m", "B", "C#", "D#m", "E#dim"],
+        "C#": ["C#", "D#m", "E#m", "F#", "G#", "A#m", "B#dim"],
+        "F": ["F", "Gm", "Am", "Bb", "C", "Dm", "Edim"],
+        "Bb": ["Bb", "Cm", "Dm", "Eb", "F", "Gm", "Adim"],
+        "Eb": ["Eb", "Fm", "Gm", "Ab", "Bb", "Cm", "Ddim"],
+        "Ab": ["Ab", "Bbm", "Cm", "Db", "Eb", "Fm", "Gdim"],
+        "Db": ["Db", "Ebm", "Fm", "Gb", "Ab", "Bbm", "Cdim"],
+        "Gb": ["Gb", "Abm", "Bbm", "Cb", "Db", "Ebm", "Fdim"],
+        "Cb": ["Cb", "Dbm", "Ebm", "Fb", "Gb", "Abm", "Bdim"],
+    };
+
+    // Initialize a score for each key
+    const keyScores: { [key: string]: number } = {};
+    for (const key in circleOfFifths) {
+        keyScores[key] = 0;
+    }
+
+    // Iterate over the chords and count how often they fit into each key
+    chords.forEach(chord => {
+        for (const key in circleOfFifths) {
+            if (circleOfFifths[key].includes(chord)) {
+                keyScores[key]++;
+            }
+        }
+    });
+
+    // Find the key with the highest score
+    let bestKey = "";
+    let highestScore = 0;
+    for (const key in keyScores) {
+        if (keyScores[key] > highestScore) {
+            highestScore = keyScores[key];
+            bestKey = key;
+        }
+    }
+
+    return bestKey;
+  }
 
   return <>
   <div className='mx-auto max-w-4xl cursor-pointer'>

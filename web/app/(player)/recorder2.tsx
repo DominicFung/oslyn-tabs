@@ -163,10 +163,13 @@ export default function Recorder(p: RecorderProps) {
     document.body.addEventListener(nextSongEventId, handleNextSong)
 
     // register listeners
-    const handlePageTurn = async (e: Event) => {
+    const handlePageTurn = ((e: CustomEvent<{page: number}>) => {
       console.log(`PAGE TURN! start time: ${recording_start}`)
-      recordingSongs[cri].pageturns.push(String(performance.now() - recording_start))
-    }
+      let time = String(performance.now() - recording_start)
+      recordingSongs[cri].pageturns.push({
+        page: e.detail.page, time
+      })
+    }) as EventListener
 
     console.log(`adding event listener "${pageTurnId}"`)
     document.body.addEventListener(pageTurnId, handlePageTurn) 

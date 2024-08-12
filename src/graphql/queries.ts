@@ -114,7 +114,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -379,7 +378,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -644,7 +642,6 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -825,7 +822,12 @@ export const getSong = /* GraphQL */ `query GetSong($songId: ID!, $userId: ID!, 
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -971,7 +973,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1236,7 +1237,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1501,7 +1501,6 @@ export const listSongs = /* GraphQL */ `query ListSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1682,7 +1681,12 @@ export const listSongs = /* GraphQL */ `query ListSongs(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -1823,7 +1827,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2088,7 +2091,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2353,7 +2355,6 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2534,7 +2535,12 @@ export const listSharedSongs = /* GraphQL */ `query ListSharedSongs(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -2665,7 +2671,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2846,7 +2851,12 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -3094,7 +3104,6 @@ export const getUserById = /* GraphQL */ `query GetUserById($userId: ID!) {
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3550,7 +3559,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3731,7 +3739,12 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -3979,7 +3992,6 @@ export const getUserByEmail = /* GraphQL */ `query GetUserByEmail($email: AWSEma
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -4435,7 +4447,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -4616,7 +4627,12 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -4864,7 +4880,6 @@ export const listUsers = /* GraphQL */ `query ListUsers($limit: Int, $filter: St
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5455,7 +5470,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5799,7 +5813,6 @@ export const getBand = /* GraphQL */ `query GetBand($bandId: ID!, $userId: ID) {
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6357,7 +6370,6 @@ export const listBands = /* GraphQL */ `query ListBands(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6701,7 +6713,6 @@ export const listBands = /* GraphQL */ `query ListBands(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -7111,7 +7122,6 @@ export const listSharedBands = /* GraphQL */ `query ListSharedBands(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -7766,7 +7776,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -8110,7 +8119,6 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands($limit: Int,
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -8606,7 +8614,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -8871,7 +8878,6 @@ export const getSet = /* GraphQL */ `query GetSet($setListId: ID!, $userId: ID!)
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -9479,7 +9485,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -9744,7 +9749,6 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -10478,7 +10482,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -10743,7 +10746,6 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -11353,7 +11355,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -11618,7 +11619,6 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName

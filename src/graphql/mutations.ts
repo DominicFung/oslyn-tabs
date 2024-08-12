@@ -127,7 +127,6 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -308,7 +307,12 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -556,7 +560,6 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1012,7 +1015,6 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1193,7 +1195,12 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -1441,7 +1448,6 @@ export const addFriendByEmail = /* GraphQL */ `mutation AddFriendByEmail($userId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -1897,7 +1903,6 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2078,7 +2083,12 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -2326,7 +2336,6 @@ export const removeFriendById = /* GraphQL */ `mutation RemoveFriendById($userId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -2801,7 +2810,6 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3066,7 +3074,6 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3331,7 +3338,6 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3512,7 +3518,12 @@ export const createSong = /* GraphQL */ `mutation CreateSong(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -3670,7 +3681,6 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -3935,7 +3945,6 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -4200,7 +4209,6 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -4381,7 +4389,12 @@ export const updateSong = /* GraphQL */ `mutation UpdateSong(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -4523,7 +4536,6 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -4788,7 +4800,6 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5053,7 +5064,6 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5234,7 +5244,12 @@ export const shareSong = /* GraphQL */ `mutation ShareSong(
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -5370,7 +5385,6 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5635,7 +5649,6 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -5900,7 +5913,6 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6081,7 +6093,12 @@ export const removeAccess = /* GraphQL */ `mutation RemoveAccess($songId: ID!, $
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -6213,7 +6230,6 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6478,7 +6494,6 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6743,7 +6758,6 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -6924,7 +6938,12 @@ export const addRecordingToSong = /* GraphQL */ `mutation AddRecordingToSong($so
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -7056,7 +7075,6 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -7321,7 +7339,6 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -7586,7 +7603,6 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -7767,7 +7783,12 @@ export const removeRecordingFromSong = /* GraphQL */ `mutation RemoveRecordingFr
       songs {
         songId
         startTime
-        pageturns
+        pageturns {
+          turn
+          page
+          time
+          __typename
+        }
         __typename
       }
       fileName
@@ -8050,7 +8071,6 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -8394,7 +8414,6 @@ export const createBand = /* GraphQL */ `mutation CreateBand(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -8945,7 +8964,6 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -9289,7 +9307,6 @@ export const updateBand = /* GraphQL */ `mutation UpdateBand($bandId: ID!, $imag
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -9840,7 +9857,6 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -10184,7 +10200,6 @@ export const addBandMembers = /* GraphQL */ `mutation AddBandMembers($bandId: ID
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -10735,7 +10750,6 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -11079,7 +11093,6 @@ export const removeBandMembers = /* GraphQL */ `mutation RemoveBandMembers($band
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -11630,7 +11643,6 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -11974,7 +11986,6 @@ export const shareSongWithBand = /* GraphQL */ `mutation ShareSongWithBand($band
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -12525,7 +12536,6 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -12869,7 +12879,6 @@ export const removeSongFromBand = /* GraphQL */ `mutation RemoveSongFromBand($ba
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -13369,7 +13378,6 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -13634,7 +13642,6 @@ export const createSet = /* GraphQL */ `mutation CreateSet(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -14243,7 +14250,6 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -14508,7 +14514,6 @@ export const updateSet = /* GraphQL */ `mutation UpdateSet(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -15107,7 +15112,6 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -15372,7 +15376,6 @@ export const addEditorToSet = /* GraphQL */ `mutation AddEditorToSet($setListId:
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -15971,7 +15974,6 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -16236,7 +16238,6 @@ export const removeEditorFromSet = /* GraphQL */ `mutation RemoveEditorFromSet($
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -16835,7 +16836,6 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -17100,7 +17100,6 @@ export const addSongToSet = /* GraphQL */ `mutation AddSongToSet($setListId: ID!
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -17699,7 +17698,6 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -17964,7 +17962,6 @@ export const removeSongFromSet = /* GraphQL */ `mutation RemoveSongFromSet($setL
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -18711,7 +18708,6 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -18976,7 +18972,6 @@ export const createJamSession = /* GraphQL */ `mutation CreateJamSession(
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -19586,7 +19581,6 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -19851,7 +19845,6 @@ export const endJamSession = /* GraphQL */ `mutation EndJamSession($jamSessionId
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -20461,7 +20454,6 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -20726,7 +20718,6 @@ export const modifyJamSongs = /* GraphQL */ `mutation ModifyJamSongs($jamSession
         songs {
           songId
           startTime
-          pageturns
           __typename
         }
         fileName
@@ -21442,7 +21433,12 @@ export const createRecording = /* GraphQL */ `mutation CreateRecording(
     songs {
       songId
       startTime
-      pageturns
+      pageturns {
+        turn
+        page
+        time
+        __typename
+      }
       __typename
     }
     fileName

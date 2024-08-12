@@ -104,7 +104,7 @@ export default function Edit(p: EditProps) {
     if (searchParams.get("new") != "true") return
     if (!song.title || !song.artist || !song.songId) return
 
-    window.history.pushState("", "", `/songs/edit/${p.song.songId}`)
+    window.history.pushState({}, "", `/songs/edit/${song.songId}`)
     searchSpotify(song.title, song.artist)
     //cleanChordSheet(song.songId)
     addSpacesAtEnd()
