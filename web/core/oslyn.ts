@@ -244,8 +244,8 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
       let regex = new RegExp(chordRegexForTextBlock, 'g')
       
       while ((matchArr = regex.exec(line)) !== null) {
-        //console.log(`${matchArr[0].trim()} :: ${currentIntermediaryJasonSection.chords[c].chord} :: ${c}`)
-        if (currentIntermediaryJasonSection.chords[c].chord === matchArr[0].trim()) {
+        console.log(`${matchArr[0].trim()} :: ${currentIntermediaryJasonSection.chords[c]?.chord} :: ${c} ${p}`)
+        if (currentIntermediaryJasonSection.chords[c] && currentIntermediaryJasonSection.chords[c].chord === matchArr[0].trim()) {
           let currentIntermediaryJasonChord = currentIntermediaryJasonSection.chords[c] as _Chord
           let decorator = getDecorator(currentIntermediaryJasonSection.chords[c].chord)
           //console.log(`${currentIntermediaryJasonSection.chords[c].chord} :: ${decorator}`)

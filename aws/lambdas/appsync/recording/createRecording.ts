@@ -47,8 +47,13 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(JSON.stringify(recording.songs))
 
     for (let i=0; i<recording.songs.length; i++) {
+      
+      if (recording.songs[i].pageturns.length === 0) { continue }
       let cpage = recording.songs[i].pageturns[0]!.page || 0
+
       recording.songs[i].pageturns[0]!.turn = turn.START
+      if (recording.songs[i].pageturns.length === 1) { continue }
+
       for (let j=1; j<recording.songs[i].pageturns.length; j++) {
         let r = recording.songs[i].pageturns[j] as RecordingPageTurn
         if (cpage+1 === r.page) recording.songs[i].pageturns[j]!.turn = turn.FORWARD

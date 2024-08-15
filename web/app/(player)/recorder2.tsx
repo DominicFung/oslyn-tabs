@@ -261,9 +261,9 @@ export default function Recorder(p: RecorderProps) {
       </div>
     </div>
 
-    <div className='text-gray-200 absolute left-0 bottom-0 h-52 w-64 overflow-y-scroll' style={{font: "1em consolas", whiteSpace: "pre-wrap"}}>
+    {/*<div className={`text-gray-200 absolute left-0 bottom-0 h-52 w-64 overflow-y-scroll p-0`} style={{font: "1em consolas", whiteSpace: "pre-wrap"}}>
       {logText}
-    </div>
+    </div>*/}
   </>
 }
 
