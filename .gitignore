@@ -74,3 +74,5 @@ amplifytools.xcconfig
 
 AuthKey_*.p8
 web/public/models
+web/._*
+._*
