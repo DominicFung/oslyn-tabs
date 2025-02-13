@@ -43,4 +43,12 @@ fi
 echo "updating API.ts in lambda folder .."
 cp -f src/API.ts aws/lambdas/API.ts
 
+echo ""
+
+echo "update amplifyconfiguration.json .."
+python3 ./scripts/writeAmplifyConfig.py ./aws/cdk-outputs.json
+
+echo "update aws-exports.js ..."
+python3 ./scripts/writeAWSExports.py ./aws/cdk-outputs.json
+
 echo "Done."

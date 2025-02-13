@@ -17,6 +17,10 @@ export class DynamoStack extends Stack {
         name: `recordingId`,
         type: AttributeType.STRING
       },
+      sortKey: {
+        name: 'updateDate',
+        type: AttributeType.NUMBER
+      },
       billingMode: BillingMode.PAY_PER_REQUEST,
       stream: StreamViewType.NEW_IMAGE,
       removalPolicy: RPOLICY
@@ -27,7 +31,11 @@ export class DynamoStack extends Stack {
       partitionKey: {
         name: 'sessionId',
         type: AttributeType.STRING
-      }
+      },
+      sortKey: {
+        name: 'updateDate',
+        type: AttributeType.NUMBER
+      },
     })
 
     recordingTable.addGlobalSecondaryIndex({
@@ -35,7 +43,11 @@ export class DynamoStack extends Stack {
       partitionKey: {
         name: 'userId',
         type: AttributeType.STRING
-      }
+      },
+      sortKey: {
+        name: 'updateDate',
+        type: AttributeType.NUMBER
+      },
     })
 
     recordingTable.addGlobalSecondaryIndex({
@@ -43,7 +55,11 @@ export class DynamoStack extends Stack {
       partitionKey: {
         name: 'jamId',
         type: AttributeType.STRING
-      }
+      },
+      sortKey: {
+        name: 'updateDate',
+        type: AttributeType.NUMBER
+      },
     })
 
     new CfnOutput(this, `${props.name}-RecordingTable-Name`, {
