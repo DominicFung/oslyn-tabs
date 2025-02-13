@@ -61,7 +61,7 @@ export default function Sidebar () {
    
     <div className="flex flex-col h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
       <a href="/" className="flex items-center pl-2.5 my-5">
-         <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" />
+         <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" unoptimized />
          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Oslyn Tabs</span>
       </a>
      <ul className="space-y-2 font-medium">
