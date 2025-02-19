@@ -66,7 +66,7 @@ export default function SongTable(p: SongTableProps) {
                 <ClickableCell href={`/songs/edit/${a.songId}${p.bandId?`?band=${p.bandId}`:""}`} className="px-6 py-4 text-ellipsis">
                   <div className="flex flex-row">
                     { a.albumCover && <div className="m-auto w-16">
-                        <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> 
+                        <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2" unoptimized/> 
                       </div>
                     }
                     <div className="flex-0 m-2 w-36 lg:w-full">

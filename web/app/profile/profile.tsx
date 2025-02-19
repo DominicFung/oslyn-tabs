@@ -44,7 +44,7 @@ export default function Profile(p: ProfileProps) {
           <NewFeature />
           <div className="flex flex-row max-w-lg m-auto">
 
-            { p.user.imageUrl && <Image src={p.user.imageUrl} className="h-24 rounded-full mr-6" width={96} height={96} alt="Oslyn Logo" /> }
+            { p.user.imageUrl && <Image src={p.user.imageUrl} className="h-24 rounded-full mr-6" width={96} height={96} alt="Oslyn Logo" unoptimized/> }
             <h1 className="pt-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">{user.username}</h1>
           </div>
       </div>
@@ -106,7 +106,7 @@ export default function Profile(p: ProfileProps) {
                   <ClickableCell href={`/user/${a?.userId}`} className="px-6 py-4 text-ellipsis">
                       <div className="flex flex-row">
                         { a?.imageUrl && <div className="m-auto w-16">
-                            <Image src={a.imageUrl} alt={""} width={40} height={40} className="w-10 m-2 rounded-full"/> 
+                            <Image src={a.imageUrl} alt={""} width={40} height={40} className="w-10 m-2 rounded-full" unoptimized/> 
                           </div>
                         }
                         <div className="flex-0 m-2 w-36 lg:w-full">

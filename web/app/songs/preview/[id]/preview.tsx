@@ -17,7 +17,7 @@ export default function Preview(p: PreviewProps) {
   return <>
     <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
-          <Image src={p.song.albumCover || ""} alt={""} width={192} height={192} className="w-48 m-2 mx-auto" />
+          <Image src={p.song.albumCover || ""} alt={""} width={192} height={192} className="w-48 m-2 mx-auto" unoptimized/>
           <div className="mt-6">
             <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-gray-100">{p.song.title}</h1>
             <p className="mb-4 text-lg font-normal text-gray-500 lg:text-lg dark:text-oslyn-300">

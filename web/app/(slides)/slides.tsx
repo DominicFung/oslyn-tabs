@@ -116,7 +116,7 @@ export default function Slides(p: SlidesProps) {
    
     {page === 0 && <div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
       <div className="flex flex-row hover:cursor-pointer">
-        {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2"/> }
+        {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2" unoptimized/> }
         <div className="m-2">
           <div className="text-gray-500 bold">{p.song.title}</div>
           <div className="text-gray-600 text-xs">{p.song.artist}</div>

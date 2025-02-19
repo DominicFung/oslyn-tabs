@@ -81,7 +81,7 @@ export default function BandInfo(p: BandProps) {
                   <span><ArrowDownTrayIcon className='h-12 w-12 mx-auto mt-20' /></span>
               </div> :
                 <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500'>
-                  { band.imageUrl ? <Image src={band.imageUrl} alt={''} width={192} height={192} 
+                  { band.imageUrl ? <Image src={band.imageUrl} alt={''} width={192} height={192} unoptimized
                       className='w-48 h-48 rounded-lg border focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500' />:
                     <span><PhotoIcon className='h-12 w-12 mx-auto mt-20' /></span>
                   }

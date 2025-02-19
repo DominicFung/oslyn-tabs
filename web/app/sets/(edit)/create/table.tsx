@@ -115,7 +115,7 @@ export default function CreateSetTable(p: CreateSetTableProps) {
                 <td className="px-6 py-4">
                   <a href={`/songs/edit/${a.songId}`}>                  
                     <div className="flex flex-row hover:cursor-pointer">
-                      {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
+                      {a.albumCover && <Image src={a.albumCover} alt={""} width={40} height={40} className="w-10 m-2" unoptimized/> }
                       <div className="m-2">
                         <div className="dark:text-white text-black bold">{a.title}</div>
                         <div>{a.artist}</div>

@@ -34,7 +34,7 @@ export default function Background(p: BackgroundProps) {
       { isDragActive ?
           <p>Drop the files here ...</p> :
           <div className='block w-48 h-48 m-4 mx-auto rounded-lg border bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500'>
-            { p.song.defaultSlideConfig?.backgroundImg ? <Image src={p.song.defaultSlideConfig!.backgroundImg} alt={''} width={192} height={192} 
+            { p.song.defaultSlideConfig?.backgroundImg ? <Image src={p.song.defaultSlideConfig!.backgroundImg} alt={''} width={192} height={192} unoptimized
                 className='w-48 h-48 rounded-lg border focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500' />:
               <span><PhotoIcon className='h-12 w-12 mx-auto mt-20' /></span>
             }

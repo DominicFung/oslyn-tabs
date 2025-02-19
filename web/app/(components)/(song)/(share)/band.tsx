@@ -51,7 +51,7 @@ export default function Bands(p: BandProps) {
             <>
             <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
               <div className="p-1 px-4 text-sm truncate flex flex-row">
-                <Image className="mr-4" src={p.bands[bandIndex].imageUrl || ""} alt="" width={28} height={28}/>
+                <Image className="mr-4" src={p.bands[bandIndex].imageUrl || ""} alt="" width={28} height={28} unoptimized/>
                 <span className="pt-1.5" >{p.bands[bandIndex].name}</span>
               </div>
               <span className="absolute flex items-center ml-3 pointer-events-none right-1">
@@ -88,7 +88,7 @@ export default function Bands(p: BandProps) {
                       >
                         <div className={`flex-1 block truncate ${selected ? "font-semibold" : "font-normal"}`}>
                           <div className="p-1 px-4 text-sm truncate flex flex-row">
-                            <Image className="mr-4" src={b.imageUrl || ""} alt="" width={28} height={28}/>
+                            <Image className="mr-4" src={b.imageUrl || ""} alt="" width={28} height={28} unoptimized/>
                             <span className="pt-1.5" >{b.name}</span>
                           </div>
                         </div>

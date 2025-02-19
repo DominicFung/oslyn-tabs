@@ -15,9 +15,13 @@ import { useSearchParams } from "next/navigation"
 import { SongUpdateRequest } from "@/app/api/song/[id]/update/route"
 
 import Revert from "../../(components)/revert"
+import { SongRequest } from "@/app/api/song/create/route"
+
+import { getArrayBufferFromObjectURL } from "@/core/utils/frontend"
 
 export interface EditProps {
-  song: Song
+  song: Song,
+  shareWithBand?: string
 }
 
 interface SpotifyTracks {
@@ -43,23 +47,49 @@ export default function Edit(p: EditProps) {
   const [ oldChordSheet, setOldChordSheet ] = useState("")
   const [ loading, setLoading ] = useState(false)
 
-  const searchSpotify = async (title: string, artist: string) => {
-    if (!title || !artist) return
+  const newSong = async (song: Song) => {
+    setLoading(true)
+    let s = await searchSpotify(song)
+    //await cleanChordSheet(songId)
+    s = addSpacesAtEnd(s || song)
+    s = await updateSong(s || song)
+    setSong(s || song)
+    setLoading(false)
+  }
+
+  const searchSpotify = async (song: Song): Promise<Song|undefined> => {
+    if (!song.title || !song.artist) return
     const { tracks } = await (await fetch(`/api/spotify`, {
       method: "POST", 
-      body: JSON.stringify({ title, artist })
+      body: JSON.stringify({ title: song.title, artist: song.artist })
     })).json() as SpotifyTracks
 
     console.log(tracks.items)
     if (tracks.items.length < 1) return
     const album = tracks.items[0].album
 
-    setSong((song) => {
-      let s = { ...song }
-      if (!song.album) s.album = album.name
-      if (!song.albumCover) s.albumCover = album.images[0].url
-      return s
-    })
+    let s = { ...song }
+    if (!song.album) s.album = album.name
+    if (!song.albumCover) s.albumCover = album.images[0].url
+    return s
+  }
+
+  const addSpacesAtEnd = (song: Song): Song => {
+    let cs = (song.chordSheet || "").replace(/[\r\n]+/g, "  \n")
+    return {...song, chordSheet: cs}
+  }
+
+  const updateSong = async (s: Song): Promise<Song|undefined> => {
+    if (!s.songId) { console.error("songId not available"); return }
+    setLoading(true)
+
+    const data = await (await fetch(`/api/song/${s.songId}/update`, {
+      method: "POST",
+      body: JSON.stringify({...s} as SongUpdateRequest)
+    })).json() as Song
+    console.log(data)
+
+    return s
   }
 
   const cleanChordSheet = async (id: string) => {
@@ -89,11 +119,6 @@ export default function Edit(p: EditProps) {
     }
   }
 
-  const addSpacesAtEnd = () => {
-    let cs = (song.chordSheet || "").replace(/[\r\n]+/g, "  \n")
-    setSong({...song, chordSheet: cs})
-  }
-
   const setChordSheet = async (chordSheet: string) => {
     setSong((prev) => { return { ...prev, chordSheet } })
     setOldChordSheet("")
@@ -105,10 +130,10 @@ export default function Edit(p: EditProps) {
     if (!song.title || !song.artist || !song.songId) return
 
     window.history.pushState({}, "", `/songs/edit/${song.songId}`)
-    searchSpotify(song.title, song.artist)
-    //cleanChordSheet(song.songId)
-    addSpacesAtEnd()
+    newSong(song)
   }, [p.song])
+
+
 
   return <div className="text-white w-full h-screen flex flex-col">
     <div className="flex-0">
@@ -117,10 +142,10 @@ export default function Edit(p: EditProps) {
     
     <div className="flex-1 p-4">
       { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { console.log(t); setSong({ ...song, chordSheet: t }) }} /> }
-      { step === 1 && <SongInfo song={song} setSong={setSong} searchSpotify={searchSpotify}/>}
+      { step === 1 && <SongInfo song={song} setSong={setSong} searchSpotify={() => searchSpotify(song)}/>}
       { step === 2 && <Review song={song} /> }
     </div>
-    <Save song={song} type="update" loading={loading}/>
+    <Save song={song} type="update" loading={loading}/> 
     <Revert oldChordSheet={oldChordSheet} newChordSheet={p.song.chordSheet||""} setChordSheet={setChordSheet} />
   </div>
 }
