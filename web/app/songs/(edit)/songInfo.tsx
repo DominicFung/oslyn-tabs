@@ -102,7 +102,7 @@ export default function SongInfo(p: SongProps) {
           { isDragActive ?
               <p>Drop the files here ...</p> :
               <div className='block w-48 h-48 m-4 rounded-lg border bg-gray-50 focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500'>
-                { p.song.albumCover ? <Image src={p.song.albumCover} alt={''} width={192} height={192} 
+                { p.song.albumCover ? <Image src={p.song.albumCover} alt={''} width={192} height={192} unoptimized
                     className='w-48 h-48 rounded-lg border focus:ring-oslyn-500 focus:border-oslyn-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-oslyn-500 dark:focus:border-oslyn-500' />:
                   <span><SparklesIcon className='h-12 w-12 mx-auto mt-20' /></span>
                 }

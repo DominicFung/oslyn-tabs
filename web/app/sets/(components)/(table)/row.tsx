@@ -29,7 +29,7 @@ export default function Row(p: RowProps) {
   <td className="px-6 py-4">
     <a href={`/songs/edit/${p.song.songId}`}>                  
       <div className="flex flex-row hover:cursor-pointer">
-        {p.song.albumCover && <Image src={p.song.albumCover} alt={""} width={40} height={40} className="w-10 m-2"/> }
+        {p.song.albumCover && <Image src={p.song.albumCover} alt={""} width={40} height={40} className="w-10 m-2" unoptimized/> }
         <div className="m-2">
           <div className="dark:text-white text-oslyn-900 bold">{p.song.title}</div>
           <div>{p.song.artist}</div>

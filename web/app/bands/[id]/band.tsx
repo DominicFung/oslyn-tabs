@@ -29,7 +29,7 @@ export default function BandComponent(p: BandProps) {
     </div> : 
     <button onClick={() => setEdit(true)}
         className="lg:pt-16 lg:pb-4 pt-8 pb-2 px-4 mx-auto max-w-screen-xl lg:py-16 z-10 relative flex flex-row">
-      <Image src={p.band.imageUrl || ""} width={500} height={500} className="w-36 h-36 ml-auto" alt="band image" />
+      <Image src={p.band.imageUrl || ""} width={500} height={500} className="w-36 h-36 ml-auto" alt="band image" unoptimized/>
       <div className="ml-4 mr-auto">
         <h1 className="my-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-4xl lg:text-5xl dark:text-white">{p.band.name}</h1>
         <p className="mb-8 text-lg font-normal text-gray-500 pl-2 lg:text-xl dark:text-gray-200">

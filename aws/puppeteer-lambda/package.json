@@ -1,0 +1,25 @@
+{
+    "name": "oslyn-studio-puppeteer-lambda",
+    "version": "1.0.0",
+    "description": "",
+    "main": "test.js",
+    "scripts": {
+        "dev": "tsc --build . && node .",
+        "test": "tsc --build . && node test.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/aws-lambda": "^8.10.147",
+        "@types/node": "^18.19.76",
+        "aws-lambda": "^1.0.7",
+        "aws-sdk": "^2.1692.0",
+        "typescript": "^5.7.3"
+    },
+    "dependencies": {
+        "@sparticuz/chromium": "^108.0.3",
+        "@spotify/web-api-ts-sdk": "^1.2.0",
+        "puppeteer": "^24.2.1",
+        "puppeteer-core": "^24.2.1"
+    }
+}

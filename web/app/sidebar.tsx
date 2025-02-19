@@ -130,7 +130,7 @@ export default function Sidebar () {
         <button className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
           path.startsWith('/profile') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
         } disabled:dark:text-gray-500`}>
-          { session.user.image && <Image src={session.user.image} className="h-6 rounded-full" width={24} height={24} alt="Oslyn Logo" /> }
+          { session.user.image && <Image src={session.user.image} className="h-6 rounded-full" width={24} height={24} alt="Oslyn Logo" unoptimized/> }
           <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
         </button>
       </a> }

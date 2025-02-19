@@ -52,7 +52,7 @@ export default function Main(p: MainProps) {
                           { a.active.map((a, i) => {
                             if (i < 5) 
                               return  <View className="m-auto w-16">
-                                        { a && a?.user && a?.user?.imageUrl &&  <Image source={{uri: a!.user!.imageUrl}} alt={""} width={40} height={40} className="w-10 m-2"/> }
+                                        { a && a?.user && a?.user?.imageUrl &&  <Image source={{uri: a!.user!.imageUrl}} alt={""} width={40} height={40} className="w-10 m-2" /> }
                                       </View>
                             else return <></>
                           })}

@@ -47,7 +47,7 @@ export default function Views(p: ViewsProps) {
   return <>
     { view === 'PREVIEW' && <Preview song={p.song} toggleView={ () => setView('PLAYER') }/>}
     { view === 'PLAYER' && <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
-      { p.song && <Slides song={p.song} /> }
+      { p.song && <Slides song={p.song} skey={sKey} textSize={textSize} complex={complex} headsUp={headsUp} transpose={transpose} /> }
 
       <Controls 
         capo={{ capo:`${0-transpose}`, setCapo }} 
