@@ -95,8 +95,10 @@ type Mutation {
   modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
 
   nextPage(jamSessionId: ID!, page: Int!): NextPage
-  nextSong(jamSessionId: ID!, song: Int!, page: Int): NextSong
+  nextSong(jamSessionId: ID!, song: Int, page: Int): NextSong
   setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
+  addSongToJamQueue(jamSessionId: ID!, song: Int!): JamQueue
+  removeSongFromJamQueue(jamSessionId: ID!, queueIndex: Int!): JamQueue
   setJamSlideConfig(jamSessionId:ID!, textSize: String): JamSessionSlideConfig 
 
   enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String): JamSessionActiveUsers
@@ -113,6 +115,8 @@ type Subscription {
   onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations: ["nextPage"])
   onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations: ["nextSong"])
   onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
+  onAddSongToJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["addSongToJamQueue"]) 
+  onRemoveSongFromJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["removeSongFromJamQueue"]) 
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
 
   onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
@@ -139,12 +143,18 @@ type NextSong {
   song: Int
   page: Int
   key: String
+  queue: [Int]
 }
 
 type NextKey {
   jamSessionId: ID!
   song: Int
   key: String
+}
+
+type JamQueue {
+  jamSessionId: ID!
+  queue: [Int]!
 }
 
 type Band {
@@ -208,6 +218,7 @@ type JamSession {
   setList: SetList!
   admins: [User]!
   members: [User]!
+  guests: [User]
 
   policy: policy!
   description: String
@@ -223,6 +234,8 @@ type JamSession {
 
   slideConfigOverrides: [SongSlideConfig]
   slideTextSize: String
+
+  queue: [Int]
 }
 
 # Not a table

@@ -1,7 +1,7 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { BatchGetItemCommand, DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { hasSubstring, merge } from '../../util/dynamo'
+import { hasSubstring, merge, chunk } from '../../util/dynamo'
 import { User } from '../../API'
 
 import { _SetList, _JamSong, _Song } from '../../type'
@@ -50,16 +50,21 @@ export const handler = async (event: AppSyncResolverEvent<{
     const uniq = [...new Set(songIds.flat(1))]
     console.log(uniq)
 
-    const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
+    const keys = chunk(uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } }), 100)
     console.log(keys)
 
-    const res1 = await dynamo.send(new BatchGetItemCommand({
-      RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
-    }))
-    console.log(res1)
-    if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
+    let songs: _Song[] = []
+
+    for (let i=0; i<keys.length; i++) {
+      const res1 = await dynamo.send(new BatchGetItemCommand({
+        RequestItems: {[SONG_TABLE_NAME]: { Keys: keys[i] }}
+      }))
+      console.log(res1)
+      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
+
+      songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[])
+    }
     
-    let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
     console.log(songs)
 
     if (hasSubstring(event.info.selectionSetList, "song/creator")) {
@@ -73,7 +78,7 @@ export const handler = async (event: AppSyncResolverEvent<{
         RequestItems: {[USER_TABLE_NAME]: { Keys: keys }}
       }))
       console.log(res2)
-      if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
+      if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId.`); return }
 
       console.log(JSON.stringify(res2.Responses))
       const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]

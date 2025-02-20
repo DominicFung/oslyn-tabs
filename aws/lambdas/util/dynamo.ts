@@ -83,3 +83,13 @@ export const multiMerge = (a1: any[], a2: any[], mk1: string, mk2: string, outpu
     else return mos ? { ...o1, [outputKey]: mos } : { ...o1 }
   })
 }
+
+export function chunk<T> (strings: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
+
+  for (let i = 0; i < strings.length; i += chunkSize) {
+      chunks.push(strings.slice(i, i + chunkSize));
+  }
+
+  return chunks;
+}
