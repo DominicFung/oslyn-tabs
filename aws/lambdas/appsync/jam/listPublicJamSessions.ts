@@ -1,6 +1,6 @@
 import { BatchGetItemCommand, DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { hasSubstring, merge } from '../../util/dynamo'
+import { hasSubstring, merge, chunk } from '../../util/dynamo'
 
 import { _JamSession, _SetList, _Song, _User } from '../../type'
 
@@ -67,16 +67,20 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
       const uniq = [...new Set(songIds.flat(1))]
       console.log(uniq)
   
-      const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
+      const keys = chunk(uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } }), 100)
       console.log(keys)
+
+      let songs: _Song[] = []
   
-      const res1 = await dynamo.send(new BatchGetItemCommand({
-        RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
-      }))
-      console.log(res1)
-      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
-      
-      let songs = res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[]
+      for (let i=0; i<keys.length; i++) {
+        const res1 = await dynamo.send(new BatchGetItemCommand({
+          RequestItems: {[SONG_TABLE_NAME]: { Keys: keys[i] }}
+        }))
+        console.log(res1)
+        if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
+  
+        songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[])
+      }
       console.log(songs)
   
       if (hasSubstring(event.info.selectionSetList, "song/creator")) {
@@ -181,7 +185,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
       console.log(users)
       for (let i=0; i<sessions.length; i++) {
-        sessions[i].active = merge(sessions[i].activeIds, users, 'userId', 'active')
+        sessions[i].active = merge(sessions[i].activeIds!, users, 'userId', 'active')
       }
     } else {
       console.log("NONE of these sessions have active users, continue ..")

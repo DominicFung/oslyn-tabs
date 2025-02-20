@@ -17,6 +17,7 @@ const pageTurnId = "page-turn"
 
 interface SlidesProps {
   jamId?: string
+  isControllerOpen: boolean
   userId?: string
   song: Song
   skey?: string
@@ -101,7 +102,7 @@ export default function Slides(p: SlidesProps) {
   }, [p.song])
 
   useEffect(() => {
-    if (slides) window.addEventListener('keydown', keydown)
+    if (slides && !p.isControllerOpen) window.addEventListener('keydown', keydown)
 
     if (slides && slides.pages[page]) {
       const a = slides.pages[page].lines.map((a) => a.lyric)
@@ -112,7 +113,7 @@ export default function Slides(p: SlidesProps) {
     }
 
     return () => { window.removeEventListener('keydown', keydown) }
-  }, [slides, page])
+  }, [slides, page, p.isControllerOpen])
 
   const updateWindowDimensions = () => {
     setScreen({w: window.innerWidth, h: window.innerHeight})
@@ -150,7 +151,7 @@ export default function Slides(p: SlidesProps) {
       return
     }
 
-    if (event.code === "ArrowRight" || "Space") {
+    if (event.code === "ArrowRight" || event.code === "Space") {
       if (slides && slides?.pages.length-1 > page) {
         setPage(page+1)
         return
@@ -209,6 +210,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
-    { slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/> }
+    {/* slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/> */}
   </>
 }

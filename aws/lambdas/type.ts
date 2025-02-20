@@ -35,6 +35,8 @@ export type _JamSession = JamSession & {
   setListId: string
   adminIds?: string[]
   memberIds?: string[]
+  guestIds?: string[]
+  activeIds?: string[]
 }
 
 export type _Participant = Participant & {

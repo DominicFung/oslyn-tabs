@@ -510,6 +510,30 @@ export class AppsyncStack extends Stack {
       fieldName: "setSongKey"
     })
 
+    const addSongToJamQueue = new NodejsFunction(this, `${props.name}-AddSongToJamQueue`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'addSongToJamQueue.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}AddSongToJamQueueDS`, addSongToJamQueue)
+    .createResolver(`${props.name}-AddSongToJamQueueResolver`, {
+      typeName: "Mutation",
+      fieldName: "addSongToJamQueue"
+    })
+
+    const removeSongFromJamQueue = new NodejsFunction(this, `${props.name}-RemoveSongFromJamQueue`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'removeSongFromJamQueue.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}RemoveSongFromJamQueueDS`, removeSongFromJamQueue)
+    .createResolver(`${props.name}-RemoveSongFromJamQueueResolver`, {
+      typeName: "Mutation",
+      fieldName: "removeSongFromJamQueue"
+    })
+
     const setJamSlideConfig = new NodejsFunction(this, `${props.name}-SetJamSlideConfig`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setJamSlideConfig.ts'),
       timeout: Duration.minutes(5),
