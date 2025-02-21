@@ -6,6 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 export interface KeyProps {
+  w: number
   skey: string
   setKey:  (capo: string) => void
 }
@@ -30,13 +31,13 @@ export default function Key(p: KeyProps) {
   const [isFocus, setIsFocus] = useState(true)
 
   return <>
-    <View className="ml-3 text-sm font-normal max-w-sm">
+    <View className="ml-3 text-sm font-normal" style={{width: p.w-100}}>
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Key</Text>
-      <Text className="pb-3 text-sm font-normal">Set the current song key for the entire team! <Text className="text-xs italic">Note: this affects everyone in the session.</Text></Text>
+      <Text className="pb-3 text-sm font-normal" style={{width: p.w-150}}>Set the current song key for the entire team! <Text className="text-xs italic">Note: this affects everyone in the session.</Text></Text>
 
-      <View className=''>
+      <View style={{width: p.w-150}}>
         <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus && { borderColor: 'black' }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -58,7 +59,7 @@ export default function Key(p: KeyProps) {
           renderLeftIcon={() => (
             <Ionicons
               style={styles.icon}
-              color={isFocus ? 'blue' : 'black'}
+              color={isFocus ? 'black' : 'black'}
               name="musical-note"
               size={20}
             />

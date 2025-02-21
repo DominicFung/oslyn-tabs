@@ -10,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { CheckBox } from '@rneui/themed'
 
 export interface DisplayProps {
+  w: number
   textSize: string
   setTextSize:  (s: string) => void
   
@@ -48,7 +49,7 @@ export default function Display(p: DisplayProps) {
   useEffect(() => { if (theme && theme != mode) { setMode(theme) }}, [theme])
 
   return <>
-    <View className="ml-3 text-sm font-normal max-w-sm h-full">
+    <View className="ml-3 text-sm font-normal max-w-sm h-full" style={{width: p.w-150}}>
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</Text>
       <Text className="pb-3 text-sm font-normal">Set your text size to make it easier to read! 
         <Text className="text-xs italic">(only affects you)</Text>
@@ -126,12 +127,12 @@ export default function Display(p: DisplayProps) {
               let first = i === 0
               let last = i === MODE.length - 1
 
-              return <View className="" key={i}>
+              return <View key={i}>
                 <Pressable onPress={() => setMode(m)} disabled={theme === undefined}
                   className={`p-4 ${
                     selected ? "text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white active": "bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"} ${
                       first && "rounded-l-lg" } ${ last && "rounded-r-lg" } focus:ring-4 focus:ring-oslyn-300 focus:outline-none focus:z-10 relative`} aria-current="page">
-                  <Text>{m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":"Mode"}</Text>
+                  <Text ellipsizeMode='tail'>{m !== "system" && capitalizeFirstLetter(m)} {m === "system"?"Auto":""}</Text>
                 </Pressable>
               </View>
             }) }

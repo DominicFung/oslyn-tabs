@@ -10918,6 +10918,270 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       }
       __typename
     }
+    guests {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+      friends {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      labelledRecording {
+        recordingId
+        jamId
+        userId
+        sessionId
+        songs {
+          songId
+          startTime
+          __typename
+        }
+        fileName
+        samplingRate
+        comment
+        status
+        createDate
+        updateDate
+        __typename
+      }
+      songsCreated {
+        songId
+        title
+        artist
+        album
+        albumCover
+        beat {
+          count
+          note
+          __typename
+        }
+        isApproved
+        version
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        viewers {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        recordings {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        __typename
+      }
+      likedSongs {
+        key
+        song {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          __typename
+        }
+        order
+        __typename
+      }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
+          __typename
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
     policy
     description
     active {
@@ -11022,6 +11286,7 @@ export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: I
       __typename
     }
     slideTextSize
+    queue
     __typename
   }
 }
@@ -11791,6 +12056,270 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       }
       __typename
     }
+    guests {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+      friends {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+        friends {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        labelledRecording {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        songsCreated {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        likedSongs {
+          key
+          order
+          __typename
+        }
+        bands {
+          bandId
+          imageUrl
+          name
+          description
+          policy
+          __typename
+        }
+        __typename
+      }
+      labelledRecording {
+        recordingId
+        jamId
+        userId
+        sessionId
+        songs {
+          songId
+          startTime
+          __typename
+        }
+        fileName
+        samplingRate
+        comment
+        status
+        createDate
+        updateDate
+        __typename
+      }
+      songsCreated {
+        songId
+        title
+        artist
+        album
+        albumCover
+        beat {
+          count
+          note
+          __typename
+        }
+        isApproved
+        version
+        creator {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        editors {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        viewers {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        recordings {
+          recordingId
+          jamId
+          userId
+          sessionId
+          fileName
+          samplingRate
+          comment
+          status
+          createDate
+          updateDate
+          __typename
+        }
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        __typename
+      }
+      likedSongs {
+        key
+        song {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+          __typename
+        }
+        order
+        __typename
+      }
+      bands {
+        bandId
+        imageUrl
+        name
+        description
+        songs {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          __typename
+        }
+        sets {
+          setListId
+          description
+          __typename
+        }
+        owner {
+          userId
+          username
+          email
+          providers
+          firstName
+          lastName
+          imageUrl
+          recieveUpdatesFromOslyn
+          isActivated
+          createDate
+          role
+          __typename
+        }
+        policy
+        userRoles {
+          roleId
+          role
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
     policy
     description
     active {
@@ -11895,6 +12424,7 @@ export const listPublicJamSessions = /* GraphQL */ `query ListPublicJamSessions(
       __typename
     }
     slideTextSize
+    queue
     __typename
   }
 }

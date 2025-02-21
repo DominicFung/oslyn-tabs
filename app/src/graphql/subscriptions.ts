@@ -25,6 +25,7 @@ export const onNextSong = /* GraphQL */ `subscription OnNextSong($jamSessionId: 
     song
     page
     key
+    queue
     __typename
   }
 }
@@ -43,6 +44,28 @@ export const onSongKey = /* GraphQL */ `subscription OnSongKey($jamSessionId: ID
 ` as GeneratedSubscription<
   APITypes.OnSongKeySubscriptionVariables,
   APITypes.OnSongKeySubscription
+>;
+export const onAddSongToJamQueue = /* GraphQL */ `subscription OnAddSongToJamQueue($jamSessionId: ID!) {
+  onAddSongToJamQueue(jamSessionId: $jamSessionId) {
+    jamSessionId
+    queue
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnAddSongToJamQueueSubscriptionVariables,
+  APITypes.OnAddSongToJamQueueSubscription
+>;
+export const onRemoveSongFromJamQueue = /* GraphQL */ `subscription OnRemoveSongFromJamQueue($jamSessionId: ID!) {
+  onRemoveSongFromJamQueue(jamSessionId: $jamSessionId) {
+    jamSessionId
+    queue
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnRemoveSongFromJamQueueSubscriptionVariables,
+  APITypes.OnRemoveSongFromJamQueueSubscription
 >;
 export const onJamSlideConfigChange = /* GraphQL */ `subscription OnJamSlideConfigChange($jamSessionId: ID!) {
   onJamSlideConfigChange(jamSessionId: $jamSessionId) {

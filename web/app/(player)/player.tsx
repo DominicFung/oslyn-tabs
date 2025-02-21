@@ -12,7 +12,8 @@ import {
   JamSession, JamSong, Participant, User, 
   JamSessionActiveUsers, NextPageMutation, 
   SetSongKeyMutation, SetJamSlideConfigMutation, 
-  AddSongToJamQueueMutation
+  AddSongToJamQueueMutation,
+  RemoveSongFromJamQueueMutation
 } from "@/../src/API"
 
 import { useEffect, useState } from "react"
@@ -333,7 +334,7 @@ export default function Player(p: PlayerProps) {
     const d = await client.graphql({
       query: m.removeSongFromJamQueue, variables: {
       jamSessionId: p.jam.jamSessionId, queueIndex: index
-    }}) as GraphQLResult<AddSongToJamQueueMutation>
+    }}) as GraphQLResult<RemoveSongFromJamQueueMutation>
     console.log(d)
   }
 

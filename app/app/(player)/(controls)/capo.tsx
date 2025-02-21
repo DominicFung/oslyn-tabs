@@ -8,11 +8,10 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { CheckBox } from '@rneui/themed'
 
 export interface CapoProps {
+  w: number
   capo: string
   setCapo:  (capo: string) => void
 }
-
-//const capos = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]
 
 const capos = [
   { label: '0', value: '0' },
@@ -35,15 +34,15 @@ export default function Capo(p: CapoProps) {
   const [isFocus, setIsFocus] = useState(true)
 
   return <>
-    <View className="ml-3 text-sm font-normal max-w-sm">
+    <View className="ml-3 text-sm font-normal" style={{width: p.w-100}}>
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Capo</Text>
-      <Text className="pb-3 text-sm font-normal">Set your Capo to make chords easier to play! 
+      <Text className="pb-3 text-sm font-normal" style={{width: p.w-150}}>Set your Capo to make chords easier to play! 
         { !isLead && <Text className="text-xs italic">(only affects you)</Text> }
       </Text> 
 
-      <View className=''>
+      <View style={{width: p.w-150}}>
         <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus && { borderColor: 'blue' }, { width: p.w-150 }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -87,7 +86,8 @@ export default function Capo(p: CapoProps) {
         </View>
         <Pressable className="ml-2 text-sm" onPress={() => { setIsLead(!isLead) }}>
           <Text className="font-medium text-gray-900 dark:text-gray-300">Lead Guarist?</Text>
-          <Text className="text-xs font-normal text-gray-500 dark:text-gray-300 w-80 pr-2">This will change the key for everyone else when you change the capo! <Text className="text-xs italic">(Because you are the lead and you are all that matters. JK.)</Text></Text>
+          <Text className="text-xs font-normal text-gray-500 dark:text-gray-300 w-80 pr-2" style={{width: p.w-200}}>
+            This will change the key for everyone else when you change the capo! <Text className="text-xs italic">(Because you are the lead and you are all that matters. JK.)</Text></Text>
         </Pressable>
       </View>
     </View>

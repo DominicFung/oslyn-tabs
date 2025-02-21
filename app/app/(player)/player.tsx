@@ -14,33 +14,23 @@ import * as s from '../../src/graphql/subscriptions'
 import * as m from '../../src/graphql/mutations'
 import { 
   JamSession, JamSong, Participant, User, NextPageMutation, 
-  SetSongKeyMutation, SetJamSlideConfigMutation 
+  SetSongKeyMutation, SetJamSlideConfigMutation, 
+  AddSongToJamQueueMutation,
+  RemoveSongFromJamQueueMutation
 } from "@/src/API"
 
 import amplifyconfig from '../../src/amplifyconfiguration.json'
 import Controls from "./controls"
 Amplify.configure(amplifyconfig)
 
-const chordsData = [
-  { label: 'A', value: 'A' },
-  { label: 'Bb', value: 'Bb' },
-  { label: 'B', value: 'B' },
-  { label: 'C', value: 'C' },
-  { label: 'C#', value: 'C#' },
-  { label: 'D', value: 'D' },
-  { label: 'Eb', value: 'Eb' },
-  { label: 'E', value: 'E' },
-  { label: 'F', value: 'F' },
-  { label: 'F#', value: 'F#' },
-  { label: 'G', value: 'G' },
-  { label: 'Ab', value: 'Ab' },
-]
-
 export interface PlayerProps {
   jam: JamSession, 
   isSlideShow?: boolean
   user: User|null
   resetJam: () => void
+
+  openController: boolean
+  setOpenController: (b: boolean) => void
 }
 
 export default function Player(p: PlayerProps){
@@ -72,6 +62,7 @@ export default function Player(p: PlayerProps){
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
+  const [ queue, setQueue ] = useState((p.jam.queue || []))
   const [ active, setActive ] = useState<Participant[]>([])
   const [ songs, setSongs ] = useState<JamSong[]>([])
 
@@ -137,9 +128,11 @@ export default function Player(p: PlayerProps){
         nextPage: subscribeNextPage(p.jam.jamSessionId),
         nextSong: subscribeNextSong(p.jam.jamSessionId),
         keyChange: subscribeKeyChange(p.jam.jamSessionId),
-        userJoin: subscribeUserJoin(p.jam.jamSessionId)
+        userJoin: subscribeUserJoin(p.jam.jamSessionId),
+        queueAdd: subscribeToQueueAdd(p.jam.jamSessionId),
+        queueRemove: subscribeToQueueRemove(p.jam.jamSessionId)
       })
-      console.log("yes sub")
+      console.log("All Subscribed!")
     }
   }, [page, p.jam.jamSessionId, subs])
 
@@ -197,6 +190,36 @@ export default function Player(p: PlayerProps){
         // its possible for song to not equal the current song ..
         // however, we cannot access the STATE of song here .. so theres no way to know ..
         setSKey(key || "C") 
+      },
+      error: (error) => console.error(error)
+    })
+    console.log(sub)
+    return sub
+  }
+
+  const subscribeToQueueAdd = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
+    const sub = client.graphql({
+      query: s.onAddSongToJamQueue, variables: { jamSessionId }
+    }).subscribe({
+      next: ({ data }) => {
+        console.log("=== On Key Change ===")
+        console.log(JSON.stringify(data))
+        setQueue(data.onAddSongToJamQueue?.queue || [])
+      },
+      error: (error) => console.error(error)
+    })
+    console.log(sub)
+    return sub
+  }
+
+  const subscribeToQueueRemove = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
+    const sub = client.graphql({
+      query: s.onRemoveSongFromJamQueue, variables: { jamSessionId }
+    }).subscribe({
+      next: ({ data }) => {
+        console.log("=== On Key Change ===")
+        console.log(JSON.stringify(data))
+        setQueue(data.onRemoveSongFromJamQueue?.queue || [])
       },
       error: (error) => console.error(error)
     })
@@ -267,6 +290,31 @@ export default function Player(p: PlayerProps){
     console.log(d)
   }
 
+  const addSongToJamQueue = async (songId: string) => {
+    let song=0; let found = false
+    for(song=0; song<songs.length; song++) { if (songs[song].song.songId === songId) { found=true; break; } }
+
+    if (found) {
+      console.log(`song found: ${songId}, index: ${song}, title: ${songs[song].song.title}`)
+      const d = await client.graphql({
+        query: m.addSongToJamQueue, variables: {
+        jamSessionId: p.jam.jamSessionId, song
+      }}) as GraphQLResult<AddSongToJamQueueMutation>
+      console.log(d)
+    } else console.error(`song ${songId} not found.`)
+  }
+
+  const removeSongFromJamQueue = async (index: number) => {
+    let queue = p.jam.queue || []
+    if (index < 0 || index >= queue.length) return
+
+    const d = await client.graphql({
+      query: m.removeSongFromJamQueue, variables: {
+      jamSessionId: p.jam.jamSessionId, queueIndex: index
+    }}) as GraphQLResult<RemoveSongFromJamQueueMutation>
+    console.log(d)
+  }
+
   const setJamConfig = async (textSize: string) => {
     const d = await client.graphql({ query: m.setJamSlideConfig, variables: {
       jamSessionId: p.jam.jamSessionId, textSize
@@ -276,7 +324,7 @@ export default function Player(p: PlayerProps){
 
   return <View className={`text-white w-full h-screen flex flex-col overflow-hidden`} id="player">
     { songs[song]?.song && 
-      <PlayerSlides 
+      <PlayerSlides
         song={songs[song]!.song} skey={sKey} page={page} 
         setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
         textSize={textSize} complex={complex} headsUp={headsUp}
@@ -286,9 +334,11 @@ export default function Player(p: PlayerProps){
 
     { songs && !p.isSlideShow &&
       <Controls 
+        open={p.openController}
+        setOpen={p.setOpenController}
         jamSessionId={p.jam.jamSessionId}
         capo={{ capo:`${0-transpose}`, setCapo }} 
-        song={{ song, setSong: setNextSong, songs: songs as JamSong[] }} 
+        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[] }} 
         sKey={{ skey: sKey, setKey }}
         display={{ textSize, setTextSize, 
           auto: false, setAuto: () => {}, 
@@ -302,6 +352,11 @@ export default function Player(p: PlayerProps){
         users={{
           active: active as Participant[],
           removeActive: () => {}
+        }}
+        queue={{
+          songs: songs as JamSong[],
+          queueOrder: queue,
+          removeFromQueue: removeSongFromJamQueue
         }}
       /> 
     }
