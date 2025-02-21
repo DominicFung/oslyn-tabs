@@ -6,13 +6,14 @@ import {Text, View, Image, Pressable, ScrollView } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 
 export interface UsersProps {
+  w: number
   users: (Participant)[]
   removeUser: (userId: string) => void
 }
 
 export default function Users(p: UsersProps) {
   return <>
-    <ScrollView className="ml-3 text-sm font-normal h-screen">
+    <ScrollView className="ml-3 text-sm font-normal h-screen" style={{width: p.w-130}}>
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Active Users</Text>
       <Text className="pb-3 text-sm font-normal w-96">Use this to monitor active users.</Text> 
 

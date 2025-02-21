@@ -6,6 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 import { FontAwesome5 } from '@expo/vector-icons'
 
 export interface SlidesProps {
+  w: number
   textSize: string
   setTextSize:  (s: string) => void
 }
@@ -27,11 +28,11 @@ const textSizes = [
 export default function Slides(p: SlidesProps) {
   const [isFocus, setIsFocus] = useState(true)
   return <>
-    <View className="ml-3 text-sm font-normal max-w-sm">
+    <View className="ml-3 text-sm font-normal" style={{width: p.w-130}}>
       <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Slides</Text>
       <Text className="pb-3 text-sm font-normal">Set your text size to make it easier to read! <Text className="text-xs italic">(only affects you)</Text></Text> 
 
-      <View className=''>
+      <View style={{width: p.w-150}}>
         <Dropdown
           style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
           placeholderStyle={styles.placeholderStyle}

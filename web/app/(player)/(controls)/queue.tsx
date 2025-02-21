@@ -1,4 +1,4 @@
-import { JamSong } from "../../../../src/API";
+import { JamSong } from "@/../src/API";
 
 interface QueueProps {
   songs: JamSong[],

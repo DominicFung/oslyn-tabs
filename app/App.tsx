@@ -46,6 +46,8 @@ export default function App() {
 
   const [ bands, setBands ] = useState<Band[]>([])
   const [ sessions, setSessions] = useState<JamSession[]>([])
+
+  const [ openController, setOpenController] = useState(false)
   
   useEffect(() => { 
     getPublicJamSessions()
@@ -53,9 +55,9 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (jam) { lockAsync(OrientationLock.LANDSCAPE_LEFT) }
+    if (jam && !openController) { lockAsync(OrientationLock.LANDSCAPE_LEFT) }
     else lockAsync(OrientationLock.DEFAULT)
-  }, [ jam ])
+  }, [ jam, openController ])
 
   const setJamGivenId = (jamSessionId: string) => {
     getJamSession(jamSessionId)
@@ -104,7 +106,10 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <LinearGradient colors={["#e4bcbb", "#bb9bff"]} start={{x: 0, y: 0}} end={{x:0, y:1}} >
         { !jam && bands && sessions && <Main bands={bands} sessions={sessions} setJam={setJamGivenId} /> }
-        {  jam && <Player jam={jam} user={null} resetJam={() => { setJam(undefined) }}/> }
+        { jam && <Player 
+                    jam={jam} user={null} resetJam={() => { setJam(undefined) }}
+                    openController={openController} setOpenController={setOpenController}
+                  /> }
       </LinearGradient>
     </ThemeProvider>
   </SafeAreaProvider>)
