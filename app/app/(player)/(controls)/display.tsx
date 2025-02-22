@@ -33,6 +33,11 @@ const textSizes = [
   { label: 'text-xl', value: 'text-xl' },
   { label: 'text-2xl', value: 'text-2xl' },
   { label: 'text-3xl', value: 'text-3xl' },
+  { label: 'text-4xl', value: 'text-4xl' },
+  { label: 'text-5xl', value: 'text-5xl' },
+  { label: 'text-6xl', value: 'text-6xl' },
+  { label: 'text-7xl', value: 'text-7xl' },
+  { label: 'text-8xl', value: 'text-8xl' },
 ]
 
 const MODE = ["dark", "light", "system"]

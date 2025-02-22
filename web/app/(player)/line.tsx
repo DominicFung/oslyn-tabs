@@ -15,6 +15,22 @@ export interface LineProps {
   decorate?: boolean
 }
 
+const hs: { [key: string]: { chordTop: number, lineMargin: number } } = {
+  "text-xs": { chordTop: -18, lineMargin: 0 },
+  "text-sm": { chordTop: -20, lineMargin: 5 },
+  "text-base": { chordTop: -23, lineMargin: 10 },
+  "text-lg": { chordTop: -26, lineMargin: 15 },
+  "text-xl": { chordTop: -28, lineMargin: 20 },
+  "text-2xl": { chordTop: -30, lineMargin: 25 },
+  "text-3xl": { chordTop: -32, lineMargin: 30 },
+  "text-4xl": { chordTop: -36, lineMargin: 40 },
+  "text-5xl": { chordTop: -46, lineMargin: 60 },
+  "text-6xl": { chordTop: -56, lineMargin: 80 },
+  "text-7xl": { chordTop: -70, lineMargin: 120 },
+  "text-8xl": { chordTop: -88, lineMargin: 170 },
+  "text-9xl": { chordTop: -100, lineMargin: 240 },
+}
+
 export default function Line(p: LineProps) {
   const [ phrase, setPhrase ] = useState<OslynPhrase>()
   
@@ -92,16 +108,16 @@ export default function Line(p: LineProps) {
   }
 
   return <>
-    { phrase && phrase.lyric.trim() != "" && <div className="relative h-12 mt-6">
+    { phrase && phrase.lyric.trim() != "" && <div className="relative h-12 tmt-6">
       { phrase.chords.map((c, i) => { 
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
         const width = calculateWidth(phrase.lyric.substring(0, c.position), p.textSize  || "text-lg")
         return<span className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1 rounded-lg`} style={{
-          marginLeft: `${width}px`, left: 0, top: -24}} key={i}>{chord}{p.decorate && c.decorator}</span>
+          marginLeft: `${width}px`, left: 0, top: p.textSize?hs[p.textSize].chordTop:hs["text-lg"].chordTop }} key={i}>{chord}{p.decorate && c.decorator}</span>
       })}
-      <div className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"} whitespace-nowrap`}>{phrase.lyric}</div>
+      <div style={{ marginTop: p.textSize?hs[p.textSize].lineMargin:hs["text-lg"].lineMargin }} className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"} whitespace-nowrap`}>{phrase.lyric}</div>
     </div> }
-    { phrase && phrase.lyric.trim() === "" && <div className="relative h-12 mt-6">
+    { phrase && phrase.lyric.trim() === "" && <div className="relative h-12 tmt-6">
       { phrase.chords.map((c, i) => { 
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
         

@@ -167,7 +167,7 @@ export default function Slides(p: SlidesProps) {
     <div className={`flex justify-center items-center h-full m-auto ${wClass}`}>
       { !slides?.pages[page] && <div className="text-white">Sorry something went wrong. Click on the gear, and select a new song to reset the system.</div> }
       { slides?.pages[page] && <div>
-        { slides?.pages && slides?.pages[page]?.lines[0] && <div className="text-gray-500 text-sm italic bold">
+        { slides?.pages && slides?.pages[page]?.lines[0] && <div className="text-gray-500 text-sm italic bold mb-8">
           {slides?.pages && slides?.pages[page].lines[0].section}
         </div> }
         { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => <div key={i}>
@@ -176,7 +176,7 @@ export default function Slides(p: SlidesProps) {
 
         <div className="h-20" />
 
-        { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold">
+        { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold mb-8">
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
         { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <div>
@@ -210,6 +210,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
-    {/* slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/> */}
+    {slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/>}
   </>
 }

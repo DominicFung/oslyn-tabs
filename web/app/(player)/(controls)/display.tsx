@@ -23,7 +23,7 @@ export interface DisplayProps {
   setHeadsUp: (b: boolean) => void
 }
 
-const textSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl']
+const textSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl', 'text-4xl', 'text-5xl', 'text-6xl', 'text-7xl']
 const MODE = ["dark", "light", "system"]
 
 export default function Display(p: DisplayProps) {
