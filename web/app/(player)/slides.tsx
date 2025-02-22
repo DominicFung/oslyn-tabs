@@ -210,6 +210,6 @@ export default function Slides(p: SlidesProps) {
         </div>
       </div>
     </div>}
-    {slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/>}
+    {/*slides && p.jamId && p.userId && <Recorder jamId={p.jamId} slides={slides} page={page} userId={p.userId} currentSongId={p.song.songId}/>*/}
   </>
 }
