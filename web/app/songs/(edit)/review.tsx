@@ -40,7 +40,7 @@ export default function Review(p: ReviewProps) {
 
   return <>
     { oslynSong?.song && <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
-      { p.song && <Slides song={p.song} pt={true} /> }
+      { p.song && <Slides song={p.song} pt={true} isControllerOpen={false} /> }
     </div> }
   </>
 }

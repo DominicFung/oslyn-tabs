@@ -24,7 +24,7 @@ export default function Views(p: ViewsProps) {
   } , [theme])
 
   const [ view, setView ] = useState<'PREVIEW'|'PLAYER'>('PLAYER')
-
+  const [ openController, setOpenController] = useState(false)
 
   const [ sKey, setSKey ] = useState(p.song.chordSheetKey || "C")
   const [transpose, setTranspose] = useState(0)
@@ -47,9 +47,12 @@ export default function Views(p: ViewsProps) {
   return <>
     { view === 'PREVIEW' && <Preview song={p.song} toggleView={ () => setView('PLAYER') }/>}
     { view === 'PLAYER' && <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
-      { p.song && <Slides song={p.song} skey={sKey} textSize={textSize} complex={complex} headsUp={headsUp} transpose={transpose} /> }
+      { p.song && <Slides song={p.song} skey={sKey} textSize={textSize} complex={complex} headsUp={headsUp} transpose={transpose} isControllerOpen={openController}/> }
 
-      <Controls 
+      <Controls
+        jamSessionId=""
+        open={openController}
+        setOpen={setOpenController}
         capo={{ capo:`${0-transpose}`, setCapo }} 
         sKey={{ skey: sKey, setKey: setSKey, togglePreview: () => setView('PREVIEW') }}
         display={{ textSize, setTextSize, 
