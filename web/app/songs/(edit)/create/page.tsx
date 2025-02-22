@@ -19,6 +19,8 @@ export default function CreateSong() {
   const [ step, setStep ] = useState(0)
   const [ shareWithBand, setShareWithBand ] = useState("")
 
+  const [ openController, setOpenController ] = useState(false)
+
   useEffect(() => {
     let swb = searchParams.get("share")
     if (swb) setShareWithBand(swb)
@@ -38,7 +40,7 @@ export default function CreateSong() {
       <div className="flex-1 p-4">
         { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { setSong({ ...song, chordSheet: t }) }} /> }
         { step === 1 && <SongInfo song={song} setSong={setSong}/>}
-        { step === 2 && <Slides song={song} pt={true} /> }
+        { step === 2 && <Slides song={song} pt={true} isControllerOpen={false} /> }
       </div>
       <Save song={song} type="create" shareWithBand={shareWithBand} goToReviewTab={() => setStep(2)} />
     </div>
