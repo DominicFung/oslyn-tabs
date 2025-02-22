@@ -60,35 +60,35 @@ export default function Recorder(p: RecorderProps) {
     }
   }
 
-  const startRecordforAI = async () => {
-    if (mediaRecorderForAI === null) { log("ERROR no media recorder 2 found."); return }
-    if (!context) { log("ERROR no audio context found."); return }
-    setIsRecording(true)
+  // const startRecordforAI = async () => {
+  //   if (mediaRecorderForAI === null) { log("ERROR no media recorder 2 found."); return }
+  //   if (!context) { log("ERROR no audio context found."); return }
+  //   setIsRecording(true)
 
-    let recording_start = performance.now();
-    let chunks: BlobPart[] = [];
+  //   let recording_start = performance.now();
+  //   let chunks: BlobPart[] = [];
 
-    mediaRecorderForAI.ondataavailable = async (e) => { chunks.push(e.data) }
+  //   mediaRecorderForAI.ondataavailable = async (e) => { chunks.push(e.data) }
 
-    mediaRecorderForAI.onstop = async () => {
-      console.log("recorder 2 stop call")
-      const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
-      log(`recorded ${((performance.now() - recording_start) / 1000).toFixed(1)}sec audio`);
-      const ab = await context.decodeAudioData(await blob.arrayBuffer())
-      console.log(ab.getChannelData(0))
+  //   mediaRecorderForAI.onstop = async () => {
+  //     console.log("recorder 2 stop call")
+  //     const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+  //     log(`recorded ${((performance.now() - recording_start) / 1000).toFixed(1)}sec audio`);
+  //     const ab = await context.decodeAudioData(await blob.arrayBuffer())
+  //     console.log(ab.getChannelData(0))
       
-      const buffer = Buffer.from(ab.getChannelData(0))
-      console.log(buffer)
+  //     const buffer = Buffer.from(ab.getChannelData(0))
+  //     console.log(buffer)
 
-      let input = {
-        page: p.page,
-        oslynSlides: p.slides,
-        buffer: encodeFloatArr(ab.getChannelData(0))
-      } as Message
+  //     let input = {
+  //       page: p.page,
+  //       oslynSlides: p.slides,
+  //       buffer: encodeFloatArr(ab.getChannelData(0))
+  //     } as Message
 
-      aiWorker.postMessage(JSON.stringify(input))
-    }
-  }
+  //     aiWorker.postMessage(JSON.stringify(input))
+  //   }
+  // }
 
   const saveAudio = async ( blob: Blob, fileName: string):Promise<any> => {
     const s3 = new S3Client({
