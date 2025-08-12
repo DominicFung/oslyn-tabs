@@ -76,3 +76,8 @@ AuthKey_*.p8
 web/public/models
 web/._*
 ._*
+app/._*
+app/.DS_Store
+
+.DS_Store
+._*

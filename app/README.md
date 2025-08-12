@@ -50,3 +50,14 @@ fastlane beta
 ```
 npx expo prebuild --platform ios
 ```
+
+### To find all those pesky mac hidden files
+
+```
+find . -type f -name '._*' -delete
+find . -type f -name '.DS_Store' -delete
+```
+
+```
+./scripts/prebuild.sh && expo 
+```

@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { JamSession, User, Band } from './src/API'
 import * as q from './src/graphql/queries'
 
-import Player from './app/(player)/player'
+import Player from './application/(player)/player'
 
 import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from 'aws-amplify/api'
@@ -19,7 +19,7 @@ import { ThemeProvider, createTheme } from '@rneui/themed'
 import { lockAsync, Orientation, OrientationLock } from 'expo-screen-orientation'
 
 import amplifyconfig from './src/amplifyconfiguration.json'
-import Main from './app/main'
+import Main from './application/main'
 Amplify.configure(amplifyconfig)
 
 // const localTheme = "light"
@@ -50,8 +50,8 @@ export default function App() {
   const [ openController, setOpenController] = useState(false)
   
   useEffect(() => { 
-    getPublicJamSessions()
-    getPublicBands()
+    //getPublicJamSessions()
+    //getPublicBands()
   }, [])
 
   useEffect(() => {
@@ -105,7 +105,8 @@ export default function App() {
   return (<SafeAreaProvider>
     <ThemeProvider theme={theme}>
       <LinearGradient colors={["#e4bcbb", "#bb9bff"]} start={{x: 0, y: 0}} end={{x:0, y:1}} >
-        { !jam && bands && sessions && <Main bands={bands} sessions={sessions} setJam={setJamGivenId} /> }
+        {/* !jam && bands && sessions && <Main bands={bands} sessions={sessions} setJam={setJamGivenId} /> */}
+        { !jam && <Main /> }
         { jam && <Player 
                     jam={jam} user={null} resetJam={() => { setJam(undefined) }}
                     openController={openController} setOpenController={setOpenController}
