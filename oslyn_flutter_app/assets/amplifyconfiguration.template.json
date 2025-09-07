@@ -1,0 +1,7 @@
+{
+  "aws_project_region": "YOUR_AWS_REGION",
+  "aws_appsync_graphqlEndpoint": "YOUR_APPSYNC_ENDPOINT",
+  "aws_appsync_region": "YOUR_APPSYNC_REGION",
+  "aws_appsync_authenticationType": "API_KEY",
+  "aws_appsync_apiKey": "YOUR_API_KEY"
+}

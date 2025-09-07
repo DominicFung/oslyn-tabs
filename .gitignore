@@ -36,7 +36,24 @@ next-env.d.ts
 
 node_modules
 
+# ===== SENSITIVE FILES - NEVER COMMIT THESE =====
+# API Keys and Secrets
 secret.json
+**/secret.json
+**/example.secret.json
+**/secret.*.json
+
+# AWS Configuration Files
+amplifyconfiguration.json
+**/amplifyconfiguration.json
+aws-exports.js
+**/aws-exports.js
+awsconfiguration.json
+**/awsconfiguration.json
+amplifyconfiguration.dart
+**/amplifyconfiguration.dart
+
+# AWS CDK and Infrastructure
 /output
 token.txt
 /aws/**/*.js

@@ -1,122 +1,821 @@
 import 'package:flutter/material.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:http/http.dart' as http;
+import 'amplifyconfiguration.dart';
+import 'models/jam_session.dart';
+import 'services/jam_service.dart';
+import 'pages/song_card_page.dart';
+import 'dart:convert'; // Added for jsonEncode
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    // Configure Amplify with the generated config
+    await _configureAmplify();
+    print('✅ AWS Amplify configured successfully');
+  } catch (e) {
+    print('❌ Failed to configure AWS Amplify: $e');
+  }
+  
   runApp(const MyApp());
+}
+
+Future<void> _configureAmplify() async {
+  try {
+    // Configure Amplify with the loaded config
+    await Amplify.addPlugins([
+      AmplifyAuthCognito(),
+      AmplifyAPI(),
+    ]);
+    
+    // Convert the config to the format Amplify expects
+    final configJson = jsonEncode(amplifyconfig);
+    await Amplify.configure(configJson);
+    
+    print('✅ AWS Amplify configured successfully');
+    print('Ready to connect to AppSync backend');
+  } catch (e) {
+    print('❌ Failed to configure AWS Amplify: $e');
+    rethrow;
+  }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Oslyn Tabs',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const JamListPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class JamListPage extends StatefulWidget {
+  const JamListPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<JamListPage> createState() => _JamListPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _JamListPageState extends State<JamListPage> {
+  List<JamSession> jamSessions = [];
+  bool isLoading = true;
+  String? errorMessage;
+  late JamService _jamService;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _jamService = JamService();
+    _loadJamSessions();
+  }
+
+  Future<void> _loadJamSessions() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      print('🔄 Loading jam sessions from AWS...');
+      
+      // Make actual GraphQL call to AWS AppSync
+      final sessions = await _jamService.getPublicJamSessions(limit: 10);
+
+      print('📊 Loaded ${sessions.length} jam sessions from AWS');
+      
+      if (sessions.isEmpty) {
+        print('⚠️  No jam sessions found - this might be normal if none exist yet');
+      }
+
+      setState(() {
+        jamSessions = sessions;
+        isLoading = false;
+      });
+
+      print('✅ Jam sessions loaded successfully');
+    } catch (e) {
+      print('❌ Error loading jam sessions: $e');
+      setState(() {
+        errorMessage = 'Failed to load jam sessions: $e';
+        isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFE0B9BE), // #E0B9BE 0%
+            Color(0xFFC7A2DB), // #C7A2DB 55%
+            Color(0xFFBD9DFA), // #BD9DFA 100%
+          ],
+          stops: [0.0, 0.55, 1.0],
+        ),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Oslyn Jam Sessions'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadJamSessions,
             ),
           ],
         ),
+        body: _buildBody(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Create jam - Coming soon!')),
+            );
+          },
+          tooltip: 'Create Jam',
+          child: const Icon(Icons.add),
+        ),
+        // Add a test button to verify AWS connectivity
+        persistentFooterButtons: [
+          ElevatedButton.icon(
+            onPressed: () async {
+              print('🧪 Testing AWS AppSync connectivity...');
+              try {
+                final jamService = JamService();
+                // Try to fetch a single jam session to test connectivity
+                final testSession = await jamService.getJamSession('test-id');
+                print('✅ AWS connectivity test completed');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('AWS connectivity test completed - check console')),
+                );
+              } catch (e) {
+                print('❌ AWS connectivity test failed: $e');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('AWS connectivity test failed: $e')),
+                );
+              }
+            },
+            icon: const Icon(Icons.cloud),
+            label: const Text('Test AWS'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              print('🌐 Testing basic HTTP connectivity to AppSync...');
+              try {
+                final response = await http.get(
+                  Uri.parse('https://oqe64k4rmbbatifefhdw5362wi.appsync-api.us-east-1.amazonaws.com/graphql'),
+                  headers: {
+                    'x-api-key': 'da2-wf3ma6ennbeuflezqt2m5xdcbi',
+                    'Content-Type': 'application/json',
+                  },
+                );
+                print('✅ HTTP test completed - Status: ${response.statusCode}');
+                print('📊 Response body: ${response.body}');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('HTTP test completed - Status: ${response.statusCode}')),
+                );
+              } catch (e) {
+                print('❌ HTTP test failed: $e');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('HTTP test failed: $e')),
+                );
+              }
+            },
+            icon: const Icon(Icons.http),
+            label: const Text('Test HTTP'),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget _buildBody() {
+    if (isLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Loading jam sessions from AWS...'),
+          ],
+        ),
+      );
+    }
+
+    if (errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              errorMessage!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _loadJamSessions,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (jamSessions.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.music_note, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              'No jam sessions found',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'This could mean:',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '• No public jam sessions exist yet\n• You need to create the first one\n• There might be a connection issue',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _loadJamSessions,
+              child: const Text('Refresh'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: jamSessions.length,
+      itemBuilder: (context, index) {
+        final jam = jamSessions[index];
+        return _buildJamCard(jam);
+      },
+    );
+  }
+
+  Widget _buildJamCard(JamSession jam) {
+    final adminCount = jam.admins.length;
+    final currentlyActiveCount = jam.active.length;
+    
+    // Calculate last used date from active participants' lastPing
+    final lastUsedDate = _getLastUsedDate(jam);
+    
+    // Create a better session name using available data
+    final sessionName = _generateSessionName(jam);
+    
+    // Format the date
+    final startDate = jam.startDate != null 
+        ? DateTime.fromMillisecondsSinceEpoch(jam.startDate!)
+        : null;
+    
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          print('🎯 Tapped on jam session: ${jam.jamSessionId}');
+          print('📝 Description: ${jam.description}');
+          print('🎵 Set List: ${jam.setList != null ? "Found" : "Not Found"}');
+          if (jam.setList != null) {
+            print('📋 Set List ID: ${jam.setList!.setListId}');
+            print('📋 Set List Description: ${jam.setList!.description}');
+            print('🎼 Songs in Set: ${jam.setList!.songs?.length ?? 0}');
+          }
+          
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SongCardPage(
+                jamSessionId: jam.jamSessionId,
+                initialDescription: jam.description,
+              ),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with session name and status
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.music_note,
+                      size: 24,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          sessionName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          'Session ID: ${jam.jamSessionId.substring(0, 8)}...',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Status indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                    ),
+                    child: Text(
+                      'Active',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.green[700],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  // Song count badge
+                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.purple.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.purple.withValues(alpha: 0.4)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.music_note,
+                            size: 12,
+                            color: Colors.purple[700],
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${jam.setList!.songs!.length}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              
+              // Compact song preview
+              if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.playlist_play,
+                        size: 16,
+                        color: Colors.blue[700],
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${jam.setList!.songs!.take(3).map((s) => s.song.title).join(' • ')}${jam.setList!.songs!.length > 3 ? ' +${jam.setList!.songs!.length - 3} more' : ''}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              
+              
+              
+              const SizedBox(height: 16),
+              
+              // Participant counts
+              Row(
+                children: [
+                  _buildParticipantInfo(
+                    icon: Icons.admin_panel_settings,
+                    label: 'Admins',
+                    count: adminCount,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildParticipantInfo(
+                    icon: Icons.radio_button_checked,
+                    label: 'Currently Active',
+                    count: currentlyActiveCount,
+                    color: Colors.purple,
+                  ),
+                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                    const SizedBox(width: 16),
+                    _buildParticipantInfo(
+                      icon: Icons.music_note,
+                      label: 'Songs',
+                      count: jam.setList!.songs!.length,
+                      color: Colors.green,
+                    ),
+                  ],
+                ],
+              ),
+              
+              
+              const SizedBox(height: 16),
+              
+              
+              
+              // Currently active people section
+              if (jam.active.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.purple.withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.radio_button_checked,
+                            size: 16,
+                            color: Colors.purple[700],
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Currently Active (${jam.active.length})',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: jam.active.map((participant) {
+                          final displayName = _getParticipantDisplayName(participant);
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.purple.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.purple.withValues(alpha: 0.4)),
+                            ),
+                            child: Text(
+                              displayName,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.purple[800],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+              
+              // Additional info row
+              Row(
+                children: [
+                  if (startDate != null) ...[
+                    Icon(
+                      Icons.schedule,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Started ${_formatRelativeDate(startDate)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                  if (lastUsedDate != null) ...[
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Last used ${_formatRelativeDate(lastUsedDate)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                  if (jam.setList != null) ...[
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.playlist_play,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${jam.setList!.songs?.length ?? 0} songs in set',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  String _generateSessionName(JamSession jam) {
+    // If there's a description, use it
+    if (jam.description != null && jam.description!.isNotEmpty) {
+      return jam.description!;
+    }
+    
+    // Try to get the set list description (like the web app does)
+    if (jam.setList != null && jam.setList!.description != null && jam.setList!.description!.isNotEmpty) {
+      return jam.setList!.description!;
+    }
+    
+    // Create a name based on admin information
+    if (jam.admins.isNotEmpty) {
+      final admin = jam.admins.first;
+      final adminName = admin.firstName != null && admin.firstName!.isNotEmpty
+          ? admin.firstName!
+          : admin.username ?? 'Admin';
+      
+      // Add date context if available
+      if (jam.startDate != null) {
+        final startDate = DateTime.fromMillisecondsSinceEpoch(jam.startDate!);
+        final now = DateTime.now();
+        final difference = now.difference(startDate);
+        
+        if (difference.inDays == 0) {
+          return "$adminName's Jam (Today)";
+        } else if (difference.inDays == 1) {
+          return "$adminName's Jam (Yesterday)";
+        } else if (difference.inDays < 7) {
+          return "$adminName's Jam (${difference.inDays} days ago)";
+        } else {
+          return "$adminName's Jam (${startDate.month}/${startDate.day})";
+        }
+      } else {
+        return "$adminName's Jam Session";
+      }
+    }
+    
+    // Fallback: use date-based naming
+    if (jam.startDate != null) {
+      final startDate = DateTime.fromMillisecondsSinceEpoch(jam.startDate!);
+      final now = DateTime.now();
+      final difference = now.difference(startDate);
+      
+      if (difference.inDays == 0) {
+        return "Today's Jam Session";
+      } else if (difference.inDays == 1) {
+        return "Yesterday's Jam Session";
+      } else if (difference.inDays < 7) {
+        return "${difference.inDays} Day Old Jam";
+      } else {
+        return "Jam Session (${startDate.month}/${startDate.day})";
+      }
+    }
+    
+    // Final fallback
+    return "Jam Session ${jam.jamSessionId.substring(0, 8)}...";
+  }
+  
+  Widget _buildParticipantInfo({
+    required IconData icon,
+    required String label,
+    required int count,
+    required Color color,
+  }) {
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: color,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: color,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+  
+  String _formatRelativeDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays == 0) {
+      return 'today';
+    } else if (difference.inDays == 1) {
+      return 'yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return '${date.month}/${date.day}/${date.year}';
+    }
+  }
+  
+  String _getUserDisplayName(User user) {
+    // Try to get a meaningful display name
+    if (user.firstName != null && user.firstName!.isNotEmpty) {
+      if (user.lastName != null && user.lastName!.isNotEmpty) {
+        return '${user.firstName} ${user.lastName}';
+      } else {
+        return user.firstName!;
+      }
+    } else if (user.username != null && user.username!.isNotEmpty) {
+      return user.username!;
+    } else if (user.email != null && user.email!.isNotEmpty) {
+      // Extract username from email if available
+      final emailParts = user.email!.split('@');
+      return emailParts.isNotEmpty ? emailParts[0] : 'Admin';
+    } else {
+      return 'Admin';
+    }
+  }
+  
+  DateTime? _getLastUsedDate(JamSession jam) {
+    // Debug: Print what data we have
+    print('🔍 Debug Last Used Date for session ${jam.jamSessionId}:');
+    print('   Active participants: ${jam.active.length}');
+    print('   Start date: ${jam.startDate}');
+    
+    // Get the most recent lastPing from active participants
+    DateTime? mostRecentPing;
+    
+    for (final participant in jam.active) {
+      print('   Participant: ${participant.username} - lastPing: ${participant.lastPing}');
+      if (participant.lastPing != null) {
+        final pingDate = DateTime.fromMillisecondsSinceEpoch(participant.lastPing!);
+        print('   Ping date: $pingDate');
+        if (mostRecentPing == null || pingDate.isAfter(mostRecentPing)) {
+          mostRecentPing = pingDate;
+        }
+      }
+    }
+    
+    // If no lastPing data, fall back to startDate
+    if (mostRecentPing == null && jam.startDate != null) {
+      mostRecentPing = DateTime.fromMillisecondsSinceEpoch(jam.startDate!);
+      print('   Using startDate as fallback: $mostRecentPing');
+    }
+    
+    print('   Final last used date: $mostRecentPing');
+    return mostRecentPing;
+  }
+  
+  
+  String _getParticipantDisplayName(Participant participant) {
+    // Try to get display name from the participant's user object first
+    if (participant.user != null) {
+      return _getUserDisplayName(participant.user!);
+    }
+    
+    // Fall back to participant's username
+    if (participant.username != null && participant.username!.isNotEmpty) {
+      return participant.username!;
+    }
+    
+    // Final fallback
+    return 'User';
   }
 }
