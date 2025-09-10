@@ -7,6 +7,8 @@ import 'amplifyconfiguration.dart';
 import 'models/jam_session.dart';
 import 'services/jam_service.dart';
 import 'pages/song_card_page.dart';
+import 'pages/half_app_bar_demo.dart';
+import 'pages/jam_list_with_half_app_bar.dart';
 import 'dart:convert'; // Added for jsonEncode
 
 void main() async {
@@ -54,6 +56,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const JamListPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -128,17 +131,84 @@ class _JamListPageState extends State<JamListPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Oslyn Jam Sessions'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _loadJamSessions,
+        body: Stack(
+          children: [
+            _buildBody(),
+            
+            // Back button (top left)
+            Positioned(
+              top: 30,
+              left: 16,
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    // Navigate back or close app
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  tooltip: 'Back',
+                ),
+              ),
+            ),
+            
+            // Settings button (top right)
+            Positioned(
+              top: 30,
+              right: 16,
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: PopupMenuButton<String>(
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'refresh':
+                        _loadJamSessions();
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'refresh',
+                      child: Row(
+                        children: [
+                          Icon(Icons.refresh, size: 20),
+                          SizedBox(width: 12),
+                          Text('Refresh Jam Sessions'),
+                        ],
+                      ),
+                    ),
+                  ],
+                  child: const Icon(Icons.settings),
+                  tooltip: 'Settings',
+                ),
+              ),
             ),
           ],
         ),
-        body: _buildBody(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -151,12 +221,36 @@ class _JamListPageState extends State<JamListPage> {
         // Add a test button to verify AWS connectivity
         persistentFooterButtons: [
           ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HalfAppBarDemoPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.apps),
+            label: const Text('Half App Bar Demo'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const JamListWithHalfAppBarPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.music_note),
+            label: const Text('Jam List with Half App Bar'),
+          ),
+          ElevatedButton.icon(
             onPressed: () async {
               print('🧪 Testing AWS AppSync connectivity...');
               try {
                 final jamService = JamService();
                 // Try to fetch a single jam session to test connectivity
-                final testSession = await jamService.getJamSession('test-id');
+                await jamService.getJamSession('test-id');
                 print('✅ AWS connectivity test completed');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('AWS connectivity test completed - check console')),
@@ -175,11 +269,13 @@ class _JamListPageState extends State<JamListPage> {
             onPressed: () async {
               print('🌐 Testing basic HTTP connectivity to AppSync...');
               try {
+                // Use Amplify configuration instead of hardcoded values
+                final config = amplifyconfig['api']['plugins']['awsAPIPlugin']['oslynstudio'];
                 final response = await http.get(
-                  Uri.parse('https://oqe64k4rmbbatifefhdw5362wi.appsync-api.us-east-1.amazonaws.com/graphql'),
+                  Uri.parse(config['endpoint']),
                   headers: {
-                    'x-api-key': 'REPLACED_FOR_SECURITY',
-                    'Content-Type': 'application/json',
+                    'x-api-key': config['apiKey'],
+                    // 'Content-Type': 'application/json',
                   },
                 );
                 print('✅ HTTP test completed - Status: ${response.statusCode}');
@@ -706,38 +802,6 @@ class _JamListPageState extends State<JamListPage> {
     );
   }
 
-  Widget _buildSummaryItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          size: 20,
-          color: color,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
-  }
   
   String _formatRelativeDate(DateTime date) {
     final now = DateTime.now();
