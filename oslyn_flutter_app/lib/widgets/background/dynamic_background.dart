@@ -104,7 +104,6 @@ class _DynamicBackgroundState extends State<DynamicBackground>
 
     // Start continuous movement
     _movementController.repeat();
-    _movementController.addListener(_updateMovement);
   }
 
   Future<void> _extractAndAnimateColors() async {
@@ -227,8 +226,11 @@ class _DynamicBackgroundState extends State<DynamicBackground>
         _screenSize = Size(constraints.maxWidth, constraints.maxHeight);
         
         return AnimatedBuilder(
-          animation: _animationController,
+          animation: Listenable.merge([_animationController, _movementController]),
           builder: (context, child) {
+            // Update movement on each frame
+            _updateMovement();
+            
             return Container(
               decoration: BoxDecoration(
                 gradient: _buildBlendedGradient(),
