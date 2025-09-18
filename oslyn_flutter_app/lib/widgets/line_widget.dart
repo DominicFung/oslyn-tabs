@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import '../core/oslyn_types.dart';
+import '../core/oslyn_engine.dart';
 import 'chord_lyric_renderer.dart';
 
-/// Line widget for displaying lyrics with chords above
-/// Based on the web app's slides line.tsx
+/// Optimized line widget for displaying lyrics with chords above
+/// Simplified version with better performance
 class LineWidget extends StatelessWidget {
   final OslynPhrase phrase;
   final String? textSize;
   final Color? color;
-  final String chordSheetKey;
+  final String chordSheetKey; // The current/selected key
+  final String? originalKey;   // The original key from the song
+  final int capo; // Capo fret number (0-12)
+  final double? dynamicFontSize; // Dynamic font size for when textSize is 'dynamic'
 
   const LineWidget({
     super.key,
@@ -16,7 +20,50 @@ class LineWidget extends StatelessWidget {
     this.textSize,
     this.color,
     required this.chordSheetKey,
+    this.originalKey,
+    this.capo = 0,
+    this.dynamicFontSize,
   });
+
+  /// Calculate the transposition offset between original key and current key
+  int _getTranspositionOffset() {
+    if (originalKey == null || originalKey == chordSheetKey) {
+      return 0; // No transposition needed
+    }
+    
+    // Find the index of the original key
+    int? originalIndex;
+    for (int i = 0; i < OslynEngine.keyDistanceMap.length; i++) {
+      if (OslynEngine.keyDistanceMap[i].contains(originalKey!)) {
+        originalIndex = i;
+        break;
+      }
+    }
+    
+    // Find the index of the current key
+    int? currentIndex;
+    for (int i = 0; i < OslynEngine.keyDistanceMap.length; i++) {
+      if (OslynEngine.keyDistanceMap[i].contains(chordSheetKey)) {
+        currentIndex = i;
+        break;
+      }
+    }
+    
+    if (originalIndex == null || currentIndex == null) {
+      return 0; // Can't calculate offset
+    }
+    
+    // Calculate the offset (how many semitones to transpose)
+    int offset = currentIndex - originalIndex;
+    while (offset < 0) {
+      offset += 12;
+    }
+    while (offset >= 12) {
+      offset -= 12;
+    }
+    
+    return offset;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +72,25 @@ class LineWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    // Calculate transposition offset and apply capo adjustment (capo raises displayed shapes)
+    final transposeOffset = (_getTranspositionOffset() + (capo % 12)) % 12;
+
     // Convert OslynPhrase to ChordLyricPair for rendering
-    final lyricLine = phrase.lyric;
+    // Add padding: 1 space before, 8 spaces after
+    final lyricLine = ' ${phrase.lyric}        ';
     
     final chordLyricPair = ChordLyricPair(
-      chordLine: phrase.chordLine, // Use the stored chord line text
+      chordLine: ' ${phrase.chordLine}        ', // Add padding to chord line too
       lyricLine: lyricLine,
       chords: phrase.chords.map((chord) {
-        // Use the original chord name stored in the decorator field
-        final displayName = chord.decorator.isNotEmpty ? chord.decorator : '?';
+        // ALWAYS use the original full chord text from the source (decorator)
+        // and only transpose the root(s). This preserves numbers and qualifiers like sus/add/maj7.
+        final originalFullText = chord.decorator;
+        final displayName = _transposeDecoratedChord(originalFullText, transposeOffset);
         
         return ChordPosition(
           chordName: displayName,
-          charPosition: chord.position,
+          charPosition: chord.position + 1, // Adjust for leading space padding
           isMinor: chord.isMinor,
           decorator: chord.decorator,
         );
@@ -46,11 +99,60 @@ class LineWidget extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(top: 8), // Reduced top margin
-      child: ChordLyricRenderer.renderChordLyricLine(chordLyricPair, textSize: textSize),
+      child: ChordLyricRenderer.renderChordLyricLine(
+        chordLyricPair, 
+        textSize: textSize,
+        dynamicFontSize: dynamicFontSize,
+      ),
     );
   }
-  
+}
 
+/// Helpers to transpose full decorated chord text (e.g., Cadd9, Gsus4/B)
+extension _ChordTransposeHelpers on LineWidget {
+  String _transposeDecoratedChord(String chordText, int offset) {
+    if (chordText.isEmpty) return chordText;
 
+    // Transpose root at start
+    final rootRegex = RegExp(r'^([A-Ga-g](?:##?|bb?))');
+    String result = chordText;
 
+    final rootMatch = rootRegex.firstMatch(result);
+    if (rootMatch != null) {
+      final root = rootMatch.group(1)!;
+      final transposedRoot = _transposeNote(root, offset);
+      if (transposedRoot != null) {
+        result = transposedRoot + result.substring(root.length);
+      }
+    }
+
+    // Transpose slash bass if present
+    final slashRegex = RegExp(r'/(\s*)([A-Ga-g](?:##?|bb?))');
+    result = result.replaceAllMapped(slashRegex, (m) {
+      final spacing = m.group(1) ?? '';
+      final bass = m.group(2)!;
+      final transposedBass = _transposeNote(bass, offset) ?? bass;
+      return '/$spacing$transposedBass';
+    });
+
+    return result;
+  }
+
+  String? _transposeNote(String note, int offset) {
+    // Normalize to proper case
+    final normalized = note[0].toUpperCase() + (note.length > 1 ? note.substring(1) : '');
+
+    int? index;
+    for (int i = 0; i < OslynEngine.keyDistanceMap.length; i++) {
+      if (OslynEngine.keyDistanceMap[i].contains(normalized)) {
+        index = i;
+        break;
+      }
+    }
+    if (index == null) return null;
+
+    int newIndex = (index + offset) % OslynEngine.keyDistanceMap.length;
+    if (newIndex < 0) newIndex += OslynEngine.keyDistanceMap.length;
+    return OslynEngine.keyDistanceMap[newIndex][0];
+  }
 }

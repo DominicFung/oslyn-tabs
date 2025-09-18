@@ -1,38 +1,71 @@
-import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
-import { hasSubstring, merge } from '../../util/dynamo'
-import { JamSession, JamSong, SetList, User } from '../../API'
+import { hasSubstring } from '../../util/dynamo'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 
-type _SetList = SetList & {
-  userId: string
-  songs: _JamSong[]
+// Generate a short, unique PIN code
+function generateJamPin(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
 }
 
-type _JamSong = JamSong & {
-  songId: string
+// Check if a PIN is already in use
+async function isPinInUse(dynamo: DynamoDBClient, pin: string): Promise<boolean> {
+  try {
+    const result = await dynamo.send(new GetItemCommand({
+      TableName: JAM_TABLE_NAME,
+      Key: { jamSessionId: { S: pin } }
+    }))
+    return !!result.Item
+  } catch (error) {
+    console.error('Error checking PIN availability:', error)
+    return true // Assume in use if error occurs
+  }
 }
 
-export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string, userId: string, policy: string, bandId: string
-}, null>) => {
-  console.log(event)
+// Generate a unique PIN
+async function generateUniquePin(dynamo: DynamoDBClient): Promise<string> {
+  let attempts = 0
+  const maxAttempts = 10
+  
+  while (attempts < maxAttempts) {
+    const pin = generateJamPin()
+    const inUse = await isPinInUse(dynamo, pin)
+    
+    if (!inUse) {
+      return pin
+    }
+    
+    attempts++
+  }
+  
+  // Fallback to UUID if we can't generate a unique PIN
+  console.warn('Could not generate unique PIN, falling back to UUID')
+  return uuidv4()
+}
+
+export const handler = async (event: any) => {
+  console.log(JSON.stringify(event, null, 2))
   const b = event.arguments
-  if (!b) { console.error(`event.arguments is empty`); return }
-  if (!b.userId) { console.error(`b.creatorId is empty`); return }
+  if (!b) { console.error('event.arguments is empty'); return }
+  if (!b.userId) { console.error(`b.userId is empty`); return }
   if (!b.setListId) { console.error(`b.setListId is empty`); return }
 
   const policy = b.policy ||  "PUBLIC_VIEW" //"PRIVATE"
 
   const dynamo = new DynamoDBClient({})
-  const jamSessionId = uuidv4()
+  const jamSessionId = uuidv4() // Keep UUID as the actual jam session ID
+  const pin = await generateUniquePin(dynamo) // Generate separate PIN
 
   const res0 = await dynamo.send(
     new GetItemCommand({
@@ -52,6 +85,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   
   let jamSession = {
     jamSessionId, setListId: b.setListId, userId: b.userId,
+    pin, // Add PIN to jam session record
 
     currentSong: 0, currentPage: 0,
     startDate: Date.now(),
@@ -64,76 +98,58 @@ export const handler = async (event: AppSyncResolverEvent<{
     active: []
   } as any
 
+  // Store the jam session
   const res2 = await dynamo.send(new PutItemCommand({
     TableName: JAM_TABLE_NAME, Item: marshall(jamSession)
   }))
   console.log(res2)
 
+  // Store PIN-to-JamSessionId mapping
+  const pinMapping = {
+    pin: pin,
+    jamSessionId: jamSessionId,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+  }
+  
+  const res3 = await dynamo.send(new PutItemCommand({
+    TableName: JAM_TABLE_NAME, 
+    Item: marshall(pinMapping)
+  }))
+  console.log('PIN mapping stored:', res3)
+
   if (hasSubstring(event.info.selectionSetList, "setList")) {
-    let setList = unmarshall(res1.Item) as _SetList
+    let setList = unmarshall(res1.Item) as any
     console.log(setList)
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
-      const songIds = setList.songs.map((s) => { return (s as _JamSong).songId as string })
-      const uniq = [...new Set(songIds)]
+      const songIds = setList.songs.map((s: any) => { return s.songId as string })
+      const uniq = Array.from(new Set(songIds))
   
-      const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
-      console.log(keys)
-  
-      const res1 = await dynamo.send(new BatchGetItemCommand({
-        RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
+      const res3 = await dynamo.send(new BatchGetItemCommand({
+        RequestItems: {
+          [SONG_TABLE_NAME]: {
+            Keys: uniq.map((songId) => ({ songId: { S: songId } })) as any
+          }
+        }
       }))
-      console.log(res1)
-      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
-  
-      const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u))
-      console.log(songs)
-      setList.songs = merge(setList.songs, songs, 'songId', 'song')
+      console.log(res3)
+      if (res3.Responses) {
+        const songs = res3.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s) as any)
+        setList.songs = setList.songs.map((js: any) => {
+          const song = songs.find((s) => s.songId === js.songId)
+          return { ...js, song }
+        })
+      }
     }
 
-    if (hasSubstring(event.info.selectionSetList, "setList/creator")) {
-      const res2 = await dynamo.send(new GetItemCommand({
-        TableName: USER_TABLE_NAME, Key: { userId: { S: setList.userId } }
-      }))
-      console.log(res2)
-      if (!res2.Item) { console.error(`ERROR: unable to get setList.userId. ${res1.$metadata}`); return  }
-      let creator = unmarshall(res2.Item) as User
-
-      if (!creator.labelledRecording) creator.labelledRecording = []
-      if (!creator.songsCreated) creator.songsCreated = []
-      if (!creator.likedSongs) creator.likedSongs = []
-      if (!creator.friends) creator.friends = []
-      
-      setList.creator = creator
-    }
-
-    // TODO: editors
-    if (hasSubstring(event.info.selectionSetList, "setList/editors")) {
-      setList.editors = []
-    }
-    
     jamSession.setList = setList
   }
 
   if (hasSubstring(event.info.selectionSetList, "admins")) {
-    jamSession.admins = [unmarshall(res0.Item)]
-    if (!jamSession.admins[0].labelledRecording) jamSession.admins[0].labelledRecording = []
-    if (!jamSession.admins[0].songsCreated) jamSession.admins[0].songsCreated = []
-    if (!jamSession.admins[0].editHistory) jamSession.admins[0].editHistory = []
-    if (!jamSession.admins[0].likedSongs) jamSession.admins[0].likedSongs = []
-    if (!jamSession.admins[0].friends) jamSession.admins[0].friends = []
+    const admins = [unmarshall(res0.Item) as any]
+    jamSession.admins = admins
   }
 
-  // TODO: members
-  if (hasSubstring(event.info.selectionSetList, "members")) {
-    jamSession.members = []
-  }
-
-  // TODO: guests
-  if (hasSubstring(event.info.selectionSetList, "guests")) {
-    jamSession.guests = []
-  }
-
-  console.log(JSON.stringify(jamSession))
-  return jamSession as JamSession
+  return jamSession
 }

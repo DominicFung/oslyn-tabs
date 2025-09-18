@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:http/http.dart' as http;
+import 'utils/font_utils.dart';
 import 'amplifyconfiguration.dart';
 import 'models/jam_session.dart';
 import 'services/jam_service.dart';
+import 'services/auth_service.dart';
+import 'pages/main_page.dart';
 import 'pages/song_card_page.dart';
 import 'pages/half_app_bar_demo.dart';
 import 'pages/jam_list_with_half_app_bar.dart';
+import 'widgets/debug_logger.dart' as debug;
+import 'widgets/chord_positioning_engine.dart';
+import 'widgets/chord_lyric_renderer.dart';
 import 'dart:convert'; // Added for jsonEncode
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Enable debug logging for chord positioning
+  debug.DebugLogger.setEnabled(true);
+  debug.DebugLogger.setMinLevel(debug.LogLevel.debug);
+  ChordPositioningEngine.setDebugPositioning(true);
+  ChordLyricRenderer.setDebugSnapping(true);
+  
+  print('🎯 Debug logging enabled for chord positioning system');
+  
+  // Set preferred orientations to landscape only for mobile devices
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  
   try {
     // Configure Amplify with the generated config
     await _configureAmplify();
     print('✅ AWS Amplify configured successfully');
+    
+    // Initialize authentication service
+    await AuthService().initialize();
+    print('✅ Auth service initialized successfully');
   } catch (e) {
     print('❌ Failed to configure AWS Amplify: $e');
   }
@@ -54,8 +79,26 @@ class MyApp extends StatelessWidget {
       title: 'Oslyn Tabs',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: FontUtils.sfProDisplay,
+        textTheme: TextTheme(
+          displayLarge: FontUtils.displayLarge,
+          displayMedium: FontUtils.displayMedium,
+          displaySmall: FontUtils.displaySmall,
+          headlineLarge: FontUtils.headlineLarge,
+          headlineMedium: FontUtils.headlineMedium,
+          headlineSmall: FontUtils.headlineSmall,
+          titleLarge: FontUtils.titleLarge,
+          titleMedium: FontUtils.titleMedium,
+          titleSmall: FontUtils.titleSmall,
+          bodyLarge: FontUtils.bodyLarge,
+          bodyMedium: FontUtils.bodyMedium,
+          bodySmall: FontUtils.bodySmall,
+          labelLarge: FontUtils.labelLarge,
+          labelMedium: FontUtils.labelMedium,
+          labelSmall: FontUtils.labelSmall,
+        ),
       ),
-      home: const JamListPage(),
+      home: const MainPage(),
       debugShowCheckedModeBanner: false,
     );
   }

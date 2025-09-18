@@ -24,6 +24,7 @@ type Query {
   listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
   getJamSession(jamSessionId: ID!, userId: ID): JamSession @aws_iam
+  getJamSessionByPin(pin: String!): JamSession @aws_iam
   listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
@@ -99,6 +100,7 @@ type Mutation {
   setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
   addSongToJamQueue(jamSessionId: ID!, song: Int!): JamQueue
   removeSongFromJamQueue(jamSessionId: ID!, queueIndex: Int!): JamQueue
+  setJamQueue(jamSessionId: ID!, queue: [Int!]!, expectedRevision: Int, currentSongIndex: Int): JamQueue
   setJamSlideConfig(jamSessionId:ID!, textSize: String): JamSessionSlideConfig 
 
   enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String): JamSessionActiveUsers
@@ -117,6 +119,7 @@ type Subscription {
   onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations: ["setSongKey"])
   onAddSongToJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["addSongToJamQueue"]) 
   onRemoveSongFromJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["removeSongFromJamQueue"]) 
+  onJamQueueUpdate(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["setJamQueue", "addSongToJamQueue", "removeSongFromJamQueue"]) 
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
 
   onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
@@ -155,6 +158,8 @@ type NextKey {
 type JamQueue {
   jamSessionId: ID!
   queue: [Int]!
+  revision: Int
+  currentSongIndex: Int
 }
 
 type Band {

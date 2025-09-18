@@ -510,6 +510,18 @@ export class AppsyncStack extends Stack {
       fieldName: "setSongKey"
     })
 
+    const setJamQueue = new NodejsFunction(this, `${props.name}-SetJamQueue`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setJamQueue.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetJamQueueDS`, setJamQueue)
+    .createResolver(`${props.name}-SetJamQueueResolver`, {
+      typeName: "Mutation",
+      fieldName: "setJamQueue"
+    })
+
     const addSongToJamQueue = new NodejsFunction(this, `${props.name}-AddSongToJamQueue`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'addSongToJamQueue.ts'),
       timeout: Duration.minutes(5),

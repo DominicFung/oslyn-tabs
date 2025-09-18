@@ -1,96 +1,314 @@
 import 'package:flutter/material.dart';
 
-/// Data structure for chord-lyric pairs
-class ChordLyricPair {
-  final String chordLine;      // "G   D   C   G   D" (preserve all spacing)
-  final String lyricLine;      // "Were creation suddenly" (preserve all spacing)
-  final List<ChordPosition> chords;
-  
-  ChordLyricPair({
-    required this.chordLine,
-    required this.lyricLine,
-    required this.chords,
-  });
-}
-
-/// Individual chord position information
-class ChordPosition {
-  final String chordName;      // "G", "D", "C"
-  final int charPosition;      // Character position (0, 4, 8, 12, 16)
-  final bool isMinor;
-  final String? decorator;     // "add9", "sus4", etc.
-  
-  ChordPosition({
-    required this.chordName,
-    required this.charPosition,
-    required this.isMinor,
-    this.decorator,
-  });
-}
-
-/// Main renderer for chord-lyric pairs
+/// Optimized chord-lyric renderer with simplified logic and better performance
 class ChordLyricRenderer {
+  // Cache for text measurements to avoid repeated TextPainter calculations
+  static final Map<String, double> _textWidthCache = {};
+  static final Map<String, double> _charWidthCache = {};
+  
+  /// Enable page-level snapping logs (triggered by SlidesWidget)
+  static bool debugSnapping = false; // Disabled by default for performance
+  /// Suppress noisy per-build renderer logs by default
+  static bool debugRenderLogs = false; // Disabled by default for performance
+
+  /// Turn on/off snapping logs at runtime
+  static void setDebugSnapping(bool value) {
+    debugSnapping = value;
+  }
+
   static ChordLyricPair parseChordLyricPair(String chordLine, String lyricLine) {
-    // DON'T trim - preserve all intentional spacing!
-    final chords = <ChordPosition>[];
-    
-    // Debug: Print lengths to understand the issue
-    print('🔍 ChordLyricPair Debug:');
-    print('   Chord line length: ${chordLine.length}');
-    print('   Lyric line length: ${lyricLine.length}');
-    print('   Chord line: "${chordLine}"');
-    print('   Lyric line: "${lyricLine}"');
-    
-    // Skip if chord line is empty or only whitespace
     if (chordLine.trim().isEmpty) {
       return ChordLyricPair(
         chordLine: chordLine,
         lyricLine: lyricLine,
-        chords: chords,
+        chords: [],
       );
     }
     
-    // Find all chord positions using regex
+    final chords = <ChordPosition>[];
     final regex = RegExp(r'([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)');
     final matches = regex.allMatches(chordLine);
     
     for (final match in matches) {
       final chordText = match.group(1)!;
-      final charPosition = match.start;  // Character position in chord line (including leading spaces)
-      
-      // Map chord position to corresponding lyric position
-      final lyricPosition = _mapChordToLyricPosition(charPosition, chordLine, lyricLine);
-      
-      // Debug: Print chord positioning
-      print('   Chord: $chordText at position $charPosition in chord line');
-      print('   Mapped to position $lyricPosition in lyric line');
-      if (lyricPosition < lyricLine.length) {
-        print('   Above character: "${lyricLine[lyricPosition]}"');
-      }
+      final charPosition = match.start;
       
       chords.add(ChordPosition(
-        chordName: chordText,  // Keep the FULL chord name (Cadd9, Dm7, Gsus4, etc.)
-        charPosition: lyricPosition,
+        chordName: chordText,
+        charPosition: charPosition,
         isMinor: _isMinorChord(chordText),
         decorator: _extractDecorator(chordText),
       ));
     }
     
     return ChordLyricPair(
-      chordLine: chordLine,      // Preserve original spacing
-      lyricLine: lyricLine,      // Preserve original spacing
+      chordLine: chordLine,
+      lyricLine: lyricLine,
       chords: chords,
     );
   }
   
-  /// Map chord position to lyric position, handling extended chords
-  /// This preserves leading whitespace and maps chords to their intended positions
-  static int _mapChordToLyricPosition(int chordPos, String chordLine, String lyricLine) {
-    // Always map proportionally to preserve relative spacing
-    // This handles cases where chord line is longer than lyric line
-    final ratio = lyricLine.length / chordLine.length;
-    final scaledPos = (chordPos * ratio).round();
-    return scaledPos.clamp(0, lyricLine.length - 1);
+  /// Precise chord positioning using efficient incremental width calculations with minimum spacing
+  static List<Widget> _buildChordPositions(ChordLyricPair pair, double fontSize) {
+    final List<Widget> chordWidgets = [];
+    
+    // Pre-calculate styling
+    final vPad = (fontSize * 0.06).clamp(0.25, 2.5);
+    final hPad = (fontSize * 0.16).clamp(2.0, 7.0);
+    final bubbleRadius = (fontSize * 0.22).clamp(3.0, 5.0);
+    
+    // Calculate minimum spacing between chords (scales with font size)
+    final minSpacing = (fontSize * 0.3).clamp(4.0, 12.0);
+    
+    // DEBUG: Log positioning calculations
+    print('🎯 CHORD POSITIONING: "${pair.lyricLine.trim()}" (min spacing: ${minSpacing.toStringAsFixed(1)}px)');
+    
+    // Sort chords by position to enable incremental calculation
+    final sortedChords = List<ChordPosition>.from(pair.chords);
+    sortedChords.sort((a, b) => a.charPosition.compareTo(b.charPosition));
+    
+    // Calculate pixel positions incrementally with minimum spacing enforcement
+    double lastPixelPosition = 0.0;
+    int lastCharPosition = 0;
+    double lastChordEndPosition = 0.0; // Track where the last chord box ends
+    
+    for (int i = 0; i < sortedChords.length; i++) {
+      final chord = sortedChords[i];
+      
+      // Clamp position to valid range
+      final lyricPosition = chord.charPosition.clamp(0, pair.lyricLine.length - 1);
+      
+      double pixelPosition;
+      
+      if (lyricPosition == lastCharPosition) {
+        // Same position as previous chord - stack vertically with minimum spacing
+        pixelPosition = lastPixelPosition;
+      } else if (lyricPosition > lastCharPosition) {
+        // Calculate incrementally from the last position
+        final textToMeasure = pair.lyricLine.substring(lastCharPosition, lyricPosition);
+        final incrementalWidth = _calculateTextWidth(textToMeasure, fontSize);
+        pixelPosition = lastPixelPosition + incrementalWidth;
+      } else {
+        // Position is before the last one (shouldn't happen with sorted chords, but fallback)
+        pixelPosition = _calculateExactPixelPosition(pair.lyricLine, lyricPosition, fontSize);
+      }
+      
+      // Enforce minimum spacing from the previous chord's text end position
+      if (i > 0) {
+        final requiredMinPosition = lastChordEndPosition + minSpacing;
+        if (pixelPosition < requiredMinPosition) {
+          pixelPosition = requiredMinPosition;
+        }
+      }
+      
+      // Calculate the width of this chord text (without padding) for spacing calculations
+      final chordText = chord.chordName;
+      final chordTextWidth = _calculateTextWidth(chordText, fontSize);
+      final bubbleWidth = chordTextWidth + (hPad * 2); // Full bubble width including padding
+      final chordEndPosition = pixelPosition + chordTextWidth; // Use text width for spacing, not bubble width
+      
+      // Position the bubble so that the chord text aligns with the lyrics
+      // The bubble should start at (pixelPosition - hPad) so the text inside aligns at pixelPosition
+      final bubblePosition = pixelPosition - hPad;
+      
+      // DEBUG: Log each chord's positioning with spacing info
+      final charAtPos = lyricPosition < pair.lyricLine.length ? pair.lyricLine[lyricPosition] : '?';
+      final textToMeasure = pair.lyricLine.substring(0, lyricPosition);
+      final spacingFromLast = i > 0 ? (pixelPosition - lastChordEndPosition).toStringAsFixed(1) : 'N/A';
+      print('   "${chord.chordName}" → pos $lyricPosition ("$charAtPos") → text at ${pixelPosition.toStringAsFixed(1)}px, bubble at ${bubblePosition.toStringAsFixed(1)}px (spacing: ${spacingFromLast}px)');
+      print('     Text: "$textToMeasure|$charAtPos" (text width: ${chordTextWidth.toStringAsFixed(1)}px, bubble width: ${bubbleWidth.toStringAsFixed(1)}px)');
+      
+      chordWidgets.add(
+        Positioned(
+          left: bubblePosition,
+          child: _buildChordChip(chord.chordName, vPad, hPad, bubbleRadius, fontSize),
+        ),
+      );
+      
+      // Update for next iteration
+      lastPixelPosition = pixelPosition;
+      lastCharPosition = lyricPosition;
+      lastChordEndPosition = chordEndPosition;
+    }
+    
+    return chordWidgets;
+  }
+  
+  /// Build a chord chip widget
+  static Widget _buildChordChip(String text, double vPad, double hPad, double radius, double fontSize) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            fontFamily: '.SF Pro Text',
+            fontFamilyFallback: ['SF Pro Text', 'system-ui', 'Roboto'],
+            height: 1.0, // Tight line height for better vertical centering
+          ).copyWith(
+            shadows: [
+              Shadow(
+                color: Colors.white.withValues(alpha: 0.7),
+                blurRadius: 0.5,
+                offset: const Offset(0.25, 0.25),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  /// Calculate the exact pixel position by measuring each character individually
+  static double _calculateExactPixelPosition(String text, int charPosition, double fontSize) {
+    if (charPosition <= 0) return 0.0;
+    
+    // Cache key for this specific text and font size
+    final cacheKey = '${text.substring(0, charPosition.clamp(0, text.length))}_${fontSize.toStringAsFixed(1)}';
+    
+    if (_textWidthCache.containsKey(cacheKey)) {
+      return _textWidthCache[cacheKey]!;
+    }
+    
+    // Measure the exact width of text up to the character position
+    final textToMeasure = text.substring(0, charPosition.clamp(0, text.length));
+    
+    final pixelWidth = _calculateTextWidth(textToMeasure, fontSize);
+    _textWidthCache[cacheKey] = pixelWidth;
+    
+    return pixelWidth;
+  }
+  
+  /// Calculate text width with caching
+  static double _calculateTextWidth(String text, double fontSize) {
+    if (text.isEmpty) return 0.0;
+    
+    // Cache key for this specific text and font size
+    final cacheKey = '${text}_${fontSize.toStringAsFixed(1)}';
+    
+    if (_textWidthCache.containsKey(cacheKey)) {
+      return _textWidthCache[cacheKey]!;
+    }
+    
+    final painter = TextPainter(
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left,
+    );
+    painter.text = TextSpan(
+      text: text,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.w900,
+        fontFamily: '.SF Pro Text',
+        fontFamilyFallback: ['SF Pro Text', 'system-ui', 'Roboto'],
+        letterSpacing: 0.3,
+      ),
+    );
+    painter.layout();
+    
+    final pixelWidth = painter.width;
+    _textWidthCache[cacheKey] = pixelWidth;
+    
+    return pixelWidth;
+  }
+  
+  /// Render the chord-lyric pair with optimized performance
+  static Widget renderChordLyricLine(ChordLyricPair pair, {String? textSize, double? dynamicFontSize}) {
+    final fontSize = textSize == 'dynamic' && dynamicFontSize != null 
+        ? dynamicFontSize 
+        : _getTextSize(textSize);
+    
+    // Pre-calculate styling
+    final vPad = (fontSize * 0.06).clamp(0.25, 2.5);
+    final hPad = (fontSize * 0.16).clamp(2.0, 7.0);
+    final bubbleRadius = (fontSize * 0.22).clamp(3.0, 5.0);
+    final bubbleHeight = ((fontSize * 1.15) + vPad * 2 + 1).clamp(fontSize + 3.0, double.infinity);
+    final lyricHeight = (fontSize * 1.7).clamp(fontSize + 8.0, fontSize * 2.2);
+    
+    // DEBUG: Log height comparison
+    print('📏 HEIGHT COMPARISON: fontSize=${fontSize.toStringAsFixed(1)}px, bubble=${bubbleHeight.toStringAsFixed(1)}px, lyric=${lyricHeight.toStringAsFixed(1)}px, bubble/lyric=${(bubbleHeight/lyricHeight).toStringAsFixed(2)}');
+    
+    // Chord-only line: use Row layout for better performance
+    if (pair.lyricLine.trim().isEmpty && pair.chords.isNotEmpty) {
+      return Center(
+        child: SizedBox(
+          height: bubbleHeight,
+          child: Row(
+            children: pair.chords.map((chord) => 
+              Container(
+                margin: const EdgeInsets.only(left: 8.0),
+                child: _buildChordChip(chord.chordName, vPad, hPad, bubbleRadius, fontSize),
+              )
+            ).toList(),
+          ),
+        ),
+      );
+    }
+    
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Chord line with simplified positioning
+          if (pair.chords.isNotEmpty)
+            SizedBox(
+              height: bubbleHeight,
+              child: Stack(
+                children: _buildChordPositions(pair, fontSize),
+              ),
+            ),
+          
+          // Lyric line
+          if (pair.lyricLine.trim().isNotEmpty)
+            SizedBox(
+              height: lyricHeight,
+              child: Text(
+                pair.lyricLine,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  fontFamily: '.SF Pro Text',
+                  fontFamilyFallback: ['SF Pro Text', 'system-ui', 'Roboto'],
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+  
+  /// Get text size based on textSize parameter
+  static double _getTextSize(String? textSize) {
+    switch (textSize) {
+      case 'text-xs': return 20.0;
+      case 'text-sm': return 24.0;
+      case 'text-base': return 28.0;
+      case 'text-lg': return 32.0;
+      case 'text-xl': return 40.0;
+      case 'text-2xl': return 48.0;
+      case 'text-3xl': return 64.0;
+      case 'text-4xl': return 80.0;
+      case 'text-5xl': return 96.0;
+      case 'text-6xl': return 128.0;
+      case 'text-7xl': return 160.0;
+      case 'text-8xl': return 200.0;
+      case 'text-9xl': return 256.0;
+      default: return 28.0;
+    }
   }
   
   static bool _isMinorChord(String chord) {
@@ -103,140 +321,38 @@ class ChordLyricRenderer {
     return match?.group(1) ?? '';
   }
   
-  /// Render the chord-lyric pair
-  static Widget renderChordLyricLine(ChordLyricPair pair, {String? textSize}) {
-    final fontSize = _getTextSize(textSize);
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Chord line with character-level positioning
-        if (pair.chords.isNotEmpty)
-          Container(
-            height: 32,
-            child: Stack(
-              children: pair.chords.map((chord) {
-                // Scale character position to pixel position
-                // Use chord line length if lyrics are empty, otherwise use lyric line length
-                final referenceLength = pair.lyricLine.trim().isEmpty ? pair.chordLine.length : pair.lyricLine.length;
-                final pixelPosition = _calculateChordPosition(chord.charPosition, referenceLength);
-                
-                return Positioned(
-                  left: pixelPosition,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1976D2).withValues(alpha: 0.15), // Light blue background
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Color(0xFF1976D2).withValues(alpha: 0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Text(
-                      chord.chordName,
-                      style: TextStyle(
-                        color: Color(0xFF1976D2), // Dark blue for chords
-                        fontWeight: FontWeight.bold,
-                        fontSize: fontSize,  // Use same size as lyrics
-                        fontFamily: 'monospace',  // Essential for alignment!
-                        shadows: [
-                          Shadow(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            blurRadius: 1,
-                            offset: const Offset(0.5, 0.5),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        
-        // Lyric line (preserve all spacing) - only show if there are lyrics
-        if (pair.lyricLine.trim().isNotEmpty)
-          Container(
-            height: 48,
-            child: Text(
-              pair.lyricLine,  // No trimming!
-              style: TextStyle(
-                color: Color(0xFF4A148C), // Darker, more saturated purple for better contrast
-                fontSize: fontSize,  // Use same size as chords
-                fontFamily: 'monospace',  // Essential for alignment!
-                fontWeight: FontWeight.w900, // Extra bold for maximum crispness
-                letterSpacing: 0.5, // Slight spacing for better character definition
-                shadows: [
-                  Shadow(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    blurRadius: 2,
-                    offset: const Offset(1, 1),
-                  ),
-                  Shadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    blurRadius: 0,
-                    offset: const Offset(0.5, 0.5),
-                  ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
+
+  /// Clear caches to free memory
+  static void clearCaches() {
+    _textWidthCache.clear();
+    _charWidthCache.clear();
   }
+}
+
+/// Data structure for chord-lyric pairs
+class ChordLyricPair {
+  final String chordLine;
+  final String lyricLine;
+  final List<ChordPosition> chords;
   
-  /// Get text size based on textSize parameter
-  static double _getTextSize(String? textSize) {
-    switch (textSize) {
-      case 'text-xs':
-        return 12.0;
-      case 'text-sm':
-        return 14.0;
-      case 'text-base':
-        return 16.0;
-      case 'text-lg':
-        return 18.0;
-      case 'text-xl':
-        return 20.0;
-      case 'text-2xl':
-        return 24.0;
-      case 'text-3xl':
-        return 30.0;
-      case 'text-4xl':
-        return 36.0;
-      case 'text-5xl':
-        return 48.0;
-      case 'text-6xl':
-        return 60.0;
-      case 'text-7xl':
-        return 72.0;
-      case 'text-8xl':
-        return 96.0;
-      case 'text-9xl':
-        return 128.0;
-      default:
-        return 20.0; // Default to text-xl
-    }
-  }
+  ChordLyricPair({
+    required this.chordLine,
+    required this.lyricLine,
+    required this.chords,
+  });
+}
+
+/// Individual chord position information
+class ChordPosition {
+  final String chordName;
+  final int charPosition;
+  final bool isMinor;
+  final String? decorator;
   
-  /// Calculate pixel position from character position
-  /// This ensures chords are properly scaled and don't overflow
-  static double _calculateChordPosition(int charPosition, int lyricLength) {
-    // Use a reasonable character width (adjust based on your font)
-    const double charWidth = 8.0;
-    
-    // Ensure we don't overflow the available space
-    final maxWidth = 800.0; // Maximum width for the chord line
-    final calculatedPosition = charPosition * charWidth;
-    
-    // If the calculated position would overflow, scale it down
-    if (calculatedPosition > maxWidth) {
-      final scaleFactor = maxWidth / (lyricLength * charWidth);
-      return charPosition * charWidth * scaleFactor;
-    }
-    
-    return calculatedPosition;
-  }
-  
+  ChordPosition({
+    required this.chordName,
+    required this.charPosition,
+    required this.isMinor,
+    this.decorator,
+  });
 }

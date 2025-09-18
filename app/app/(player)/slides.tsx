@@ -1,11 +1,11 @@
 import { chordSheetToSlides } from "../../core/oslyn"
 import { OslynSlide } from "../../core/types"
 import { Song } from "../../src/API"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef, useCallback } from "react"
 import Line from "./line"
 
 import { transpose as trans } from "../../core/oslyn"
-import {Text, View, Image, Pressable, Dimensions } from 'react-native'
+import {Text, View, Image, Pressable, Dimensions, PanResponder } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
 import { useKeepAwake } from 'expo-keep-awake'
@@ -46,7 +46,40 @@ export default function Slides(p: SlidesProps) {
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
   const [ loading, setLoading ] = useState(false)
-  const setPage = (n: number) => { if (p.setPage) p.setPage(n); else _setPage(n); }
+  
+  // Fade-out state and logic
+  const [ showUI, setShowUI ] = useState(true)
+  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const fadeDuration = 2000 // 2 seconds
+
+  // Reset fade timer and show UI
+  const resetFadeTimer = useCallback(() => {
+    setShowUI(true)
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current)
+    }
+    fadeTimeoutRef.current = setTimeout(() => {
+      setShowUI(false)
+    }, fadeDuration)
+  }, [fadeDuration])
+
+  // Start fade timer
+  const startFadeTimer = useCallback(() => {
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current)
+    }
+    fadeTimeoutRef.current = setTimeout(() => {
+      setShowUI(false)
+    }, fadeDuration)
+  }, [fadeDuration])
+
+  const setPage = (n: number) => { 
+    if (p.setPage) p.setPage(n); 
+    else _setPage(n)
+    
+    // Reset fade timer when page changes
+    resetFadeTimer()
+  }
   useEffect(() => { _setPage(p.page || 0); setLoading(true) }, [p.page])
   /** NOTE: DELAY needed to wait for page to render, THEN fix width. This is an ugly solution, but I cannot find a better one :( */
   useEffect(() => { setTimeout(() => { setMaxWidth(0); setLoading(false) }, 500) }, [page])
@@ -55,6 +88,20 @@ export default function Slides(p: SlidesProps) {
   
   const [ w, setW ] = useState(Dimensions.get('window').width)
   const [ h, setH ] = useState(Dimensions.get('window').height)
+
+  // PanResponder for touch detection
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        resetFadeTimer()
+      },
+      onPanResponderMove: () => {
+        resetFadeTimer()
+      },
+    })
+  ).current
 
   useEffect(() => { 
     const sub = addOrientationChangeListener((e) => {
@@ -66,8 +113,18 @@ export default function Slides(p: SlidesProps) {
       setH(window.height); setW(window.width)
     })
 
-    return () => { removeOrientationChangeListener(sub); sub2?.remove() }
-  }, [])
+    // Start the initial fade timer
+    startFadeTimer()
+
+    return () => { 
+      removeOrientationChangeListener(sub); 
+      sub2?.remove()
+      
+      if (fadeTimeoutRef.current) {
+        clearTimeout(fadeTimeoutRef.current)
+      }
+    }
+  }, [startFadeTimer])
 
   useEffect(() => {
     let baseKey = p.skey || p.song.chordSheetKey || "C"
@@ -97,6 +154,7 @@ export default function Slides(p: SlidesProps) {
   return <>
     <View className="flex flex-row align-middle justify-center"
       style={{ height: h, width: w }}
+      {...panResponder.panHandlers}
     >
       <View className="flex-1" />
       <View /*className={`bg-purple-300`}*/ style={{
@@ -105,7 +163,7 @@ export default function Slides(p: SlidesProps) {
         ( p.headsUp ?  AVERAGE_LINE_H  : 0 )
       }}>
         { slides?.pages[page] && <View>
-          { slides?.pages && slides?.pages[page]?.lines[0] && <Text className="text-gray-500 text-sm italic bold">
+          { slides?.pages && slides?.pages[page]?.lines[0] && <Text className="text-gray-500 text-sm italic bold" style={{ opacity: showUI ? 1 : 0 }}>
             {slides?.pages && slides?.pages[page].lines[0].section}
           </Text> }
           { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => 
@@ -114,7 +172,7 @@ export default function Slides(p: SlidesProps) {
 
           { p.headsUp && <View className="h-20" /> }
 
-          { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <Text className="text-gray-500 text-sm italic bold">
+          { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <Text className="text-gray-500 text-sm italic bold" style={{ opacity: showUI ? 1 : 0 }}>
             {slides?.pages && slides?.pages[page].extra?.section}
           </Text> }
           { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <View>
@@ -128,7 +186,7 @@ export default function Slides(p: SlidesProps) {
 
     {/* Buttons */}
     <View className="absolute top-0 left-0 ml-0 flex flex-row"
-      style={{ height: h, width: w }}
+      style={{ height: h, width: w, opacity: showUI ? 1 : 0 }}
     >
     { page > 0 ? <Pressable onPress={() => setPage(page-1)}>
         <LinearGradient colors={["rgba(95,40,212,0.5)", "rgba(95,40,212,0)" ]} start={{x: 0, y: 0}} end={{x:1, y:0}}>
@@ -164,7 +222,7 @@ export default function Slides(p: SlidesProps) {
         </LinearGradient>
       </Pressable> : <View style={{ width: p.pt?(w/2)-90:w/2, height: h }} /> }
 
-      <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`}>
+      <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`} style={{ opacity: showUI ? 1 : 0 }}>
         <View className="flex flex-row hover:cursor-pointer">
           {p.song.albumCover && <Image source={{ uri: p.song.albumCover }} alt={p.song.album || ""} style={{width: 100, height: 100}} className="w-20 m-2"/> }
           <View className="m-2">

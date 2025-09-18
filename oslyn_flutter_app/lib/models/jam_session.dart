@@ -5,7 +5,11 @@ part 'jam_session.g.dart';
 @JsonSerializable()
 class JamSession {
   final String jamSessionId;
+  final String? pin;
   final String? description;
+  final List<int>? queue;
+  final int? currentSong;
+  final int? currentPage;
   final List<User> admins;
   final List<User> members;
   final List<User> guests;
@@ -18,7 +22,11 @@ class JamSession {
 
   JamSession({
     required this.jamSessionId,
+    this.pin,
     this.description,
+    this.queue,
+    this.currentSong,
+    this.currentPage,
     required this.admins,
     required this.members,
     required this.guests,
@@ -32,7 +40,11 @@ class JamSession {
 
   factory JamSession.fromJson(Map<String, dynamic> json) => JamSession(
     jamSessionId: json['jamSessionId'] as String,
+    pin: json['pin'] as String?,
     description: json['description'] as String?,
+    queue: (json['queue'] as List<dynamic>?)?.map((e) => e as int).toList(),
+    currentSong: json['currentSong'] as int?,
+    currentPage: json['currentPage'] as int?,
     admins: (json['admins'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     members: (json['members'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
     guests: (json['guests'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
@@ -231,4 +243,31 @@ class Participant {
     'ip': ip,
     'user': user?.toJson(),
   };
+}
+
+@JsonSerializable()
+class Band {
+  final String bandId;
+  final String name;
+  final String? description;
+  final bool isPublic;
+  final List<User> members;
+
+  Band({
+    required this.bandId,
+    required this.name,
+    this.description,
+    required this.isPublic,
+    required this.members,
+  });
+
+  factory Band.fromJson(Map<String, dynamic> json) => Band(
+    bandId: json['bandId'] as String,
+    name: json['name'] as String,
+    description: json['description'] as String?,
+    isPublic: json['isPublic'] as bool,
+    members: (json['members'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
+  );
+
+  Map<String, dynamic> toJson() => _$BandToJson(this);
 }

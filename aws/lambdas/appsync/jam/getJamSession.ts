@@ -55,7 +55,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
       console.log("getting setList/songs ..")
       const songIds = (setList.songs as _JamSong[]).map((s) => { return s!.songId as string })
-      const uniq = [...new Set(songIds)]
+      const uniq = Array.from(new Set(songIds))
   
       const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
       console.log(keys)
@@ -116,7 +116,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       if (s?.participantType === "USER") return  s?.userId || ""
       return ""
     }).filter((i) => { return i != "" }) as string[]
-    const uniq = [...new Set(tmp)]
+    const uniq = Array.from(new Set(tmp))
 
     const keys = uniq.map((s) => { return { userId: { S: s } }})
     

@@ -4,9 +4,11 @@ import 'oslyn_types.dart';
 // Based on the web app's oslyn.ts
 
 class OslynEngine {
-  // Chord regex patterns
-  static const String chordRegexForTextBlock = r"(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)";
-  static const String chordRegex = r"^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$";
+  // Chord regex patterns (inclusive of add/sus/maj/min/extensions and slash chords)
+  static const String chordRegexForTextBlock =
+      r"(^| |\n)([A-Ga-g](?:##?|bb?)?(?:m|M)?(?:maj|min|dim|aug|sus|add)?(?:[#b]?\d{0,2})*(?:\([^)]*\))?(?:\/[A-Ga-g](?:##?|bb?)?)?)(?=\n| |$)";
+  static const String chordRegex =
+      r"^([A-Ga-g](?:##?|bb?)?(?:m|M)?(?:maj|min|dim|aug|sus|add)?(?:[#b]?\d{0,2})*(?:\([^)]*\))?(?:\/[A-Ga-g](?:##?|bb?)?)?)$";
   static const String keyRegex = r"^[A-Ga-g](##?|bb?)?$";
 
   // Key distance map for transposition (same as web app)
@@ -175,7 +177,8 @@ class OslynEngine {
   /// Extract chords with positions from a line
   static List<Map<String, dynamic>> _extractChordsFromLine(String line) {
     final chords = <Map<String, dynamic>>[];
-    final regex = RegExp(r'([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)');
+    // Capture full chord tokens starting with a root note, including sus/add/maj/min, numbers, parentheses, and slash bass
+    final regex = RegExp(r'([A-Ga-g](?:##?|bb?)?(?:m|M)?(?:maj|min|dim|aug|sus|add)?(?:[#b]?\d{0,2})*(?:\([^)]*\))?(?:\/[A-Ga-g](?:##?|bb?)?)?)');
     final matches = regex.allMatches(line);
     
     for (final match in matches) {

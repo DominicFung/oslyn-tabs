@@ -43,6 +43,12 @@ secret.json
 **/example.secret.json
 **/secret.*.json
 
+# Google Services Configuration
+google-services.json
+**/google-services.json
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+
 # AWS Configuration Files
 amplifyconfiguration.json
 **/amplifyconfiguration.json

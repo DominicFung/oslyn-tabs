@@ -118,4 +118,16 @@ class GraphQLSubscriptions {
       }
     }
   ''';
+
+  // Subscribe to any queue update (set/add/remove)
+  static const String onJamQueueUpdate = '''
+    subscription OnJamQueueUpdate(\$jamSessionId: ID!) {
+      onJamQueueUpdate(jamSessionId: \$jamSessionId) {
+        jamSessionId
+        queue
+        revision
+        currentSongIndex
+      }
+    }
+  ''';
 }

@@ -3,7 +3,7 @@
 import { chordSheetToSlides } from "@/core/oslyn"
 import { OslynSlide } from "@/core/types"
 import { Song } from "@/../src/API"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import Line from "./line"
 import { calcMaxWidthTailwindClass } from "@/core/utils/frontend"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid"
@@ -44,6 +44,32 @@ export default function Slides(p: SlidesProps) {
   const [ slides, setSlides ] = useState<OslynSlide>()
   const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
+  
+  // Fade-out state and logic
+  const [ showUI, setShowUI ] = useState(true)
+  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const fadeDuration = 2000 // 2 seconds
+
+  // Reset fade timer and show UI
+  const resetFadeTimer = useCallback(() => {
+    setShowUI(true)
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current)
+    }
+    fadeTimeoutRef.current = setTimeout(() => {
+      setShowUI(false)
+    }, fadeDuration)
+  }, [fadeDuration])
+
+  // Start fade timer
+  const startFadeTimer = useCallback(() => {
+    if (fadeTimeoutRef.current) {
+      clearTimeout(fadeTimeoutRef.current)
+    }
+    fadeTimeoutRef.current = setTimeout(() => {
+      setShowUI(false)
+    }, fadeDuration)
+  }, [fadeDuration])
 
   const setPage = (n: number) => {
     console.log("call next page")
@@ -55,6 +81,9 @@ export default function Slides(p: SlidesProps) {
 
     if (p.setPage) p.setPage(n)
     else _setPage(n)
+    
+    // Reset fade timer when page changes
+    resetFadeTimer()
   }
 
   useEffect(() => { _setPage(p.page || 0) }, [p.page])
@@ -77,11 +106,30 @@ export default function Slides(p: SlidesProps) {
     window.addEventListener("resize", updateWindowDimensions)
     window.addEventListener("orientationchange", updateWindowDimensions)
 
+    // Add touch and mouse event listeners for fade reset
+    const handleUserActivity = () => {
+      resetFadeTimer()
+    }
+
+    window.addEventListener("touchstart", handleUserActivity)
+    window.addEventListener("mousemove", handleUserActivity)
+    window.addEventListener("mousedown", handleUserActivity)
+
+    // Start the initial fade timer
+    startFadeTimer()
+
     return () => { 
       window.removeEventListener("resize", updateWindowDimensions)
       window.removeEventListener("orientationchange", updateWindowDimensions)
+      window.removeEventListener("touchstart", handleUserActivity)
+      window.removeEventListener("mousemove", handleUserActivity)
+      window.removeEventListener("mousedown", handleUserActivity)
+      
+      if (fadeTimeoutRef.current) {
+        clearTimeout(fadeTimeoutRef.current)
+      }
     }
-  }, [])
+  }, [resetFadeTimer, startFadeTimer])
 
   useEffect(() => {
     if (p.setLastPage) {
@@ -167,7 +215,7 @@ export default function Slides(p: SlidesProps) {
     <div className={`flex justify-center items-center h-full m-auto ${wClass}`}>
       { !slides?.pages[page] && <div className="text-white">Sorry something went wrong. Click on the gear, and select a new song to reset the system.</div> }
       { slides?.pages[page] && <div>
-        { slides?.pages && slides?.pages[page]?.lines[0] && <div className="text-gray-500 text-sm italic bold mb-8">
+        { slides?.pages && slides?.pages[page]?.lines[0] && <div className={`text-gray-500 text-sm italic bold mb-8 transition-opacity duration-500 ${showUI ? 'opacity-100' : 'opacity-0'}`}>
           {slides?.pages && slides?.pages[page].lines[0].section}
         </div> }
         { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => <div key={i}>
@@ -176,7 +224,7 @@ export default function Slides(p: SlidesProps) {
 
         <div className="h-20" />
 
-        { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className="text-gray-500 text-sm italic bold mb-8">
+        { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <div className={`text-gray-500 text-sm italic bold mb-8 transition-opacity duration-500 ${showUI ? 'opacity-100' : 'opacity-0'}`}>
           {slides?.pages && slides?.pages[page].extra?.section}
         </div> }
         { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <div>
@@ -184,7 +232,7 @@ export default function Slides(p: SlidesProps) {
         </div> }
       </div> }
     </div>
-    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden sm:flex sm:flex-row":"ml-0 w-full flex flex-row"}`}>
+    <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden sm:flex sm:flex-row":"ml-0 w-full flex flex-row"} transition-opacity duration-500 ${showUI ? 'opacity-100' : 'opacity-0'}`}>
       { page > 0 ? <button className={`focus:outline-none flex-1 ${p.pt && "fixed left-0 top-0 mt-24 h-[calc(100%-90px)]"} ${p.pt && openSidebar && "ml-64"}`}
       onClick={() => setPage(page-1)}>
         <div className={`w-32 flex justify-center items-center ${p.pt?"h-full":"h-screen"}`} style={{
@@ -201,7 +249,7 @@ export default function Slides(p: SlidesProps) {
         </div>
       </button> : <div className="flex-1" /> }
     </div>
-    {<div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg`}>
+    {<div className={`absolute ${openSidebar?"left-72": "left-10"} ${p.pt?"top-28":"top-3"} rounded-lg transition-opacity duration-500 ${showUI ? 'opacity-100' : 'opacity-0'}`}>
       <div className="flex flex-row hover:cursor-pointer">
         {p.song.albumCover && <Image src={p.song.albumCover} alt={p.song.album || ""} width={200} height={200} className="w-20 m-2" unoptimized/> }
         <div className="m-2">

@@ -7,7 +7,7 @@ class GraphQLMutations {
     mutation CreateJamSession(
       \$setListId: ID!
       \$userId: ID!
-      \$policy: policy
+      \$policy: Policy!
       \$bandId: ID
     ) {
       createJamSession(
@@ -83,6 +83,7 @@ class GraphQLMutations {
         passcode
         startDate
         endDate
+        pin
       }
     }
   ''';

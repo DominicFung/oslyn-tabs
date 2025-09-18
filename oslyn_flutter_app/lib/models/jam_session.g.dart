@@ -8,7 +8,11 @@ part of 'jam_session.dart';
 
 JamSession _$JamSessionFromJson(Map<String, dynamic> json) => JamSession(
       jamSessionId: json['jamSessionId'] as String,
+      pin: json['pin'] as String?,
       description: json['description'] as String?,
+      queue: (json['queue'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      currentSong: json['currentSong'] as int?,
+      currentPage: json['currentPage'] as int?,
       admins: (json['admins'] as List<dynamic>)
           .map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -33,7 +37,11 @@ JamSession _$JamSessionFromJson(Map<String, dynamic> json) => JamSession(
 Map<String, dynamic> _$JamSessionToJson(JamSession instance) =>
     <String, dynamic>{
       'jamSessionId': instance.jamSessionId,
+      'pin': instance.pin,
       'description': instance.description,
+      'queue': instance.queue,
+      'currentSong': instance.currentSong,
+      'currentPage': instance.currentPage,
       'admins': instance.admins,
       'members': instance.members,
       'guests': instance.guests,
@@ -164,4 +172,22 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'isActivated': instance.isActivated,
       'createDate': instance.createDate,
       'role': instance.role,
+    };
+
+Band _$BandFromJson(Map<String, dynamic> json) => Band(
+      bandId: json['bandId'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String?,
+      isPublic: json['isPublic'] as bool,
+      members: (json['members'] as List<dynamic>)
+          .map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$BandToJson(Band instance) => <String, dynamic>{
+      'bandId': instance.bandId,
+      'name': instance.name,
+      'description': instance.description,
+      'isPublic': instance.isPublic,
+      'members': instance.members,
     };
