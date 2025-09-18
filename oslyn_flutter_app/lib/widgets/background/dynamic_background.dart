@@ -107,7 +107,13 @@ class _DynamicBackgroundState extends State<DynamicBackground>
   }
 
   Future<void> _extractAndAnimateColors() async {
+    print('🎨 DynamicBackground: _extractAndAnimateColors called');
+    print('🎨 DynamicBackground: enableColorExtraction = ${widget.enableColorExtraction}');
+    print('🎨 DynamicBackground: albumArtUrl = ${widget.albumArtUrl}');
+    print('🎨 DynamicBackground: albumArtProvider = ${widget.albumArtProvider}');
+    
     if (!widget.enableColorExtraction) {
+      print('🎨 DynamicBackground: Color extraction disabled, using default colors');
       _setDefaultColors();
       return;
     }
@@ -154,6 +160,7 @@ class _DynamicBackgroundState extends State<DynamicBackground>
   }
 
   void _setDefaultColors() {
+    print('🎨 DynamicBackground: _setDefaultColors called');
     setState(() {
       _currentColors = const [
         Color(0xFF8B7ED8),
@@ -174,7 +181,11 @@ class _DynamicBackgroundState extends State<DynamicBackground>
   }
 
   void _updateMovement() {
-    if (_currentPositions == null || _screenSize == null) return;
+    if (_currentPositions == null || _screenSize == null) {
+      print('🎨 DynamicBackground: _updateMovement skipped - positions: ${_currentPositions != null}, screenSize: ${_screenSize != null}');
+      return;
+    }
+    print('🎨 DynamicBackground: _updateMovement called with ${_currentPositions!.length} positions');
     
     final now = DateTime.now();
     final deltaTime = now.difference(_lastUpdateTime).inMilliseconds / 1000.0;
