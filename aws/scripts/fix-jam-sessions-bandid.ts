@@ -1,5 +1,5 @@
 import { DynamoDBClient, ScanCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
+import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || 'oslynstudio-JamSessionTable'
 const dynamo = new DynamoDBClient({})
@@ -57,7 +57,7 @@ async function fixJamSessionsBandId() {
         // For now, using a placeholder that indicates it needs manual review
         const defaultBandId = `temp-band-${jamSession.userId || 'unknown'}`
         
-        const updateResult = await dynamo.send(new UpdateItemCommand({
+        await dynamo.send(new UpdateItemCommand({
           TableName: JAM_TABLE_NAME,
           Key: { jamSessionId: { S: jamSession.jamSessionId } },
           UpdateExpression: 'SET bandId = :bandId',

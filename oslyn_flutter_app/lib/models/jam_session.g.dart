@@ -6,6 +6,17 @@ part of 'jam_session.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+PageSettings _$PageSettingsFromJson(Map<String, dynamic> json) => PageSettings(
+      pageMax: json['pageMax'] as int?,
+      pageMin: json['pageMin'] as int?,
+    );
+
+Map<String, dynamic> _$PageSettingsToJson(PageSettings instance) =>
+    <String, dynamic>{
+      'pageMax': instance.pageMax,
+      'pageMin': instance.pageMin,
+    };
+
 JamSession _$JamSessionFromJson(Map<String, dynamic> json) => JamSession(
       jamSessionId: json['jamSessionId'] as String,
       pin: json['pin'] as String?,
@@ -31,9 +42,17 @@ JamSession _$JamSessionFromJson(Map<String, dynamic> json) => JamSession(
       startDate: json['startDate'] as int?,
       endDate: json['endDate'] as int?,
       bandId: json['bandId'] as String?,
+      userId: json['userId'] as String?,
       setList: json['setList'] == null
           ? null
           : SetList.fromJson(json['setList'] as Map<String, dynamic>),
+      pageSettings: json['pageSettings'] == null
+          ? null
+          : PageSettings.fromJson(json['pageSettings'] as Map<String, dynamic>),
+      slideConfigOverrides: (json['slideConfigOverrides'] as List<dynamic>?)
+          ?.map((e) => SongSlideConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      slideTextSize: json['slideTextSize'] as String?,
     );
 
 Map<String, dynamic> _$JamSessionToJson(JamSession instance) =>
@@ -54,7 +73,11 @@ Map<String, dynamic> _$JamSessionToJson(JamSession instance) =>
       'startDate': instance.startDate,
       'endDate': instance.endDate,
       'bandId': instance.bandId,
+      'userId': instance.userId,
       'setList': instance.setList,
+      'pageSettings': instance.pageSettings,
+      'slideConfigOverrides': instance.slideConfigOverrides,
+      'slideTextSize': instance.slideTextSize,
     };
 
 SetList _$SetListFromJson(Map<String, dynamic> json) => SetList(
@@ -64,14 +87,14 @@ SetList _$SetListFromJson(Map<String, dynamic> json) => SetList(
       songs: (json['songs'] as List<dynamic>?)
           ?.map((e) => JamSong.fromJson(e as Map<String, dynamic>))
           .toList(),
+      editors: (json['editors'] as List<dynamic>?)
+          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
       songCache: (json['songCache'] as List<dynamic>?)
           ?.map((e) => Song.fromJson(e as Map<String, dynamic>))
           .toList(),
       songIds:
           (json['songIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      editors: (json['editors'] as List<dynamic>?)
-          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
 
 Map<String, dynamic> _$SetListToJson(SetList instance) => <String, dynamic>{
@@ -79,9 +102,9 @@ Map<String, dynamic> _$SetListToJson(SetList instance) => <String, dynamic>{
       'description': instance.description,
       'bandId': instance.bandId,
       'songs': instance.songs,
+      'editors': instance.editors,
       'songCache': instance.songCache,
       'songIds': instance.songIds,
-      'editors': instance.editors,
     };
 
 JamSong _$JamSongFromJson(Map<String, dynamic> json) => JamSong(
@@ -166,7 +189,7 @@ BandMembership _$BandMembershipFromJson(Map<String, dynamic> json) =>
     BandMembership(
       bandId: json['bandId'] as String,
       role: json['role'] as String,
-      joinedAt: json['joinedAt'] as int,
+      joinedAt: json['joinedAt'] as String,
     );
 
 Map<String, dynamic> _$BandMembershipToJson(BandMembership instance) =>
@@ -215,16 +238,16 @@ Band _$BandFromJson(Map<String, dynamic> json) => Band(
       name: json['name'] as String,
       description: json['description'] as String?,
       isPublic: json['isPublic'] as bool?,
-      userRole: json['userRole'] as String?,
-      owner: json['owner'] == null
-          ? null
-          : User.fromJson(json['owner'] as Map<String, dynamic>),
       members: (json['members'] as List<dynamic>?)
           ?.map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
       admins: (json['admins'] as List<dynamic>?)
           ?.map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
+      userRole: json['userRole'] as String?,
+      owner: json['owner'] == null
+          ? null
+          : User.fromJson(json['owner'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BandToJson(Band instance) => <String, dynamic>{
@@ -232,8 +255,8 @@ Map<String, dynamic> _$BandToJson(Band instance) => <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
       'isPublic': instance.isPublic,
-      'userRole': instance.userRole,
-      'owner': instance.owner,
       'members': instance.members,
       'admins': instance.admins,
+      'userRole': instance.userRole,
+      'owner': instance.owner,
     };

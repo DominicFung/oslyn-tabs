@@ -26,6 +26,7 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
   final TextEditingController _userIdController = TextEditingController();
   String? _currentUserId;
   bool _isLoading = false;
+  String? _errorMessage;
   
   // Data state
   User? _currentUser;
@@ -49,43 +50,18 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
   Future<void> _loadUserData(String userId) async {
     setState(() {
       _isLoading = true;
+      _errorMessage = null;
     });
 
     try {
       // Load user information
       final user = await _jamService.getUserById(userId);
-      print('🔍 ACCOUNT DEBUG: User data loaded: ${user?.username} (${user?.userId})');
-      print('🔍 ACCOUNT DEBUG: User bandMemberships: ${user?.bandMemberships?.length ?? 0}');
-      if (user?.bandMemberships != null) {
-        for (int i = 0; i < user!.bandMemberships!.length; i++) {
-          final membership = user.bandMemberships![i];
-          print('🔍 ACCOUNT DEBUG: Membership $i: Band ${membership.bandId}, Role ${membership.role}');
-        }
-      }
       
       // Load user's bands
       final bands = await _jamService.getBands(userId);
-      print('🔍 ACCOUNT DEBUG: Loaded ${bands.length} bands');
-      for (int i = 0; i < bands.length; i++) {
-        final band = bands[i];
-        print('🔍 ACCOUNT DEBUG: Band $i: ${band.name} (${band.bandId})');
-        print('🔍 ACCOUNT DEBUG:   - Owner: ${band.owner?.username}(${band.owner?.userId})');
-        print('🔍 ACCOUNT DEBUG:   - Admins: ${band.admins?.map((a) => '${a.username}(${a.userId})').join(', ')}');
-        print('🔍 ACCOUNT DEBUG:   - Members: ${band.members?.map((m) => '${m.username}(${m.userId})').join(', ')}');
-        print('🔍 ACCOUNT DEBUG:   - Is user owner? ${band.owner?.userId == userId}');
-        print('🔍 ACCOUNT DEBUG:   - Is user admin? ${band.admins?.any((admin) => admin.userId == userId)}');
-        print('🔍 ACCOUNT DEBUG:   - Is user owner or admin? ${band.owner?.userId == userId || (band.admins?.any((admin) => admin.userId == userId) ?? false)}');
-      }
       
       // Load user's jam sessions (use getUserJamSessions instead of getPublicJamSessions)
       final jamSessions = await _jamService.getUserJamSessions(userId);
-      print('🔍 ACCOUNT DEBUG: Loaded ${jamSessions.length} jam sessions');
-      for (int i = 0; i < jamSessions.length; i++) {
-        final session = jamSessions[i];
-        print('🔍 ACCOUNT DEBUG: Jam Session $i: ${session.description} (${session.jamSessionId})');
-        print('🔍 ACCOUNT DEBUG:   - BandId: ${session.bandId}');
-        print('🔍 ACCOUNT DEBUG:   - Admins: ${session.admins.map((a) => '${a.username}(${a.userId})').join(', ')}');
-      }
 
       setState(() {
         _currentUser = user;
@@ -95,8 +71,8 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
         _isLoading = false;
       });
     } catch (e) {
-      print('❌ ACCOUNT DEBUG: Error loading user data: $e');
       setState(() {
+        _errorMessage = 'Error loading user data: $e';
         _isLoading = false;
       });
     }
@@ -320,8 +296,6 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
                     itemCount: _userJamSessions.length,
                     itemBuilder: (context, index) {
                       final session = _userJamSessions[index];
-                      // Find the band name for this jam session
-                      final bandName = _getBandNameForSession(session);
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
@@ -335,7 +309,7 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
                           title: Text(
-                            _generateSessionName(session),
+                            session.description ?? 'Untitled Session',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -344,128 +318,36 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
                           ),
                           subtitle: Padding(
                             padding: const EdgeInsets.only(top: 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (bandName != null)
-                                  Text(
-                                    'Band: $bandName',
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.8),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                Text(
-                                  'ID: ${session.jamSessionId}',
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                    fontSize: 10,
-                                    fontFamily: 'monospace',
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                // Creation date
-                                if (session.startDate != null) ...[
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.schedule,
-                                        size: 12,
-                                        color: Colors.blue[300],
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'Created ${_formatRelativeDate(DateTime.fromMillisecondsSinceEpoch(session.startDate!))}',
-                                        style: TextStyle(
-                                          color: Colors.blue[300],
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                                // Last updated (if available)
-                                if (session.endDate != null) ...[
-                                  const SizedBox(height: 2),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.update,
-                                        size: 12,
-                                        color: Colors.orange[300],
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'Updated ${_formatRelativeDate(DateTime.fromMillisecondsSinceEpoch(session.endDate!))}',
-                                        style: TextStyle(
-                                          color: Colors.orange[300],
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ],
+                            child: Text(
+                              'ID: ${session.jamSessionId}',
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.7),
+                                fontSize: 10,
+                                fontFamily: 'monospace',
+                              ),
                             ),
                           ),
-                          trailing: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              // Policy indicator
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: session.policy == 'PUBLIC' 
-                                      ? Colors.green.withValues(alpha: 0.3)
-                                      : Colors.orange.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: session.policy == 'PUBLIC' 
-                                        ? Colors.green.withValues(alpha: 0.5)
-                                        : Colors.orange.withValues(alpha: 0.5),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  session.policy ?? 'UNKNOWN',
-                                  style: TextStyle(
-                                    color: session.policy == 'PUBLIC' 
-                                        ? Colors.green[300]
-                                        : Colors.orange[300],
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              // Song count
-                              if (session.setList?.songsList != null) ...[
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          trailing: session.bandId != null
+                              ? Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: Colors.purple.withValues(alpha: 0.3),
+                                    color: Colors.white.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: Colors.purple.withValues(alpha: 0.5),
+                                      color: Colors.white.withValues(alpha: 0.3),
                                       width: 1,
                                     ),
                                   ),
                                   child: Text(
-                                    '${session.setList!.songsList!.length} songs',
+                                    'Band: ${session.bandId!.substring(0, 8)}...',
                                     style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 8,
+                                      fontSize: 10,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ],
-                          ),
+                                )
+                              : null,
                         ),
                       );
                     },
@@ -474,24 +356,6 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
         ],
       ),
     );
-  }
-
-  String? _getBandNameForSession(JamSession session) {
-    if (session.bandId == null) return null;
-    
-    final band = _userBands.firstWhere(
-      (b) => b.bandId == session.bandId,
-      orElse: () => Band(
-        bandId: session.bandId!,
-        name: 'Unknown Band',
-        description: null,
-        isPublic: null,
-        members: null,
-        admins: null,
-      ),
-    );
-    
-    return band.name;
   }
 
   Widget _buildBandsTab() {
@@ -514,32 +378,16 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
       );
     }
 
-    // Separate bands into owned, admin, and member bands using band.userRole
-    final ownedBands = <Band>[];
-    final adminBands = <Band>[];
-    final memberBands = <Band>[];
+    // Separate bands into owned and member bands
+    final ownedBands = _userBands.where((band) => 
+      band.admins?.any((admin) => admin.userId == _currentUserId) ?? false
+    ).toList();
     
-    print('🔍 ROLE DEBUG: Processing ${_userBands.length} bands using band.userRole');
-    for (final band in _userBands) {
-      final role = band.userRole;
-      print('🔍 ROLE DEBUG: Band ${band.name} (${band.bandId}) -> Role: ${role ?? 'NOT_FOUND'}');
-      if (role == 'OWNER') {
-        ownedBands.add(band);
-        print('🔍 ROLE DEBUG: Added to ownedBands');
-      } else if (role == 'ADMIN') {
-        adminBands.add(band);
-        print('🔍 ROLE DEBUG: Added to adminBands');
-      } else if (role == 'MEMBER') {
-        memberBands.add(band);
-        print('🔍 ROLE DEBUG: Added to memberBands');
-      } else {
-        print('🔍 ROLE DEBUG: No matching role found, band not categorized');
-      }
-    }
-    
-    print('🔍 ROLE DEBUG: Final counts - Owned: ${ownedBands.length}, Admin: ${adminBands.length}, Member: ${memberBands.length}');
+    final memberBands = _userBands.where((band) => 
+      !(band.admins?.any((admin) => admin.userId == _currentUserId) ?? false)
+    ).toList();
 
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -555,23 +403,17 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
               ),
             ),
             const SizedBox(height: 12),
-            ...ownedBands.map((band) => _buildBandItem(band, role: 'Owner')),
-            const SizedBox(height: 24),
-          ],
-          
-          // Admin of bands section
-          if (adminBands.isNotEmpty) ...[
-            Text(
-              'Admin of ${adminBands.length} band${adminBands.length == 1 ? '' : 's'}',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            Expanded(
+              flex: ownedBands.length,
+              child: ListView.builder(
+                itemCount: ownedBands.length,
+                itemBuilder: (context, index) {
+                  final band = ownedBands[index];
+                  return _buildBandItem(band, isOwner: true);
+                },
               ),
             ),
-            const SizedBox(height: 12),
-            ...adminBands.map((band) => _buildBandItem(band, role: 'Admin')),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
           ],
           
           // Member of bands section
@@ -585,30 +427,40 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
               ),
             ),
             const SizedBox(height: 12),
-            ...memberBands.map((band) => _buildBandItem(band, role: 'Member')),
-            const SizedBox(height: 16),
+            Expanded(
+              flex: memberBands.length,
+              child: ListView.builder(
+                itemCount: memberBands.length,
+                itemBuilder: (context, index) {
+                  final band = memberBands[index];
+                  return _buildBandItem(band, isOwner: false);
+                },
+              ),
+            ),
           ],
           
           // No bands message
           if (_userBands.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1,
+            Expanded(
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Text(
+                    'No bands found',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-              ),
-              child: const Text(
-                'No bands found',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
               ),
             ),
         ],
@@ -616,178 +468,106 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
     );
   }
 
-  Widget _buildBandItem(Band band, {required String role}) {
+  Widget _buildBandItem(Band band, {required bool isOwner}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(12),
+        title: Row(
           children: [
-            // Header row with band name and role
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    band.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+            Expanded(
+              child: Text(
+                band.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: role == 'Owner'
-                        ? Colors.blue.withValues(alpha: 0.3)
-                        : role == 'Admin'
-                            ? Colors.purple.withValues(alpha: 0.3)
-                            : Colors.grey.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: role == 'Owner'
-                          ? Colors.blue.withValues(alpha: 0.5)
-                          : role == 'Admin'
-                              ? Colors.purple.withValues(alpha: 0.5)
-                              : Colors.grey.withValues(alpha: 0.5),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    role,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 8),
-            
-            // Description
-            Text(
-              band.description ?? 'No description',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
-                fontSize: 13,
               ),
             ),
-            
-            const SizedBox(height: 12),
-            
-            // Footer row with member count and privacy status
-            Row(
-              children: [
-                Text(
-                  '${band.members?.length ?? 0} members',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                  ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: isOwner 
+                    ? Colors.blue.withValues(alpha: 0.3)
+                    : Colors.grey.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: isOwner 
+                      ? Colors.blue.withValues(alpha: 0.5)
+                      : Colors.grey.withValues(alpha: 0.5),
+                  width: 1,
                 ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: band.isPublic == true 
-                        ? Colors.green.withValues(alpha: 0.3)
-                        : Colors.orange.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: band.isPublic == true 
-                          ? Colors.green.withValues(alpha: 0.5)
-                          : Colors.orange.withValues(alpha: 0.5),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    band.isPublic == true ? 'Public' : 'Private',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+              ),
+              child: Text(
+                isOwner ? 'Owner' : 'Member',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
+              ),
+            ),
+          ],
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            band.description ?? 'No description',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.7),
+              fontSize: 12,
+            ),
+          ),
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '${band.members?.length ?? 0} members',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.8),
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: band.isPublic == true 
+                    ? Colors.green.withValues(alpha: 0.3)
+                    : Colors.orange.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: band.isPublic == true 
+                      ? Colors.green.withValues(alpha: 0.5)
+                      : Colors.orange.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                band.isPublic == true ? 'Public' : 'Private',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  String _generateSessionName(JamSession jam) {
-    // If there's a description, use it
-    if (jam.description != null && jam.description!.isNotEmpty) {
-      return jam.description!;
-    }
-    
-    // Try to get the set list description (like the web app does)
-    if (jam.setList != null && jam.setList!.description != null && jam.setList!.description!.isNotEmpty) {
-      return jam.setList!.description!;
-    }
-    
-    // Create a name based on admin information
-    if (jam.admins.isNotEmpty) {
-      final admin = jam.admins.first;
-      final adminName = admin.firstName != null && admin.firstName!.isNotEmpty
-          ? admin.firstName!
-          : admin.username ?? 'Admin';
-      
-      // Add date context if available
-      if (jam.startDate != null) {
-        final startDate = DateTime.fromMillisecondsSinceEpoch(jam.startDate!);
-        final now = DateTime.now();
-        final difference = now.difference(startDate);
-        
-        if (difference.inDays == 0) {
-          return "$adminName's Jam (Today)";
-        } else if (difference.inDays == 1) {
-          return "$adminName's Jam (Yesterday)";
-        } else if (difference.inDays < 7) {
-          return "$adminName's Jam (${difference.inDays} days ago)";
-        } else {
-          return "$adminName's Jam (${startDate.month}/${startDate.day})";
-        }
-      } else {
-        return "$adminName's Jam Session";
-      }
-    }
-    
-    // Fallback: use date-based naming
-    if (jam.startDate != null) {
-      final startDate = DateTime.fromMillisecondsSinceEpoch(jam.startDate!);
-      final now = DateTime.now();
-      final difference = now.difference(startDate);
-      
-      if (difference.inDays == 0) {
-        return "Today's Jam Session";
-      } else if (difference.inDays == 1) {
-        return "Yesterday's Jam Session";
-      } else if (difference.inDays < 7) {
-        return "${difference.inDays} Day Old Jam";
-      } else {
-        return "Jam Session (${startDate.month}/${startDate.day})";
-      }
-    }
-    
-    // Final fallback
-    return "Jam Session";
   }
 
 
@@ -869,7 +649,7 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Band IDs:',
+                    'Band Memberships:',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -889,13 +669,25 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
                           width: 1,
                         ),
                       ),
-                      child: Text(
-                        '${membership.bandId} (${membership.role})',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontFamily: 'monospace',
-                          color: Colors.white.withValues(alpha: 0.8),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Band: ${membership.bandId}',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontFamily: 'monospace',
+                              color: Colors.white.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          Text(
+                            'Role: ${membership.role}',
+                            style: TextStyle(
+                              fontSize: 9,
+                              color: Colors.white.withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   )),
@@ -944,20 +736,5 @@ class _UserAccountInterfaceState extends State<UserAccountInterface>
     if (timestamp == null) return 'N/A';
     final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
     return '${date.day}/${date.month}/${date.year}';
-  }
-
-  String _formatRelativeDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-    
-    if (difference.inDays == 0) {
-      return 'today';
-    } else if (difference.inDays == 1) {
-      return 'yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${date.month}/${date.day}/${date.year}';
-    }
   }
 }

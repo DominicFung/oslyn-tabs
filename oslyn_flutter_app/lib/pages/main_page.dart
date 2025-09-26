@@ -773,10 +773,6 @@ class _MainPageState extends State<MainPage> {
         print('🔍 Double-checking _currentUserId before API call: "$_currentUserId"');
         print('🔍 Double-checking _isAuthenticated before API call: $_isAuthenticated');
         
-        // Debug: Run comprehensive access test
-        print('🔍 Running debug access test...');
-        await _jamService.debugJamSessionAccess(sanitizedInput, userIdToUse);
-        
         jamSession = await _jamService.getJamSession(sanitizedInput, userId: userIdToUse);
         print('🆔 Jam session ID lookup result: ${jamSession != null ? "FOUND" : "NOT FOUND"}');
         actualJamSessionId = sanitizedInput;

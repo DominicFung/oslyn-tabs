@@ -1058,10 +1058,6 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                               _queueRevision = newRevision;
                             });
                           },
-                          onSetlistUpdated: () {
-                            // Refresh jam session data to get updated setlist
-                            _refreshJamSession();
-                          },
                         ),
                   ),
                 ),
@@ -1654,10 +1650,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
               print('      - Key: ${jamSong.key}');
               print('      - Chord Sheet Length: ${jamSong.song.chordSheet.length} characters');
               print('      - Chord Sheet Key: ${jamSong.song.chordSheetKey}');
-              if (i < 3) { // Only show first 3 songs in detail
+              if (i < 5) { // Only show first 5 songs in detail
                 print('      - Chord Sheet Preview: ${jamSong.song.chordSheet.length > 100 ? jamSong.song.chordSheet.substring(0, 100) + '...' : jamSong.song.chordSheet}');
               }
-              if (i >= 3) {
+              if (i >= 5) {
                 print('      ... and ${session.setList!.songs!.length - 6} more songs');
                 break;
               }
@@ -1699,11 +1695,8 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
           print('⚠️ No set list found in jam session');
         }
         
-        if (session.setList?.songs?.isEmpty == true || session.setList?.songs == null) {
-          print('🔄 Set list is empty or has no songs, trying to load songs from current user...');
-          print('🔄 Set list songs: ${session.setList?.songs}');
-          print('🔄 Set list songs is null: ${session.setList?.songs == null}');
-          print('🔄 Set list songs is empty: ${session.setList?.songs?.isEmpty ?? true}');
+        if (session.setList?.songs?.isEmpty == true) {
+          print('🔄 Set list is empty, trying to load songs from current user...');
           await _loadSongsFromCurrentUser();
           // Initialize queue after loading songs
           await _initializeQueue();
@@ -2773,17 +2766,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       
       final (q, rev, currentSongFromServer) = await _jamService.getJamQueue(widget.jamSessionId);
       
-      print('📊 ===== QUEUE LOADING DEBUG =====');
       print('📊 Current queue from server: $q (revision: $rev)');
       print('📊 Current song index from server: $currentSongFromServer');
       print('📊 Jam session setlist songs: ${jamSession?.setList?.songs?.length ?? 0}');
       print('📊 Local songs: ${songs?.length ?? 0}');
-      print('📊 Queue is null: ${q == null}');
-      print('📊 Queue is empty: ${q?.isEmpty ?? true}');
-      print('📊 Queue length: ${q?.length ?? 0}');
-      if (q != null) {
-        print('📊 Queue contents: ${q.map((e) => '${e.runtimeType}: $e').toList()}');
-      }
       
       // Set the current song index from the server response
       if (q != null && q.isNotEmpty) {
@@ -2817,36 +2803,19 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         }
       }
       
-      // If queue is empty or null, try to create a basic queue from available songs
+      // If queue is empty or null, keep it empty (don't auto-populate with setlist)
       if (q == null || q.isEmpty) {
-        print('🆕 Queue is empty, trying to create basic queue from available songs...');
+        print('🆕 Queue is empty, keeping it empty (no auto-population)');
         
-        // Check if we have songs available (either from setList or local songs)
-        final availableSongs = jamSession?.setList?.songsList?.length ?? songs?.length ?? 0;
-        print('🆕 Available songs: $availableSongs');
-        
-        if (availableSongs > 0) {
-          // Create a basic queue with the first few songs
-          final basicQueue = List.generate(availableSongs, (index) => index);
-          print('🆕 Created basic queue: $basicQueue');
-          
-          setState(() {
-            _queue = basicQueue;
-            _queueRevision = rev ?? 0;
-            _currentSongIndex = 0; // Start with first song
-          });
-          print('✅ Created basic queue with ${basicQueue.length} songs');
-        } else {
-          print('🆕 No songs available, keeping queue empty');
-          setState(() {
-            _queue = <int>[];
-            _queueRevision = rev ?? 0;
-            _currentSongIndex = -1; // No current song when queue is empty
-          });
-        }
+        setState(() {
+          _queue = <int>[];
+          _queueRevision = rev ?? 0;
+          _currentSongIndex = -1; // No current song when queue is empty
+        });
+        print('✅ Queue kept empty as intended');
       } else {
       // Queue already exists, use it (remove duplicates and validate indices)
-      final availableSongs = jamSession?.setList?.songsList?.length ?? songs?.length ?? 0;
+      final availableSongs = jamSession?.setList?.songs?.length ?? songs?.length ?? 0;
       final seen = <int>{};
       final validQueue = q.where((songIndex) => 
         seen.add(songIndex) && songIndex >= 0 && songIndex < availableSongs
@@ -2869,11 +2838,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       });
       print('✅ Loaded existing queue with ${_queue.length} songs (deduplicated from ${q.length}, validated against ${availableSongs} available songs)');
       print('🎵 Current song index: $_currentSongIndex');
-      print('📊 ===== FINAL QUEUE STATE =====');
-      print('📊 Final queue: $_queue');
-      print('📊 Final current song index: $_currentSongIndex');
-      print('📊 Final queue revision: $_queueRevision');
-      }
+    }
     } catch (e) {
       print('❌ Error initializing queue: $e');
       // Set a minimal local queue as fallback
@@ -3764,10 +3729,6 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
               _queueRevision = newRevision;
             });
           },
-          onSetlistUpdated: () {
-            // Refresh jam session data to get updated setlist
-            _refreshJamSession();
-          },
           onSongSelected: (songIndex) {
             Navigator.pop(context);
             _onSongSelected(songIndex);
@@ -4621,17 +4582,14 @@ The hour I first believed
                               queueRevision: _queueRevision,
                               onQueueUpdated: (newQueue, newRevision) {
                                 setState(() {
-                                  // Only validate indices, allow duplicates
+                                  // Remove duplicates while preserving order and validate indices
                                   final availableSongs = jamSession?.setList?.songs?.length ?? songs?.length ?? 0;
+                                  final seen = <int>{};
                                   _queue = newQueue.where((songIndex) => 
-                                    songIndex >= 0 && songIndex < availableSongs
+                                    seen.add(songIndex) && songIndex >= 0 && songIndex < availableSongs
                                   ).toList();
                                   _queueRevision = newRevision;
                                 });
-                              },
-                              onSetlistUpdated: () {
-                                // Refresh jam session data to get updated setlist
-                                _refreshJamSession();
                               },
                               onSongSelected: _onSongSelected,
                               onCurrentSongChanged: (newCurrentSongIndex) {
@@ -6315,40 +6273,5 @@ The hour I first believed
         ),
       ),
     );
-  }
-
-  /// Refreshes jam session data to get updated setlist
-  Future<void> _refreshJamSession() async {
-    try {
-      print('🔄 ===== REFRESH JAM SESSION CALLED =====');
-      print('🔄 Refreshing jam session data...');
-      
-      // Initialize the service if not already done
-      _jamService = JamService();
-      
-      // Fetch the updated jam session
-      print('🔄 Calling getJamSession...');
-      final updatedJamSession = await _jamService.getJamSession(widget.jamSessionId);
-      print('🔄 getJamSession returned: ${updatedJamSession != null ? "not null" : "null"}');
-      
-      if (updatedJamSession != null) {
-        print('🔄 Updating state with new jam session...');
-        setState(() {
-          jamSession = updatedJamSession;
-          // Update queue and revision from the refreshed data
-          _queue = updatedJamSession.queue ?? [];
-          _queueRevision = updatedJamSession.revision ?? 0;
-        });
-        print('✅ Jam session refreshed successfully');
-        print('🎵 Updated setlist has ${updatedJamSession.setList?.songs?.length ?? 0} songs');
-        print('🎵 Current jamSession.setList?.songs?.length: ${jamSession?.setList?.songs?.length ?? 0}');
-      } else {
-        print('❌ Failed to refresh jam session - received null');
-      }
-    } catch (e) {
-      print('❌ Error refreshing jam session: $e');
-      print('❌ Stack trace: ${StackTrace.current}');
-      // Don't show error to user as this is a background refresh
-    }
   }
 }

@@ -31,8 +31,8 @@ void main() {
         final user = await jamService.getUserById(testUserId);
         expect(user, isNotNull);
         expect(user!.userId, equals(testUserId));
-        expect(user.bandIds, isNotNull);
-        print('✅ User loaded with ${user.bandIds?.length ?? 0} bands');
+        expect(user.bandMemberships, isNotNull);
+        print('✅ User loaded with ${user.bandMemberships?.length ?? 0} band memberships');
       } catch (e) {
         print('❌ Error loading user: $e');
         // Don't fail the test if the user doesn't exist yet

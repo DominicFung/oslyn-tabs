@@ -14,11 +14,31 @@ export interface JamSession {
   admins?: User[];
   members?: User[];
   guests?: User[];
+  adminIds?: string[]; // ID arrays for efficient access control
+  memberIds?: string[];
+  guestIds?: string[];
   active?: Participant[];
   passcode?: string;
   startDate?: number;
   endDate?: number;
   setList?: SetList;
+  pageSettings?: PageSettings;
+  slideConfigOverrides?: SongSlideConfig[];
+  slideTextSize?: string;
+}
+
+export interface PageSettings {
+  pageMax?: number;
+  pageMin?: number;
+}
+
+export interface SongSlideConfig {
+  songId: string;
+  backgroundImg?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  highlightColor?: string;
+  highlightOpacity?: string;
 }
 
 export interface SetList {

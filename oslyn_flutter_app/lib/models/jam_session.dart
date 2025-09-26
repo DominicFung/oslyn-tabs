@@ -3,6 +3,20 @@ import 'package:json_annotation/json_annotation.dart';
 part 'jam_session.g.dart';
 
 @JsonSerializable()
+class PageSettings {
+  final int? pageMax;
+  final int? pageMin;
+
+  PageSettings({
+    this.pageMax,
+    this.pageMin,
+  });
+
+  factory PageSettings.fromJson(Map<String, dynamic> json) => _$PageSettingsFromJson(json);
+  Map<String, dynamic> toJson() => _$PageSettingsToJson(this);
+}
+
+@JsonSerializable()
 class JamSession {
   final String jamSessionId;
   final String? pin;
@@ -20,7 +34,11 @@ class JamSession {
   final int? startDate;
   final int? endDate;
   final String? bandId;
+  final String? userId; // Creator/owner of the jam session
   final SetList? setList;
+  final PageSettings? pageSettings;
+  final List<SongSlideConfig>? slideConfigOverrides;
+  final String? slideTextSize;
 
   JamSession({
     required this.jamSessionId,
@@ -39,19 +57,18 @@ class JamSession {
     this.startDate,
     this.endDate,
     this.bandId,
+    this.userId,
     this.setList,
+    this.pageSettings,
+    this.slideConfigOverrides,
+    this.slideTextSize,
   });
 
   factory JamSession.fromJson(Map<String, dynamic> json) => JamSession(
     jamSessionId: json['jamSessionId'] as String,
     pin: json['pin'] as String?,
     description: json['description'] as String?,
-    queue: (json['queue'] as List<dynamic>?)?.map((e) {
-      if (e is String) {
-        return int.tryParse(e) ?? 0;
-      }
-      return e as int;
-    }).toList(),
+    queue: (json['queue'] as List<dynamic>?)?.map((e) => e as int).toList(),
     revision: json['revision'] as int?,
     currentSong: json['currentSong'] as int?,
     currentPage: json['currentPage'] as int?,
@@ -64,7 +81,11 @@ class JamSession {
     startDate: json['startDate'] as int?,
     endDate: json['endDate'] as int?,
     bandId: json['bandId'] as String?,
+    userId: json['userId'] as String?,
     setList: json['setList'] != null ? SetList.fromJson(json['setList'] as Map<String, dynamic>) : null,
+    pageSettings: json['pageSettings'] != null ? PageSettings.fromJson(json['pageSettings'] as Map<String, dynamic>) : null,
+    slideConfigOverrides: (json['slideConfigOverrides'] as List<dynamic>?)?.map((e) => SongSlideConfig.fromJson(e as Map<String, dynamic>)).toList(),
+    slideTextSize: json['slideTextSize'] as String?,
   );
 
   Map<String, dynamic> toJson() => _$JamSessionToJson(this);
@@ -76,18 +97,21 @@ class SetList {
   final String? description;
   final String? bandId;
   final List<JamSong>? songs;
+  final List<User>? editors;
   final List<Song>? songCache;
   final List<String>? songIds;
-  final List<User>? editors;
+
+  // Add getter for backward compatibility
+  List<JamSong>? get songsList => songs;
 
   SetList({
     required this.setListId,
     this.description,
     this.bandId,
     this.songs,
+    this.editors,
     this.songCache,
     this.songIds,
-    this.editors,
   });
 
   factory SetList.fromJson(Map<String, dynamic> json) => SetList(
@@ -95,31 +119,12 @@ class SetList {
     description: json['description'] as String?,
     bandId: json['bandId'] as String?,
     songs: (json['songs'] as List<dynamic>?)?.map((e) => JamSong.fromJson(e as Map<String, dynamic>)).toList(),
+    editors: (json['editors'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList(),
     songCache: (json['songCache'] as List<dynamic>?)?.map((e) => Song.fromJson(e as Map<String, dynamic>)).toList(),
     songIds: (json['songIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
-    editors: (json['editors'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList(),
   );
 
   Map<String, dynamic> toJson() => _$SetListToJson(this);
-
-  /// Get songs from either the songs field or convert from songCache
-  List<JamSong>? get songsList {
-    if (songs != null) {
-      return songs;
-    } else if (songCache != null) {
-      // Convert songCache to JamSong format
-      return songCache!.asMap().entries.map((entry) {
-        final index = entry.key;
-        final song = entry.value;
-        return JamSong(
-          key: song.songId,
-          song: song,
-          order: index,
-        );
-      }).toList();
-    }
-    return null;
-  }
 }
 
 @JsonSerializable()
@@ -216,7 +221,7 @@ class SongSlideConfig {
 class BandMembership {
   final String bandId;
   final String role;
-  final int joinedAt;
+  final String joinedAt;
 
   BandMembership({
     required this.bandId,
@@ -260,9 +265,6 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
-
-  /// Getter for bandIds - returns band IDs from band memberships
-  List<String>? get bandIds => bandMemberships?.map((bm) => bm.bandId).toList();
 }
 
 @JsonSerializable()
@@ -271,20 +273,20 @@ class Band {
   final String name;
   final String? description;
   final bool? isPublic;
-  final String? userRole; // The current user's role in this band (OWNER, ADMIN, MEMBER)
-  final User? owner;
   final List<User>? members;
   final List<User>? admins;
+  final String? userRole;
+  final User? owner;
 
   Band({
     required this.bandId,
     required this.name,
     this.description,
     this.isPublic,
-    this.userRole,
-    this.owner,
     this.members,
     this.admins,
+    this.userRole,
+    this.owner,
   });
 
   factory Band.fromJson(Map<String, dynamic> json) => _$BandFromJson(json);

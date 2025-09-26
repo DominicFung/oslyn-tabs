@@ -67,7 +67,7 @@ export const handler = async (event: AppSyncResolverEvent<{ jamSessionId: string
     UpdateExpression: `SET ${updateExpressions.join(', ')}`,
     ExpressionAttributeNames: expressionAttributeNames,
     ExpressionAttributeValues: expressionAttributeValues,
-    ReturnValues: 'NONE',
+    ReturnValues: 'NONE' as const,
   }
 
   console.log('🔄 Attempting DynamoDB update:')

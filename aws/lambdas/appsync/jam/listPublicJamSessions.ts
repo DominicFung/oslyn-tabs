@@ -2,7 +2,7 @@ import { BatchGetItemCommand, DynamoDBClient, ScanCommand } from '@aws-sdk/clien
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge, chunk } from '../../util/dynamo'
 
-import { JamSessionData, SetListData, SongData, UserData, isJamSessionData, isSetListData, isSongData, isUserData } from '../../types'
+import { JamSession, SetList, Song, User } from '../../types'
 
 import { AppSyncResolverEvent } from 'aws-lambda'
 
@@ -55,7 +55,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
   console.log('🔍 [DEBUG] Step 2: Processing jam sessions')
   let sessions = res0.Items!.map(s => {
-    const jam = unmarshall(s) as JamSessionData
+    const jam = unmarshall(s) as JamSession
     console.log('📊 [DEBUG] Unmarshalled jam session:', jam)
     if (!jam.active) jam.active = []
     if (!jam.queue) jam.queue = []
@@ -96,8 +96,8 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
     console.log(`  - User ID: ${session.userId}`)
     console.log(`  - Current Song: ${session.currentSong || 0}`)
     console.log(`  - Current Page: ${session.currentPage || 0}`)
-    console.log(`  - Active IDs: ${JSON.stringify(session.activeIds || [])}`)
-    console.log(`  - Page Settings: ${JSON.stringify(session.pageSettings || {})}`)
+    console.log(`  - Active: ${JSON.stringify(session.active || [])}`)
+    console.log(`  - Queue: ${JSON.stringify(session.queue || [])}`)
   })
   
   console.log(`Sorted ${sessions.length} jam sessions by creation date (most recent first)`)
@@ -123,14 +123,14 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
     }))
     console.log(res1)
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet setListId. ${res1.$metadata}`); return }
-    let sets = res1.Responses![SETLIST_TABLE_NAME].map(s => unmarshall(s) as SetListData)
+    let sets = res1.Responses![SETLIST_TABLE_NAME].map(s => unmarshall(s) as SetList)
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
       console.log("getting songs ...")
   
       const songIds = sets.map((s) => { 
         let r = [] as string[]
-        for (const k of s.songs) { k?.songId && r.push(k?.songId)}
+        for (const k of s.songs || []) { k?.songId && r.push(k?.songId)}
         return r as string[]
       })
   
@@ -146,7 +146,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         console.log(`  - Songs Count: ${set.songs?.length || 0}`)
         if (set.songs && set.songs.length > 0) {
           console.log(`  - First 3 Songs:`)
-          set.songs.slice(0, 3).forEach((song, songIndex) => {
+          set.songs.slice(0, 3).forEach((song: any, songIndex: number) => {
             console.log(`    ${songIndex + 1}. Song ID: ${song?.song?.songId || 'N/A'}, Key: ${song?.key || 'N/A'}`)
           })
           if (set.songs.length > 3) {
@@ -158,7 +158,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
       const keys = chunk(uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } }), 100)
       console.log(keys)
 
-      let songs: SongData[] = []
+      let songs: Song[] = []
   
       for (let i=0; i<keys.length; i++) {
         const res1 = await dynamo.send(new BatchGetItemCommand({
@@ -167,7 +167,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         console.log(res1)
         if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
   
-        songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s) as SongData))
+        songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s) as Song))
       }
       
       console.log('=== SONGS DATA DEBUG ===')
@@ -195,7 +195,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
   
         console.log(JSON.stringify(res2.Responses))
-        const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s) as UserData)
+        const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s) as User)
         console.log(users)
   
         songs = merge(songs, users, 'userId', 'creator')
@@ -208,7 +208,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
       }
       
       for (let i=0; i<sets.length; i++) {
-        sets[i].songs = merge(sets[i].songs, songs, 'songId', 'song')
+        sets[i].songs = merge(sets[i].songs || [], songs, 'songId', 'song')
       }
     }
 
@@ -255,7 +255,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
     const userIds = sessions.map((b) => { 
       let r = [] as string[]
-      for (const k of b?.activeIds!) { k && r.push(k)}
+      for (const k of b?.active || []) { k?.userId && r.push(k.userId)}
       return r as string[]
     })
 
@@ -283,7 +283,8 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
       console.log(users)
       for (let i=0; i<sessions.length; i++) {
-        sessions[i].active = merge(sessions[i].activeIds!, users, 'userId', 'active')
+        const activeUserIds = sessions[i].active?.map(p => p.userId) || []
+        sessions[i].active = merge(activeUserIds, users, 'userId', 'active')
       }
     } else {
       console.log("NONE of these sessions have active users, continue ..")

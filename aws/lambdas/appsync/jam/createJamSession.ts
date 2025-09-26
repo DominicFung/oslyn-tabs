@@ -93,7 +93,7 @@ export const handler = async (event: any) => {
   let jamSession = {
     jamSessionId, 
     setListId: b.setListId, 
-    userId: b.userId,
+    userId: b.userId, // Creator of the jam session
     bandId: b.bandId || null, // Add bandId field, default to null if not provided
     pin, // Add PIN to jam session record
 
@@ -108,6 +108,14 @@ export const handler = async (event: any) => {
 
     active: []
   } as any
+
+  // Debug logging for jam session creation
+  console.log('🏗️ DEBUG: Creating jam session with data:', JSON.stringify({
+    jamSessionId,
+    userId: b.userId,
+    policy,
+    bandId: b.bandId || null
+  }, null, 2));
 
   // Store the jam session
   const res2 = await dynamo.send(new PutItemCommand({

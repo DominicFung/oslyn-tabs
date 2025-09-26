@@ -1,0 +1,289 @@
+import { DynamoDBClient, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb';
+import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { JamSession, SetList, Song } from '../../types';
+
+// Utility functions
+function hasSubstring(strings: string[], substring: string): boolean {
+  return strings.some((str) => str.includes(substring));
+}
+
+const dynamo = new DynamoDBClient({ region: process.env.AWS_REGION || 'us-east-1' });
+const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || 'oslynstudio-JamSessionTable';
+const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || 'oslynstudio-SetListTable';
+const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || 'oslynstudio-SongTable';
+const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || 'oslynstudio-BandTable';
+const USER_TABLE_NAME = process.env.USER_TABLE_NAME || 'oslynstudio-UserTable';
+
+export const handler = async (event: any) => {
+  console.log('getJamSession event:', JSON.stringify(event, null, 2));
+  
+  const { jamSessionId, userId } = event.arguments;
+  
+  if (!jamSessionId) {
+    console.error('ERROR: jamSessionId is required');
+    throw new Error('jamSessionId is required');
+  }
+
+  console.log('Getting jam session:', jamSessionId);
+  console.log('User ID:', userId);
+
+  // Debug: Log environment and configuration
+  console.log('🔧 DEBUG: Environment Configuration:');
+  console.log('  - AWS_REGION:', process.env.AWS_REGION || 'us-east-1 (default)');
+  console.log('  - JAM_TABLE_NAME:', JAM_TABLE_NAME);
+  console.log('  - jamSessionId type:', typeof jamSessionId);
+  console.log('  - jamSessionId value:', JSON.stringify(jamSessionId));
+  console.log('  - jamSessionId length:', jamSessionId?.length);
+
+  // Debug: Log the exact DynamoDB query
+  const dynamoQuery = {
+    TableName: JAM_TABLE_NAME,
+    Key: { jamSessionId: { S: jamSessionId } }
+  };
+  console.log('🔍 DEBUG: DynamoDB Query:', JSON.stringify(dynamoQuery, null, 2));
+
+  // Get jam session from DynamoDB
+  let res;
+  try {
+    res = await dynamo.send(new GetItemCommand(dynamoQuery));
+    
+    // Debug: Log the raw response
+    console.log('📥 DEBUG: DynamoDB Response:');
+    console.log('  - $metadata:', res.$metadata);
+    console.log('  - Item exists:', !!res.Item);
+    console.log('  - Raw Item:', res.Item ? JSON.stringify(res.Item, null, 2) : 'null');
+
+  } catch (error) {
+    console.error('💥 DEBUG: DynamoDB Error:', error);
+    console.error('🔍 DEBUG: Error details:');
+    if (error instanceof Error) {
+      console.error('  - Error name:', error.name);
+      console.error('  - Error message:', error.message);
+    }
+    if (error && typeof error === 'object' && 'code' in error) {
+      console.error('  - Error code:', (error as any).code);
+    }
+    throw error;
+  }
+
+  if (!res.Item) {
+    console.error(`❌ ERROR: jamSessionId not found: ${jamSessionId}`);
+    console.error('🔍 DEBUG: Possible causes:');
+    console.error('  1. Wrong table name');
+    console.error('  2. Wrong region');
+    console.error('  3. Primary key name mismatch');
+    console.error('  4. Data type mismatch (should be String)');
+    console.error('  5. Case sensitivity');
+    console.error('  6. Extra whitespace');
+    console.error('  7. Permissions issue');
+    throw new Error(`Jam session not found: ${jamSessionId}`);
+  }
+
+  console.log('✅ DEBUG: Item found successfully');
+  const jamSession = unmarshall(res.Item) as JamSession;
+  console.log('Jam session found:', jamSession);
+
+  // COMPREHENSIVE ACCESS CONTROL CHECK
+  if (jamSession.policy === 'PRIVATE') {
+    console.log('🔒 DEBUG: Checking private access for user:', userId);
+    console.log('🔍 DEBUG: Jam session data:', JSON.stringify({
+      jamSessionId: jamSession.jamSessionId,
+      userId: jamSession.userId,
+      bandId: jamSession.bandId,
+      policy: jamSession.policy,
+      admins: jamSession.admins,
+      members: jamSession.members,
+      guests: jamSession.guests,
+      adminIds: (jamSession as any).adminIds,
+      memberIds: (jamSession as any).memberIds,
+      guestIds: (jamSession as any).guestIds
+    }, null, 2));
+    
+    if (!userId) {
+      console.error('ERROR: userId is required for private jam sessions');
+      throw new Error('userId is required for private jam sessions');
+    }
+
+    // 1. Check if user is the creator FIRST (most common case)
+    const isCreator = jamSession.userId === userId;
+    console.log(`🏗️ DEBUG: Creator check - jamSession.userId: "${jamSession.userId}" (type: ${typeof jamSession.userId}), userId: "${userId}" (type: ${typeof userId}), isCreator: ${isCreator}`);
+
+    // 2. Check via ID arrays (consistent with enterJam.ts logic)
+    const adminIds = (jamSession as any).adminIds || [];
+    const memberIds = (jamSession as any).memberIds || [];
+    const guestIds = (jamSession as any).guestIds || [];
+    
+    const isAdminById = adminIds.includes(userId);
+    const isMemberById = memberIds.includes(userId);
+    const isGuestById = guestIds.includes(userId);
+
+    // 3. Check via User object arrays (legacy check)
+    const isAdmin = jamSession.admins && Array.isArray(jamSession.admins) ? 
+      jamSession.admins.some(admin => admin && admin.userId === userId) : false;
+    const isMember = jamSession.members && Array.isArray(jamSession.members) ? 
+      jamSession.members.some(member => member && member.userId === userId) : false;
+    const isGuest = jamSession.guests && Array.isArray(jamSession.guests) ? 
+      jamSession.guests.some(guest => guest && guest.userId === userId) : false;
+
+    // 4. CRITICAL: Check if user is a member of the associated band
+    let isBandMember = false;
+    let bandCheckDetails = '';
+    if (jamSession.bandId) {
+      console.log(`🎸 DEBUG: Checking band membership for bandId: "${jamSession.bandId}"`);
+      try {
+        // First check if user has band membership in their profile
+        const userRes = await dynamo.send(new GetItemCommand({
+          TableName: USER_TABLE_NAME,
+          Key: { userId: { S: userId } }
+        }));
+        
+        if (userRes.Item) {
+          const user = unmarshall(userRes.Item);
+          console.log(`👤 DEBUG: User bandMemberships:`, JSON.stringify(user.bandMemberships, null, 2));
+          
+          // Check if user has membership in this band
+          if (user.bandMemberships && Array.isArray(user.bandMemberships)) {
+            const bandMembership = user.bandMemberships.find((membership: any) => 
+              membership.bandId === jamSession.bandId
+            );
+            if (bandMembership) {
+              isBandMember = true;
+              bandCheckDetails = `User has band membership: ${JSON.stringify(bandMembership)}`;
+              console.log(`🎸 DEBUG: ${bandCheckDetails}`);
+            }
+          }
+        }
+
+        // Also check the band directly
+        const bandRes = await dynamo.send(new GetItemCommand({
+          TableName: BAND_TABLE_NAME,
+          Key: { bandId: { S: jamSession.bandId } }
+        }));
+        
+        if (bandRes.Item) {
+          const band = unmarshall(bandRes.Item);
+          console.log(`🎸 DEBUG: Band data:`, JSON.stringify({
+            bandId: band.bandId,
+            userId: band.userId,
+            adminIds: band.adminIds,
+            memberIds: band.memberIds
+          }, null, 2));
+          
+          // Check if user is band creator, admin, or member
+          const isBandCreator = band.userId === userId;
+          const isBandAdmin = (band.adminIds || []).includes(userId);
+          const isBandMemberCheck = (band.memberIds || []).includes(userId);
+          
+          if (isBandCreator || isBandAdmin || isBandMemberCheck) {
+            isBandMember = true;
+            bandCheckDetails += ` | Band direct check - creator: ${isBandCreator}, admin: ${isBandAdmin}, member: ${isBandMemberCheck}`;
+          }
+          console.log(`🎸 DEBUG: Band access - creator: ${isBandCreator}, admin: ${isBandAdmin}, member: ${isBandMemberCheck}, total: ${isBandMember}`);
+        }
+      } catch (error) {
+        console.error(`🎸 ERROR: Failed to check band membership:`, error);
+        bandCheckDetails = `Band check failed: ${error}`;
+      }
+    }
+
+    console.log(`🔍 DEBUG: COMPREHENSIVE ACCESS CHECK RESULTS:`);
+    console.log(`   - isCreator: ${isCreator}`);
+    console.log(`   - isAdmin (obj): ${isAdmin} | isAdmin (id): ${isAdminById}`);
+    console.log(`   - isMember (obj): ${isMember} | isMember (id): ${isMemberById}`);
+    console.log(`   - isGuest (obj): ${isGuest} | isGuest (id): ${isGuestById}`);
+    console.log(`   - isBandMember: ${isBandMember} (${bandCheckDetails})`);
+
+    // Allow access if user has ANY valid access path
+    const hasAccess = isCreator || isAdmin || isMember || isGuest || 
+                     isAdminById || isMemberById || isGuestById || isBandMember;
+
+    if (hasAccess) {
+      console.log('✅ DEBUG: User has access to private jam session');
+      if (isCreator) console.log('   ✅ Access granted: User is the creator');
+      if (isAdmin || isAdminById) console.log('   ✅ Access granted: User is an admin');
+      if (isMember || isMemberById) console.log('   ✅ Access granted: User is a member');
+      if (isGuest || isGuestById) console.log('   ✅ Access granted: User is a guest');
+      if (isBandMember) console.log('   ✅ Access granted: User is a band member');
+    } else {
+      console.error(`❌ ERROR: User ${userId} does not have access to private jam session ${jamSessionId}`);
+      console.error('💡 DEBUG: Access denied - DETAILED BREAKDOWN:');
+      console.error(`   - jamSession.userId: "${jamSession.userId}" (type: ${typeof jamSession.userId})`);
+      console.error(`   - userId: "${userId}" (type: ${typeof userId})`);
+      console.error(`   - Creator check: ${jamSession.userId} === ${userId} = ${isCreator}`);
+      console.error(`   - Admin checks: obj=${isAdmin} (length: ${jamSession.admins?.length || 0}), id=${isAdminById} (ids: ${JSON.stringify(adminIds)})`);
+      console.error(`   - Member checks: obj=${isMember} (length: ${jamSession.members?.length || 0}), id=${isMemberById} (ids: ${JSON.stringify(memberIds)})`);
+      console.error(`   - Guest checks: obj=${isGuest} (length: ${jamSession.guests?.length || 0}), id=${isGuestById} (ids: ${JSON.stringify(guestIds)})`);
+      console.error(`   - Band member check: ${isBandMember} (bandId: ${jamSession.bandId}) - ${bandCheckDetails}`);
+      throw new Error(`User ${userId} does not have access to private jam session ${jamSessionId}`);
+    }
+  }
+
+  // Get setList if requested
+  if (hasSubstring(event.info.selectionSetList, "setList")) {
+    console.log("getting setList ...")
+    console.log("jamSession.setListId:", jamSession.setListId)
+    
+    // Check if jamSession has setListId, if not, try to get it from the setList field
+    let setListId = jamSession.setListId
+    if (!setListId && jamSession.setList && jamSession.setList.setListId) {
+      setListId = jamSession.setList.setListId
+    }
+    
+    if (!setListId) {
+      console.warn(`WARNING: No setListId found for jam session ${jamSessionId}, skipping setList resolution`);
+      // Don't throw an error, just skip setList resolution
+      jamSession.setList = undefined;
+    } else {
+
+    const res2 = await dynamo.send(
+      new GetItemCommand({
+        TableName: SETLIST_TABLE_NAME,
+        Key: { setListId: { S: setListId } }
+      })
+    )
+    if (!res2.Item) { 
+      console.error(`ERROR: setListId not found: ${setListId}`); 
+      throw new Error(`SetList not found: ${setListId}`)
+    }
+
+    let setList = unmarshall(res2.Item) as SetList
+    console.log('SetList found:', setList)
+
+    if (hasSubstring(event.info.selectionSetList, "setList/songCache")) {
+      console.log("getting setList/songCache ..")
+      
+      // Check if setList has songs in the old format (JamSong array)
+      if (setList.songs && Array.isArray(setList.songs)) {
+        console.log("Found songs in old format, converting to songCache")
+        const songIds = (setList.songs || []).map((s) => s?.songId).filter(Boolean) as string[]
+        const uniq = Array.from(new Set(songIds))
+    
+        const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
+        console.log(keys)
+    
+        const res1 = await dynamo.send(new BatchGetItemCommand({
+          RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
+        }))
+        console.log(res1)
+        if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
+    
+        const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u) as Song)
+        console.log(songs)
+
+        // Convert to songCache format
+        setList.songCache = songs
+      } else if (setList.songCache && Array.isArray(setList.songCache)) {
+        console.log("Found songCache in new format, using as is")
+        // songCache already exists, use it
+      } else {
+        console.log("No songs found in setList, songCache will be null")
+        setList.songCache = undefined
+      }
+    }
+
+    jamSession.setList = setList
+    }
+  }
+
+  return jamSession;
+};

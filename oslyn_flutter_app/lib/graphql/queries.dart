@@ -8,6 +8,24 @@ class GraphQLQueries {
       listPublicJamSessions(limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
         jamSessionId
         description
+        bandId
+        policy
+        passcode
+        startDate
+        endDate
+        pageSettings {
+          pageMax
+          pageMin
+        }
+        slideConfigOverrides {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
+        slideTextSize
         admins {
           userId
           username
@@ -106,6 +124,24 @@ query GetJamSession(\$jamSessionId: ID!, \$userId: ID) {
     currentSong
     currentPage
     description
+    bandId
+    policy
+    passcode
+    startDate
+    endDate
+    pageSettings {
+      pageMax
+      pageMin
+    }
+    slideConfigOverrides {
+      songId
+      backgroundImg
+      backgroundColor
+      textColor
+      highlightColor
+      highlightOpacity
+    }
+    slideTextSize
     admins {
       userId
       username
@@ -174,25 +210,34 @@ query GetJamSession(\$jamSessionId: ID!, \$userId: ID) {
     setList {
       setListId
       description
-      bandId
-      songCache {
-        songId
-        title
-        artist
-        album
-        albumCover
-        isApproved
-        version
-        chordSheet
-        chordSheetKey
-        originPlatorm
-        originLink
-        CCLISongTitle
-        CCLISongWriter
-        CCLICopyrightNotice
-        CCLILicenseNumber
-        bandIds
-        primaryBandId
+      songs {
+        key
+        song {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+        }
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
+        order
       }
       editors {
         userId
@@ -454,30 +499,6 @@ mutation NextPage(\$jamSessionId: ID!, \$page: Int!) {
 }
 ''';
 
-  // Add song to setlist
-  static const String addSongToSet = '''
-mutation AddSongToSet(\$setListId: ID!, \$songId: ID!, \$key: String) {
-  addSongToSet(setListId: \$setListId, songId: \$songId, key: \$key) {
-    setListId
-    description
-    songs {
-      key
-      order
-      song {
-        songId
-        title
-        artist
-        album
-        albumCover
-        chordSheet
-        chordSheetKey
-      }
-    }
-    bandId
-  }
-}
-''';
-
   // Get shared songs for a user
   static const String listSharedSongs = '''
 query ListSharedSongs(\$userId: ID!, \$optimize: Boolean, \$limit: Int, \$filter: String, \$nextToken: String) {
@@ -551,20 +572,6 @@ query ListBands(\$userId: ID!, \$limit: Int, \$filter: String, \$nextToken: Stri
     name
     description
     isPublic
-    userRole
-    owner {
-      userId
-      username
-      email
-      providers
-      firstName
-      lastName
-      imageUrl
-      recieveUpdatesFromOslyn
-      isActivated
-      createDate
-      role
-    }
     members {
       userId
       username
@@ -610,6 +617,11 @@ query GetUserById(\$userId: ID!) {
     isActivated
     createDate
     role
+    bandMemberships {
+      bandId
+      role
+      joinedAt
+    }
   }
 }
 ''';
@@ -649,20 +661,6 @@ query GetUserJamSessions(\$userId: ID!) {
     }
     queue
     revision
-  }
-}
-''';
-
-  // Update jam session description
-  static const String updateJamSessionDescription = '''
-mutation UpdateJamSessionDescription(\$jamSessionId: ID!, \$description: String!) {
-  updateJamSessionDescription(jamSessionId: \$jamSessionId, description: \$description) {
-    jamSessionId
-    description
-    startDate
-    endDate
-    policy
-    bandId
   }
 }
 ''';
@@ -802,6 +800,231 @@ query ListBandSongs(\$bandId: ID!, \$limit: Int, \$filter: String, \$nextToken: 
       isActivated
       createDate
       role
+    }
+  }
+}
+''';
+
+  // Add song to setlist
+  static const String addSongToSet = '''
+mutation AddSongToSet(\$setListId: ID!, \$songId: ID!, \$key: String) {
+  addSongToSet(setListId: \$setListId, songId: \$songId, key: \$key) {
+    setListId
+    description
+    bandId
+    songs {
+      key
+      order
+      song {
+        songId
+        title
+        artist
+        album
+        albumCover
+        isApproved
+        version
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        bandIds
+        primaryBandId
+      }
+      defaultSlideConfig {
+        songId
+        backgroundImg
+        backgroundColor
+        textColor
+        highlightColor
+        highlightOpacity
+      }
+    }
+    songCache {
+      songId
+      title
+      artist
+      album
+      albumCover
+      isApproved
+      version
+      chordSheet
+      chordSheetKey
+      originPlatorm
+      originLink
+      CCLISongTitle
+      CCLISongWriter
+      CCLICopyrightNotice
+      CCLILicenseNumber
+      bandIds
+      primaryBandId
+    }
+    songIds
+    editors {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+  }
+}
+''';
+
+  // Update jam session description
+  static const String updateJamSessionDescription = '''
+mutation UpdateJamSessionDescription(\$jamSessionId: ID!, \$description: String!) {
+  updateJamSessionDescription(jamSessionId: \$jamSessionId, description: \$description) {
+    jamSessionId
+    description
+    pin
+    queue
+    revision
+    currentSong
+    currentPage
+    admins {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    members {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    guests {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    policy
+    active {
+      userId
+      participantType
+      joinTime
+      lastPing
+      username
+      colour
+      ip
+      user {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+      }
+    }
+    passcode
+    startDate
+    endDate
+    bandId
+    setList {
+      setListId
+      description
+      bandId
+      songs {
+        key
+        order
+        song {
+          songId
+          title
+          artist
+          album
+          albumCover
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          originPlatorm
+          originLink
+          CCLISongTitle
+          CCLISongWriter
+          CCLICopyrightNotice
+          CCLILicenseNumber
+          bandIds
+          primaryBandId
+        }
+        defaultSlideConfig {
+          songId
+          backgroundImg
+          backgroundColor
+          textColor
+          highlightColor
+          highlightOpacity
+        }
+      }
+      songCache {
+        songId
+        title
+        artist
+        album
+        albumCover
+        isApproved
+        version
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        bandIds
+        primaryBandId
+      }
+      songIds
+      editors {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+      }
     }
   }
 }

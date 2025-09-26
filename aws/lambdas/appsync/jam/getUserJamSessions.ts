@@ -67,7 +67,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     
     if (userBands.length > 0) {
       // Use IN operator for better performance
-      const bandIdValues = userBands.map(bandId => ({ S: bandId }))
       
       console.log('🔍 [DEBUG] Scan parameters:')
       console.log('   - TableName:', JAM_TABLE_NAME)
