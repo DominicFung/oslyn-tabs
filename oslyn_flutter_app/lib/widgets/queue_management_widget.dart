@@ -53,30 +53,30 @@ class _QueueManagementWidgetState extends State<QueueManagementWidget> {
   }
 
   String _getSongTitle(int songIndex) {
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-      final songs = widget.jamSession!.setList!.songs!;
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+      final songs = widget.jamSession!.setList!.songsList!;
       if (songIndex >= 0 && songIndex < songs.length) {
-        return songs[songIndex].song.title;
+        return songs[songIndex].song.title; // TODO: Load song details
       }
     }
     return 'Song $songIndex';
   }
 
   String _getSongArtist(int songIndex) {
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-      final songs = widget.jamSession!.setList!.songs!;
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+      final songs = widget.jamSession!.setList!.songsList!;
       if (songIndex >= 0 && songIndex < songs.length) {
-        return songs[songIndex].song.artist;
+        return songs[songIndex].song.artist; // TODO: Load song details
       }
     }
     return '';
   }
 
   String? _getAlbumCover(int songIndex) {
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-      final songs = widget.jamSession!.setList!.songs!;
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+      final songs = widget.jamSession!.setList!.songsList!;
       if (songIndex >= 0 && songIndex < songs.length) {
-        return songs[songIndex].song.albumCover;
+        return songs[songIndex].song.albumCover; // TODO: Load song details
       }
     }
     return null;
@@ -164,7 +164,7 @@ class _QueueManagementWidgetState extends State<QueueManagementWidget> {
           return;
         } else {
           // Retry - get current server state
-          final (currentQueue, currentRev) = await _jamService.getJamQueue(widget.jamSessionId);
+          final (currentQueue, currentRev, _) = await _jamService.getJamQueue(widget.jamSessionId);
           if (currentQueue != null && currentRev != null) {
             setState(() {
               _localQueue = currentQueue;
@@ -217,7 +217,7 @@ class _QueueManagementWidgetState extends State<QueueManagementWidget> {
           return;
         } else {
           // Retry - get current server state
-          final (currentQueue, currentRev) = await _jamService.getJamQueue(widget.jamSessionId);
+          final (currentQueue, currentRev, _) = await _jamService.getJamQueue(widget.jamSessionId);
           if (currentQueue != null && currentRev != null) {
             setState(() {
               _localQueue = currentQueue;

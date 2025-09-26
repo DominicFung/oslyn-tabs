@@ -1,0 +1,525 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Band {
+  admins: [User]!
+  bandId: ID!
+  description: String
+  imageUrl: String
+  isPublic: Boolean
+  members: [User]!
+  name: String!
+  owner: User!
+  policy: policy!
+  sets: [SetList]!
+  songs: [Song]!
+  userRole: String
+  userRoles: [UserBandRole]
+}
+
+type BandMembership {
+  bandId: ID!
+  joinedAt: String!
+  role: String!
+}
+
+type Beat {
+  count: Int!
+  note: Int!
+}
+
+type JamQueue {
+  currentSongIndex: Int
+  jamSessionId: ID!
+  queue: [Int]!
+  revision: Int
+}
+
+type JamSession {
+  active: [Participant]!
+  admins: [User]!
+  bandId: ID
+  currentPage: Int
+  currentSong: Int
+  description: String
+  endDate: AWSTimestamp
+  guests: [User]
+  jamSessionId: ID!
+  members: [User]!
+  pageSettings: PageSettings!
+  passcode: String
+  policy: policy!
+  queue: [Int]
+  revision: Int
+  setList: SetList!
+  slideConfigOverrides: [SongSlideConfig]
+  slideTextSize: String
+  startDate: AWSTimestamp
+}
+
+type JamSessionActiveUsers {
+  active: [Participant]!
+  jamSessionId: ID!
+  latest: Participant
+}
+
+type JamSessionSlideConfig {
+  jamSessionId: ID!
+  textSize: String
+}
+
+type JamSong {
+  defaultSlideConfig: SongSlideConfig
+  key: String!
+  order: Int
+  song: Song!
+}
+
+type Mutation {
+  addBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
+  addEditorToSet(setListId: ID!, userId: ID!): SetList @aws_iam
+  addFriendByEmail(email: AWSEmail!, userId: ID!): User! @aws_iam
+  addRecordingToSong(recordingId: ID!, songId: ID!): Song @aws_iam
+  addSongToJamQueue(jamSessionId: ID!, song: Int!): JamQueue
+  addSongToQueue(jamSessionId: ID!, position: Int, songId: ID!): JamQueue @aws_iam
+  addSongToSet(key: String, setListId: ID!, songId: ID!): SetList @aws_iam
+  addSongToSetlist(setListId: ID!, songId: ID!): SetList @aws_iam
+  addUserToBand(bandId: ID!, role: bandRole!, userId: ID!): UserBandRole @aws_iam
+  createBand(adminIds: [ID], description: String!, imageUrl: String, name: String!, policy: String, userId: ID!): Band @aws_iam
+  createJamSession(bandId: ID, description: String, policy: policy, setListId: ID!, userId: ID!): JamSession @aws_iam
+  createRecording(fileName: String!, jamId: ID!, recordingId: ID!, samplingRate: Int!, sessionId: ID!, songs: [RecordingSongSegmentInput]!, userId: ID!): Recording @aws_iam
+  createSet(bandId: ID!, description: String!, songs: [JamSongInput]!, userId: ID!): SetList @aws_iam
+  createSong(album: String, albumCover: String, artist: String, bandId: ID!, chordSheet: String!, chordSheetKey: String!, title: String!, userId: ID!): Song @aws_iam
+  createUser(email: String!, firstName: String, imageUrl: String, lastName: String, provider: provider!, username: String!): User @aws_iam
+  endJamSession(jamSessionId: ID!): JamSession @aws_iam
+  enterJam(colour: String, guestName: String, ip: String, jamSessionId: ID!, userId: ID): JamSessionActiveUsers
+  exitJam(guestName: String, jamSessionId: ID!, userId: ID): JamSessionActiveUsers
+  importSetlistToBand(fromBandId: ID!, setlistId: ID!, toBandId: ID!, userId: ID!): SetList @aws_iam
+  importSongToBand(fromBandId: ID!, songId: ID!, toBandId: ID!, userId: ID!): Song @aws_iam
+  modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
+  nextPage(jamSessionId: ID!, page: Int!): NextPage
+  nextSong(jamSessionId: ID!, page: Int, song: Int): NextSong
+  removeAccess(removeUserEmail: AWSEmail!, songId: ID!, userId: ID!): Song @aws_iam
+  removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
+  removeEditorFromSet(setListId: ID!, userId: ID!): SetList @aws_iam
+  removeFriendById(friendId: ID!, userId: ID!): User @aws_iam
+  removeRecordingFromSong(recordingId: ID!, songId: ID!): Song @aws_iam
+  removeSongFromBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
+  removeSongFromJamQueue(jamSessionId: ID!, queueIndex: Int!): JamQueue
+  removeSongFromSet(jamSongId: [ID]!, setListId: ID!): SetList @aws_iam
+  removeSongFromSetlist(setListId: ID!, songId: ID!): SetList @aws_iam
+  removeUserFromBand(bandId: ID!, userId: ID!): Band @aws_iam
+  setJamQueue(currentSongIndex: Int, expectedRevision: Int, jamSessionId: ID!, queue: [Int!]!): JamQueue
+  setJamSlideConfig(jamSessionId: ID!, textSize: String): JamSessionSlideConfig
+  setSongKey(jamSessionId: ID!, key: String!, song: Int): NextKey
+  shareSong(access: access!, shareWithEmail: AWSEmail!, songId: ID!, userId: ID!): Song @aws_iam
+  shareSongWithBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
+  updateBand(bandId: ID!, imageUrl: String, policy: String): Band @aws_iam
+  updateJamSessionDescription(description: String!, jamSessionId: ID!): JamSession @aws_iam
+  updateSet(bandId: ID, description: String, setListId: ID!, songs: [JamSongInput], userId: ID): SetList @aws_iam
+  updateSong(album: String, albumCover: String, approved: Boolean, artist: String, beat: _Beat, chordSheet: String, chordSheetKey: String, originalLink: String, originalPlatorm: chordSheetPlatform, songId: ID!, title: String, userId: ID!): Song @aws_iam
+  updateUserBandRole(bandId: ID!, role: bandRole!, userId: ID!): UserBandRole @aws_iam
+}
+
+type NextKey {
+  jamSessionId: ID!
+  key: String
+  song: Int
+}
+
+type NextPage {
+  jamSessionId: ID!
+  page: Int
+}
+
+type NextSong {
+  jamSessionId: ID!
+  key: String
+  page: Int
+  queue: [Int]
+  song: Int
+}
+
+type PageSettings {
+  pageMax: Int
+  pageMin: Int
+}
+
+type Participant {
+  colour: String
+  ip: String
+  joinTime: AWSTimestamp!
+  lastPing: AWSTimestamp
+  participantType: participantType!
+  user: User
+  userId: ID!
+  username: String
+}
+
+type Query {
+  getBand(bandId: ID!, userId: ID): Band @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID): JamSession @aws_iam
+  getJamSessionByPin(pin: String!): JamSession @aws_iam
+  getSet(bandId: ID, setListId: ID!, userId: ID!): SetList @aws_iam
+  getSetCount(addSharedCount: Boolean, bandId: ID, userId: ID!): Int! @aws_iam
+  getSong(bandId: ID, songId: ID!, userId: ID!): Song @aws_iam
+  getSongCount(addSharedCount: Boolean, bandId: ID, userId: ID!): Int! @aws_iam
+  getSongsByIds(songIds: [ID!]!): [Song]! @aws_iam
+  getUserByEmail(email: AWSEmail): User @aws_iam
+  getUserById(userId: ID!): User @aws_iam
+  getUserJamSessions(userId: ID!): [JamSession]! @aws_iam
+  listBands(filter: String, limit: Int, nextToken: String, userId: ID!): [Band]! @aws_iam
+  listJamSessions(bandId: ID, filter: String, limit: Int, nextToken: String, userId: ID!): [JamSession]! @aws_iam
+  listPublicBands(filter: String, limit: Int, nextToken: String): [Band]! @aws_iam
+  listPublicJamSessions(filter: String, limit: Int, nextToken: String): [JamSession]! @aws_iam
+  listSets(bandId: ID, filter: String, limit: Int, nextToken: String, userId: ID!): [SetList]! @aws_iam
+  listSharedBands(filter: String, limit: Int, nextToken: String, userId: ID!): [UserBandRole]! @aws_iam
+  listSharedSongs(bandId: ID, filter: String, limit: Int, nextToken: String, optimize: Boolean, userId: ID!): [Song]! @aws_iam
+  listSongs(bandId: ID, filter: String, limit: Int, nextToken: String, userId: ID!): [Song]! @aws_iam
+  listUsers(filter: String, limit: Int, nextToken: String): [User]! @aws_iam
+}
+
+type Recording {
+  comment: String
+  createDate: AWSTimestamp!
+  fileName: String!
+  jamId: ID!
+  recordingId: ID!
+  samplingRate: Int!
+  sessionId: ID!
+  songs: [RecordingSongSegment]!
+  status: String
+  updateDate: AWSTimestamp
+  userId: ID!
+}
+
+type RecordingPageTurn {
+  page: Int!
+  time: String!
+  turn: turn!
+}
+
+type RecordingSongSegment {
+  pageturns: [RecordingPageTurn]!
+  songId: ID!
+  startTime: String!
+}
+
+type SetList {
+  band: Band
+  bandId: ID!
+  creator: User!
+  description: String!
+  editors: [User]!
+  setListId: ID!
+  songCache: [Song]
+  songIds: [ID]!
+}
+
+type Song {
+  CCLICopyrightNotice: String
+  CCLILicenseNumber: String
+  CCLISongTitle: String
+  CCLISongWriter: String
+  album: String
+  albumCover: String
+  artist: String
+  bandIds: [ID]!
+  beat: Beat
+  chordSheet: String
+  chordSheetKey: String
+  creator: User!
+  editors: [User]!
+  isApproved: Boolean!
+  originLink: String
+  originPlatorm: chordSheetPlatform
+  primaryBandId: ID
+  recordings: [Recording]!
+  songId: ID!
+  title: String!
+  version: Int!
+  viewers: [User]!
+}
+
+type SongSlideConfig {
+  backgroundColor: String
+  backgroundImg: String
+  highlightColor: String
+  highlightOpacity: String
+  songId: ID!
+  textColor: String
+}
+
+type Subscription {
+  onAddSongToJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations : ["addSongToJamQueue"])
+  onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations : ["enterJam"])
+  onExitJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations : ["exitJam"])
+  onJamQueueUpdate(jamSessionId: ID!): JamQueue @aws_subscribe(mutations : ["setJamQueue", "addSongToJamQueue", "removeSongFromJamQueue"])
+  onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations : ["setJamSlideConfig"])
+  onNextPage(jamSessionId: ID!): NextPage @aws_subscribe(mutations : ["nextPage"])
+  onNextSong(jamSessionId: ID!): NextSong @aws_subscribe(mutations : ["nextSong"])
+  onQueueUpdated(jamSessionId: ID!): JamQueue @aws_subscribe(mutations : ["addSongToQueue", "setJamQueue"])
+  onRemoveSongFromJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations : ["removeSongFromJamQueue"])
+  onSetlistUpdated(setListId: ID!): SetList @aws_subscribe(mutations : ["addSongToSetlist", "removeSongFromSetlist"])
+  onSongKey(jamSessionId: ID!): NextKey @aws_subscribe(mutations : ["setSongKey"])
+}
+
+type User {
+  bandMemberships: [BandMembership]
+  bands: [Band]
+  createDate: AWSTimestamp
+  email: AWSEmail!
+  firstName: String
+  friends: [User]!
+  imageUrl: String
+  isActivated: Boolean
+  labelledRecording: [Recording]!
+  lastName: String
+  likedSongs: [JamSong]!
+  providers: [provider]!
+  recieveUpdatesFromOslyn: Boolean
+  role: role!
+  songsCreated: [Song]!
+  userId: ID!
+  username: String!
+}
+
+type UserBandRole {
+  band: Band!
+  role: bandRole!
+  roleId: ID!
+  user: User!
+}
+
+enum ModelAttributeTypes {
+  _null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+enum access {
+  admin
+  edit
+  view
+}
+
+enum bandRole {
+  ADMIN
+  MEMBER
+}
+
+enum chordSheetPlatform {
+  OTHER
+  UG
+  WORSHIPTOGETHER
+}
+
+enum gender {
+  FEMALE
+  MALE
+}
+
+enum labelStatus {
+  DONE
+  INAUDIT
+  INPROGRESS
+  REJECTED
+  TOLABEL
+}
+
+enum participantType {
+  GUEST
+  USER
+}
+
+enum policy {
+  PRIVATE
+  PUBLIC_JOIN
+  PUBLIC_VIEW
+}
+
+enum provider {
+  facebook
+  google
+}
+
+enum role {
+  ADMIN
+  USER
+}
+
+enum turn {
+  BACK
+  FORWARD
+  SKIP
+  START
+}
+
+input JamSongInput {
+  key: String!
+  order: Int
+  songId: ID!
+}
+
+input ModelBooleanInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelFloatInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  le: Float
+  lt: Float
+  ne: Float
+}
+
+input ModelIDInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelSizeInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  le: Int
+  lt: Int
+  ne: Int
+}
+
+input ModelStringInput {
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionBooleanInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+input ModelSubscriptionFloatInput {
+  between: [Float]
+  eq: Float
+  ge: Float
+  gt: Float
+  in: [Float]
+  le: Float
+  lt: Float
+  ne: Float
+  notIn: [Float]
+}
+
+input ModelSubscriptionIDInput {
+  beginsWith: ID
+  between: [ID]
+  contains: ID
+  eq: ID
+  ge: ID
+  gt: ID
+  in: [ID]
+  le: ID
+  lt: ID
+  ne: ID
+  notContains: ID
+  notIn: [ID]
+}
+
+input ModelSubscriptionIntInput {
+  between: [Int]
+  eq: Int
+  ge: Int
+  gt: Int
+  in: [Int]
+  le: Int
+  lt: Int
+  ne: Int
+  notIn: [Int]
+}
+
+input ModelSubscriptionStringInput {
+  beginsWith: String
+  between: [String]
+  contains: String
+  eq: String
+  ge: String
+  gt: String
+  in: [String]
+  le: String
+  lt: String
+  ne: String
+  notContains: String
+  notIn: [String]
+}
+
+input RecordingPageTurnInput {
+  page: Int!
+  time: String!
+}
+
+input RecordingSongSegmentInput {
+  pageturns: [RecordingPageTurnInput]!
+  songId: ID!
+  startTime: String!
+}
+
+input _Beat {
+  count: Int!
+  note: Int!
+}

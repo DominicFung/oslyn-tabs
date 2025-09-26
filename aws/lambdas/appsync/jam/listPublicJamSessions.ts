@@ -2,10 +2,9 @@ import { BatchGetItemCommand, DynamoDBClient, ScanCommand } from '@aws-sdk/clien
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge, chunk } from '../../util/dynamo'
 
-import { _JamSession, _SetList, _Song, _User } from '../../type'
+import { JamSessionData, SetListData, SongData, UserData, isJamSessionData, isSetListData, isSongData, isUserData } from '../../types'
 
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { User } from '../../API'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
@@ -13,8 +12,20 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
-  console.log(event)
+  console.log('🔍 [DEBUG] listPublicJamSessions called with event:', JSON.stringify(event, null, 2))
+  console.log('🔍 [DEBUG] Environment variables:')
+  console.log('   - JAM_TABLE_NAME:', JAM_TABLE_NAME)
+  console.log('   - SETLIST_TABLE_NAME:', SETLIST_TABLE_NAME)
+  console.log('   - SONG_TABLE_NAME:', SONG_TABLE_NAME)
+  console.log('   - USER_TABLE_NAME:', USER_TABLE_NAME)
+  
   const dynamo = new DynamoDBClient({})
+
+  console.log('🔍 [DEBUG] Step 1: Scanning JamSessionTable for PUBLIC sessions')
+  console.log('🔍 [DEBUG] Scan parameters:')
+  console.log('   - TableName:', JAM_TABLE_NAME)
+  console.log('   - Select: ALL_ATTRIBUTES')
+  console.log('   - ScanFilter: policy BEGINS_WITH "PUBLIC"')
 
   const res0 = await dynamo.send(
     new ScanCommand({
@@ -29,33 +40,48 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
     })
   )
 
-  if (!res0) { console.log("ERROR: empty scan response"); return }
-  if (res0.Items && res0.Items.length === 0) return []
+  console.log('📥 [DEBUG] JamSessionTable scan result:')
+  console.log('   - Items count:', res0.Items?.length || 0)
+  console.log('   - Raw response:', JSON.stringify(res0, null, 2))
 
+  if (!res0) { 
+    console.log("❌ [DEBUG] ERROR: empty scan response"); 
+    return 
+  }
+  if (res0.Items && res0.Items.length === 0) {
+    console.log('❌ [DEBUG] No public jam sessions found')
+    return []
+  }
+
+  console.log('🔍 [DEBUG] Step 2: Processing jam sessions')
   let sessions = res0.Items!.map(s => {
-    let jam = unmarshall(s) as _JamSession
-    if (!jam.activeIds) jam.activeIds = []
+    const jam = unmarshall(s) as JamSessionData
+    console.log('📊 [DEBUG] Unmarshalled jam session:', jam)
+    if (!jam.active) jam.active = []
+    if (!jam.queue) jam.queue = []
+    if (jam.revision === undefined || jam.revision === null) jam.revision = 0
     return jam
   })
 
-  // Debug: Log all sessions before sorting
-  console.log('=== BEFORE SORTING ===')
+  console.log('📊 [DEBUG] Processed', sessions.length, 'jam sessions')
+  console.log('🔍 [DEBUG] Step 3: Sorting sessions by startDate')
+  console.log('📊 [DEBUG] Sessions before sorting:')
   sessions.forEach((session, index) => {
-    console.log(`${index}: ${session.jamSessionId} - startDate: ${session.startDate} (${new Date(session.startDate || 0).toISOString()})`)
+    console.log(`   ${index}: ${session.jamSessionId} - startDate: ${session.startDate} (${new Date(session.startDate || 0).toISOString()})`)
   })
 
   // Sort by startDate (creation date) in descending order (most recent first)
+  console.log('🔍 [DEBUG] Starting sort operation...')
   sessions.sort((a, b) => {
     const aDate = a.startDate || 0
     const bDate = b.startDate || 0
-    console.log(`Comparing: ${a.jamSessionId} (${aDate}) vs ${b.jamSessionId} (${bDate})`)
+    console.log(`🔍 [DEBUG] Comparing: ${a.jamSessionId} (${aDate}) vs ${b.jamSessionId} (${bDate})`)
     return bDate - aDate // Descending order (newest first)
   })
   
-  // Debug: Log all sessions after sorting
-  console.log('=== AFTER SORTING ===')
+  console.log('📊 [DEBUG] Sessions after sorting:')
   sessions.forEach((session, index) => {
-    console.log(`${index}: ${session.jamSessionId} - startDate: ${session.startDate} (${new Date(session.startDate || 0).toISOString()})`)
+    console.log(`   ${index}: ${session.jamSessionId} - startDate: ${session.startDate} (${new Date(session.startDate || 0).toISOString()})`)
   })
 
   // Debug: Log detailed session data
@@ -97,7 +123,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
     }))
     console.log(res1)
     if (!res1.Responses) { console.error(`ERROR: unable to BatchGet setListId. ${res1.$metadata}`); return }
-    let sets = res1.Responses![SETLIST_TABLE_NAME].map(s => unmarshall(s)) as _SetList[]
+    let sets = res1.Responses![SETLIST_TABLE_NAME].map(s => unmarshall(s) as SetListData)
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
       console.log("getting songs ...")
@@ -121,7 +147,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         if (set.songs && set.songs.length > 0) {
           console.log(`  - First 3 Songs:`)
           set.songs.slice(0, 3).forEach((song, songIndex) => {
-            console.log(`    ${songIndex + 1}. Song ID: ${song.songId}, Key: ${song.key || 'N/A'}`)
+            console.log(`    ${songIndex + 1}. Song ID: ${song?.song?.songId || 'N/A'}, Key: ${song?.key || 'N/A'}`)
           })
           if (set.songs.length > 3) {
             console.log(`    ... and ${set.songs.length - 3} more songs`)
@@ -132,7 +158,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
       const keys = chunk(uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } }), 100)
       console.log(keys)
 
-      let songs: _Song[] = []
+      let songs: SongData[] = []
   
       for (let i=0; i<keys.length; i++) {
         const res1 = await dynamo.send(new BatchGetItemCommand({
@@ -141,7 +167,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         console.log(res1)
         if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
   
-        songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s)) as _Song[])
+        songs.push(...res1.Responses![SONG_TABLE_NAME].map((s) => unmarshall(s) as SongData))
       }
       
       console.log('=== SONGS DATA DEBUG ===')
@@ -150,12 +176,9 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         console.log(`\n--- Song ${index + 1}: ${song.songId} ---`)
         console.log(`  - Title: ${song.title || 'N/A'}`)
         console.log(`  - Artist: ${song.artist || 'N/A'}`)
-        console.log(`  - Key: ${song.key || 'N/A'}`)
         console.log(`  - Chord Sheet Length: ${song.chordSheet?.length || 0} characters`)
         console.log(`  - Chord Sheet Key: ${song.chordSheetKey || 'N/A'}`)
         console.log(`  - User ID: ${song.userId}`)
-        console.log(`  - Created: ${song.createdAt ? new Date(song.createdAt).toISOString() : 'N/A'}`)
-        console.log(`  - Updated: ${song.updatedAt ? new Date(song.updatedAt).toISOString() : 'N/A'}`)
       })
   
       if (hasSubstring(event.info.selectionSetList, "song/creator")) {
@@ -172,7 +195,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
         if (!res2.Responses) { console.error(`ERROR: unable to BatchGet userId. ${res1.$metadata}`); return }
   
         console.log(JSON.stringify(res2.Responses))
-        const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s)) as User[]
+        const users = res2.Responses![USER_TABLE_NAME].map((s) => unmarshall(s) as UserData)
         console.log(users)
   
         songs = merge(songs, users, 'userId', 'creator')
@@ -294,16 +317,22 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
     console.log(users)
     sessions = merge(sessions, users, 'userId', 'admins') // this injects the single user .. we dont want that.
-    sessions.map(s => { s.admins = [s.admins as unknown as User] }) // TODO. fix admin to admins
+    sessions = sessions.map(s => ({ ...s, admins: [s.admins as unknown as User] })) // Fix: properly transform array
   }
 
   if (hasSubstring(event.info.selectionSetList, "members")) {
-    sessions.map(s => { if (!s.members) s.members = [] })
+    console.log('🔍 [DEBUG] Setting empty members array for all sessions')
+    sessions = sessions.map(s => ({ ...s, members: s.members || [] }))
   }
 
   if (hasSubstring(event.info.selectionSetList, "guests")) {
-    sessions.map(s => { if (!s.guests) s.guests = [] })
+    console.log('🔍 [DEBUG] Setting empty guests array for all sessions')
+    sessions = sessions.map(s => ({ ...s, guests: s.guests || [] }))
   }
 
+  console.log('✅ [DEBUG] Final result:')
+  console.log('   - Total sessions:', sessions.length)
+  console.log('   - Sessions:', JSON.stringify(sessions, null, 2))
+  
   return sessions
 }

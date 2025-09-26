@@ -258,8 +258,8 @@ class _SectionSidebarState extends State<SectionSidebar> {
     
     // If we have a queue, only check the queue for next song
     if (widget.queue != null && widget.queue!.isNotEmpty) {
-      if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-        final songs = widget.jamSession!.setList!.songs!;
+      if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+        final songs = widget.jamSession!.setList!.songsList!;
         
         // Check if nextSongIndex is null (current song is last in queue)
         if (widget.nextSongIndex == null) {
@@ -309,8 +309,8 @@ class _SectionSidebarState extends State<SectionSidebar> {
     
     String result = 'No songs in set';
     
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-      final songs = widget.jamSession!.setList!.songs!;
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+      final songs = widget.jamSession!.setList!.songsList!;
       
       // Use queue-based previous song if available
       if (widget.currentSongIndex != null && 
@@ -387,7 +387,7 @@ class _SectionSidebarState extends State<SectionSidebar> {
   }
 
   void _openSongSelector() {
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
       // Show the queue management interface
       showModalBottomSheet(
         context: context,

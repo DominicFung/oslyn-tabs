@@ -21,6 +21,15 @@ class AuthService {
   bool get isFirstTimeUser => _isFirstTimeUser;
   bool isAuthenticated() => _currentUserId != null;
 
+  // Setters for manual authentication
+  void setUserInfo(String userId, String? email, String? username) {
+    _currentUserId = userId;
+    _currentUserEmail = email;
+    _currentUserName = username;
+    _isFirstTimeUser = false;
+    print('🔐 AuthService user info updated: $userId');
+  }
+
   /// Initialize authentication service
   Future<void> initialize() async {
     try {

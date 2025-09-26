@@ -30,7 +30,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   let jamSession = unmarshall(res1.Item) as _JamSession
 
   if (b.userId && (jamSession.activeIds || []).includes(b.userId)) {
-    jamSession.activeIds = jamSession.activeIds.filter( v => v === b.userId)
+    jamSession.activeIds = (jamSession.activeIds || []).filter( v => v === b.userId)
 
     let param = updateDynamoUtil({
       table: JAM_TABLE_NAME,
@@ -39,8 +39,8 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
     const res2 = await dynamo.send(new UpdateItemCommand(param))
     console.log(res2)
-  } else if (b.guestName && (jamSession.guests || []).includes(b.guestName)) {
-    jamSession.guests = jamSession.guests.filter( v => v === b.guestName)
+  } else if (b.guestName && (jamSession.guests || []).some(guest => guest?.username === b.guestName)) {
+    jamSession.guests = (jamSession.guests || []).filter( v => v?.username !== b.guestName)
 
     let param = updateDynamoUtil({
       table: JAM_TABLE_NAME,
@@ -70,7 +70,15 @@ export const handler = async (event: AppSyncResolverEvent<{
 
       return user
     })
-    jamSession.active = active
+    jamSession.active = active.map(user => ({
+      __typename: "Participant",
+      userId: user.userId,
+      participantType: 'USER' as any,
+      joinTime: Date.now(),
+      lastPing: Date.now(),
+      username: user.username,
+      user: user
+    }))
   }
   
   if (!jamSession.guests) jamSession.guests = []

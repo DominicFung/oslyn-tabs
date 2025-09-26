@@ -2,7 +2,12 @@ import { Band, JamSession, JamSong, SetList, Song, User, Participant } from "./A
 
 export type _User = User & {
   friendIds: string[]
-  bandIds: string[]
+  bandMemberships?: any[]
+  editHistory?: any[]
+  labelledRecording?: any[]
+  songsCreated?: any[]
+  likedSongs?: any[]
+  friends?: any[]
 }
 
 export type _SetList = SetList & {
@@ -28,15 +33,20 @@ export type _Band = Band & {
   memberIds?: string[]
   setIds?: string[]
   songIds?: string[]
+  members?: any[]
+  admins?: any[]
 }
 
 export type _JamSession = JamSession & {
   userId?: string
   setListId: string
+  bandId?: string
   adminIds?: string[]
   memberIds?: string[]
   guestIds?: string[]
   activeIds?: string[]
+  queue?: number[]
+  revision?: number
 }
 
 export type _Participant = Participant & {

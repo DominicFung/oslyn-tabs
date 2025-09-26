@@ -1,6 +1,14 @@
 // Core types for Oslyn chord parsing system
 // Based on the web app's types.d.ts
 
+/// Line types in a chord sheet
+enum LineType {
+  chord,
+  lyric,
+  blank,
+  annotation,
+}
+
 class OslynSong {
   final List<OslynPhrase> song;
   final Map<String, dynamic> meta;

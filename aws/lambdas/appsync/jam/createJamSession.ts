@@ -83,13 +83,24 @@ export const handler = async (event: any) => {
   )
   if (!res1.Item) { console.error(`ERROR: setListId not found: ${b.setListId}`); return }
   
+  // Get the setlist to extract description
+  const setList = unmarshall(res1.Item)
+  const setListDescription = setList.description || null
+  
+  // Use provided description or fall back to setlist description
+  const jamSessionDescription = b.description || setListDescription
+  
   let jamSession = {
-    jamSessionId, setListId: b.setListId, userId: b.userId,
+    jamSessionId, 
+    setListId: b.setListId, 
+    userId: b.userId,
+    bandId: b.bandId || null, // Add bandId field, default to null if not provided
     pin, // Add PIN to jam session record
 
     currentSong: 0, currentPage: 0,
     startDate: Date.now(),
     policy: policy,
+    description: jamSessionDescription, // Use description from setlist or provided
 
     pageSettings: {
       pageMax: 3, pageMin: 2

@@ -12,8 +12,8 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  title: string, userId: string, chordSheetKey: string, chordSheet: string, 
-  artist?: string, album?: string, albumCover?: string, shareWithBand?: string,
+  title: string, userId: string, bandId: string, chordSheetKey: string, chordSheet: string, 
+  artist?: string, album?: string, albumCover?: string,
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -21,6 +21,7 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   if (!b.title) { console.error(`b.title is empty`); return }
   if (!b.userId) { console.error(`b.userId is empty`); return }
+  if (!b.bandId) { console.error(`b.bandId is empty`); return }
   if (!b.chordSheetKey) { console.error(`b.chordSheetKey is empty`); return }
   if (!b.chordSheet) { console.error(`b.chordSheet is empty`); return }
 
@@ -38,6 +39,9 @@ export const handler = async (event: AppSyncResolverEvent<{
   let song = {
     songId, title: b.title, 
     userId: b.userId,
+    createdBy: b.userId,
+    bandId: b.bandId,
+    bandIds: [b.bandId],
     chordSheetKey: b.chordSheetKey,
     chordSheet: b.chordSheet,
 
@@ -70,23 +74,21 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!song.creator.likedSongs) song.creator.likedSongs = []
   if (!song.creator.friendsIds) song.creator.friends = []
 
-  if (b.shareWithBand) {
-    const bandId = b.shareWithBand
-    const res1 = await dynamo.send(
-      new GetItemCommand({ TableName: BAND_TABLE_NAME, Key: { bandId: { S: bandId } } })
-    )
-    if (!res1.Item) { console.error(`ERROR: bandId not found ${bandId}`); return }
-    let band = unmarshall(res1.Item) as _Band
+  // Add song to band's song collection (denormalized for performance)
+  const res2 = await dynamo.send(
+    new GetItemCommand({ TableName: BAND_TABLE_NAME, Key: { bandId: { S: b.bandId } } })
+  )
+  if (!res2.Item) { console.error(`ERROR: bandId not found ${b.bandId}`); return }
+  let band = unmarshall(res2.Item) as _Band
 
-    let songs = band.songIds || []
-    if (!songs.includes(songId)) songs.push(songId)
-    else return song // this is generally not possible
+  let songs = band.songIds || []
+  if (!songs.includes(songId)) songs.push(songId)
+  else return song // this is generally not possible
 
-    console.log(`Adding ${songId} to ${bandId} 's songs ..`)
-    const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { songIds: songs }, key: { bandId: bandId } })
-    const res2 = await dynamo.send(new UpdateItemCommand(params))
-    console.log(res2)
-  }
+  console.log(`Adding ${songId} to ${b.bandId} 's songs ..`)
+  const params = updateDynamoUtil({ table: BAND_TABLE_NAME, item: { songIds: songs }, key: { bandId: b.bandId } })
+  const res3 = await dynamo.send(new UpdateItemCommand(params))
+  console.log(res3)
   
   return song
 }

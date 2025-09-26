@@ -8,6 +8,7 @@ class JamSession {
   final String? pin;
   final String? description;
   final List<int>? queue;
+  final int? revision;
   final int? currentSong;
   final int? currentPage;
   final List<User> admins;
@@ -18,6 +19,7 @@ class JamSession {
   final String? passcode;
   final int? startDate;
   final int? endDate;
+  final String? bandId;
   final SetList? setList;
 
   JamSession({
@@ -25,6 +27,7 @@ class JamSession {
     this.pin,
     this.description,
     this.queue,
+    this.revision,
     this.currentSong,
     this.currentPage,
     required this.admins,
@@ -35,6 +38,7 @@ class JamSession {
     this.passcode,
     this.startDate,
     this.endDate,
+    this.bandId,
     this.setList,
   });
 
@@ -42,7 +46,13 @@ class JamSession {
     jamSessionId: json['jamSessionId'] as String,
     pin: json['pin'] as String?,
     description: json['description'] as String?,
-    queue: (json['queue'] as List<dynamic>?)?.map((e) => e as int).toList(),
+    queue: (json['queue'] as List<dynamic>?)?.map((e) {
+      if (e is String) {
+        return int.tryParse(e) ?? 0;
+      }
+      return e as int;
+    }).toList(),
+    revision: json['revision'] as int?,
     currentSong: json['currentSong'] as int?,
     currentPage: json['currentPage'] as int?,
     admins: (json['admins'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
@@ -53,6 +63,7 @@ class JamSession {
     passcode: json['passcode'] as String?,
     startDate: json['startDate'] as int?,
     endDate: json['endDate'] as int?,
+    bandId: json['bandId'] as String?,
     setList: json['setList'] != null ? SetList.fromJson(json['setList'] as Map<String, dynamic>) : null,
   );
 
@@ -63,24 +74,52 @@ class JamSession {
 class SetList {
   final String setListId;
   final String? description;
+  final String? bandId;
   final List<JamSong>? songs;
+  final List<Song>? songCache;
+  final List<String>? songIds;
   final List<User>? editors;
 
   SetList({
     required this.setListId,
     this.description,
+    this.bandId,
     this.songs,
+    this.songCache,
+    this.songIds,
     this.editors,
   });
 
   factory SetList.fromJson(Map<String, dynamic> json) => SetList(
     setListId: json['setListId'] as String,
     description: json['description'] as String?,
+    bandId: json['bandId'] as String?,
     songs: (json['songs'] as List<dynamic>?)?.map((e) => JamSong.fromJson(e as Map<String, dynamic>)).toList(),
+    songCache: (json['songCache'] as List<dynamic>?)?.map((e) => Song.fromJson(e as Map<String, dynamic>)).toList(),
+    songIds: (json['songIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
     editors: (json['editors'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList(),
   );
 
   Map<String, dynamic> toJson() => _$SetListToJson(this);
+
+  /// Get songs from either the songs field or convert from songCache
+  List<JamSong>? get songsList {
+    if (songs != null) {
+      return songs;
+    } else if (songCache != null) {
+      // Convert songCache to JamSong format
+      return songCache!.asMap().entries.map((entry) {
+        final index = entry.key;
+        final song = entry.value;
+        return JamSong(
+          key: song.songId,
+          song: song,
+          order: index,
+        );
+      }).toList();
+    }
+    return null;
+  }
 }
 
 @JsonSerializable()
@@ -120,6 +159,8 @@ class Song {
   final String? CCLISongWriter;
   final String? CCLICopyrightNotice;
   final String? CCLILicenseNumber;
+  final List<String>? bandIds;
+  final String? primaryBandId;
 
   Song({
     required this.songId,
@@ -137,6 +178,8 @@ class Song {
     this.CCLISongWriter,
     this.CCLICopyrightNotice,
     this.CCLILicenseNumber,
+    this.bandIds,
+    this.primaryBandId,
   });
 
   factory Song.fromJson(Map<String, dynamic> json) =>
@@ -170,6 +213,22 @@ class SongSlideConfig {
 }
 
 @JsonSerializable()
+class BandMembership {
+  final String bandId;
+  final String role;
+  final int joinedAt;
+
+  BandMembership({
+    required this.bandId,
+    required this.role,
+    required this.joinedAt,
+  });
+
+  factory BandMembership.fromJson(Map<String, dynamic> json) => _$BandMembershipFromJson(json);
+  Map<String, dynamic> toJson() => _$BandMembershipToJson(this);
+}
+
+@JsonSerializable()
 class User {
   final String? userId;
   final String? username;
@@ -182,6 +241,7 @@ class User {
   final bool? isActivated;
   final int? createDate;
   final String? role;
+  final List<BandMembership>? bandMemberships;
 
   User({
     this.userId,
@@ -195,10 +255,40 @@ class User {
     this.isActivated,
     this.createDate,
     this.role,
+    this.bandMemberships,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  /// Getter for bandIds - returns band IDs from band memberships
+  List<String>? get bandIds => bandMemberships?.map((bm) => bm.bandId).toList();
+}
+
+@JsonSerializable()
+class Band {
+  final String bandId;
+  final String name;
+  final String? description;
+  final bool? isPublic;
+  final String? userRole; // The current user's role in this band (OWNER, ADMIN, MEMBER)
+  final User? owner;
+  final List<User>? members;
+  final List<User>? admins;
+
+  Band({
+    required this.bandId,
+    required this.name,
+    this.description,
+    this.isPublic,
+    this.userRole,
+    this.owner,
+    this.members,
+    this.admins,
+  });
+
+  factory Band.fromJson(Map<String, dynamic> json) => _$BandFromJson(json);
+  Map<String, dynamic> toJson() => _$BandToJson(this);
 }
 
 class Participant {
@@ -245,29 +335,3 @@ class Participant {
   };
 }
 
-@JsonSerializable()
-class Band {
-  final String bandId;
-  final String name;
-  final String? description;
-  final bool isPublic;
-  final List<User> members;
-
-  Band({
-    required this.bandId,
-    required this.name,
-    this.description,
-    required this.isPublic,
-    required this.members,
-  });
-
-  factory Band.fromJson(Map<String, dynamic> json) => Band(
-    bandId: json['bandId'] as String,
-    name: json['name'] as String,
-    description: json['description'] as String?,
-    isPublic: json['isPublic'] as bool,
-    members: (json['members'] as List<dynamic>?)?.map((e) => User.fromJson(e as Map<String, dynamic>)).toList() ?? [],
-  );
-
-  Map<String, dynamic> toJson() => _$BandToJson(this);
-}

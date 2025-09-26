@@ -13,6 +13,7 @@ import 'pages/main_page.dart';
 import 'pages/song_card_page.dart';
 import 'pages/half_app_bar_demo.dart';
 import 'pages/jam_list_with_half_app_bar.dart';
+import 'pages/band_test_page.dart';
 import 'widgets/debug_logger.dart' as debug;
 import 'widgets/chord_positioning_engine.dart';
 import 'widgets/chord_lyric_renderer.dart';
@@ -288,6 +289,18 @@ class _JamListPageState extends State<JamListPage> {
             label: const Text('Jam List with Half App Bar'),
           ),
           ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BandTestPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.group),
+            label: const Text('Band Test'),
+          ),
+          ElevatedButton.icon(
             onPressed: () async {
               print('🧪 Testing AWS AppSync connectivity...');
               try {
@@ -455,7 +468,7 @@ class _JamListPageState extends State<JamListPage> {
           if (jam.setList != null) {
             print('📋 Set List ID: ${jam.setList!.setListId}');
             print('📋 Set List Description: ${jam.setList!.description}');
-            print('🎼 Songs in Set: ${jam.setList!.songs?.length ?? 0}');
+            print('🎼 Songs in Set: ${jam.setList!.songsList?.length ?? 0}');
           }
           
           Navigator.push(
@@ -528,7 +541,7 @@ class _JamListPageState extends State<JamListPage> {
                     ),
                   ),
                   // Song count badge
-                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                  if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -547,7 +560,7 @@ class _JamListPageState extends State<JamListPage> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${jam.setList!.songs!.length}',
+                            '${jam.setList!.songsList!.length}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -562,7 +575,7 @@ class _JamListPageState extends State<JamListPage> {
               ),
               
               // Compact song preview
-              if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+              if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -581,7 +594,7 @@ class _JamListPageState extends State<JamListPage> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '${jam.setList!.songs!.take(3).map((s) => s.song.title).join(' • ')}${jam.setList!.songs!.length > 3 ? ' +${jam.setList!.songs!.length - 3} more' : ''}',
+                          '${jam.setList!.songsList!.take(3).map((s) => s.song.title).join(' • ')}${jam.setList!.songsList!.length > 3 ? ' +${jam.setList!.songsList!.length - 3} more' : ''}',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.blue[700],
@@ -615,12 +628,12 @@ class _JamListPageState extends State<JamListPage> {
                     count: currentlyActiveCount,
                     color: Colors.purple,
                   ),
-                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                  if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                     const SizedBox(width: 16),
                     _buildParticipantInfo(
                       icon: Icons.music_note,
                       label: 'Songs',
-                      count: jam.setList!.songs!.length,
+                      count: jam.setList!.songsList!.length,
                       color: Colors.green,
                     ),
                   ],
@@ -735,7 +748,7 @@ class _JamListPageState extends State<JamListPage> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${jam.setList!.songs?.length ?? 0} songs in set',
+                      '${jam.setList!.songsList?.length ?? 0} songs in set',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],

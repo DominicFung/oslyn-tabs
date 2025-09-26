@@ -171,7 +171,7 @@ export const handler = async (event: AppSyncResolverEvent<{}, null>) => {
 
       console.log(users)
       for (let i=0; i<bands.length; i++) {
-        bands[i].admins = merge(bands[i].admins, users, 'userId', 'admin')
+        bands[i].admins = merge(bands[i].admins || [], users, 'userId', 'admin')
       }
     } else {
       console.log("NONE of this user's bands has admins, continue ..")

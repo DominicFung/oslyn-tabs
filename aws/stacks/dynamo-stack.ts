@@ -196,6 +196,113 @@ export class DynamoStack extends Stack {
       exportName: `${props.name}-BandUserRoleTable-Arn`
     })
 
+    // New tables for band-based access control
+    const userBandMembershipTable = new Table(this, `${props.name}-UserBandMembershipTable`, {
+      tableName: `${props.name}-UserBandMembershipTable`,
+      partitionKey: {
+        name: 'userId',
+        type: AttributeType.STRING
+      },
+      sortKey: {
+        name: 'bandId', 
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    // GSI for reverse lookups (band -> users)
+    userBandMembershipTable.addGlobalSecondaryIndex({
+      indexName: 'bandId-index',
+      partitionKey: {
+        name: 'bandId',
+        type: AttributeType.STRING
+      },
+      sortKey: {
+        name: 'joinedAt',
+        type: AttributeType.NUMBER
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-UserBandMembershipTable-Name`, {
+      value: userBandMembershipTable.tableName,
+      exportName: `${props.name}-UserBandMembershipTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-UserBandMembershipTable-Arn`, {
+      value: userBandMembershipTable.tableArn,
+      exportName: `${props.name}-UserBandMembershipTable-Arn`
+    })
+
+    const bandSongTable = new Table(this, `${props.name}-BandSongTable`, {
+      tableName: `${props.name}-BandSongTable`,
+      partitionKey: {
+        name: 'bandId',
+        type: AttributeType.STRING
+      },
+      sortKey: {
+        name: 'songId',
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    // GSI for song-to-band lookups
+    bandSongTable.addGlobalSecondaryIndex({
+      indexName: 'songId-index',
+      partitionKey: {
+        name: 'songId',
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-BandSongTable-Name`, {
+      value: bandSongTable.tableName,
+      exportName: `${props.name}-BandSongTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-BandSongTable-Arn`, {
+      value: bandSongTable.tableArn,
+      exportName: `${props.name}-BandSongTable-Arn`
+    })
+
+    const bandSetlistTable = new Table(this, `${props.name}-BandSetlistTable`, {
+      tableName: `${props.name}-BandSetlistTable`,
+      partitionKey: {
+        name: 'bandId',
+        type: AttributeType.STRING
+      },
+      sortKey: {
+        name: 'setlistId',
+        type: AttributeType.STRING
+      },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      stream: StreamViewType.NEW_IMAGE,
+      removalPolicy: RPOLICY
+    })
+
+    // GSI for setlist-to-band lookups
+    bandSetlistTable.addGlobalSecondaryIndex({
+      indexName: 'setlistId-index',
+      partitionKey: {
+        name: 'setlistId',
+        type: AttributeType.STRING
+      }
+    })
+
+    new CfnOutput(this, `${props.name}-BandSetlistTable-Name`, {
+      value: bandSetlistTable.tableName,
+      exportName: `${props.name}-BandSetlistTable-Name`
+    })
+
+    new CfnOutput(this, `${props.name}-BandSetlistTable-Arn`, {
+      value: bandSetlistTable.tableArn,
+      exportName: `${props.name}-BandSetlistTable-Arn`
+    })
+
     const setListTable = new Table(this, `${props.name}-SetListTable`, {
       tableName: `${props.name}-SetListTable`,
       partitionKey: {

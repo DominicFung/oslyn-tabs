@@ -72,7 +72,6 @@ export const handler = async (event: AppSyncResolverEvent<{ jamSessionId: string
 
   console.log('🔄 Attempting DynamoDB update:')
   console.log('  - UpdateExpression:', params.UpdateExpression)
-  console.log('  - ConditionExpression:', params.ConditionExpression)
   console.log('  - New queue to set:', JSON.stringify(cleanQueue))
   console.log('  - New revision:', nextRevision)
 
@@ -93,7 +92,7 @@ export const handler = async (event: AppSyncResolverEvent<{ jamSessionId: string
       jamSessionId: b.jamSessionId, 
       queue: jam.queue || [], 
       revision: currentRevision,
-      currentSongIndex: jam.currentSong
+      currentSongIndex: b.currentSongIndex
     }
   }
 }

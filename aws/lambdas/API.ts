@@ -26,6 +26,7 @@ export type User = {
   songsCreated:  Array<Song | null >,
   likedSongs:  Array<JamSong | null >,
   bands?:  Array<Band | null > | null,
+  editHistory?: any[] | null,
 };
 
 export enum role {

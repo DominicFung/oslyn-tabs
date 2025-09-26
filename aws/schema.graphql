@@ -6,9 +6,9 @@ schema {
 
 type Query {
   getSong(songId: ID!, userId: ID!, bandId: ID): Song @aws_iam
-  getSongCount(userId: ID!, addSharedCount:Boolean): Int! @aws_iam
-  listSongs(userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
-  listSharedSongs(userId: ID!, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  getSongCount(userId: ID!, bandId: ID, addSharedCount:Boolean): Int! @aws_iam
+  listSongs(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  listSharedSongs(userId: ID!, bandId: ID, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   
   getUserById(userId: ID!): User @aws_iam
   getUserByEmail(email: AWSEmail): User @aws_iam
@@ -19,13 +19,15 @@ type Query {
   listSharedBands(userId: ID!, limit: Int, filter: String, nextToken: String): [UserBandRole]! @aws_iam
   listPublicBands(limit: Int, filter: String, nextToken: String): [Band]! @aws_iam
 
-  getSet(setListId: ID!, userId: ID!): SetList @aws_iam
-  getSetCount(userId: ID!, addSharedCount:Boolean): Int! @aws_iam
-  listSets(userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
+  getSet(setListId: ID!, userId: ID!, bandId: ID): SetList @aws_iam
+  getSetCount(userId: ID!, bandId: ID, addSharedCount:Boolean): Int! @aws_iam
+  listSets(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
-  getJamSession(jamSessionId: ID!, userId: ID): JamSession @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID, bandId: ID): JamSession @aws_iam
   getJamSessionByPin(pin: String!): JamSession @aws_iam
+  getUserJamSessions(userId: ID!): [JamSession]! @aws_iam
   listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+  listJamSessions(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
 }
 
 type Mutation {
@@ -39,14 +41,12 @@ type Mutation {
   createSong(
     title: String!
     userId: ID!
+    bandId: ID!
     artist: String
     album: String
     albumCover: String
-
     chordSheet: String!
     chordSheetKey: String!
-
-    shareWithBand: ID
   ): Song @aws_iam
 
   updateSong(
@@ -77,13 +77,23 @@ type Mutation {
   removeBandMembers(bandId: ID!, userIds: [ID]!): Band @aws_iam
   shareSongWithBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
   removeSongFromBand(bandId: ID!, songId: ID!, userId: ID!): Band @aws_iam
+  
+  # New band management mutations
+  addUserToBand(bandId: ID!, userId: ID!, role: bandRole!): UserBandRole @aws_iam
+  removeUserFromBand(bandId: ID!, userId: ID!): Band @aws_iam
+  updateUserBandRole(bandId: ID!, userId: ID!, role: bandRole!): UserBandRole @aws_iam
+  
+  # Song import between bands
+  importSongToBand(songId: ID!, fromBandId: ID!, toBandId: ID!, userId: ID!): Song @aws_iam
+  importSetlistToBand(setlistId: ID!, fromBandId: ID!, toBandId: ID!, userId: ID!): SetList @aws_iam
 
-  createSet(userId: ID!, description: String!, songs: [JamSongInput]!): SetList @aws_iam
+  createSet(userId: ID!, bandId: ID!, description: String!, songs: [JamSongInput]!): SetList @aws_iam
   updateSet(
     setListId: ID!
     description: String
     songs: [JamSongInput]
     userId: ID
+    bandId: ID
   ): SetList @aws_iam
 
   addEditorToSet(setListId: ID!, userId: ID!): SetList @aws_iam
@@ -91,7 +101,8 @@ type Mutation {
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam
   removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList @aws_iam
 
-  createJamSession(setListId: ID!, userId: ID!, policy: policy, bandId: ID): JamSession @aws_iam
+  createJamSession(setListId: ID!, userId: ID!, bandId: ID!, policy: policy, description: String): JamSession @aws_iam
+  updateJamSessionDescription(jamSessionId: ID!, description: String!): JamSession @aws_iam
   endJamSession(jamSessionId: ID!): JamSession @aws_iam
   modifyJamSongs(jamSessionId: ID!, jamSongs: [JamSongInput]!): JamSession
 
@@ -172,11 +183,13 @@ type Band {
   songs: [Song]!
   sets: [SetList]!
 
-  # members: [User]!
-  # admins: [User]!  
+  members: [User]!
+  admins: [User]!  
   owner: User!
   policy: policy!
   userRoles: [UserBandRole]
+  userRole: String # The current user's role in this band (OWNER, ADMIN, MEMBER)
+  isPublic: Boolean
 }
 
 type UserBandRole {
@@ -194,9 +207,13 @@ type SetList {
   setListId: ID!
   description: String!
   songs: [JamSong]!
+  songCache: [Song]
   editors: [User]!
   creator: User!
   band: Band
+  
+  # New band associations
+  bandId: ID!  # Primary band this setlist belongs to
 }
 
 type Participant {
@@ -241,6 +258,10 @@ type JamSession {
   slideTextSize: String
 
   queue: [Int]
+  revision: Int
+  
+  # New band associations
+  bandId: ID!  # Band this jam session belongs to
 }
 
 # Not a table
@@ -306,6 +327,10 @@ type Song {
   CCLISongWriter: String
   CCLICopyrightNotice: String
   CCLILicenseNumber: String
+
+  # New band associations
+  bandIds: [ID]!  # All bands this song belongs to
+  primaryBandId: ID  # Primary band (for display purposes)
 }
 
 type User {
@@ -329,6 +354,13 @@ type User {
   likedSongs: [JamSong]!
 
   bands: [Band] # bands that are associated to this user
+  bandMemberships: [BandMembership] # Detailed band membership info with roles
+}
+
+type BandMembership {
+  bandId: ID!
+  role: String! # OWNER, ADMIN, MEMBER
+  joinedAt: String!
 }
 
 enum role { USER, ADMIN }

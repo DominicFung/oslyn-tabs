@@ -1,0 +1,163 @@
+# GraphQL Schema Updates for Band-Based Access Control
+# Add these modifications to your existing schema.graphql
+
+# Updated Query types with band context
+type Query {
+  # Updated song queries with band context
+  getSong(songId: ID!, userId: ID!, bandId: ID): Song @aws_iam
+  listSongs(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  listSharedSongs(userId: ID!, bandId: ID, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  
+  # Updated setlist queries with band context
+  getSet(setListId: ID!, userId: ID!, bandId: ID): SetList @aws_iam
+  listSets(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
+  
+  # Updated jam session queries with band context
+  getJamSession(jamSessionId: ID!, userId: ID, bandId: ID): JamSession @aws_iam
+  listJamSessions(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+  
+  # New band-specific queries
+  getBandSongs(bandId: ID!, userId: ID!, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
+  getBandSetlists(bandId: ID!, userId: ID!, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
+  getBandJamSessions(bandId: ID!, userId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+}
+
+# Updated Mutation types with band context
+type Mutation {
+  # Updated song mutations with band context
+  createSong(
+    title: String!
+    userId: ID!
+    bandId: ID!  # Now required for band-based access
+    artist: String
+    album: String
+    albumCover: String
+    chordSheet: String!
+    chordSheetKey: String!
+  ): Song @aws_iam
+
+  # Updated setlist mutations with band context
+  createSet(
+    userId: ID!
+    bandId: ID!  # Now required for band-based access
+    description: String!
+    songs: [JamSongInput]!
+  ): SetList @aws_iam
+
+  # Updated jam session mutations with band context
+  createJamSession(
+    setListId: ID!
+    userId: ID!
+    bandId: ID!  # Now required for band-based access
+    policy: policy
+  ): JamSession @aws_iam
+
+  # New band management mutations
+  addUserToBand(bandId: ID!, userId: ID!, role: bandRole!): UserBandRole @aws_iam
+  removeUserFromBand(bandId: ID!, userId: ID!): Band @aws_iam
+  updateUserBandRole(bandId: ID!, userId: ID!, role: bandRole!): UserBandRole @aws_iam
+  
+  # Song import between bands
+  importSongToBand(songId: ID!, fromBandId: ID!, toBandId: ID!, userId: ID!): Song @aws_iam
+  importSetlistToBand(setlistId: ID!, fromBandId: ID!, toBandId: ID!, userId: ID!): SetList @aws_iam
+}
+
+# Updated types with band associations
+type Song {
+  songId: ID!
+  title: String!
+  artist: String
+  album: String
+  albumCover: String
+  beat: Beat
+  isApproved: Boolean!  
+  version: Int!
+
+  creator: User!
+  editors: [User]!
+  viewers: [User]!
+
+  recordings: [Recording]!
+
+  chordSheet: String
+  chordSheetKey: String
+  originPlatorm: chordSheetPlatform 
+  originLink: String
+
+  CCLISongTitle: String
+  CCLISongWriter: String
+  CCLICopyrightNotice: String
+  CCLILicenseNumber: String
+
+  # New band associations
+  bandIds: [ID]!  # All bands this song belongs to
+  primaryBandId: ID  # Primary band (for display purposes)
+}
+
+type SetList {
+  setListId: ID!
+  description: String!
+  songs: [JamSong]!
+  editors: [User]!
+  creator: User!
+  band: Band  # Now required - setlists belong to bands
+  
+  # New band associations
+  bandId: ID!  # Primary band this setlist belongs to
+}
+
+type JamSession {
+  jamSessionId: ID!
+  setList: SetList!
+  admins: [User]!
+  members: [User]!
+  guests: [User]
+
+  policy: policy!
+  description: String
+  active: [Participant]!
+  passcode: String
+
+  currentSong: Int
+  currentPage: Int
+  pageSettings: PageSettings!
+
+  startDate: AWSTimestamp
+  endDate: AWSTimestamp
+
+  slideConfigOverrides: [SongSlideConfig]
+  slideTextSize: String
+
+  queue: [Int]
+  
+  # New band associations
+  bandId: ID!  # Band this jam session belongs to
+}
+
+# New types for band management
+type UserBandMembership {
+  userId: ID!
+  bandId: ID!
+  role: bandRole!
+  joinedAt: AWSTimestamp!
+  user: User!
+  band: Band!
+}
+
+type BandSong {
+  bandId: ID!
+  songId: ID!
+  addedBy: ID!
+  addedAt: AWSTimestamp!
+  song: Song!
+  addedByUser: User!
+}
+
+type BandSetlist {
+  bandId: ID!
+  setlistId: ID!
+  createdBy: ID!
+  createdAt: AWSTimestamp!
+  setlist: SetList!
+  createdByUser: User!
+}

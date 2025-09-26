@@ -280,7 +280,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
           if (jam.setList != null) {
             print('📋 Set List ID: ${jam.setList!.setListId}');
             print('📋 Set List Description: ${jam.setList!.description}');
-            print('🎼 Songs in Set: ${jam.setList!.songs?.length ?? 0}');
+            print('🎼 Songs in Set: ${jam.setList!.songsList?.length ?? 0}');
           }
           
           Navigator.push(
@@ -335,6 +335,31 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                       ],
                     ),
                   ),
+                  // Policy indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: jam.policy == 'PUBLIC' 
+                          ? Colors.green.withValues(alpha: 0.2)
+                          : Colors.orange.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: jam.policy == 'PUBLIC' 
+                            ? Colors.green.withValues(alpha: 0.4)
+                            : Colors.orange.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Text(
+                      jam.policy ?? 'UNKNOWN',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: jam.policy == 'PUBLIC' 
+                            ? Colors.green[700]
+                            : Colors.orange[700],
+                      ),
+                    ),
+                  ),
                   // Status indicator
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -353,7 +378,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                     ),
                   ),
                   // Song count badge
-                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                  if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -372,7 +397,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${jam.setList!.songs!.length}',
+                            '${jam.setList!.songsList!.length}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -410,7 +435,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
               ),
               
               // Compact song preview
-              if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+              if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -429,7 +454,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '${jam.setList!.songs!.take(3).map((s) => s.song.title).join(' • ')}${jam.setList!.songs!.length > 3 ? ' +${jam.setList!.songs!.length - 3} more' : ''}',
+                          '${jam.setList!.songsList!.take(3).map((s) => s.song.title).join(' • ')}${jam.setList!.songsList!.length > 3 ? ' +${jam.setList!.songsList!.length - 3} more' : ''}',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.blue[700],
@@ -461,12 +486,12 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                     count: currentlyActiveCount,
                     color: Colors.purple,
                   ),
-                  if (jam.setList?.songs != null && jam.setList!.songs!.isNotEmpty) ...[
+                  if (jam.setList?.songsList != null && jam.setList!.songsList!.isNotEmpty) ...[
                     const SizedBox(width: 16),
                     _buildParticipantInfo(
                       icon: Icons.music_note,
                       label: 'Songs',
-                      count: jam.setList!.songs!.length,
+                      count: jam.setList!.songsList!.length,
                       color: Colors.green,
                     ),
                   ],
@@ -535,57 +560,114 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
                 const SizedBox(height: 12),
               ],
               
-              // Additional info row
-              Row(
-                children: [
-                  if (startDate != null) ...[
-                    Icon(
-                      Icons.schedule,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Started ${_formatRelativeDate(startDate)}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+              // Key information row - Creation date, last updated, song count
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    // Creation date
+                    if (startDate != null) ...[
+                      Icon(
+                        Icons.schedule,
+                        size: 16,
+                        color: Colors.blue[600],
                       ),
-                    ),
-                  ],
-                  if (lastUsedDate != null) ...[
-                    const SizedBox(width: 16),
-                    Icon(
-                      Icons.access_time,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Last used ${_formatRelativeDate(lastUsedDate)}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                      const SizedBox(width: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Created',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            _formatRelativeDate(startDate),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                  if (jam.setList != null) ...[
-                    const SizedBox(width: 16),
-                    Icon(
-                      Icons.playlist_play,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${jam.setList!.songs?.length ?? 0} songs in set',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                    ],
+                    
+                    if (startDate != null) const SizedBox(width: 20),
+                    
+                    // Last updated
+                    if (lastUsedDate != null) ...[
+                      Icon(
+                        Icons.update,
+                        size: 16,
+                        color: Colors.orange[600],
                       ),
-                    ),
+                      const SizedBox(width: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Last Updated',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            _formatRelativeDate(lastUsedDate),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.orange[700],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    
+                    if (lastUsedDate != null) const SizedBox(width: 20),
+                    
+                    // Song count
+                    if (jam.setList != null) ...[
+                      Icon(
+                        Icons.music_note,
+                        size: 16,
+                        color: Colors.purple[600],
+                      ),
+                      const SizedBox(width: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Songs',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            '${jam.setList!.songsList?.length ?? 0}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.purple[700],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ],
           ),
@@ -786,6 +868,7 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
         setListId: 'dummy-setlist-id', // This would come from a form
         userId: 'dummy-user-id', // This would come from auth
         policy: 'PUBLIC',
+        description: 'New Jam Session - ${DateTime.now().toString().substring(0, 16)}',
       );
       
       if (jamSession != null) {
@@ -818,4 +901,5 @@ class _JamListWithHalfAppBarPageState extends State<JamListWithHalfAppBarPage> {
       );
     }
   }
+
 }

@@ -46,6 +46,14 @@ export const handler = async (event: any) => {
     const jamSession = unmarshall(jamResult.Item)
     console.log(`Successfully found jam session ${jamSessionId} for PIN ${b.pin}`)
     
+    // Ensure required fields are initialized
+    if (!jamSession.admins) jamSession.admins = []
+    if (!jamSession.members) jamSession.members = []
+    if (!jamSession.guests) jamSession.guests = []
+    if (!jamSession.active) jamSession.active = []
+    if (!jamSession.queue) jamSession.queue = []
+    if (jamSession.revision === undefined || jamSession.revision === null) jamSession.revision = 0
+    
     return jamSession
 
   } catch (error) {

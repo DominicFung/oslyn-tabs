@@ -94,10 +94,11 @@ export const handler = async (event: AppSyncResolverEvent<{
         let user = unmarshall(res1.Item) as _User
 
         if (hasSubstring(event.info.selectionSetList, "bands")) {
-          if (!user.bandIds || user.bandIds.length === 0) { user.bands = [] }
+          if (!user.bandMemberships || user.bandMemberships.length === 0) { user.bands = [] }
           else {
             console.log("getting bands ...")
-            const uniq = [...new Set(user.bandIds)]
+            const bandIds = Array.from(new Set(user.bandMemberships.map((membership: any) => membership.bandId as string)))
+            const uniq = bandIds
       
             const keys = uniq
               .map((s) => { return { bandId: { S: s } } as { [bandId: string]: any } })

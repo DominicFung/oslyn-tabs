@@ -73,7 +73,7 @@ class _OptimizedSongDisplayState extends State<OptimizedSongDisplay> {
         );
         
         setState(() {
-          slides = oslynSlides.pages.isNotEmpty ? oslynSlides.pages[currentPage] : null;
+          slides = oslynSlides.isNotEmpty ? oslynSlides[currentPage] : null;
           isLoading = false;
         });
       } catch (e) {

@@ -1,0 +1,124 @@
+import { DynamoDBClient, ScanCommand, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
+import { unmarshall, marshall } from '@aws-sdk/util-dynamodb'
+
+const USER_TABLE_NAME = process.env.USER_TABLE_NAME || 'oslynstudio-UserTable'
+const USER_BAND_MEMBERSHIP_TABLE_NAME = process.env.USER_BAND_MEMBERSHIP_TABLE_NAME || 'oslynstudio-UserBandMembershipTable'
+
+interface BandMembership {
+  bandId: string
+  role: 'ADMIN' | 'MEMBER'
+  joinedAt: number
+}
+
+interface UserBandMembership {
+  userId: string
+  bandId: string
+  role: 'ADMIN' | 'MEMBER'
+  joinedAt: number
+}
+
+async function migrateBandMemberships() {
+  const dynamo = new DynamoDBClient({})
+  
+  console.log('🚀 Starting band memberships migration...')
+  console.log(`📊 Source table: ${USER_BAND_MEMBERSHIP_TABLE_NAME}`)
+  console.log(`📊 Target table: ${USER_TABLE_NAME}`)
+  
+  try {
+    // 1. Get all band memberships from UserBandMembershipTable
+    console.log('📥 Scanning UserBandMembershipTable...')
+    const membershipsRes = await dynamo.send(new ScanCommand({
+      TableName: USER_BAND_MEMBERSHIP_TABLE_NAME
+    }))
+    
+    if (!membershipsRes.Items || membershipsRes.Items.length === 0) {
+      console.log('❌ No memberships found in UserBandMembershipTable')
+      return
+    }
+    
+    const memberships = membershipsRes.Items.map(item => unmarshall(item) as UserBandMembership)
+    console.log(`📊 Found ${memberships.length} memberships to migrate`)
+    
+    // 2. Group memberships by userId
+    const membershipsByUser = new Map<string, BandMembership[]>()
+    
+    for (const membership of memberships) {
+      if (!membershipsByUser.has(membership.userId)) {
+        membershipsByUser.set(membership.userId, [])
+      }
+      
+      membershipsByUser.get(membership.userId)!.push({
+        bandId: membership.bandId,
+        role: membership.role,
+        joinedAt: membership.joinedAt
+      })
+    }
+    
+    console.log(`📊 Grouped into ${membershipsByUser.size} users`)
+    
+    // 3. Update each user with their band memberships
+    let successCount = 0
+    let errorCount = 0
+    
+    for (const [userId, userMemberships] of membershipsByUser) {
+      try {
+        console.log(`🔄 Processing user ${userId} with ${userMemberships.length} memberships...`)
+        
+        // Get current user data
+        const userRes = await dynamo.send(new GetItemCommand({
+          TableName: USER_TABLE_NAME,
+          Key: { userId: { S: userId } }
+        }))
+        
+        if (!userRes.Item) {
+          console.log(`❌ User ${userId} not found, skipping...`)
+          errorCount++
+          continue
+        }
+        
+        // const user = unmarshall(userRes.Item)
+        
+        // Update user with bandMemberships
+        await dynamo.send(new UpdateItemCommand({
+          TableName: USER_TABLE_NAME,
+          Key: { userId: { S: userId } },
+          UpdateExpression: 'SET bandMemberships = :bandMemberships',
+          ExpressionAttributeValues: {
+            ':bandMemberships': { L: userMemberships.map(membership => 
+              marshall(membership)
+            )}
+          }
+        }))
+        
+        console.log(`✅ Updated user ${userId} with ${userMemberships.length} memberships`)
+        successCount++
+        
+      } catch (error) {
+        console.error(`❌ Error updating user ${userId}:`, error)
+        errorCount++
+      }
+    }
+    
+    console.log('🎉 Migration completed!')
+    console.log(`✅ Successfully updated: ${successCount} users`)
+    console.log(`❌ Errors: ${errorCount} users`)
+    
+  } catch (error) {
+    console.error('❌ Migration failed:', error)
+  }
+}
+
+// Run migration if this file is executed directly
+if (require.main === module) {
+  migrateBandMemberships()
+    .then(() => {
+      console.log('Migration script completed')
+      process.exit(0)
+    })
+    .catch((error) => {
+      console.error('Migration script failed:', error)
+      process.exit(1)
+    })
+}
+
+export { migrateBandMemberships }

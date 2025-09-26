@@ -1,0 +1,25 @@
+type SetList {
+  setListId: ID!
+  description: String!
+  songs: [JamSong]!
+  editors: [User]!
+  creator: User!
+  band: Band
+  bandId: ID!
+}
+
+type JamSong {
+  key: String!
+  song: Song!
+  defaultSlideConfig: SongSlideConfig
+  order: Int
+}
+
+type SongSlideConfig {
+  songId: ID!
+  backgroundImg: String
+  backgroundColor: String
+  textColor: String
+  highlightColor: String
+  highlightOpacity: String
+}

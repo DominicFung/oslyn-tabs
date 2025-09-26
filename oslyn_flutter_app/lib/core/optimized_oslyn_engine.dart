@@ -166,13 +166,14 @@ class OptimizedOslynEngine {
   }
 
   /// Converts a raw chord sheet string to a structured OslynSong
-  static OslynSong chordSheetToSlides(String chordSheet, String key) {
+  static List<OslynSlide> chordSheetToSlides(String chordSheet, String key) {
     final lines = chordSheet.split('\n');
     final slides = <OslynSlide>[];
     final currentPage = <OslynPhrase>[];
     
     const int linesPerPage = 20;
     int lineCount = 0;
+    int phraseCount = 0;
     String? currentSection;
     
     for (final line in lines) {
@@ -185,7 +186,7 @@ class OptimizedOslynEngine {
           currentSection = sectionName;
           // If we have content, create a new page
           if (currentPage.isNotEmpty) {
-            slides.add(OslynSlide(lines: List.from(currentPage)));
+            slides.add(OslynSlide(pages: [OslynPage(lines: List.from(currentPage))]));
             currentPage.clear();
             lineCount = 0;
           }
@@ -195,7 +196,9 @@ class OptimizedOslynEngine {
         currentPage.add(OslynPhrase(
           lyric: line,
           chords: [],
-          section: currentSection,
+          section: currentSection ?? 'Verse',
+          phrase: phraseCount++,
+          chordLine: line,
         ));
         lineCount++;
       } else if (lineType == LineType.lyric) {
@@ -203,13 +206,15 @@ class OptimizedOslynEngine {
         currentPage.add(OslynPhrase(
           lyric: line,
           chords: _extractChordsFromLine(line, key),
-          section: currentSection,
+          section: currentSection ?? 'Verse',
+          phrase: phraseCount++,
+          chordLine: line,
         ));
         lineCount++;
         
         // Check if we need to start a new page
         if (lineCount >= linesPerPage) {
-          slides.add(OslynSlide(lines: List.from(currentPage)));
+          slides.add(OslynSlide(pages: [OslynPage(lines: List.from(currentPage))]));
           currentPage.clear();
           lineCount = 0;
         }
@@ -218,7 +223,9 @@ class OptimizedOslynEngine {
         currentPage.add(OslynPhrase(
           lyric: '',
           chords: [],
-          section: currentSection,
+          section: currentSection ?? 'Verse',
+          phrase: phraseCount++,
+          chordLine: '',
         ));
         lineCount++;
       }
@@ -226,10 +233,10 @@ class OptimizedOslynEngine {
     
     // Add any remaining content
     if (currentPage.isNotEmpty) {
-      slides.add(OslynSlide(lines: List.from(currentPage)));
+      slides.add(OslynSlide(pages: [OslynPage(lines: List.from(currentPage))]));
     }
     
-    return OslynSong(pages: slides, key: key);
+    return slides;
   }
 
   /// Simplified chord extraction from a lyric line
@@ -259,6 +266,7 @@ class OptimizedOslynEngine {
           position: position,
           isMinor: isMinor,
           decorator: decorator,
+          meta: OslynChordMeta(start: position.toDouble(), end: (position + 1).toDouble()),
         ));
       }
     }

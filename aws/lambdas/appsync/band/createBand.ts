@@ -57,13 +57,17 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!band.owner.likedSongs) band.owner.likedSongs = []
   if (!band.owner.friends) band.owner.friends = []
 
-  if (!band.owner.bandIds) band.owner.bands = []
+  if (!band.owner.bandMemberships) band.owner.bands = []
   
 
   // add Band to User
-  const bandIds: string[] = band.owner.bandIds || []
-  bandIds.push(bandId)
-  const params = updateDynamoUtil({ table: USER_TABLE_NAME, item: { bandIds }, key: { userId: band.owner.userId } })
+  const bandMemberships = band.owner.bandMemberships || []
+  bandMemberships.push({
+    bandId: bandId,
+    role: 'OWNER',
+    joinedAt: Date.now()
+  })
+  const params = updateDynamoUtil({ table: USER_TABLE_NAME, item: { bandMemberships }, key: { userId: band.owner.userId } })
   const res2 = await dynamo.send( new UpdateItemCommand(params) )
 
   console.log(res2)

@@ -1,0 +1,4803 @@
+{ name: 'oslynstudio' }
+Description: '{"createdOn":"Mac","createdBy":"AmplifyCDK","createdWith":"1.5.4","stackType":"api-AppSync","metadata":{"dataSources":""}}'
+Metadata:
+  AWS::Amplify::GraphQL:
+    version: "1"
+    stackOutputs:
+      - awsAppsyncApiId
+      - awsAppsyncApiEndpoint
+      - awsAppsyncAuthenticationType
+      - awsAppsyncRegion
+      - amplifyApiModelSchemaS3Uri
+      - awsAppsyncApiKey
+Resources:
+  oslynstudioAppsyncGraphQLAPI247FE76D:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      AuthenticationType: API_KEY
+      Name: oslynstudio
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/GraphQLAPI/Resource
+  oslynstudioAppsyncGraphQLAPITransformerSchemaDABAEC09:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DefinitionS3Location:
+        Fn::Sub: s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/26f33f3f52066ca2b06bbdfc2f7c37485f47f74470102d46eca2d0cb8f635f7c.graphql
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/GraphQLAPI/TransformerSchema
+  oslynstudioAppsyncGraphQLAPIDefaultApiKey2F29BBCD:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      Expires: 1789925996
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/GraphQLAPI/DefaultApiKey
+  oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:441d4465
+          Value: "true"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Resource
+  oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucketPolicy371AD334:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:PutBucketPolicy
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Policy/Resource
+  oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucketAutoDeleteObjectsCustomResource90B3B209:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+    DependsOn:
+      - oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucketPolicy371AD334
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/AutoDeleteObjectsCustomResource/Default
+  oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentAwsCliLayer681CE268:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 3fb6287214999ddeafa7cd0e3e58bc5144c8678bb720f3b5e45e8fd32f333eb3.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/AwsCliLayer/Resource
+      aws:asset:path: asset.3fb6287214999ddeafa7cd0e3e58bc5144c8678bb720f3b5e45e8fd32f333eb3.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiB544FC528:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBC5D8AB21
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+      SourceObjectKeys:
+        - 3eb12e565863b67e947c51183ddb76726e23ee65f5db5694296799c0b5731604.zip
+      SourceMarkers:
+        - {}
+      DestinationBucketName:
+        Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+      Prune: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/CustomResource-1536MiB/Default
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSServiceRoleF6497FD2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateUserDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSServiceRoleDefaultPolicy3C5F42D3:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateUser5672CD68
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateUser5672CD68
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSServiceRoleDefaultPolicy3C5F42D3
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSServiceRoleF6497FD2
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateUserDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSDB5011E8:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateUser5672CD68
+            - Arn
+      Name: oslynstudioCreateUserDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSServiceRoleF6497FD2
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateUserDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserResolverF1E23F15:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateUserDS
+      FieldName: createUser
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateUserDSDB5011E8
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateUserResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDSServiceRoleFD113873:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetUserByIdDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDSServiceRoleDefaultPolicy5CC37693:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetUserById9A881973
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetUserById9A881973
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDSServiceRoleDefaultPolicy5CC37693
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDSServiceRoleFD113873
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetUserByIdDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDS33421651:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetUserById9A881973
+            - Arn
+      Name: oslynstudioGetUserByIdDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDSServiceRoleFD113873
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetUserByIdDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdResolverC37113B4:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetUserByIdDS
+      FieldName: getUserById
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetUserByIdDS33421651
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetUserByIdResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDSServiceRoleC5EE8DCB:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddFriendByEmailDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDSServiceRoleDefaultPolicyADE5742E:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioAddFriendByEmailF7C5F6EB
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioAddFriendByEmailF7C5F6EB
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDSServiceRoleDefaultPolicyADE5742E
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDSServiceRoleC5EE8DCB
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddFriendByEmailDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDS6075A8A9:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioAddFriendByEmailF7C5F6EB
+            - Arn
+      Name: oslynstudioAddFriendByEmailDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDSServiceRoleC5EE8DCB
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddFriendByEmailDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailResolverE462BD52:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioAddFriendByEmailDS
+      FieldName: addFriendByEmail
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioAddFriendByEmailDS6075A8A9
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-AddFriendByEmailResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSServiceRoleBBADE02D:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveFriendByIdDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSServiceRoleDefaultPolicy0E1F8A58:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioRemoveFriendByIdFB8E6F64
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioRemoveFriendByIdFB8E6F64
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSServiceRoleDefaultPolicy0E1F8A58
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSServiceRoleBBADE02D
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveFriendByIdDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSE3FDD4EC:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioRemoveFriendByIdFB8E6F64
+            - Arn
+      Name: oslynstudioRemoveFriendByIdDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSServiceRoleBBADE02D
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveFriendByIdDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdResolverDF10FA69:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioRemoveFriendByIdDS
+      FieldName: removeFriendById
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioRemoveFriendByIdDSE3FDD4EC
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-RemoveFriendByIdResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDSServiceRole0C9B72C3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSongDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDSServiceRoleDefaultPolicyB5EC0D8C:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateSongA80C5824
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateSongA80C5824
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDSServiceRoleDefaultPolicyB5EC0D8C
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDSServiceRole0C9B72C3
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSongDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDS9FB2ABA1:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateSongA80C5824
+            - Arn
+      Name: oslynstudioCreateSongDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDSServiceRole0C9B72C3
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSongDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongResolver0C7F5F77:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateSongDS
+      FieldName: createSong
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateSongDS9FB2ABA1
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateSongResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDSServiceRole0D09D908:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSongDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDSServiceRoleDefaultPolicy368781F9:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioUpdateSongFFB8603C
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioUpdateSongFFB8603C
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDSServiceRoleDefaultPolicy368781F9
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDSServiceRole0D09D908
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSongDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDS7C3B658F:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioUpdateSongFFB8603C
+            - Arn
+      Name: oslynstudioUpdateSongDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDSServiceRole0D09D908
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSongDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongResolver0CACE8AE:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioUpdateSongDS
+      FieldName: updateSong
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSongDS7C3B658F
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-UpdateSongResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSServiceRole4508C7D6:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSServiceRoleDefaultPolicyA5310132:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetSong472E31B9
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetSong472E31B9
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSServiceRoleDefaultPolicyA5310132
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSServiceRole4508C7D6
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSBA2141CC:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetSong472E31B9
+            - Arn
+      Name: oslynstudioGetSongDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSServiceRole4508C7D6
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongResolverB2F14B51:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetSongDS
+      FieldName: getSong
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetSongDSBA2141CC
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetSongResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDSServiceRole63AAFA56:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongCountDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDSServiceRoleDefaultPolicy65E8CAED:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetSongCountBA7347BF
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetSongCountBA7347BF
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDSServiceRoleDefaultPolicy65E8CAED
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDSServiceRole63AAFA56
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongCountDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDS406DB358:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetSongCountBA7347BF
+            - Arn
+      Name: oslynstudioGetSongCountDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDSServiceRole63AAFA56
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSongCountDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountResolverFF098B8B:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetSongCountDS
+      FieldName: getSongCount
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetSongCountDS406DB358
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetSongCountResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDSServiceRole0E519448:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSongsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDSServiceRoleDefaultPolicyFA008346:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListSongs6A4FDB6D
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListSongs6A4FDB6D
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDSServiceRoleDefaultPolicyFA008346
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDSServiceRole0E519448
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSongsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDS31688204:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListSongs6A4FDB6D
+            - Arn
+      Name: oslynstudioListSongsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDSServiceRole0E519448
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSongsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSongsResolverDD332A3A:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListSongsDS
+      FieldName: listSongs
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListSongsDS31688204
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListSongsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDSServiceRoleA9260CAE:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedSongsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDSServiceRoleDefaultPolicyCAF7B0BD:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListSharedSongs3A477421
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListSharedSongs3A477421
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDSServiceRoleDefaultPolicyCAF7B0BD
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDSServiceRoleA9260CAE
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedSongsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDS468DD314:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListSharedSongs3A477421
+            - Arn
+      Name: oslynstudioListSharedSongsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDSServiceRoleA9260CAE
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedSongsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsResolver19DE2978:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListSharedSongsDS
+      FieldName: listSharedSongs
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListSharedSongsDS468DD314
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListSharedSongsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDSServiceRoleCAE38F98:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDSServiceRoleDefaultPolicy130BADA9:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioShareSong9A440736
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioShareSong9A440736
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDSServiceRoleDefaultPolicy130BADA9
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDSServiceRoleCAE38F98
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDS653CBC39:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioShareSong9A440736
+            - Arn
+      Name: oslynstudioShareSongDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDSServiceRoleCAE38F98
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongResolverCEC063DF:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioShareSongDS
+      FieldName: shareSong
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioShareSongDS653CBC39
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ShareSongResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSServiceRole27BC7001:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongWithBandDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSServiceRoleDefaultPolicy27304394:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioShareSongWithBandBA573ECC
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioShareSongWithBandBA573ECC
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSServiceRoleDefaultPolicy27304394
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSServiceRole27BC7001
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongWithBandDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSCE17A8A4:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioShareSongWithBandBA573ECC
+            - Arn
+      Name: oslynstudioShareSongWithBandDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSServiceRole27BC7001
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioShareSongWithBandDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandResolver933969CF:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioShareSongWithBandDS
+      FieldName: shareSongWithBand
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioShareSongWithBandDSCE17A8A4
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ShareSongWithBandResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDSServiceRoleA5AFB7F5:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetBandDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDSServiceRoleDefaultPolicy6A8F505B:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetBandD9904BA0
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetBandD9904BA0
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDSServiceRoleDefaultPolicy6A8F505B
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDSServiceRoleA5AFB7F5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetBandDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDS6D6A351E:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetBandD9904BA0
+            - Arn
+      Name: oslynstudioGetBandDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDSServiceRoleA5AFB7F5
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetBandDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetBandResolver1EB3EA8C:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetBandDS
+      FieldName: getBand
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetBandDS6D6A351E
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetBandResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSServiceRoleE946C9D7:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateBandDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSServiceRoleDefaultPolicy5192232D:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateBand80171467
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateBand80171467
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSServiceRoleDefaultPolicy5192232D
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSServiceRoleE946C9D7
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateBandDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSC33E8C9B:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateBand80171467
+            - Arn
+      Name: oslynstudioCreateBandDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSServiceRoleE946C9D7
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateBandDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandResolver32DDDB58:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateBandDS
+      FieldName: createBand
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateBandDSC33E8C9B
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateBandResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDSServiceRole16AA2D6B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateBandDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDSServiceRoleDefaultPolicy584B8DF7:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioUpdateBand8B79D5CA
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioUpdateBand8B79D5CA
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDSServiceRoleDefaultPolicy584B8DF7
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDSServiceRole16AA2D6B
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateBandDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDS24DBAFCC:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioUpdateBand8B79D5CA
+            - Arn
+      Name: oslynstudioUpdateBandDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDSServiceRole16AA2D6B
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateBandDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandResolver823DEFA3:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioUpdateBandDS
+      FieldName: updateBand
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateBandDS24DBAFCC
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-UpdateBandResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSServiceRole05044BAE:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListBandsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSServiceRoleDefaultPolicy0B5622A8:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListBands234313B2
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListBands234313B2
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSServiceRoleDefaultPolicy0B5622A8
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSServiceRole05044BAE
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListBandsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSA2EDBA89:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListBands234313B2
+            - Arn
+      Name: oslynstudioListBandsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSServiceRole05044BAE
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListBandsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListBandsResolver32D26D2B:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListBandsDS
+      FieldName: listBands
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListBandsDSA2EDBA89
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListBandsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSServiceRoleA0568527:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedBandsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSServiceRoleDefaultPolicy3CCB3B22:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListSharedBands45C5205E
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListSharedBands45C5205E
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSServiceRoleDefaultPolicy3CCB3B22
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSServiceRoleA0568527
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedBandsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSDF9091C9:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListSharedBands45C5205E
+            - Arn
+      Name: oslynstudioListSharedBandsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSServiceRoleA0568527
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSharedBandsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsResolver0A9C02FA:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListSharedBandsDS
+      FieldName: listSharedBands
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListSharedBandsDSDF9091C9
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListSharedBandsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDSServiceRoleD1264CF5:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicBandsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDSServiceRoleDefaultPolicyEEEBD9E9:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListPublicBands038585CA
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListPublicBands038585CA
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDSServiceRoleDefaultPolicyEEEBD9E9
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDSServiceRoleD1264CF5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicBandsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDS73758037:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListPublicBands038585CA
+            - Arn
+      Name: oslynstudioListPublicBandsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDSServiceRoleD1264CF5
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicBandsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsResolverDC5CDA83:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListPublicBandsDS
+      FieldName: listPublicBands
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListPublicBandsDS73758037
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListPublicBandsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDSServiceRole84316E6B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSetDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDSServiceRoleDefaultPolicy2E50ADA2:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateSetF6EB402B
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateSetF6EB402B
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDSServiceRoleDefaultPolicy2E50ADA2
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDSServiceRole84316E6B
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSetDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDS4B727B82:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateSetF6EB402B
+            - Arn
+      Name: oslynstudioCreateSetDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDSServiceRole84316E6B
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateSetDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetResolver95AC53C9:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateSetDS
+      FieldName: createSet
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateSetDS4B727B82
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateSetResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSServiceRole2D8A626F:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSetDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSServiceRoleDefaultPolicy152612B5:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioUpdateSet703B39D6
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioUpdateSet703B39D6
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSServiceRoleDefaultPolicy152612B5
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSServiceRole2D8A626F
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSetDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSBE022A07:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioUpdateSet703B39D6
+            - Arn
+      Name: oslynstudioUpdateSetDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSServiceRole2D8A626F
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioUpdateSetDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetResolver64DC94CE:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioUpdateSetDS
+      FieldName: updateSet
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioUpdateSetDSBE022A07
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-UpdateSetResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDSServiceRoleED083634:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDSServiceRoleDefaultPolicy7F62E324:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetSet0B60718A
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetSet0B60718A
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDSServiceRoleDefaultPolicy7F62E324
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDSServiceRoleED083634
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDS625C733D:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetSet0B60718A
+            - Arn
+      Name: oslynstudioGetSetDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDSServiceRoleED083634
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetResolverB9721F69:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetSetDS
+      FieldName: getSet
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetSetDS625C733D
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetSetResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDSServiceRole6659553B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetCountDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDSServiceRoleDefaultPolicyBA82E44C:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetSetCount66E33208
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetSetCount66E33208
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDSServiceRoleDefaultPolicyBA82E44C
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDSServiceRole6659553B
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetCountDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDS0392F4CD:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetSetCount66E33208
+            - Arn
+      Name: oslynstudioGetSetCountDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDSServiceRole6659553B
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetSetCountDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountResolverCECF1BBA:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetSetCountDS
+      FieldName: getSetCount
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetSetCountDS0392F4CD
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetSetCountResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSetDSServiceRoleFA2FE863:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSetDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSetDSServiceRoleDefaultPolicy7C445AEA:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListSet940BD274
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListSet940BD274
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListSetDSServiceRoleDefaultPolicy7C445AEA
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListSetDSServiceRoleFA2FE863
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSetDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSetDS291AD841:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListSet940BD274
+            - Arn
+      Name: oslynstudioListSetDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListSetDSServiceRoleFA2FE863
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListSetDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListSetResolver4A2E76CF:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListSetDS
+      FieldName: listSets
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListSetDS291AD841
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListSetResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDSServiceRoleF4B430F4:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToSetDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDSServiceRoleDefaultPolicyE664DD20:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioAddSongToSetA971BB33
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioAddSongToSetA971BB33
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDSServiceRoleDefaultPolicyE664DD20
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDSServiceRoleF4B430F4
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToSetDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDS01452A0A:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioAddSongToSetA971BB33
+            - Arn
+      Name: oslynstudioAddSongToSetDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDSServiceRoleF4B430F4
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToSetDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetResolverBB299973:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioAddSongToSetDS
+      FieldName: addSongToSet
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToSetDS01452A0A
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-AddSongToSetResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDSServiceRole43BFD245:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetJamSessionDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDSServiceRoleDefaultPolicy24D9E7B7:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioGetJamSessionA1F8285E
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioGetJamSessionA1F8285E
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDSServiceRoleDefaultPolicy24D9E7B7
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDSServiceRole43BFD245
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetJamSessionDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDS190E5DED:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioGetJamSessionA1F8285E
+            - Arn
+      Name: oslynstudioGetJamSessionDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDSServiceRole43BFD245
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioGetJamSessionDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionResolverBCA918E9:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioGetJamSessionDS
+      FieldName: getJamSession
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioGetJamSessionDS190E5DED
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-GetJamSessionResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDSServiceRoleDDF9AD36:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateJamSessionDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDSServiceRoleDefaultPolicy2A9AAD35:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateJamSessionC3B52A4A
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateJamSessionC3B52A4A
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDSServiceRoleDefaultPolicy2A9AAD35
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDSServiceRoleDDF9AD36
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateJamSessionDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDS0ED63D9C:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateJamSessionC3B52A4A
+            - Arn
+      Name: oslynstudioCreateJamSessionDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDSServiceRoleDDF9AD36
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateJamSessionDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionResolver0FC081D0:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateJamSessionDS
+      FieldName: createJamSession
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateJamSessionDS0ED63D9C
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateJamSessionResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDSServiceRole148EF4BF:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicJamSessionsDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDSServiceRoleDefaultPolicyE84598EF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioListPublicJamSessions7D99E8EE
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioListPublicJamSessions7D99E8EE
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDSServiceRoleDefaultPolicyE84598EF
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDSServiceRole148EF4BF
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicJamSessionsDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDS4153C561:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioListPublicJamSessions7D99E8EE
+            - Arn
+      Name: oslynstudioListPublicJamSessionsDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDSServiceRole148EF4BF
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioListPublicJamSessionsDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsResolverCB110653:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioListPublicJamSessionsDS
+      FieldName: listPublicJamSessions
+      Kind: UNIT
+      TypeName: Query
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioListPublicJamSessionsDS4153C561
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ListPublicJamSessionsResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDSServiceRoleCF35693B:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioEnterJamDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDSServiceRoleDefaultPolicy91C89EE1:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioEnterJam542B2348
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioEnterJam542B2348
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDSServiceRoleDefaultPolicy91C89EE1
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDSServiceRoleCF35693B
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioEnterJamDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDS80EE59DD:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioEnterJam542B2348
+            - Arn
+      Name: oslynstudioEnterJamDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDSServiceRoleCF35693B
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioEnterJamDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamResolver8BAA2D01:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioEnterJamDS
+      FieldName: enterJam
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioEnterJamDS80EE59DD
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-EnterJamResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDSServiceRoleE10C8E84:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioExitJamDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDSServiceRoleDefaultPolicy8181E6CF:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioExitJam7103C55F
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioExitJam7103C55F
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDSServiceRoleDefaultPolicy8181E6CF
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDSServiceRoleE10C8E84
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioExitJamDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDS00FA065D:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioExitJam7103C55F
+            - Arn
+      Name: oslynstudioExitJamDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDSServiceRoleE10C8E84
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioExitJamDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioExitJamResolverA8B855C3:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioExitJamDS
+      FieldName: exitJam
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioExitJamDS00FA065D
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-ExitJamResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDSServiceRoleE5996AF2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextPageDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDSServiceRoleDefaultPolicyA93CBB87:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioNextPage13151F65
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioNextPage13151F65
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDSServiceRoleDefaultPolicyA93CBB87
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDSServiceRoleE5996AF2
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextPageDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDS452188A3:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioNextPage13151F65
+            - Arn
+      Name: oslynstudioNextPageDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDSServiceRoleE5996AF2
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextPageDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextPageResolverC8F52489:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioNextPageDS
+      FieldName: nextPage
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioNextPageDS452188A3
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-NextPageResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSServiceRoleF824EBF4:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextSongDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSServiceRoleDefaultPolicy7D2519BE:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioNextSong12E2E42C
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioNextSong12E2E42C
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSServiceRoleDefaultPolicy7D2519BE
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSServiceRoleF824EBF4
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextSongDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSDFA27870:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioNextSong12E2E42C
+            - Arn
+      Name: oslynstudioNextSongDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSServiceRoleF824EBF4
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioNextSongDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioNextSongResolver79B8ABEA:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioNextSongDS
+      FieldName: nextSong
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioNextSongDSDFA27870
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-NextSongResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDSServiceRole9CAF667F:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetSongKeyDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDSServiceRoleDefaultPolicyA40779E0:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioSetSongKeyF9CC7B0B
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioSetSongKeyF9CC7B0B
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDSServiceRoleDefaultPolicyA40779E0
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDSServiceRole9CAF667F
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetSongKeyDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDS872DBA6A:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioSetSongKeyF9CC7B0B
+            - Arn
+      Name: oslynstudioSetSongKeyDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDSServiceRole9CAF667F
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetSongKeyDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyResolverFDE75280:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioSetSongKeyDS
+      FieldName: setSongKey
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioSetSongKeyDS872DBA6A
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-SetSongKeyResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDSServiceRoleA642D616:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamQueueDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDSServiceRoleDefaultPolicyD58A26D5:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioSetJamQueue567D8CC6
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioSetJamQueue567D8CC6
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDSServiceRoleDefaultPolicyD58A26D5
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDSServiceRoleA642D616
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamQueueDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDS00990948:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioSetJamQueue567D8CC6
+            - Arn
+      Name: oslynstudioSetJamQueueDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDSServiceRoleA642D616
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamQueueDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueResolver907E76DE:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioSetJamQueueDS
+      FieldName: setJamQueue
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioSetJamQueueDS00990948
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-SetJamQueueResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSServiceRole8E912662:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToJamQueueDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSServiceRoleDefaultPolicyC6230ECE:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioAddSongToJamQueue0787C9A4
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioAddSongToJamQueue0787C9A4
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSServiceRoleDefaultPolicyC6230ECE
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSServiceRole8E912662
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToJamQueueDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSB0378745:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioAddSongToJamQueue0787C9A4
+            - Arn
+      Name: oslynstudioAddSongToJamQueueDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSServiceRole8E912662
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioAddSongToJamQueueDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueResolver0C8B367B:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioAddSongToJamQueueDS
+      FieldName: addSongToJamQueue
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioAddSongToJamQueueDSB0378745
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-AddSongToJamQueueResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDSServiceRoleCB1A574D:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveSongFromJamQueueDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDSServiceRoleDefaultPolicy01548410:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioRemoveSongFromJamQueue67B5DF22
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioRemoveSongFromJamQueue67B5DF22
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDSServiceRoleDefaultPolicy01548410
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDSServiceRoleCB1A574D
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveSongFromJamQueueDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDS57904DCE:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioRemoveSongFromJamQueue67B5DF22
+            - Arn
+      Name: oslynstudioRemoveSongFromJamQueueDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDSServiceRoleCB1A574D
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioRemoveSongFromJamQueueDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueResolver290B28BA:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioRemoveSongFromJamQueueDS
+      FieldName: removeSongFromJamQueue
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioRemoveSongFromJamQueueDS57904DCE
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-RemoveSongFromJamQueueResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSServiceRole8FDFE905:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamSlideConfigDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSServiceRoleDefaultPolicy501A8FC8:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioSetJamSlideConfig5FDB8115
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioSetJamSlideConfig5FDB8115
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSServiceRoleDefaultPolicy501A8FC8
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSServiceRole8FDFE905
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamSlideConfigDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSAD325A0E:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioSetJamSlideConfig5FDB8115
+            - Arn
+      Name: oslynstudioSetJamSlideConfigDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSServiceRole8FDFE905
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioSetJamSlideConfigDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigResolver30BDAE62:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioSetJamSlideConfigDS
+      FieldName: setJamSlideConfig
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioSetJamSlideConfigDSAD325A0E
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-SetJamSlideConfigResolver/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDSServiceRoleCBB6E1E9:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateRecordingDS/ServiceRole/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDSServiceRoleDefaultPolicy7D41F429:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioCreateRecordingDFFCFBE5
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioCreateRecordingDFFCFBE5
+                        - Arn
+                    - :*
+        Version: "2012-10-17"
+      PolicyName: oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDSServiceRoleDefaultPolicy7D41F429
+      Roles:
+        - Ref: oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDSServiceRoleCBB6E1E9
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateRecordingDS/ServiceRole/DefaultPolicy/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDS1C358954:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      LambdaConfig:
+        LambdaFunctionArn:
+          Fn::GetAtt:
+            - oslynstudioCreateRecordingDFFCFBE5
+            - Arn
+      Name: oslynstudioCreateRecordingDS
+      ServiceRoleArn:
+        Fn::GetAtt:
+          - oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDSServiceRoleCBB6E1E9
+          - Arn
+      Type: AWS_LAMBDA
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudioCreateRecordingDS/Resource
+  oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingResolverDE94786D:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - oslynstudioAppsyncGraphQLAPI247FE76D
+          - ApiId
+      DataSourceName: oslynstudioCreateRecordingDS
+      FieldName: createRecording
+      Kind: UNIT
+      TypeName: Mutation
+    DependsOn:
+      - oslynstudioAppsyncL2GraphqlApioslynstudioCreateRecordingDS1C358954
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-Appsync/L2GraphqlApi/oslynstudio-CreateRecordingResolver/Resource
+  CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role
+  CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+          - Arn
+      Runtime: nodejs18.x
+      Description:
+        Fn::Join:
+          - ""
+          - - "Lambda function for auto-deleting objects in "
+            - Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+            - " S3 bucket."
+    DependsOn:
+      - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler
+      aws:asset:path: asset.b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6
+      aws:asset:property: Code
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+              - s3:Abort*
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBC5D8AB21:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: e976a796f036a5efbf44b99e44cfb5a961df08d8dbf7cd37e60bf216fb982a00.zip
+      Environment:
+        Variables:
+          AWS_CA_BUNDLE: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      Handler: index.handler
+      Layers:
+        - Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentAwsCliLayer681CE268
+      MemorySize: 1536
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+          - Arn
+      Runtime: python3.9
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/Resource
+      aws:asset:path: asset.e976a796f036a5efbf44b99e44cfb5a961df08d8dbf7cd37e60bf216fb982a00
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  oslynstudioAppsyncLambdaRole7A3524A5:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-AppsyncLambdaRole/Resource
+  oslynstudioInlinePolicy5A5C8D01:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:GetResourcePolicy
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+              - secretsmanager:ListSecretVersionIds
+              - secretsmanager:ListSecrets
+            Effect: Allow
+            Resource: "*"
+          - Action: dynamodb:*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-UserTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-BandTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-SongTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-SetListTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-JamTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-InviteTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-BandUserRoleTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-RecordingTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-UserBandMembershipTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-BandSongTable-Arn
+                    - "*"
+              - Fn::Join:
+                  - ""
+                  - - Fn::ImportValue: oslynstudio-BandSetlistTable-Arn
+                    - "*"
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: oslynstudioInlinePolicy5A5C8D01
+      Roles:
+        - Ref: oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-InlinePolicy/Resource
+  oslynstudioCreateUser5672CD68:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 3e57740b902dac030ea5f968408b0b0f3c7f05792fcbccf7c4b8b192a77648b9.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateUser/Resource
+      aws:asset:path: asset.3e57740b902dac030ea5f968408b0b0f3c7f05792fcbccf7c4b8b192a77648b9
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetUserById9A881973:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 7075646078cf2542211ec73cb44289b610d0440753a4b15f361123bf988ed652.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetUserById/Resource
+      aws:asset:path: asset.7075646078cf2542211ec73cb44289b610d0440753a4b15f361123bf988ed652
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioAddFriendByEmailF7C5F6EB:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 87a594d1364a36daf8719b902c4926f608f3f684bb03dce7480353a18848dec1.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-AddFriendByEmail/Resource
+      aws:asset:path: asset.87a594d1364a36daf8719b902c4926f608f3f684bb03dce7480353a18848dec1
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioRemoveFriendByIdFB8E6F64:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 720d5eedfb50830a5257d301b7db5cbe7480e00aa338cf261c755acca3256e19.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-RemoveFriendById/Resource
+      aws:asset:path: asset.720d5eedfb50830a5257d301b7db5cbe7480e00aa338cf261c755acca3256e19
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioCreateSongA80C5824:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 026a68766a6013ddece9149aa1cdab3910499ef86966b0e7bd4e29cab55786e9.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateSong/Resource
+      aws:asset:path: asset.026a68766a6013ddece9149aa1cdab3910499ef86966b0e7bd4e29cab55786e9
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioUpdateSongFFB8603C:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 258e0ded47ce3a2666b84006fe81a211d84c9e45ceb88134055535f15134e62d.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-UpdateSong/Resource
+      aws:asset:path: asset.258e0ded47ce3a2666b84006fe81a211d84c9e45ceb88134055535f15134e62d
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetSong472E31B9:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: cfdd35595a00e78c886ab1177dd12778cfc895575870eb01e24cb9cff3f58b77.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetSong/Resource
+      aws:asset:path: asset.cfdd35595a00e78c886ab1177dd12778cfc895575870eb01e24cb9cff3f58b77
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetSongCountBA7347BF:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 81717e08a07bd987621c81939d9b1a76ab27c88aab0036d21fc23500ed36698a.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetSongCount/Resource
+      aws:asset:path: asset.81717e08a07bd987621c81939d9b1a76ab27c88aab0036d21fc23500ed36698a
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListSongs6A4FDB6D:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 7d8b33636b1fe0ec15423791ec7f071986a2259d472a434dea5709ace0bda44d.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListSongs/Resource
+      aws:asset:path: asset.7d8b33636b1fe0ec15423791ec7f071986a2259d472a434dea5709ace0bda44d
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListSharedSongs3A477421:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 75e5fea29d1c4d262c4e71f0de527cf14d2ad2b1d40674a528b0b9c5c31bd53d.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListSharedSongs/Resource
+      aws:asset:path: asset.75e5fea29d1c4d262c4e71f0de527cf14d2ad2b1d40674a528b0b9c5c31bd53d
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioShareSong9A440736:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 329cc99f15800bc1ed81f750a40b13deaa95a5dbd33a6e14c06a3fc55f8128ed.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ShareSong/Resource
+      aws:asset:path: asset.329cc99f15800bc1ed81f750a40b13deaa95a5dbd33a6e14c06a3fc55f8128ed
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioShareSongWithBandBA573ECC:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: ff151ce68310b1c61557745bdda66eb4db87436658dcf3398a9712ff9c949b09.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ShareSongWithBand/Resource
+      aws:asset:path: asset.ff151ce68310b1c61557745bdda66eb4db87436658dcf3398a9712ff9c949b09
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetBandD9904BA0:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: a1217688d44a1b26f3e02d509ef045b619761057c3a3d48c366f8b89baf4ea2a.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetBand/Resource
+      aws:asset:path: asset.a1217688d44a1b26f3e02d509ef045b619761057c3a3d48c366f8b89baf4ea2a
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioCreateBand80171467:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 2436f0b72e59eb14ce0ec7eb31770fee8f24e017b9ccdf59d6250ec5e445b2a6.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateBand/Resource
+      aws:asset:path: asset.2436f0b72e59eb14ce0ec7eb31770fee8f24e017b9ccdf59d6250ec5e445b2a6
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioUpdateBand8B79D5CA:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: d0f442de02e87ed75c15f0f5de9c79fb48c142ac622816f62926c6613629963c.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-UpdateBand/Resource
+      aws:asset:path: asset.d0f442de02e87ed75c15f0f5de9c79fb48c142ac622816f62926c6613629963c
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListBands234313B2:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 7333210c4f5dfe3e5bad4738f32ca5768c1b9aad998ff6aaed29638ee38cc217.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListBands/Resource
+      aws:asset:path: asset.7333210c4f5dfe3e5bad4738f32ca5768c1b9aad998ff6aaed29638ee38cc217
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListSharedBands45C5205E:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: e142af8fdf11ed572657e9712d9b8963e82f5cadee121e739e7021dafbf305fd.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListSharedBands/Resource
+      aws:asset:path: asset.e142af8fdf11ed572657e9712d9b8963e82f5cadee121e739e7021dafbf305fd
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListPublicBands038585CA:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 9dcf2f719ca08f3fe3a6af07720394eec64c9a414c7c8b434ca3231e7d33869a.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListPublicBands/Resource
+      aws:asset:path: asset.9dcf2f719ca08f3fe3a6af07720394eec64c9a414c7c8b434ca3231e7d33869a
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioCreateSetF6EB402B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: f09154e57d871a141d4183c845e4fd7a1f123ceb15634b813f95ca6c3c2c6040.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateSet/Resource
+      aws:asset:path: asset.f09154e57d871a141d4183c845e4fd7a1f123ceb15634b813f95ca6c3c2c6040
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioUpdateSet703B39D6:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 4aacabede0dbce7abebcd17b00e3069c36ba3c5ebb309c2d9441d39388e3c24d.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-UpdateSet/Resource
+      aws:asset:path: asset.4aacabede0dbce7abebcd17b00e3069c36ba3c5ebb309c2d9441d39388e3c24d
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetSet0B60718A:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 79dc41b85bc0363afa2202c9f8b79d06236b2e88742d92b8c88ffe58e0f7d190.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetSet/Resource
+      aws:asset:path: asset.79dc41b85bc0363afa2202c9f8b79d06236b2e88742d92b8c88ffe58e0f7d190
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetSetCount66E33208:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 59d601591cc0fba923bbf7f0e817aa3720fa1537133952d069c0c548f6755ef2.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetSetCount/Resource
+      aws:asset:path: asset.59d601591cc0fba923bbf7f0e817aa3720fa1537133952d069c0c548f6755ef2
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListSet940BD274:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 7790c820a28967b5ef3c81b491cbcf00d27c4f3040ee16ff4c77049f3927fd3a.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListSet/Resource
+      aws:asset:path: asset.7790c820a28967b5ef3c81b491cbcf00d27c4f3040ee16ff4c77049f3927fd3a
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioAddSongToSetA971BB33:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 99187d6db3cd0b4e831187a0c0a1f0c3623716697ff9c50f60d11e9bafd33723.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-AddSongToSet/Resource
+      aws:asset:path: asset.99187d6db3cd0b4e831187a0c0a1f0c3623716697ff9c50f60d11e9bafd33723
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioGetJamSessionA1F8285E:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: de2b2e9e73b2b74a6b8b0fb9419c277f5afd958433787f72438128da4f3de047.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-GetJamSession/Resource
+      aws:asset:path: asset.de2b2e9e73b2b74a6b8b0fb9419c277f5afd958433787f72438128da4f3de047
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioCreateJamSessionC3B52A4A:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: defc6eaf2279db564e81dc2c0be789a0cefbd39790778cd5c0271d2e0adba799.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateJamSession/Resource
+      aws:asset:path: asset.defc6eaf2279db564e81dc2c0be789a0cefbd39790778cd5c0271d2e0adba799
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioListPublicJamSessions7D99E8EE:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: efcf348bc8ddbd7f23d51a55b09224d6e887583bf5834ad7727da2b59e76a70a.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ListPublicJamSessions/Resource
+      aws:asset:path: asset.efcf348bc8ddbd7f23d51a55b09224d6e887583bf5834ad7727da2b59e76a70a
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioEnterJam542B2348:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: bc8dffc15347278029222ffa6d362a2a6a6bfca95d20a1e90e9617c4fe9ac5e9.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-EnterJam/Resource
+      aws:asset:path: asset.bc8dffc15347278029222ffa6d362a2a6a6bfca95d20a1e90e9617c4fe9ac5e9
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioExitJam7103C55F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 203d3af191c1423a466c3999bf04076c099baecafea12f3a8bfd63a73b445214.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-ExitJam/Resource
+      aws:asset:path: asset.203d3af191c1423a466c3999bf04076c099baecafea12f3a8bfd63a73b445214
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioNextPage13151F65:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 390cc16565ba83345f1f5ac2e5fea6c698b5487dfd78f02af37d411589868f84.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-NextPage/Resource
+      aws:asset:path: asset.390cc16565ba83345f1f5ac2e5fea6c698b5487dfd78f02af37d411589868f84
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioNextSong12E2E42C:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: d7d0043854ecf055cb09048bb433d60b8c2b70cfb7ec6ec14d46ab1607700cc4.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-NextSong/Resource
+      aws:asset:path: asset.d7d0043854ecf055cb09048bb433d60b8c2b70cfb7ec6ec14d46ab1607700cc4
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioSetSongKeyF9CC7B0B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 282740e747344d13a36202f13f10bcc2a7a0128d4cb6c0bd3153977b8f146117.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-SetSongKey/Resource
+      aws:asset:path: asset.282740e747344d13a36202f13f10bcc2a7a0128d4cb6c0bd3153977b8f146117
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioSetJamQueue567D8CC6:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: b1ce37328db3b1f423a0beaa2b3a0b98b5425eb31ca62447ccc93c04fbb67844.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-SetJamQueue/Resource
+      aws:asset:path: asset.b1ce37328db3b1f423a0beaa2b3a0b98b5425eb31ca62447ccc93c04fbb67844
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioAddSongToJamQueue0787C9A4:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 0093342568f80a046db0c563447a158d7151eccafd93233082b2ef0af8d5960b.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-AddSongToJamQueue/Resource
+      aws:asset:path: asset.0093342568f80a046db0c563447a158d7151eccafd93233082b2ef0af8d5960b
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioRemoveSongFromJamQueue67B5DF22:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 03d076bd7edf2879aa626c4fec9ce32585db3618fd129470aa9315e4c89b3d52.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-RemoveSongFromJamQueue/Resource
+      aws:asset:path: asset.03d076bd7edf2879aa626c4fec9ce32585db3618fd129470aa9315e4c89b3d52
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioSetJamSlideConfig5FDB8115:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 1d462ea7ab83cdd4648206a2c1494961219cd056e0e269ac37f3c376db101daf.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-SetJamSlideConfig/Resource
+      aws:asset:path: asset.1d462ea7ab83cdd4648206a2c1494961219cd056e0e269ac37f3c376db101daf
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  oslynstudioCreateRecordingDFFCFBE5:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: d3e01ff60750086d8dd10ff34ad9278b37d26460a9d9ec823f79e3e101d6913b.zip
+      Environment:
+        Variables:
+          USER_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserTable-Name
+          BAND_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandTable-Name
+          SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SongTable-Name
+          SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-SetListTable-Name
+          JAM_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-JamTable-Name
+          INVITE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-InviteTable-Name
+          USER_BAND_ROLE_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandUserRoleTable-Name
+          RECORDING_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-RecordingTable-Name
+          USER_BAND_MEMBERSHIP_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-UserBandMembershipTable-Name
+          BAND_SONG_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSongTable-Name
+          BAND_SETLIST_TABLE_NAME:
+            Fn::ImportValue: oslynstudio-BandSetlistTable-Name
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - oslynstudioAppsyncLambdaRole7A3524A5
+          - Arn
+      Runtime: nodejs16.x
+      Timeout: 300
+    DependsOn:
+      - oslynstudioAppsyncLambdaRole7A3524A5
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/oslynstudio-CreateRecording/Resource
+      aws:asset:path: asset.d3e01ff60750086d8dd10ff34ad9278b37d26460a9d9ec823f79e3e101d6913b
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/1WSwXLCIBCGn6V33LZp+wAapz3Uaa2Z6dVBsiqRQMqCTibjuxeIMXrafz9g92chg+csg6cHfqKJKA8TJTfQFY6LAwto3fGmoVYL6D4sb/Z/atrIGSdk+VYn8rMI5CYrxB5rHkHgn9iyBa83JZ9zxwvjrUgnb7IVklFHtBEP+szoJXQmQkcwjYGV2CjT1qgdzLw4oJtfQdwNXU+TtV7GghfVh6VRUrQj7vMzU8kgdGFhwVu0v2hJGs0KqXcKndHvXgsXyVWErYM+M8lr6FZGpZulOHa677HWpsSK4CuFsUK6Ypj5LnRkuSdn6jiKYVpXfamiost1eB2hJExPlCuZjLPx0F2NpTVHWaId3u3bu8an+eRGl7L3EK1BRY/H7BXewn+oSMqJ9drJGmHVx3+ashekLAIAAA==
+    Metadata:
+      aws:cdk:path: oslynstudio-AppsyncStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Outputs:
+  awsAppsyncApiId:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPI247FE76D
+        - ApiId
+  awsAppsyncApiEndpoint:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPI247FE76D
+        - GraphQLUrl
+  awsAppsyncAuthenticationType:
+    Value: API_KEY
+  awsAppsyncRegion:
+    Value:
+      Ref: AWS::Region
+  amplifyApiModelSchemaS3Uri:
+    Value:
+      Fn::Join:
+        - ""
+        - - s3://
+          - Ref: oslynstudioAppsyncAmplifyCodegenAssetsAmplifyCodegenAssetsBucket9259CE11
+          - /model-schema.graphql
+  awsAppsyncApiKey:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPIDefaultApiKey2F29BBCD
+        - ApiKey
+  GraphQLAPIURL:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPI247FE76D
+        - GraphQLUrl
+  GraphQLAPIKey:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPIDefaultApiKey2F29BBCD
+        - ApiKey
+  StackRegion:
+    Value:
+      Ref: AWS::Region
+  oslynstudioAppsyncId:
+    Value:
+      Fn::GetAtt:
+        - oslynstudioAppsyncGraphQLAPI247FE76D
+        - ApiId
+  oslynstudioAppsyncArn:
+    Value:
+      Fn::Join:
+        - ""
+        - - "arn:"
+          - Ref: AWS::Partition
+          - ":appsync:"
+          - Ref: AWS::Region
+          - ":"
+          - Ref: AWS::AccountId
+          - :apis/
+          - Fn::GetAtt:
+              - oslynstudioAppsyncGraphQLAPI247FE76D
+              - ApiId
+    Export:
+      Name: oslynstudio-AppsyncArn
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+

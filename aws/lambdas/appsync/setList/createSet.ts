@@ -10,14 +10,15 @@ const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  userId: string, description: string, songs: {
+  userId: string, bandId: string, description: string, songs: {
     songId: string, key: string, order: Number
-  }[], bandId?: string, 
+  }[], 
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
-  if (!b.userId) { console.error(`b.creatorId is empty`); return }
+  if (!b.userId) { console.error(`b.userId is empty`); return }
+  if (!b.bandId) { console.error(`b.bandId is empty`); return }
   if (!b.description) { console.error(`b.description is empty`); return }
 
   console.log(JSON.stringify(b.songs))
@@ -34,7 +35,13 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!res0.Item) { console.error(`ERROR: userId not found: ${b.userId}`); return }
   const creator = { ...unmarshall(res0.Item), friends: []}
   
-  let setList = { setListId, description: b.description, userId: b.userId } as any
+  let setList = { 
+    setListId, 
+    description: b.description, 
+    userId: b.userId,
+    createdBy: b.userId,
+    bandId: b.bandId
+  } as any
   setList.songs = b.songs
 
   const res1 = await dynamo.send(new PutItemCommand({

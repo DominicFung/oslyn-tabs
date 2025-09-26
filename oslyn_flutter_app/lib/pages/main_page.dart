@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:oslyn_flutter_app/services/auth_service.dart';
 import 'package:oslyn_flutter_app/services/jam_service.dart';
 import 'package:oslyn_flutter_app/pages/song_card_page.dart';
@@ -20,45 +21,214 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final TextEditingController _jamIdController = TextEditingController();
+  final TextEditingController _userIdController = TextEditingController();
   final FocusNode _jamIdFocusNode = FocusNode();
+  final FocusNode _userIdFocusNode = FocusNode();
   final AuthService _authService = AuthService();
   final JamService _jamService = JamService();
   bool _isLoading = false;
   List<JamSession> _userJamSessions = [];
-  bool _isLoadingJamSessions = false;
+  String? _currentUserId;
+  bool _isAuthenticated = false;
 
   @override
   void initState() {
     super.initState();
-    _authService.initialize();
-    _loadUserJamSessions();
+    print('🔧 MainPage initState() called');
+    _initializeAuth();
   }
 
-  Future<void> _loadUserJamSessions() async {
-    if (!_authService.isAuthenticated()) return;
+  Future<void> _initializeAuth() async {
+    print('🔍 ===== AUTH INITIALIZATION DEBUG START =====');
+    await _authService.initialize();
+    
+    // Check if user is already authenticated
+    final userId = _authService.currentUserId;
+    print('🔍 Auth service initialized, user ID: "$userId"');
+    print('🔍 User ID is null: ${userId == null}');
+    print('🔍 User ID is empty: ${userId?.isEmpty ?? true}');
+    
+    if (userId != null && userId.isNotEmpty) {
+      print('✅ User already authenticated from previous session');
+      setState(() {
+        _currentUserId = userId;
+        _isAuthenticated = true;
+      });
+      
+      print('✅ State restored - _currentUserId: "$_currentUserId"');
+      print('✅ State restored - _isAuthenticated: $_isAuthenticated');
+      
+      // Load user's jam sessions
+      await _loadUserJamSessions();
+    } else {
+      print('ℹ️ No previous authentication found - user needs to sign in');
+    }
+  }
+
+  Future<void> _authenticateUser(String userId) async {
+    if (userId.trim().isEmpty) return;
     
     setState(() {
-      _isLoadingJamSessions = true;
+      _isLoading = true;
     });
 
     try {
-      final sessions = await _jamService.getPublicJamSessions(limit: 10);
+      print('🔍 ===== USER AUTHENTICATION DEBUG START =====');
+      print('🔍 Input user ID: "$userId"');
+      print('🔍 Trimmed user ID: "${userId.trim()}"');
+      print('🔍 User ID length: ${userId.trim().length}');
+      print('🔍 User ID is empty: ${userId.trim().isEmpty}');
+      
+      // Test the user ID by trying to fetch user data
+      print('🔍 Calling getUserById with userId: "${userId.trim()}"');
+      final user = await _jamService.getUserById(userId.trim());
+      print('🔍 getUserById result: ${user != null ? "USER FOUND" : "USER NOT FOUND"}');
+      
+      if (user != null) {
+        print('✅ User authentication successful');
+        print('✅ Setting _currentUserId to: "${userId.trim()}"');
+        print('✅ Setting _isAuthenticated to: true');
+        
+        // Update AuthService with the user ID so it's available globally
+        print('🔍 Updating AuthService with user ID: "${userId.trim()}"');
+        _authService.setUserInfo(userId.trim(), user.email, user.username);
+        
+        // Save to SharedPreferences so it persists
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', userId.trim());
+        await prefs.setString('user_email', user.email ?? '');
+        await prefs.setString('user_name', user.username ?? '');
+        await prefs.setBool('user_has_logged_in_before', true);
+        
+        print('✅ AuthService updated with user information');
+        print('🔍 AuthService currentUserId: ${_authService.currentUserId}');
+        
+        setState(() {
+          print('🔍 Setting _currentUserId to: "${userId.trim()}"');
+          _currentUserId = userId.trim();
+          _isAuthenticated = true;
+          _isLoading = false;
+        });
+        
+        print('✅ State updated successfully');
+        print('🔍 Current _currentUserId after setState: "$_currentUserId"');
+        print('🔍 Current _isAuthenticated after setState: $_isAuthenticated');
+        
+        // Verify the user ID is properly set
+        if (_currentUserId != null && _currentUserId!.isNotEmpty) {
+          print('✅ User ID is properly set and ready for jam session access');
+          print('✅ Manual authentication completed successfully');
+        } else {
+          print('❌ User ID is still null or empty after authentication!');
+        }
+        
+        // Load user's jam sessions after successful authentication
+        print('🔍 Calling _loadUserJamSessions()...');
+        _loadUserJamSessions();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Welcome, ${user.firstName ?? user.username ?? 'User'}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User not found. Please check your User ID.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Authentication failed: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _logout() async {
+    print('🔍 ===== LOGOUT CALLED =====');
+    print('🔍 Current user ID before logout: "$_currentUserId"');
+    print('🔍 Current authentication status: $_isAuthenticated');
+    
+    // Sign out from auth service
+    await _authService.signOut();
+    
+    setState(() {
+      _currentUserId = null;
+      _isAuthenticated = false;
+      _userJamSessions.clear();
+    });
+    
+    print('🔍 User ID after logout: "$_currentUserId"');
+    print('🔍 Authentication status after logout: $_isAuthenticated');
+    _userIdController.clear();
+    
+    _showSnackBar('Successfully signed out!');
+  }
+
+  Future<void> _loadUserJamSessions() async {
+    print('🔍 ===== LOAD USER JAM SESSIONS DEBUG START =====');
+    print('🔍 Is authenticated: $_isAuthenticated');
+    print('🔍 Current user ID: "$_currentUserId"');
+    print('🔍 Current user ID is null: ${_currentUserId == null}');
+    print('🔍 Current user ID is empty: ${_currentUserId?.isEmpty ?? true}');
+    
+    if (!_isAuthenticated || _currentUserId == null) {
+      print('❌ Cannot load user jam sessions - not authenticated or no user ID');
+      return;
+    }
+    
+    setState(() {
+      // Loading jam sessions
+    });
+
+    try {
+      print('🔍 Calling getUserJamSessions with userId: "$_currentUserId"');
+      
+      // First test the resolver with a minimal query
+      await _jamService.testGetUserJamSessionsResolver(_currentUserId!);
+      
+      final sessions = await _jamService.getUserJamSessions(_currentUserId!);
+      print('🔍 getUserJamSessions returned ${sessions.length} sessions');
+      
+      if (sessions.isNotEmpty) {
+        print('📊 Jam sessions found:');
+        for (int i = 0; i < sessions.length; i++) {
+          final session = sessions[i];
+          print('   ${i + 1}. ${session.jamSessionId} - ${session.description ?? 'No description'}');
+        }
+      } else {
+        print('⚠️ No jam sessions found for user');
+      }
+      
       setState(() {
         _userJamSessions = sessions;
-        _isLoadingJamSessions = false;
       });
+      print('✅ Successfully loaded ${sessions.length} jam sessions');
     } catch (e) {
-      print('Error loading jam sessions: $e');
+      print('❌ Error loading user jam sessions: $e');
+      print('❌ Error stack trace: ${StackTrace.current}');
       setState(() {
-        _isLoadingJamSessions = false;
+        // Error loading jam sessions
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isAuthenticated = _authService.isAuthenticated();
-    final welcomeMessage = _authService.getWelcomeMessage();
+    print('🔧 MainPage build() called - _isLoading: $_isLoading, _isAuthenticated: $_isAuthenticated');
+    final welcomeMessage = _isAuthenticated ? 'Welcome back!' : '';
     
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -82,12 +252,18 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Top Bar with User Account
-                if (isAuthenticated) _buildTopBar(),
+                if (_isAuthenticated) _buildTopBar(),
                 
                 // Welcome Message for Authenticated Users
-                if (isAuthenticated && welcomeMessage.isNotEmpty) ...[
+                if (_isAuthenticated && welcomeMessage.isNotEmpty) ...[
                   _buildWelcomeBanner(welcomeMessage),
                   SizedBox(height: 20),
+                ],
+                
+                // User Authentication Section
+                if (!_isAuthenticated) ...[
+                  _buildAuthenticationForm(),
+                  SizedBox(height: 40),
                 ],
                 
                 // Main Content Row - Logo on left, options on right
@@ -130,7 +306,7 @@ class _MainPageState extends State<MainPage> {
                               ),
                               SizedBox(height: isWideScreen ? 20 : 16),
                               // Help text for sign in
-                              if (!isAuthenticated)
+                              if (!_isAuthenticated)
                                 Text(
                                   'Sign in to create jam sessions and manage songs',
                                   style: TextStyle(
@@ -142,7 +318,7 @@ class _MainPageState extends State<MainPage> {
                                 ),
                               SizedBox(height: isWideScreen ? 12 : 8),
                               // Small Sign in with Google widget
-                              if (!isAuthenticated)
+                              if (!_isAuthenticated)
                                 _buildSmallGoogleSignIn(isWideScreen),
                               SizedBox(height: isWideScreen ? 20 : 16),
                             ],
@@ -164,7 +340,10 @@ class _MainPageState extends State<MainPage> {
                                   subtitle: 'Start jamming right away',
                                   icon: Icons.music_note,
                                   color: Color(0xFF007AFF),
-                                  onTap: _showEnterJamOptions,
+                                  onTap: () {
+                                    print('🔘 Enter Jam Session button tapped!');
+                                    _showEnterJamOptions();
+                                  },
                                   isCompact: !isWideScreen,
                                 ),
                                 
@@ -176,7 +355,7 @@ class _MainPageState extends State<MainPage> {
             SizedBox(height: isWideScreen ? 20 : 16),
             
             // Debug Test Button (only in debug mode)
-            if (isAuthenticated)
+            if (_isAuthenticated)
               _buildDebugTestButton(isWideScreen),
                               ],
                             ),
@@ -190,7 +369,7 @@ class _MainPageState extends State<MainPage> {
                 SizedBox(height: 20),
                 
                 // Welcome message for authenticated users
-                if (isAuthenticated)
+                if (_isAuthenticated)
                   Text(
                     'Welcome back! You can manage songs and access all jam sessions.',
                     style: TextStyle(
@@ -532,20 +711,74 @@ class _MainPageState extends State<MainPage> {
       print('🔍 Validating jam session: ${SecurityValidator.sanitizeForLogging(sanitizedInput)}');
       
       // 4. Check if input is a PIN (6 characters) or jam session ID (UUID)
+      print('🔍 ===== JAM SESSION VALIDATION DEBUG START =====');
+      print('🔍 Sanitized input: "$sanitizedInput"');
+      print('🔍 Input length: ${sanitizedInput.length}');
+      print('🔍 Current user ID: "$_currentUserId"');
+      print('🔍 Current user ID is null: ${_currentUserId == null}');
+      print('🔍 Current user ID is empty: ${_currentUserId?.isEmpty ?? true}');
+      
       JamSession? jamSession;
       String? actualJamSessionId;
       
       if (sanitizedInput.length == 6) {
         // It's a PIN - look up the jam session by PIN
-        print('🔑 Input is a PIN, looking up jam session...');
+        print('🔑 Input is a PIN (6 characters), looking up jam session by PIN...');
+        print('🔑 PIN: "$sanitizedInput"');
+        print('🔑 Current user ID when using PIN: "$_currentUserId"');
+        print('🔑 User authenticated: $_isAuthenticated');
         jamSession = await _jamService.getJamSessionByPin(sanitizedInput);
+        print('🔑 PIN lookup result: ${jamSession != null ? "FOUND" : "NOT FOUND"}');
         if (jamSession != null) {
           actualJamSessionId = jamSession.jamSessionId;
+          print('🔑 Actual jam session ID from PIN: "$actualJamSessionId"');
         }
       } else {
-        // It's a jam session ID - look up directly
-        print('🆔 Input is a jam session ID, looking up directly...');
-        jamSession = await _jamService.getJamSession(sanitizedInput);
+        // It's a jam session ID - look up directly with user authentication
+        print('🆔 ===== JAM SESSION ID LOOKUP DEBUG START =====');
+        print('🆔 Input is a jam session ID (not 6 characters), looking up directly...');
+        print('🆔 Jam session ID: "$sanitizedInput"');
+        print('🆔 Current user ID: "$_currentUserId"');
+        print('🆔 User ID type: ${_currentUserId.runtimeType}');
+        print('🆔 User ID is null: ${_currentUserId == null}');
+        print('🆔 User ID is empty: ${_currentUserId?.isEmpty ?? true}');
+        print('🆔 User ID equals "null": ${_currentUserId == "null"}');
+        print('🆔 User authenticated: $_isAuthenticated');
+        print('🆔 User jam sessions count: ${_userJamSessions.length}');
+        
+        // Check if user is properly authenticated
+        if (!_isAuthenticated || _currentUserId == null) {
+          print('❌ User not authenticated - cannot access private jam sessions');
+          print('❌ Please authenticate first by entering your User ID or signing in with Google');
+          _showSnackBar('Please authenticate first to access jam sessions.');
+          return;
+        }
+        
+        // Get the user ID - convert "null" string to actual null
+        String? userIdToUse = _currentUserId;
+        if (userIdToUse == "null" || userIdToUse == null || userIdToUse.isEmpty) {
+          userIdToUse = null;
+          print('🔄 [DEBUG] userIdToUse is null, empty, or "null" string - setting to null');
+        }
+        
+        if (userIdToUse == null) {
+          print('❌ No valid user ID available for jam session access');
+          print('❌ This should not happen if user is properly authenticated');
+          _showSnackBar('Authentication error. Please sign in again.');
+          return;
+        }
+        
+        print('✅ Using user ID for jam session access: "$userIdToUse"');
+        print('📤 Calling getJamSession with userId: "$userIdToUse"');
+        print('🔍 Double-checking _currentUserId before API call: "$_currentUserId"');
+        print('🔍 Double-checking _isAuthenticated before API call: $_isAuthenticated');
+        
+        // Debug: Run comprehensive access test
+        print('🔍 Running debug access test...');
+        await _jamService.debugJamSessionAccess(sanitizedInput, userIdToUse);
+        
+        jamSession = await _jamService.getJamSession(sanitizedInput, userId: userIdToUse);
+        print('🆔 Jam session ID lookup result: ${jamSession != null ? "FOUND" : "NOT FOUND"}');
         actualJamSessionId = sanitizedInput;
       }
       
@@ -590,15 +823,42 @@ class _MainPageState extends State<MainPage> {
     });
     
     try {
+      print('🔍 ===== GOOGLE SIGN-IN DEBUG START =====');
+      print('🔍 Starting Google Sign-In process...');
+      
       final success = await _authService.signInWithGoogle();
+      print('🔍 Google Sign-In result: $success');
+      
       if (success) {
-        _showSnackBar('Successfully signed in!');
-        // Load jam sessions for the newly signed-in user
-        await _loadUserJamSessions();
+        // Get the user ID from the auth service
+        final userId = _authService.currentUserId;
+        print('🔍 Google Sign-In successful, user ID: "$userId"');
+        print('🔍 User ID is null: ${userId == null}');
+        print('🔍 User ID is empty: ${userId?.isEmpty ?? true}');
+        
+        if (userId != null && userId.isNotEmpty) {
+          print('✅ Setting _currentUserId from Google Sign-In: "$userId"');
+          setState(() {
+            _currentUserId = userId;
+            _isAuthenticated = true;
+          });
+          
+          print('✅ State updated - _currentUserId: "$_currentUserId"');
+          print('✅ State updated - _isAuthenticated: $_isAuthenticated');
+          
+          _showSnackBar('Successfully signed in!');
+          // Load jam sessions for the newly signed-in user
+          await _loadUserJamSessions();
+        } else {
+          print('❌ Google Sign-In succeeded but user ID is null or empty');
+          _showSnackBar('Sign in failed: No user ID received.');
+        }
       } else {
+        print('❌ Google Sign-In failed');
         _showSnackBar('Sign in failed. Please try again.');
       }
     } catch (e) {
+      print('❌ Error during Google Sign-In: $e');
       _showSnackBar('Error signing in: $e');
     } finally {
       setState(() {
@@ -695,6 +955,142 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  Widget _buildAuthenticationForm() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Enter Your User ID',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 0.5,
+            ),
+          ),
+          SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: TextField(
+              controller: _userIdController,
+              focusNode: _userIdFocusNode,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+              decoration: InputDecoration(
+                labelText: 'User ID',
+                labelStyle: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 16,
+                ),
+                hintText: 'e.g., your-user-id_usr',
+                hintStyle: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 14,
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(20),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Colors.white.withOpacity(0.8),
+                ),
+              ),
+              onSubmitted: (value) {
+                if (value.trim().isNotEmpty) {
+                  _authenticateUser(value);
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 24),
+          Container(
+            width: double.infinity,
+            height: 56,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.purple.withOpacity(0.8),
+                  Colors.purple.withOpacity(0.6),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.2),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.purple.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: _isLoading ? null : () {
+                  final userId = _userIdController.text.trim();
+                  if (userId.isNotEmpty) {
+                    _authenticateUser(userId);
+                  }
+                },
+                child: Center(
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTopBar() {
     return Container(
       width: double.infinity,
@@ -713,10 +1109,59 @@ class _MainPageState extends State<MainPage> {
               letterSpacing: 1,
             ),
           ),
-          // User Account
-          UserAccountWidget(
-            onTap: _showUserAccountMenu,
-            size: 40,
+          // User Info and Logout
+          Row(
+            children: [
+              // Current User Info
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  'User: ${_currentUserId?.substring(0, 8) ?? 'Unknown'}...',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              SizedBox(width: 12),
+              // User Account
+              UserAccountWidget(
+                onTap: _showUserAccountMenu,
+                size: 40,
+              ),
+              SizedBox(width: 12),
+              // Logout Button
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.red.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: IconButton(
+                  onPressed: _logout,
+                  icon: Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  tooltip: 'Logout',
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -757,227 +1202,6 @@ class _MainPageState extends State<MainPage> {
   }
 
 
-  Widget _buildJamSessionsList({bool isCompact = false}) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(isCompact ? 16 : 24),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(isCompact ? 12 : 16),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Row(
-            children: [
-              Container(
-                width: isCompact ? 50 : 60,
-                height: isCompact ? 50 : 60,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(isCompact ? 25 : 30),
-                  border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
-                ),
-                child: Icon(
-                  Icons.music_note,
-                  color: Colors.white,
-                  size: isCompact ? 24 : 30,
-                ),
-              ),
-              SizedBox(width: isCompact ? 16 : 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Your Jam Sessions',
-                      style: TextStyle(
-                        fontFamily: '.SF Pro Display',
-                        fontSize: isCompact ? 16 : 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                    Text(
-                      'Access your music sessions',
-                      style: TextStyle(
-                        fontFamily: '.SF Pro Text',
-                        fontSize: isCompact ? 12 : 14,
-                        color: Colors.white.withOpacity(0.8),
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: _loadUserJamSessions,
-                icon: Icon(
-                  Icons.refresh,
-                  color: Colors.white.withOpacity(0.7),
-                  size: isCompact ? 16 : 18,
-                ),
-                tooltip: 'Refresh',
-              ),
-            ],
-          ),
-          
-          SizedBox(height: isCompact ? 16 : 20),
-          
-          // Jam Sessions List
-          if (_isLoadingJamSessions)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              ),
-            )
-          else if (_userJamSessions.isEmpty)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.music_off,
-                    color: Colors.white.withOpacity(0.6),
-                    size: 32,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    'No jam sessions yet',
-                    style: TextStyle(
-                      fontFamily: '.SF Pro Text',
-                      fontSize: 14,
-                      color: Colors.white.withOpacity(0.8),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Create or join a session to get started',
-                    style: TextStyle(
-                      fontFamily: '.SF Pro Text',
-                      fontSize: 12,
-                      color: Colors.white.withOpacity(0.6),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-          else
-            Column(
-              children: _userJamSessions.take(3).map((session) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: isCompact ? 8 : 12),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SongCardPage(
-                            jamSessionId: session.jamSessionId,
-                            initialDescription: session.description ?? '',
-                          ),
-                        ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: EdgeInsets.all(isCompact ? 12 : 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: isCompact ? 32 : 40,
-                            height: isCompact ? 32 : 40,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF007AFF).withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(isCompact ? 16 : 20),
-                            ),
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: Colors.white,
-                              size: isCompact ? 16 : 20,
-                            ),
-                          ),
-                          SizedBox(width: isCompact ? 12 : 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  session.description?.isNotEmpty == true 
-                                    ? session.description!
-                                    : 'Jam Session ${session.jamSessionId.substring(0, 8)}...',
-                                  style: TextStyle(
-                                    fontFamily: '.SF Pro Text',
-                                    fontSize: isCompact ? 12 : 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 2),
-                                Text(
-                                  '${session.active.length} active • ${session.admins.length} admins',
-                                  style: TextStyle(
-                                    fontFamily: '.SF Pro Text',
-                                    fontSize: isCompact ? 10 : 12,
-                                    color: Colors.white.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white.withOpacity(0.5),
-                            size: isCompact ? 12 : 14,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          
-          if (_userJamSessions.length > 3) ...[
-            SizedBox(height: isCompact ? 8 : 12),
-            Center(
-              child: Text(
-                '+${_userJamSessions.length - 3} more sessions',
-                style: TextStyle(
-                  fontFamily: '.SF Pro Text',
-                  fontSize: isCompact ? 10 : 12,
-                  color: Colors.white.withOpacity(0.6),
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 
   void _showUserAccountMenu() {
     showDialog(
@@ -1105,7 +1329,10 @@ class _MainPageState extends State<MainPage> {
                 child: SizedBox(
                   height: isWideScreen ? 48 : 40,
                   child: ElevatedButton.icon(
-                    onPressed: _isLoading ? null : _openQRScanner,
+                    onPressed: _isLoading ? null : () {
+                      print('🔘 Scan QR button tapped!');
+                      _openQRScanner();
+                    },
                     icon: Icon(Icons.qr_code_scanner, color: Colors.white, size: isWideScreen ? 20 : 16),
                     label: Text(
                       'Scan QR',
@@ -1132,7 +1359,10 @@ class _MainPageState extends State<MainPage> {
                 child: SizedBox(
                   height: isWideScreen ? 48 : 40,
                   child: ElevatedButton.icon(
-                    onPressed: _isLoading ? null : _showPinInput,
+                    onPressed: _isLoading ? null : () {
+                      print('🔘 Enter PIN button tapped!');
+                      _showPinInput();
+                    },
                     icon: Icon(Icons.pin, color: Colors.white, size: isWideScreen ? 20 : 16),
                     label: Text(
                       'Enter PIN',
@@ -1241,3 +1471,4 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 }
+

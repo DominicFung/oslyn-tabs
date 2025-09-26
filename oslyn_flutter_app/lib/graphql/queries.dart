@@ -73,6 +73,8 @@ class GraphQLQueries {
         passcode
         startDate
         endDate
+        queue
+        revision
         setList {
           setListId
           description
@@ -100,6 +102,7 @@ query GetJamSession(\$jamSessionId: ID!, \$userId: ID) {
   getJamSession(jamSessionId: \$jamSessionId, userId: \$userId) {
     jamSessionId
     queue
+    revision
     currentSong
     currentPage
     description
@@ -171,34 +174,25 @@ query GetJamSession(\$jamSessionId: ID!, \$userId: ID) {
     setList {
       setListId
       description
-      songs {
-        key
-        song {
-          songId
-          title
-          artist
-          album
-          albumCover
-          isApproved
-          version
-          chordSheet
-          chordSheetKey
-          originPlatorm
-          originLink
-          CCLISongTitle
-          CCLISongWriter
-          CCLICopyrightNotice
-          CCLILicenseNumber
-        }
-        defaultSlideConfig {
-          songId
-          backgroundImg
-          backgroundColor
-          textColor
-          highlightColor
-          highlightOpacity
-        }
-        order
+      bandId
+      songCache {
+        songId
+        title
+        artist
+        album
+        albumCover
+        isApproved
+        version
+        chordSheet
+        chordSheetKey
+        originPlatorm
+        originLink
+        CCLISongTitle
+        CCLISongWriter
+        CCLICopyrightNotice
+        CCLILicenseNumber
+        bandIds
+        primaryBandId
       }
       editors {
         userId
@@ -225,6 +219,7 @@ query GetJamSessionByPin(\$pin: String!) {
     jamSessionId
     pin
     queue
+    revision
     currentSong
     currentPage
     description
@@ -369,8 +364,8 @@ mutation SetJamQueue(\$jamSessionId: ID!, \$queue: [Int!]!, \$expectedRevision: 
   }
 
   static const String listSongs = '''
-query ListSongs(\$userId: ID!, \$limit: Int, \$filter: String, \$nextToken: String) {
-  listSongs(userId: \$userId, limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
+query ListSongs(\$userId: ID!, \$bandId: ID, \$limit: Int, \$filter: String, \$nextToken: String) {
+  listSongs(userId: \$userId, bandId: \$bandId, limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
     songId
     title
     artist
@@ -390,6 +385,8 @@ query ListSongs(\$userId: ID!, \$limit: Int, \$filter: String, \$nextToken: Stri
     CCLISongWriter
     CCLICopyrightNotice
     CCLILicenseNumber
+    bandIds
+    primaryBandId
     creator {
       userId
       username
@@ -453,6 +450,30 @@ mutation NextPage(\$jamSessionId: ID!, \$page: Int!) {
   nextPage(jamSessionId: \$jamSessionId, page: \$page) {
     jamSessionId
     page
+  }
+}
+''';
+
+  // Add song to setlist
+  static const String addSongToSet = '''
+mutation AddSongToSet(\$setListId: ID!, \$songId: ID!, \$key: String) {
+  addSongToSet(setListId: \$setListId, songId: \$songId, key: \$key) {
+    setListId
+    description
+    songs {
+      key
+      order
+      song {
+        songId
+        title
+        artist
+        album
+        albumCover
+        chordSheet
+        chordSheetKey
+      }
+    }
+    bandId
   }
 }
 ''';
@@ -522,7 +543,229 @@ query ListPublicBands(\$limit: Int, \$filter: String, \$nextToken: String) {
 }
 ''';
 
-  // Get songs from a specific band
+  // Get user's bands
+  static const String listBands = '''
+query ListBands(\$userId: ID!, \$limit: Int, \$filter: String, \$nextToken: String) {
+  listBands(userId: \$userId, limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
+    bandId
+    name
+    description
+    isPublic
+    userRole
+    owner {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    members {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    admins {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+  }
+}
+''';
+
+  // Get user by ID with band information
+  static const String getUserById = '''
+query GetUserById(\$userId: ID!) {
+  getUserById(userId: \$userId) {
+    userId
+    username
+    email
+    providers
+    firstName
+    lastName
+    imageUrl
+    recieveUpdatesFromOslyn
+    isActivated
+    createDate
+    role
+  }
+}
+''';
+
+  // Get user's accessible jam sessions
+  static const String getUserJamSessions = '''
+query GetUserJamSessions(\$userId: ID!) {
+  getUserJamSessions(userId: \$userId) {
+    jamSessionId
+    bandId
+    policy
+    description
+    startDate
+    endDate
+    admins {
+      userId
+      username
+      firstName
+      lastName
+    }
+    members {
+      userId
+      username
+      firstName
+      lastName
+    }
+    guests {
+      userId
+      username
+      firstName
+      lastName
+    }
+    active {
+      userId
+      participantType
+      username
+    }
+    queue
+    revision
+  }
+}
+''';
+
+  // Update jam session description
+  static const String updateJamSessionDescription = '''
+mutation UpdateJamSessionDescription(\$jamSessionId: ID!, \$description: String!) {
+  updateJamSessionDescription(jamSessionId: \$jamSessionId, description: \$description) {
+    jamSessionId
+    description
+    startDate
+    endDate
+    policy
+    bandId
+  }
+}
+''';
+
+  // Get jam sessions for a user with band context
+  static const String listJamSessions = '''
+query ListJamSessions(\$userId: ID!, \$bandId: ID, \$limit: Int, \$filter: String, \$nextToken: String) {
+  listJamSessions(userId: \$userId, bandId: \$bandId, limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
+    jamSessionId
+    description
+    bandId
+    admins {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    members {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    guests {
+      userId
+      username
+      email
+      providers
+      firstName
+      lastName
+      imageUrl
+      recieveUpdatesFromOslyn
+      isActivated
+      createDate
+      role
+    }
+    policy
+    active {
+      userId
+      participantType
+      joinTime
+      lastPing
+      username
+      colour
+      ip
+      user {
+        userId
+        username
+        email
+        providers
+        firstName
+        lastName
+        imageUrl
+        recieveUpdatesFromOslyn
+        isActivated
+        createDate
+        role
+      }
+    }
+    passcode
+    startDate
+    endDate
+    queue
+    revision
+    setList {
+      setListId
+      description
+      bandId
+      songs {
+        key
+        order
+        song {
+          songId
+          title
+          artist
+          isApproved
+          version
+          chordSheet
+          chordSheetKey
+          bandIds
+          primaryBandId
+        }
+      }
+    }
+  }
+}
+''';
+
+  // Get songs from a specific band (deprecated - use listSongs with bandId)
   static const String listBandSongs = '''
 query ListBandSongs(\$bandId: ID!, \$limit: Int, \$filter: String, \$nextToken: String) {
   listBandSongs(bandId: \$bandId, limit: \$limit, filter: \$filter, nextToken: \$nextToken) {
@@ -545,6 +788,8 @@ query ListBandSongs(\$bandId: ID!, \$limit: Int, \$filter: String, \$nextToken: 
     CCLISongWriter
     CCLICopyrightNotice
     CCLILicenseNumber
+    bandIds
+    primaryBandId
     creator {
       userId
       username

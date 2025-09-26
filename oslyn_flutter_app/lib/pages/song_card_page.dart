@@ -14,10 +14,11 @@ import '../widgets/section_sidebar.dart';
 import '../widgets/left_navigation_sidebar.dart';
 import '../widgets/key_selector_widget.dart';
 import '../widgets/queue_management.dart';
-import '../widgets/user_account_widget.dart';
+import '../widgets/user_account_interface.dart';
 import '../services/auth_service.dart';
 import '../core/oslyn_engine.dart';
 import '../graphql/subscriptions.dart';
+import 'main_page.dart';
 import '../widgets/qr_generator_widget.dart';
 import '../utils/font_utils.dart';
 import '../widgets/background/background.dart';
@@ -133,6 +134,12 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
   
   // Settings overlay state
   bool _showSettingsOverlay = false;
+  
+  // Exit flag to prevent further operations
+  bool _isExiting = false;
+  
+  // Account overlay state
+  bool _showAccountOverlay = false;
   
   // Overlay position toggle (true = right side, false = left side)
   bool _overlayOnRightSide = false;
@@ -776,6 +783,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                   label: 'Settings',
                   isActive: _showSettingsOverlay,
                   onTap: () {
+                    print('🔘 Settings button tapped! _showSettingsOverlay: $_showSettingsOverlay');
                     if (_showSettingsOverlay) {
                       _closeSettingsOverlay();
                     } else {
@@ -810,14 +818,18 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                     });
                   },
                 ),
-                // Sign in button
+                // Account button
                 _buildAppleWidget(
-                  icon: Icons.login,
-                  label: 'Sign In',
-                  isActive: AuthService().isAuthenticated(),
+                  icon: Icons.person,
+                  label: 'Account',
+                  isActive: _showAccountOverlay,
                   onTap: () {
-                    _closeAllSelectors();
-                    // TODO: Implement sign in functionality
+                    if (_showAccountOverlay) {
+                      _closeAccountOverlay();
+                    } else {
+                      _closeAllSelectors();
+                      _switchToAccountOverlay();
+                    }
                   },
                 ),
               ],
@@ -853,6 +865,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                         label: 'Settings',
                         isActive: _showSettingsOverlay,
                         onTap: () {
+                          print('🔘 Settings button tapped (vertical)! _showSettingsOverlay: $_showSettingsOverlay');
                           if (_showSettingsOverlay) {
                             _closeSettingsOverlay();
                           } else {
@@ -887,14 +900,18 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                           });
                         },
                       ),
-                      // Sign in button
+                      // Account button
                       _buildVerticalAppleWidget(
-                        icon: Icons.login,
-                        label: 'Sign In',
-                        isActive: AuthService().isAuthenticated(),
+                        icon: Icons.person,
+                        label: 'Account',
+                        isActive: _showAccountOverlay,
                         onTap: () {
-                          _closeAllSelectors();
-                          // TODO: Implement sign in functionality
+                          if (_showAccountOverlay) {
+                            _closeAccountOverlay();
+                          } else {
+                            _closeAllSelectors();
+                            _switchToAccountOverlay();
+                          }
                         },
                       ),
                     ],
@@ -1041,6 +1058,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                               _queueRevision = newRevision;
                             });
                           },
+                          onSetlistUpdated: () {
+                            // Refresh jam session data to get updated setlist
+                            _refreshJamSession();
+                          },
                         ),
                   ),
                 ),
@@ -1052,6 +1073,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       
       // Show settings overlay on right side
       if (_showSettingsOverlay) {
+        print('🔧 Rendering settings overlay (right side)');
         return Container(
           decoration: _getOutlineDecoration(Colors.blue, width: 2),
           child: SlideTransition(
@@ -1092,6 +1114,16 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                             onTap: () {
                               _closeSettingsOverlay();
                               _loadJamSession();
+                            },
+                          ),
+                          // Exit Jam Session option
+                          _buildSettingsItem(
+                            icon: Icons.exit_to_app,
+                            title: 'Exit Jam Session',
+                            subtitle: 'Return to main page',
+                            onTap: () {
+                              print('🔘 Exit Jam Session button tapped!');
+                              _closeSettingsOverlayAndExit();
                             },
                           ),
                           const Divider(color: Colors.white30),
@@ -1244,6 +1276,57 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
           ),
         );
       }
+      
+      // Show account overlay on right side
+      if (_showAccountOverlay) {
+        final authService = AuthService();
+        final userId = authService.currentUserId;
+        
+        if (userId == null) {
+          return Container(
+            decoration: _getOutlineDecoration(Colors.red, width: 2),
+            child: Padding(
+              padding: EdgeInsets.all(16 * spacingScaleFactor),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, color: Colors.red, size: 48),
+                    SizedBox(height: 16),
+                    Text(
+                      'Not Authenticated',
+                      style: TextStyle(
+                        fontSize: 18 * textScaleFactor,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Please sign in to view account',
+                      style: TextStyle(
+                        fontSize: 14 * textScaleFactor,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+        
+        return Container(
+          decoration: _getOutlineDecoration(Colors.purple, width: 2),
+          child: Padding(
+            padding: EdgeInsets.all(16 * spacingScaleFactor),
+            child: UserAccountInterface(
+              onClose: _closeAccountOverlay,
+              userId: userId,
+            ),
+          ),
+        );
+      }
     }
     
     // Default: show normal lyrics content
@@ -1384,7 +1467,19 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
 
   @override
   void dispose() {
+    print('🧹 Disposing SongCardPage - cleaning up all resources...');
+    print('🔍 Disposal subscription states:');
+    print('   - _songSubscription: ${_songSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _keySubscription: ${_keySubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _pageSubscription: ${_pageSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _queueSubscription: ${_queueSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _fadeTimer: ${_fadeTimer != null ? "ACTIVE" : "NULL"}');
+    
+    // Dispose focus node
     _focusNode.dispose();
+    print('✅ Focus node disposed');
+    
+    // Dispose all animation controllers
     _queueManagementAnimationController.dispose();
     _settingsAnimationController.dispose();
     _keySelectorAnimationController.dispose();
@@ -1393,11 +1488,40 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
     _leftContainerWidthAnimationController.dispose();
     _containerWLayoutAnimationController.dispose();
     _containerWSlideAnimationController.dispose();
-    _songSubscription?.cancel();
-    _keySubscription?.cancel();
-    _pageSubscription?.cancel();
-    _queueSubscription?.cancel();
-    _fadeTimer?.cancel();
+    print('✅ Animation controllers disposed');
+    
+    // Cancel all subscriptions
+    if (_songSubscription != null) {
+      print('🛑 Disposing song subscription...');
+      _songSubscription!.cancel();
+    }
+    if (_keySubscription != null) {
+      print('🛑 Disposing key subscription...');
+      _keySubscription!.cancel();
+    }
+    if (_pageSubscription != null) {
+      print('🛑 Disposing page subscription...');
+      _pageSubscription!.cancel();
+    }
+    if (_queueSubscription != null) {
+      print('🛑 Disposing queue subscription...');
+      _queueSubscription!.cancel();
+    }
+    
+    // Cancel fade timer
+    if (_fadeTimer != null) {
+      print('🛑 Disposing fade timer...');
+      _fadeTimer!.cancel();
+    }
+    
+    // Clear all references to prevent memory leaks
+    _songSubscription = null;
+    _keySubscription = null;
+    _pageSubscription = null;
+    _queueSubscription = null;
+    _fadeTimer = null;
+    
+    print('✅ SongCardPage disposed successfully - all resources cleaned up');
     super.dispose();
   }
 
@@ -1440,8 +1564,15 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       print('   - Additional Tables: SETLIST_TABLE_NAME, SONG_TABLE_NAME (if setList requested)');
       print('⏱️ Starting DynamoDB query at: ${DateTime.now().toIso8601String()}');
       
+      // Get user ID from auth service for authentication
+      final authService = AuthService();
+      final userId = authService.currentUserId;
+      print('🔍 Auth service user ID: "$userId"');
+      print('🔍 User ID is null: ${userId == null}');
+      print('🔍 User ID is empty: ${userId?.isEmpty ?? true}');
+      
       final stopwatch = Stopwatch()..start();
-      final session = await _jamService.getJamSession(widget.jamSessionId);
+      final session = await _jamService.getJamSession(widget.jamSessionId, userId: userId);
       stopwatch.stop();
       
       print('⏱️ DynamoDB query completed in: ${stopwatch.elapsedMilliseconds}ms');
@@ -1523,10 +1654,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
               print('      - Key: ${jamSong.key}');
               print('      - Chord Sheet Length: ${jamSong.song.chordSheet.length} characters');
               print('      - Chord Sheet Key: ${jamSong.song.chordSheetKey}');
-              if (i < 5) { // Only show first 5 songs in detail
+              if (i < 3) { // Only show first 3 songs in detail
                 print('      - Chord Sheet Preview: ${jamSong.song.chordSheet.length > 100 ? jamSong.song.chordSheet.substring(0, 100) + '...' : jamSong.song.chordSheet}');
               }
-              if (i >= 5) {
+              if (i >= 3) {
                 print('      ... and ${session.setList!.songs!.length - 6} more songs');
                 break;
               }
@@ -1568,8 +1699,11 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
           print('⚠️ No set list found in jam session');
         }
         
-        if (session.setList?.songs?.isEmpty == true) {
-          print('🔄 Set list is empty, trying to load songs from current user...');
+        if (session.setList?.songs?.isEmpty == true || session.setList?.songs == null) {
+          print('🔄 Set list is empty or has no songs, trying to load songs from current user...');
+          print('🔄 Set list songs: ${session.setList?.songs}');
+          print('🔄 Set list songs is null: ${session.setList?.songs == null}');
+          print('🔄 Set list songs is empty: ${session.setList?.songs?.isEmpty ?? true}');
           await _loadSongsFromCurrentUser();
           // Initialize queue after loading songs
           await _initializeQueue();
@@ -1651,8 +1785,15 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       print('✅ Successfully loaded ${allSongs.length} accessible songs for user');
     } catch (e) {
       print('❌ Error loading songs for current user: $e');
-      // Fallback to admin songs if user loading fails
-      await _loadSongsFromAdmin('9e7724c6-fbda-4a0c-874d-3841ae0848c1_usr');
+      // Show error message to user instead of falling back to hardcoded admin
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load songs: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -2171,6 +2312,16 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
                   _loadJamSession();
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text('Exit Jam Session'),
+                subtitle: const Text('Return to main page'),
+                onTap: () {
+                  print('🔘 Exit Jam Session button tapped (dialog)!');
+                  Navigator.pop(context); // Close dialog
+                  _exitJamSession();
+                },
+              ),
               const Divider(),
               const Text('Sidebar Position', style: TextStyle(fontWeight: FontWeight.bold)),
               ListTile(
@@ -2605,23 +2756,39 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
   Future<void> _initializeQueue() async {
     try {
       print('🔄 Initializing queue for jam session: ${widget.jamSessionId}');
-      final (q, rev) = await _jamService.getJamQueue(widget.jamSessionId);
       
+      // Get user ID from auth service for authentication
+      final authService = AuthService();
+      final userId = authService.currentUserId;
+      print('🔄 Auth service user ID for queue: "$userId"');
+      
+      // Debug: Check if jam session is loaded
+      print('🔍 [DEBUG] Jam session loaded: ${jamSession != null}');
+      if (jamSession != null) {
+        print('🔍 [DEBUG] Jam session ID: ${jamSession!.jamSessionId}');
+        print('🔍 [DEBUG] Jam session queue: ${jamSession!.queue}');
+        print('🔍 [DEBUG] Jam session revision: ${jamSession!.revision}');
+        print('🔍 [DEBUG] Jam session current song: ${jamSession!.currentSong}');
+      }
+      
+      final (q, rev, currentSongFromServer) = await _jamService.getJamQueue(widget.jamSessionId);
+      
+      print('📊 ===== QUEUE LOADING DEBUG =====');
       print('📊 Current queue from server: $q (revision: $rev)');
+      print('📊 Current song index from server: $currentSongFromServer');
       print('📊 Jam session setlist songs: ${jamSession?.setList?.songs?.length ?? 0}');
       print('📊 Local songs: ${songs?.length ?? 0}');
+      print('📊 Queue is null: ${q == null}');
+      print('📊 Queue is empty: ${q?.isEmpty ?? true}');
+      print('📊 Queue length: ${q?.length ?? 0}');
+      if (q != null) {
+        print('📊 Queue contents: ${q.map((e) => '${e.runtimeType}: $e').toList()}');
+      }
       
-      // Also fetch the current song index from the server
-      // We'll use setJamQueue with the current queue to get the current song index
+      // Set the current song index from the server response
       if (q != null && q.isNotEmpty) {
-        final (_, _, currentSongFromServer) = await _jamService.setJamQueue(
-          widget.jamSessionId, 
-          q, 
-          expectedRevision: rev ?? 0
-        );
-        
         if (currentSongFromServer != null) {
-          print('🎵 Current song index from server: $currentSongFromServer');
+          print('🎵 Using current song index from server: $currentSongFromServer');
           setState(() {
             _currentSongIndex = currentSongFromServer;
           });
@@ -2629,6 +2796,11 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
           print('🎵 Using current song from jam session: ${jamSession!.currentSong}');
           setState(() {
             _currentSongIndex = jamSession!.currentSong!;
+          });
+        } else {
+          print('🎵 No current song index available, setting to 0 (first song)');
+          setState(() {
+            _currentSongIndex = 0;
           });
         }
         
@@ -2645,19 +2817,36 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         }
       }
       
-      // If queue is empty or null, keep it empty (don't auto-populate with setlist)
+      // If queue is empty or null, try to create a basic queue from available songs
       if (q == null || q.isEmpty) {
-        print('🆕 Queue is empty, keeping it empty (no auto-population)');
+        print('🆕 Queue is empty, trying to create basic queue from available songs...');
         
-        setState(() {
-          _queue = <int>[];
-          _queueRevision = rev ?? 0;
-          _currentSongIndex = -1; // No current song when queue is empty
-        });
-        print('✅ Queue kept empty as intended');
+        // Check if we have songs available (either from setList or local songs)
+        final availableSongs = jamSession?.setList?.songsList?.length ?? songs?.length ?? 0;
+        print('🆕 Available songs: $availableSongs');
+        
+        if (availableSongs > 0) {
+          // Create a basic queue with the first few songs
+          final basicQueue = List.generate(availableSongs, (index) => index);
+          print('🆕 Created basic queue: $basicQueue');
+          
+          setState(() {
+            _queue = basicQueue;
+            _queueRevision = rev ?? 0;
+            _currentSongIndex = 0; // Start with first song
+          });
+          print('✅ Created basic queue with ${basicQueue.length} songs');
+        } else {
+          print('🆕 No songs available, keeping queue empty');
+          setState(() {
+            _queue = <int>[];
+            _queueRevision = rev ?? 0;
+            _currentSongIndex = -1; // No current song when queue is empty
+          });
+        }
       } else {
       // Queue already exists, use it (remove duplicates and validate indices)
-      final availableSongs = jamSession?.setList?.songs?.length ?? songs?.length ?? 0;
+      final availableSongs = jamSession?.setList?.songsList?.length ?? songs?.length ?? 0;
       final seen = <int>{};
       final validQueue = q.where((songIndex) => 
         seen.add(songIndex) && songIndex >= 0 && songIndex < availableSongs
@@ -2680,7 +2869,11 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
       });
       print('✅ Loaded existing queue with ${_queue.length} songs (deduplicated from ${q.length}, validated against ${availableSongs} available songs)');
       print('🎵 Current song index: $_currentSongIndex');
-    }
+      print('📊 ===== FINAL QUEUE STATE =====');
+      print('📊 Final queue: $_queue');
+      print('📊 Final current song index: $_currentSongIndex');
+      print('📊 Final queue revision: $_queueRevision');
+      }
     } catch (e) {
       print('❌ Error initializing queue: $e');
       // Set a minimal local queue as fallback
@@ -2759,7 +2952,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         break;
       } else {
         // Failed - get fresh queue state and retry
-        final (q, rev) = await _jamService.getJamQueue(widget.jamSessionId);
+        final (q, rev, _) = await _jamService.getJamQueue(widget.jamSessionId);
         if (q != null && rev != null) {
           setState(() {
             _queue = q;
@@ -2790,7 +2983,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         });
         break;
       } else {
-        final (q, rev) = await _jamService.getJamQueue(widget.jamSessionId);
+        final (q, rev, _) = await _jamService.getJamQueue(widget.jamSessionId);
         if (q != null && rev != null) {
           setState(() { _queue = q; _queueRevision = rev; });
         } else {
@@ -2950,6 +3143,12 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    // Early return if exiting
+    if (_isExiting) {
+      print('🚫 Widget is exiting, skipping build');
+      return const SizedBox.shrink();
+    }
+    
     // Allow both authenticated and guest users to view jam sessions
     // Authentication is optional for viewing, but required for certain actions
 
@@ -3175,16 +3374,21 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
   }
 
   void _openSettingsOverlay() {
+    print('🔧 _openSettingsOverlay() called');
     setState(() {
       _showSettingsOverlay = true;
     });
+    print('🔧 Settings overlay state set to true');
     // Start the slide up animation
     _settingsAnimationController.forward();
+    print('🔧 Settings animation started');
   }
 
   void _closeSettingsOverlay() {
+    print('🔧 _closeSettingsOverlay() called');
     // Start the slide down animation
     _settingsAnimationController.reverse().then((_) {
+      print('🔧 Settings overlay animation completed');
       if (mounted) {
         setState(() {
           _showSettingsOverlay = false;
@@ -3194,6 +3398,115 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         // Reset animation controllers
         _textSizeAnimationController.reset();
         _qrCodeAnimationController.reset();
+        print('🔧 Settings overlay state updated');
+      }
+    });
+  }
+
+  void _closeSettingsOverlayAndExit() {
+    print('🔧 _closeSettingsOverlayAndExit() called');
+    
+    // Immediately close the settings overlay without animation
+    setState(() {
+      _showSettingsOverlay = false;
+      _showTextSizeOverlay = false;
+      _showQRCodeOverlay = false;
+    });
+    
+    // Reset animation controllers
+    _settingsAnimationController.reset();
+    _textSizeAnimationController.reset();
+    _qrCodeAnimationController.reset();
+    
+    print('🔧 Settings overlay closed immediately, calling exit...');
+    
+    // Call exit immediately without waiting for animation
+    _exitJamSession();
+  }
+
+  void _exitJamSession() {
+    print('🚀 _exitJamSession() method called!');
+    
+    if (!mounted || _isExiting) {
+      print('⚠️ Widget not mounted or already exiting, skipping exit cleanup');
+      return;
+    }
+    
+    // Set exit flag to prevent further operations
+    _isExiting = true;
+    
+    print('🚪 Exiting jam session - cleaning up resources...');
+    print('🔍 Current subscription states:');
+    print('   - _songSubscription: ${_songSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _keySubscription: ${_keySubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _pageSubscription: ${_pageSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _queueSubscription: ${_queueSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _fadeTimer: ${_fadeTimer != null ? "ACTIVE" : "NULL"}');
+    
+    // Cancel all subscriptions first
+    if (_songSubscription != null) {
+      print('🛑 Cancelling song subscription...');
+      _songSubscription!.cancel();
+    }
+    if (_keySubscription != null) {
+      print('🛑 Cancelling key subscription...');
+      _keySubscription!.cancel();
+    }
+    if (_pageSubscription != null) {
+      print('🛑 Cancelling page subscription...');
+      _pageSubscription!.cancel();
+    }
+    if (_queueSubscription != null) {
+      print('🛑 Cancelling queue subscription...');
+      _queueSubscription!.cancel();
+    }
+    
+    // Cancel fade timer
+    if (_fadeTimer != null) {
+      print('🛑 Cancelling fade timer...');
+      _fadeTimer!.cancel();
+    }
+    
+    // Clear subscription references
+    _songSubscription = null;
+    _keySubscription = null;
+    _pageSubscription = null;
+    _queueSubscription = null;
+    _fadeTimer = null;
+    
+    print('✅ All subscriptions and timers cancelled and cleared');
+    print('🔍 Final subscription states:');
+    print('   - _songSubscription: ${_songSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _keySubscription: ${_keySubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _pageSubscription: ${_pageSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _queueSubscription: ${_queueSubscription != null ? "ACTIVE" : "NULL"}');
+    print('   - _fadeTimer: ${_fadeTimer != null ? "ACTIVE" : "NULL"}');
+    
+    // Navigate back to main page using pushReplacement to clear navigation stack
+    print('🚀 Navigating back to main page...');
+    
+    // Use a post-frame callback to ensure navigation happens after current frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        try {
+          // Use pushReplacement to clear the navigation stack and reset Navigator state
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPage(),
+            ),
+          );
+          print('✅ Navigation completed successfully with pushReplacement');
+        } catch (e) {
+          print('❌ Navigation error: $e');
+          // If pushReplacement fails, try regular pop
+          try {
+            Navigator.pop(context);
+            print('✅ Fallback navigation completed successfully');
+          } catch (e2) {
+            print('❌ Fallback navigation also failed: $e2');
+          }
+        }
       }
     });
   }
@@ -3217,7 +3530,9 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
   }
 
   void _switchToSettingsOverlay() {
+    print('🔧 _switchToSettingsOverlay() called');
     if (_showQueueManagementOverlay) {
+      print('🔧 Closing queue first, then opening settings');
       // Close queue first, then open settings
       _queueManagementAnimationController.reverse().then((_) {
         if (mounted) {
@@ -3226,9 +3541,11 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
             _showSettingsOverlay = true;
           });
           _settingsAnimationController.forward();
+          print('🔧 Settings overlay opened after queue closed');
         }
       });
     } else {
+      print('🔧 Opening settings directly');
       // Just open settings
       _openSettingsOverlay();
     }
@@ -3250,7 +3567,47 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
         _showCapoSelectorOverlay = false;
       });
     }
+    if (_showAccountOverlay) {
+      setState(() {
+        _showAccountOverlay = false;
+      });
+    }
     // Note: Text size overlay is a sub-overlay of settings, so it's handled by settings overlay
+  }
+
+  void _switchToAccountOverlay() {
+    if (_showQueueManagementOverlay) {
+      // Close queue first, then open account
+      _queueManagementAnimationController.reverse().then((_) {
+        if (mounted) {
+          setState(() {
+            _showQueueManagementOverlay = false;
+            _showAccountOverlay = true;
+          });
+        }
+      });
+    } else if (_showSettingsOverlay) {
+      // Close settings first, then open account
+      _settingsAnimationController.reverse().then((_) {
+        if (mounted) {
+          setState(() {
+            _showSettingsOverlay = false;
+            _showAccountOverlay = true;
+          });
+        }
+      });
+    } else {
+      // Just open account
+      setState(() {
+        _showAccountOverlay = true;
+      });
+    }
+  }
+
+  void _closeAccountOverlay() {
+    setState(() {
+      _showAccountOverlay = false;
+    });
   }
 
   void _cycleKey() {
@@ -3367,6 +3724,7 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
     Widget? trailing,
     required VoidCallback onTap,
   }) {
+    print('🔧 _buildSettingsItem called for: $title');
     return ListTile(
       leading: Icon(icon, color: Colors.white70),
       title: Text(
@@ -3380,7 +3738,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
             )
           : null,
       trailing: trailing,
-      onTap: onTap,
+      onTap: () {
+        print('🔧 Settings item tapped: $title');
+        onTap();
+      },
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
     );
   }
@@ -3402,6 +3763,10 @@ class _SongCardPageState extends State<SongCardPage> with TickerProviderStateMix
               _queue = newQueue;
               _queueRevision = newRevision;
             });
+          },
+          onSetlistUpdated: () {
+            // Refresh jam session data to get updated setlist
+            _refreshJamSession();
           },
           onSongSelected: (songIndex) {
             Navigator.pop(context);
@@ -4256,14 +4621,17 @@ The hour I first believed
                               queueRevision: _queueRevision,
                               onQueueUpdated: (newQueue, newRevision) {
                                 setState(() {
-                                  // Remove duplicates while preserving order and validate indices
+                                  // Only validate indices, allow duplicates
                                   final availableSongs = jamSession?.setList?.songs?.length ?? songs?.length ?? 0;
-                                  final seen = <int>{};
                                   _queue = newQueue.where((songIndex) => 
-                                    seen.add(songIndex) && songIndex >= 0 && songIndex < availableSongs
+                                    songIndex >= 0 && songIndex < availableSongs
                                   ).toList();
                                   _queueRevision = newRevision;
                                 });
+                              },
+                              onSetlistUpdated: () {
+                                // Refresh jam session data to get updated setlist
+                                _refreshJamSession();
                               },
                               onSongSelected: _onSongSelected,
                               onCurrentSongChanged: (newCurrentSongIndex) {
@@ -4307,6 +4675,7 @@ The hour I first believed
 
     // If settings overlay is shown, display it instead of normal content (only on left side)
     if (_showSettingsOverlay && !_overlayOnRightSide) {
+      print('🔧 Rendering settings overlay (left side)');
       return Container(
         decoration: _getOutlineDecoration(Colors.blue, width: 2),
         child: SlideTransition(
@@ -4346,6 +4715,16 @@ The hour I first believed
                         onTap: () {
                           _closeSettingsOverlay();
                           _loadJamSession();
+                        },
+                      ),
+                      // Exit Jam Session option
+                      _buildSettingsItem(
+                        icon: Icons.exit_to_app,
+                        title: 'Exit Jam Session',
+                        subtitle: 'Return to main page',
+                        onTap: () {
+                          print('🔘 Exit Jam Session button tapped (left side)!');
+                          _closeSettingsOverlayAndExit();
                         },
                       ),
                       const Divider(color: Colors.white30),
@@ -4495,6 +4874,57 @@ The hour I first believed
               ),
             ],
           ),
+          ),
+        ),
+      );
+    }
+
+    // If account overlay is shown, display it instead of normal content (only on left side)
+    if (_showAccountOverlay && !_overlayOnRightSide) {
+      final authService = AuthService();
+      final userId = authService.currentUserId;
+      
+      if (userId == null) {
+        return Container(
+          decoration: _getOutlineDecoration(Colors.red, width: 2),
+          child: Padding(
+            padding: EdgeInsets.all(16 * spacingScaleFactor),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error, color: Colors.red, size: 48),
+                  SizedBox(height: 16),
+                  Text(
+                    'Not Authenticated',
+                    style: TextStyle(
+                      fontSize: 18 * textScaleFactor,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Please sign in to view account',
+                    style: TextStyle(
+                      fontSize: 14 * textScaleFactor,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+      
+      return Container(
+        decoration: _getOutlineDecoration(Colors.purple, width: 2),
+        child: Padding(
+          padding: EdgeInsets.all(16 * spacingScaleFactor),
+          child: UserAccountInterface(
+            onClose: _closeAccountOverlay,
+            userId: userId,
           ),
         ),
       );
@@ -5601,7 +6031,7 @@ The hour I first believed
                                       _buildLeftContainerContent(tinySpacing, smallSpacing, mediumSpacing, largeSpacing, extraLargeSpacing, spacingScaleFactor, calculateDynamicSpacing),
                                       
                                       // Pull tab button in top right corner - only show when no overlays are active
-                                      if (!_showQueueManagementOverlay && !_showSettingsOverlay && !_showKeySelectorOverlay && !_showCapoSelectorOverlay && !_showTextSizeOverlay && !_showQRCodeOverlay)
+                                      if (!_showQueueManagementOverlay && !_showSettingsOverlay && !_showAccountOverlay && !_showKeySelectorOverlay && !_showCapoSelectorOverlay && !_showTextSizeOverlay && !_showQRCodeOverlay)
                                         Positioned(
                                           top: 8,
                                           right: 8,
@@ -5826,19 +6256,99 @@ The hour I first believed
   }
 
   void _showUserAccountMenu() {
+    final authService = AuthService();
+    final userId = authService.currentUserId;
+    
+    if (userId == null) {
+      // Show error dialog if not authenticated
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.red[900],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error, color: Colors.red, size: 48),
+                const SizedBox(height: 16),
+                Text(
+                  'Not Authenticated',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Please sign in to view account',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+    
     showDialog(
       context: context,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        child: UserAccountMenu(
-          onSignOut: () {
-            Navigator.pop(context);
-            // TODO: Implement sign out
-            print('Sign out requested from sidebar');
-          },
+        child: UserAccountInterface(
           onClose: () => Navigator.pop(context),
+          userId: userId,
         ),
       ),
     );
+  }
+
+  /// Refreshes jam session data to get updated setlist
+  Future<void> _refreshJamSession() async {
+    try {
+      print('🔄 ===== REFRESH JAM SESSION CALLED =====');
+      print('🔄 Refreshing jam session data...');
+      
+      // Initialize the service if not already done
+      _jamService = JamService();
+      
+      // Fetch the updated jam session
+      print('🔄 Calling getJamSession...');
+      final updatedJamSession = await _jamService.getJamSession(widget.jamSessionId);
+      print('🔄 getJamSession returned: ${updatedJamSession != null ? "not null" : "null"}');
+      
+      if (updatedJamSession != null) {
+        print('🔄 Updating state with new jam session...');
+        setState(() {
+          jamSession = updatedJamSession;
+          // Update queue and revision from the refreshed data
+          _queue = updatedJamSession.queue ?? [];
+          _queueRevision = updatedJamSession.revision ?? 0;
+        });
+        print('✅ Jam session refreshed successfully');
+        print('🎵 Updated setlist has ${updatedJamSession.setList?.songs?.length ?? 0} songs');
+        print('🎵 Current jamSession.setList?.songs?.length: ${jamSession?.setList?.songs?.length ?? 0}');
+      } else {
+        print('❌ Failed to refresh jam session - received null');
+      }
+    } catch (e) {
+      print('❌ Error refreshing jam session: $e');
+      print('❌ Stack trace: ${StackTrace.current}');
+      // Don't show error to user as this is a background refresh
+    }
   }
 }

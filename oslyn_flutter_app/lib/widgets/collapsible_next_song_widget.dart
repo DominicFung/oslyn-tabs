@@ -64,8 +64,8 @@ class _CollapsibleNextSongWidgetState extends State<CollapsibleNextSongWidget>
   }
 
   String _getNextSongTitle({int? queueIndex}) {
-    if (widget.jamSession?.setList?.songs?.isNotEmpty == true) {
-      final songs = widget.jamSession!.setList!.songs!;
+    if (widget.jamSession?.setList?.songsList?.isNotEmpty == true) {
+      final songs = widget.jamSession!.setList!.songsList!;
       
       // Check if we have a queue and nextSongIndex is not null
       if (widget.queue != null && widget.queue!.isNotEmpty) {
@@ -92,7 +92,7 @@ class _CollapsibleNextSongWidgetState extends State<CollapsibleNextSongWidget>
   }
 
   int _getTotalSongs() {
-    return widget.jamSession?.setList?.songs?.length ?? 0;
+    return widget.jamSession?.setList?.songsList?.length ?? 0;
   }
 
   @override
@@ -204,9 +204,9 @@ class _CollapsibleNextSongWidgetState extends State<CollapsibleNextSongWidget>
         const SizedBox(height: 8),
         
         // Song selector button
-        if (widget.jamSession?.setList?.songs?.isNotEmpty == true)
+        if (widget.jamSession?.setList?.songsList?.isNotEmpty == true)
           SongSelectorWidget(
-            songs: widget.jamSession!.setList!.songs!,
+            songs: widget.jamSession!.setList!.songsList!,
             currentSongIndex: widget.currentSongIndex,
             onSongSelected: widget.onSongSelected,
             buttonText: 'Select the next song',

@@ -4,7 +4,7 @@ import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphq
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
-import path, { join } from 'path'
+import { join } from 'path'
 
 interface AppsyncProps {
   name: string
@@ -38,9 +38,19 @@ export class AppsyncStack extends Stack {
     const recordingDynamoName = Fn.importValue(`${props.name}-RecordingTable-Name`)
     const recordingDynamoArn = Fn.importValue(`${props.name}-RecordingTable-Arn`)
 
+    // New band access control tables
+    const userBandMembershipDynamoName = Fn.importValue(`${props.name}-UserBandMembershipTable-Name`)
+    const userBandMembershipDynamoArn = Fn.importValue(`${props.name}-UserBandMembershipTable-Arn`)
+
+    const bandSongDynamoName = Fn.importValue(`${props.name}-BandSongTable-Name`)
+    const bandSongDynamoArn = Fn.importValue(`${props.name}-BandSongTable-Arn`)
+
+    const bandSetlistDynamoName = Fn.importValue(`${props.name}-BandSetlistTable-Name`)
+    const bandSetlistDynamoArn = Fn.importValue(`${props.name}-BandSetlistTable-Arn`)
+
     const appsync = new AmplifyGraphqlApi(this, `${props.name}-Appsync`, {
       apiName: `${props.name}`,
-      definition: AmplifyGraphqlDefinition.fromFiles(path.join(__dirname, "../", 'schema.graphql')),
+      definition: AmplifyGraphqlDefinition.fromFiles(join(__dirname, "../", 'schema.graphql')),
       authorizationModes: {
         apiKeyConfig: { expires: Duration.days(365) }
       },
@@ -98,7 +108,8 @@ export class AppsyncStack extends Stack {
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
               `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`,
-              `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`
+              `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`,
+              `${userBandMembershipDynamoArn}*`, `${bandSongDynamoArn}*`, `${bandSetlistDynamoArn}*`
             ]
           }),
           new PolicyStatement({
@@ -121,7 +132,10 @@ export class AppsyncStack extends Stack {
         JAM_TABLE_NAME: jamDynamoName,
         INVITE_TABLE_NAME: inviteDynamoName,
         USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName,
-        RECORDING_TABLE_NAME: recordingDynamoName
+        RECORDING_TABLE_NAME: recordingDynamoName,
+        USER_BAND_MEMBERSHIP_TABLE_NAME: userBandMembershipDynamoName,
+        BAND_SONG_TABLE_NAME: bandSongDynamoName,
+        BAND_SETLIST_TABLE_NAME: bandSetlistDynamoName
       },
       runtime: Runtime.NODEJS_16_X,
     }
@@ -426,6 +440,18 @@ export class AppsyncStack extends Stack {
       fieldName: "getJamSession"
     })
 
+    const getUserJamSessions = new NodejsFunction(this, `${props.name}-GetUserJamSessions`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'getUserJamSessions.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetUserJamSessionsDS`, getUserJamSessions)
+    .createResolver(`${props.name}-GetUserJamSessionsResolver`, {
+      typeName: "Query",
+      fieldName: "getUserJamSessions"
+    })
+
     const createJamSession = new NodejsFunction(this, `${props.name}-CreateJamSession`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'createJamSession.ts'),
       timeout: Duration.minutes(5),
@@ -436,6 +462,18 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-CreateJamSessionResolver`, {
       typeName: "Mutation",
       fieldName: "createJamSession"
+    })
+
+    const updateJamSessionDescription = new NodejsFunction(this, `${props.name}-UpdateJamSessionDescription`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'updateJamSessionDescription.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}UpdateJamSessionDescriptionDS`, updateJamSessionDescription)
+    .createResolver(`${props.name}-UpdateJamSessionDescriptionResolver`, {
+      typeName: "Mutation",
+      fieldName: "updateJamSessionDescription"
     })
 
     const listPublicJamSessions = new NodejsFunction(this, `${props.name}-ListPublicJamSessions`, {
