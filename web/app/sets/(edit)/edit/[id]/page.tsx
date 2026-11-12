@@ -19,13 +19,14 @@ type _Session = Session & {
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function EditSets({ params }: { params: { id: string } }) {
+export default async function EditSets({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
   const userId = (session?.user as _Session)?.userId
 
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   
   let d1 = [] as Song[]
@@ -33,7 +34,7 @@ export default async function EditSets({ params }: { params: { id: string } }) {
 
   try {
     const { data } = await client.graphql({ 
-      query: q.getSet, variables: { setListId: params.id, userId: userId }
+      query: q.getSet, variables: { setListId: id, userId: userId }
     }) as GraphQLResult<{ getSet: SetList }>
 
     if (data?.getSet) d2 = data?.getSet

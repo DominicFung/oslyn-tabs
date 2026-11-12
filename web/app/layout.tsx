@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-oslyn-200 dark:bg-black`}>
         <div className="bg-gradient-to-b from-coral-50 to-oslyn-200 dark:from-oslyn-900 dark:to-black w-full h-full absolute top-0 left-0 z-0 overflow-x-hidden">
         <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false} storageKey={"oslynTheme"}>

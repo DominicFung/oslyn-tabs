@@ -15,6 +15,7 @@ import Bands from './bands'
 import { BandContextProvider } from './context'
 import BandTabs from './(components)/bandTabs'
 import NewFeature from '../(components)/new'
+import Link from 'next/link'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
@@ -25,7 +26,7 @@ export default async function Band() {
   const name = session?.user?.name?.split(" ")[0]
   const userId = (session?.user as _Session)?.userId
 
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   let d = [] as Band[]
 
@@ -87,9 +88,9 @@ export default async function Band() {
         <div className="flex flex-row z-10 relative">
           <BandTabs bands={d} />
           <div className="flex-1" />
-          <a href="/bands/create">
+          <Link href="/bands/create">
             <button type="submit" className="text-white mx-5 my-2 bg-oslyn-700 hover:bg-oslyn-800 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:focus:ring-oslyn-800">+</button>
-          </a>
+          </Link>
         </div>
       </section>
       { user && <Bands bands={d} user={user} songs={songs} /> }

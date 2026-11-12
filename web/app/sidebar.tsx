@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useSideBarContext } from "@/app/context";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
@@ -60,10 +61,10 @@ export default function Sidebar () {
     </div>
    
     <div className="flex flex-col h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <a href="/" className="flex items-center pl-2.5 my-5">
+      <Link href="/" className="flex items-center pl-2.5 my-5">
          <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" unoptimized />
          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Oslyn Tabs</span>
-      </a>
+      </Link>
      <ul className="space-y-2 font-medium">
         <li>
           <button onClick={() => router.push("/jam/start")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${

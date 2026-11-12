@@ -21,7 +21,7 @@ type _Session = Session & {
 }
 
 export default async function CreateSet() {
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   let d = [] as Song[]
 

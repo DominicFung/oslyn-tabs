@@ -16,15 +16,16 @@ import BandComponent from './band'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function BandPage({ params }: { params: { id: string } }) {
-  const req = { headers: { cookie: headers().get('cookie') } }
+export default async function BandPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
 
   const session = await getServerSession(authOptions)
   const userId = (session?.user as _Session)?.userId
 
   let d = null as Band | null
-  let p = { bandId: params.id as string } as any
+  let p = { bandId: id as string } as any
   if (userId) p.userId = userId
 
   try {
