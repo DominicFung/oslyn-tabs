@@ -2,35 +2,43 @@
   "expo": {
     "name": "Oslyn",
     "slug": "Tabs",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "bitcode": false,
-    "entryPoint": "./index.js",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "scheme": "oslyn",
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
-      "bundleIdentifier": "TJR9Q2Q4KU.com.oslyn.tabs"
+      "bundleIdentifier": "TJR9Q2Q4KU.com.oslyn.tabs",
+      "buildNumber": "10",
+      "appleTeamId": "TJR9Q2Q4KU",
+      "entitlements": {
+        "aps-environment": "development"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
+      "package": "com.oslyn.tabs",
+      "versionCode": 10,
+      "permissions": [],
+      "blockedPermissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.oslyn.tabs"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_AUDIO",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "com.google.android.gms.permission.AD_ID"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +47,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera.",
+          "recordAudioAndroid": false
         }
       ],
       [
@@ -47,7 +56,19 @@
         {
           "initialOrientation": "DEFAULT"
         }
-      ]
+      ],
+      "./plugins/withAndroidPlayRelease",
+      "expo-build-properties",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-status-bar",
+      "expo-font"
     ],
     "extra": {
       "eas": {

@@ -10,6 +10,15 @@ build/
 local.properties
 *.iml
 *.hprof
+.cxx/
+gradle/gradle-daemon-jvm.properties
+
+# generated inline modules
+app/src/main/java/inline/
 
 # Bundle artifacts
 *.jsbundle
+
+# Play upload key and Play Console API credentials
+keystore.properties
+play-service-account.json

@@ -1,0 +1,39 @@
+# Android release lane. Mirrors app/ios/fastlane: `cd android && fastlane beta`
+# builds a signed AAB and uploads it. iOS stays on its own Fastfile.
+
+default_platform(:android)
+
+platform :android do
+  desc "Build a Play-signed release AAB. Does not upload it."
+  lane :bundle do
+    amplify_config = File.expand_path("../../src/amplifyconfiguration.json", __dir__)
+    UI.user_error!("Missing #{amplify_config}. Generate it with scripts/writeAmplifyConfig.py before building a store bundle.") unless File.exist?(amplify_config)
+
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      project_dir: File.expand_path("..", __dir__)
+    )
+  end
+
+  desc "Bump versionCode, build a signed AAB, and upload it to the Play internal track"
+  lane :beta do
+    key_path = ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+    UI.user_error!("Set GOOGLE_PLAY_SERVICE_ACCOUNT_JSON to the Play Console service-account JSON path.") unless key_path && File.exist?(key_path)
+
+    increment_version_code(
+      gradle_file_path: File.expand_path("../app/build.gradle", __dir__)
+    )
+    bundle
+    upload_to_play_store(
+      track: "internal",
+      aab: File.expand_path("../app/build/outputs/bundle/release/app-release.aab", __dir__),
+      json_key: key_path,
+      package_name: "com.oslyn.tabs",
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
