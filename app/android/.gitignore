@@ -10,6 +10,11 @@ build/
 local.properties
 *.iml
 *.hprof
+.cxx/
 
 # Bundle artifacts
 *.jsbundle
+
+# Play upload key and Play Console API credentials
+keystore.properties
+play-service-account.json

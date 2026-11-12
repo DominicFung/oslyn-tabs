@@ -8,7 +8,8 @@
     "ios": "./scripts/prebuild.sh && expo run:ios -d",
     "web": "expo start --web",
     "ts:check": "tsc",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'",
+    "android:bundle": "cd android && ./gradlew bundleRelease"
   },
   "dependencies": {
     "@aws-amplify/api-rest": "^4.0.6",
@@ -23,6 +24,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "aws-amplify": "^6.0.5",
     "expo": "^52.0.33",
+    "expo-build-properties": "~0.13.3",
     "expo-camera": "~16.0.16",
     "expo-constants": "~17.0.5",
     "expo-crypto": "~14.0.2",
