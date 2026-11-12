@@ -6,20 +6,19 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "bitcode": false,
-    "entryPoint": "./index.js",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "scheme": "oslyn",
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
-      "bundleIdentifier": "TJR9Q2Q4KU.com.oslyn.tabs"
+      "bundleIdentifier": "TJR9Q2Q4KU.com.oslyn.tabs",
+      "buildNumber": "10",
+      "appleTeamId": "TJR9Q2Q4KU",
+      "entitlements": {
+        "aps-environment": "development"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -58,19 +57,18 @@
           "initialOrientation": "DEFAULT"
         }
       ],
+      "./plugins/withAndroidPlayRelease",
+      "expo-build-properties",
       [
-        "expo-build-properties",
+        "expo-splash-screen",
         {
-          "android": {
-            "minSdkVersion": 24,
-            "compileSdkVersion": 36,
-            "targetSdkVersion": 36,
-            "buildToolsVersion": "36.0.0",
-            "kotlinVersion": "1.9.25"
-          }
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
         }
       ],
-      "./plugins/withAndroidPlayRelease"
+      "expo-status-bar",
+      "expo-font"
     ],
     "extra": {
       "eas": {

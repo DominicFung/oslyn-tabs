@@ -1,16 +1,9 @@
-const fs = require("fs");
-const path = require("path");
 const {
   withAndroidManifest,
   withAppBuildGradle,
-  withDangerousMod,
+  withInfoPlist,
   withProjectBuildGradle,
 } = require("@expo/config-plugins");
-
-// Play requires API 36 as of 31 Aug 2026. AGP 8.9.1 is the first stable
-// plugin that can compile against that SDK, and it needs Gradle 8.11.1+.
-const ANDROID_GRADLE_PLUGIN = "8.9.1";
-const GRADLE_DISTRIBUTION = "https\\://services.gradle.org/distributions/gradle-8.11.1-all.zip";
 
 const RELEASE_SIGNING_BLOCK = `
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -54,9 +47,9 @@ subprojects { subproject ->
         if (androidExt != null && androidExt.namespace == null) {
             def manifestFile = subproject.file("src/main/AndroidManifest.xml")
             if (manifestFile.exists()) {
-                def packageName = new XmlSlurper().parse(manifestFile).@package.text()
-                if (packageName) {
-                    androidExt.namespace = packageName
+                def matcher = (manifestFile.getText("UTF-8") =~ /package="([^"]+)"/)
+                if (matcher.find()) {
+                    androidExt.namespace = matcher.group(1)
                 }
             }
         }
@@ -71,10 +64,7 @@ function withReleaseSigning(config) {
     }
     let contents = config.modResults.contents;
     if (!contents.includes("keystorePropertiesFile")) {
-      contents = contents.replace(
-        "def jscFlavor = 'org.webkit:android-jsc:+'",
-        `def jscFlavor = 'org.webkit:android-jsc:+'\n${RELEASE_SIGNING_BLOCK}`
-      );
+      contents = contents.replace(/\nandroid \{/, `\n${RELEASE_SIGNING_BLOCK}\nandroid {`);
     }
     contents = contents.replace(
       /[ \t]*signingConfigs \{[\s\S]*?\n[ \t]*\}\n[ \t]*buildTypes \{/,
@@ -95,10 +85,6 @@ function withPlayGradle(config) {
       throw new Error("android/build.gradle must stay Groovy so the Play Gradle settings can be applied.");
     }
     let contents = config.modResults.contents;
-    contents = contents.replace(
-      /classpath\((['"])com\.android\.tools\.build:gradle(?::[^'"]+)?\1\)/,
-      `classpath('com.android.tools.build:gradle:${ANDROID_GRADLE_PLUGIN}')`
-    );
     if (!contents.includes("androidExt.namespace")) {
       contents += `\n${NAMESPACE_FALLBACK}`;
     }
@@ -117,26 +103,26 @@ function withoutReleaseOverlayPermission(config) {
   });
 }
 
-function withGradleWrapper(config) {
-  return withDangerousMod(config, [
-    "android",
-    (config) => {
-      const wrapperPath = path.join(
-        config.modRequest.platformProjectRoot,
-        "gradle/wrapper/gradle-wrapper.properties"
-      );
-      const contents = fs.readFileSync(wrapperPath, "utf8");
-      const next = contents.replace(/distributionUrl=.*/g, `distributionUrl=${GRADLE_DISTRIBUTION}`);
-      fs.writeFileSync(wrapperPath, next);
-      return config;
-    },
-  ]);
+// The historical iOS URL scheme is the bundle id, which starts with the team id.
+// app.json `scheme` must match ^[a-z]..., so `oslyn` is the new scheme and this
+// keeps the existing one registered.
+function withLegacyUrlScheme(config) {
+  return withInfoPlist(config, (config) => {
+    const scheme = "TJR9Q2Q4KU.com.oslyn.tabs";
+    const types = config.modResults.CFBundleURLTypes || [];
+    const already = types.some((entry) => (entry.CFBundleURLSchemes || []).includes(scheme));
+    if (!already) {
+      types.push({ CFBundleURLSchemes: [scheme] });
+      config.modResults.CFBundleURLTypes = types;
+    }
+    return config;
+  });
 }
 
 module.exports = function withAndroidPlayRelease(config) {
   config = withPlayGradle(config);
   config = withReleaseSigning(config);
   config = withoutReleaseOverlayPermission(config);
-  config = withGradleWrapper(config);
+  config = withLegacyUrlScheme(config);
   return config;
 };
