@@ -27,7 +27,7 @@ export default async function _Sets() {
   const name = session?.user?.name?.split(" ")[0]
   const userId = (session?.user as _Session)?.userId
 
-  const req = { headers: { cookie: headers().get('cookie') }}
+  const req = { headers: { cookie: (await headers()).get('cookie') }}
   const client = generateClient()
   let d = [] as SetList[]
 

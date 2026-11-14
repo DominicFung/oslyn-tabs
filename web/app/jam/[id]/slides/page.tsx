@@ -16,15 +16,16 @@ import Unauth from "@/app/unauthorized"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function JamPlayer({ params }: { params: { id: string } }) {
-  const req = { headers: { cookie: headers().get('cookie') } }
+export default async function JamPlayer({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
 
   const session = await getServerSession(authOptions)
   const userId = (session?.user as _Session)?.userId
 
   let d = null as JamSession | null
-  let p = { jamSessionId: params.id as string } as any
+  let p = { jamSessionId: id as string } as any
   if (userId) p.userId = userId
 
   try {

@@ -21,7 +21,7 @@ import Main from './main'
 Amplify.configure(amplifyconfig, { ssr: true })
 
 export default async function Home() {
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
 
   let d = [] as JamSession[]

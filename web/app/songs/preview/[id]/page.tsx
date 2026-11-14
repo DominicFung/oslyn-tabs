@@ -18,25 +18,31 @@ import Views from "./views"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function CreateJam(context: any) {
+export default async function CreateJam(context: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
   const userId = (session?.user as _Session)?.userId
 
-  if (!context.params.id) { throw `Jam Submission SongId: ${context.params.id} Not Provided.` }
-  const songId = context.params.id
+  const params = await context.params
+  const searchParams = await context.searchParams
+  if (!params.id) { throw `Jam Submission SongId: ${params.id} Not Provided.` }
+  const songId = params.id
   console.log(`PAGE: /jam/start/song/${songId}`)
 
-  const bandId = context.searchParams.band || ""
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const bandParam = searchParams.band
+  const bandId = (Array.isArray(bandParam) ? bandParam[0] : bandParam) || ""
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   let d = null as Song | null
 
   try {
     const { data } = await client.graphql({ 
       query: q.getSong, variables: { 
-        songId: context.params.id as string, userId,
+        songId: params.id as string, userId,
         bandId: bandId
       }
     }) as GraphQLResult<{  getSong: Song }>

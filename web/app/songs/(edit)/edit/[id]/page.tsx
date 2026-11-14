@@ -16,24 +16,30 @@ import { _Session } from '@/core/utils/frontend'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function EditSong(context: any) {
+export default async function EditSong(context: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
   const userId = (session?.user as _Session)?.userId
 
-  console.log(context)
+  const params = await context.params
+  const searchParams = await context.searchParams
+  console.log({ params, searchParams })
 
-  const bandId = context.searchParams.band || ""
+  const bandParam = searchParams.band
+  const bandId = (Array.isArray(bandParam) ? bandParam[0] : bandParam) || ""
 
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   let d = null as Song | null
 
   try {
     const { data } = await client.graphql({ 
       query: q.getSong, variables: { 
-        songId: context.params.id as string, userId,
+        songId: params.id as string, userId,
         bandId: bandId
       }
     }) as GraphQLResult<{  getSong: Song }>

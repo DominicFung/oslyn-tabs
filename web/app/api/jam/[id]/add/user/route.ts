@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
   const userId = (session?.user as _Session)?.userId
 
-  const ip = request.ip || (forwarded && forwarded.split(/, /)[0]) || request.headers.get("x-real-ip") || "unknown"
+  const ip = (forwarded && forwarded.split(/, /)[0]) || request.headers.get("x-real-ip") || "unknown"
   console.log(`ip of "${userId}": ${ip}`)
 
   try {

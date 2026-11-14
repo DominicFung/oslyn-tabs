@@ -17,22 +17,25 @@ import { _Session } from '@/core/utils/frontend'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function CreateBand(context: any) {
+export default async function CreateBand(context: {
+  params: Promise<{ id: string }>
+}) {
   const session = await getServerSession(authOptions)
 
   if (!(session?.user as _Session)?.userId) { return <Unauth /> }
   const userId = (session?.user as _Session)?.userId
 
-  console.log(context)
+  const params = await context.params
+  console.log({ params })
 
-  const req = { headers: { cookie: headers().get('cookie') } }
+  const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
   let d = null as Band | null
 
   try {
     const { data } = await client.graphql({ 
       query: q.getBand, variables: { 
-        bandId: context.params.id as string, userId
+        bandId: params.id as string, userId
       }
     }) as GraphQLResult<{  getBand: Band }>
     

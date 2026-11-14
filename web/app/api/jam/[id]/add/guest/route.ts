@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   const forwarded = request.headers.get("x-forwarded-for")
   console.log(forwarded)
 
-  const ip = request.ip || (forwarded && forwarded.split(/, /)[0]) || request.headers.get("x-real-ip") || "unknown"
+  const ip = (forwarded && forwarded.split(/, /)[0]) || request.headers.get("x-real-ip") || "unknown"
   console.log(`ip of "${b.name}": ${ip}`)
   console.log(request)
 
