@@ -7,7 +7,7 @@ import { songReadOptions } from '../../util/selection'
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
-const USER_BAND_ROLE_TABLE_NAME = process.env.USER_BAND_ROLE_TABLE_NAME || ''
+const USER_BAND_MEMBERSHIP_TABLE_NAME = process.env.USER_BAND_MEMBERSHIP_TABLE_NAME || ''
 
 export async function queryAll(
   dynamo: DynamoDBClient,
@@ -95,7 +95,26 @@ export async function sharedSongs(
   })
 }
 
-/** Song ids on bands this user owns or belongs to. Uses the owner and role indexes, not a scan. */
+/**
+ * Band ids from UserBandMembershipTable. Same key as getUserJamSessions:
+ * userId is the partition key, so this is a query, not a scan or the missing role index.
+ */
+async function membershipBandIds(dynamo: DynamoDBClient, userId: string): Promise<string[]> {
+  if (!USER_BAND_MEMBERSHIP_TABLE_NAME) {
+    console.error('USER_BAND_MEMBERSHIP_TABLE_NAME is empty')
+    return []
+  }
+  const rows = await queryAll(dynamo, {
+    TableName: USER_BAND_MEMBERSHIP_TABLE_NAME,
+    KeyConditionExpression: 'userId = :userId',
+    ExpressionAttributeValues: { ':userId': { S: userId } },
+  })
+  return rows
+    .map((row) => unmarshall(row).bandId)
+    .filter((id): id is string => typeof id === 'string' && id.length > 0)
+}
+
+/** Song ids on bands this user owns or belongs to. No song-table scan. */
 export async function bandSongIds(dynamo: DynamoDBClient, userId: string, user: _User): Promise<Set<string>> {
   const bandIds = new Set<string>(idList(user.bandIds))
 
@@ -114,17 +133,7 @@ export async function bandSongIds(dynamo: DynamoDBClient, userId: string, user: 
     for (const id of idList(band.songIds)) songIds.add(id)
   }
 
-  const roles = await queryAll(dynamo, {
-    TableName: USER_BAND_ROLE_TABLE_NAME,
-    IndexName: 'user',
-    KeyConditionExpression: 'userId = :key',
-    ExpressionAttributeValues: { ':key': { S: userId } },
-    ProjectionExpression: 'bandId',
-  })
-  for (const row of roles) {
-    const role = unmarshall(row) as { bandId?: string }
-    if (role.bandId) bandIds.add(role.bandId)
-  }
+  for (const bandId of await membershipBandIds(dynamo, userId)) bandIds.add(bandId)
 
   const ownedIds = new Set(owned.map((row) => (unmarshall(row) as _Band).bandId).filter((id): id is string => !!id))
   const missing = [...bandIds].filter((id) => !ownedIds.has(id))

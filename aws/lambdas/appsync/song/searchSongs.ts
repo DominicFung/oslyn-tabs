@@ -23,7 +23,6 @@ export const handler = async (event: AppSyncResolverEvent<{
   const selection = event.info.selectionSetList
   const own = await ownSongs(dynamo, b.userId, selection)
   const shared = await sharedSongs(dynamo, b.userId, user, selection)
-  const onBands = await bandSongIds(dynamo, b.userId, user)
 
   const seen = new Set<string>()
   const ordered: _Song[] = []
@@ -35,9 +34,14 @@ export const handler = async (event: AppSyncResolverEvent<{
   own.forEach(push)
   shared.forEach(push)
 
-  const missingBandSongs = [...onBands].filter((id) => !seen.has(id))
-  const bandSongs = await songsByIds(dynamo, missingBandSongs, selection)
-  bandSongs.forEach(push)
+  try {
+    const onBands = await bandSongIds(dynamo, b.userId, user)
+    const missingBandSongs = [...onBands].filter((id) => !seen.has(id))
+    const bandSongs = await songsByIds(dynamo, missingBandSongs, selection)
+    bandSongs.forEach(push)
+  } catch (error) {
+    console.error('band song lookup failed; returning own and shared songs only', error)
+  }
 
   const matches = ordered
     .filter((song) => matchesQuery(song, query))
