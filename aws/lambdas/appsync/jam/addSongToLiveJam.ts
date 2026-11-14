@@ -51,8 +51,16 @@ export const handler = async (event: AppSyncResolverEvent<{
 
   const user = await loadUser(dynamo, b.userId)
   if (!user) { console.error(`user not found: ${b.userId}`); return }
-  const visible = songSharedWith(song, b.userId) || (await bandSongIds(dynamo, b.userId, user)).has(song.songId)
-  if (!visible) { console.error(`user ${b.userId} cannot use song ${b.songId}`); return }
+  const shared = songSharedWith(song, b.userId)
+  let onBand = false
+  if (!shared) {
+    try {
+      onBand = (await bandSongIds(dynamo, b.userId, user)).has(song.songId)
+    } catch (error) {
+      console.error('band song lookup failed during addSongToLiveJam', error)
+    }
+  }
+  if (!shared && !onBand) { console.error(`user ${b.userId} cannot use song ${b.songId}`); return }
 
   const key = b.key || song.chordSheetKey || 'C'
   const appended = await dynamo.send(new UpdateItemCommand({
