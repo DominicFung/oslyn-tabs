@@ -648,6 +648,31 @@ export class AppsyncStack extends Stack {
       fieldName: "deleteSet"
     })
 
+    const searchSongs = new NodejsFunction(this, `${props.name}-SearchSongs`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'searchSongs.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SearchSongsDS`, searchSongs)
+    .createResolver(`${props.name}-SearchSongsResolver`, {
+      typeName: "Query",
+      fieldName: "searchSongs"
+    })
+
+    const addSongToLiveJam = new NodejsFunction(this, `${props.name}-AddSongToLiveJam`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'addSongToLiveJam.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}AddSongToLiveJamDS`, addSongToLiveJam)
+    .createResolver(`${props.name}-AddSongToLiveJamResolver`, {
+      typeName: "Mutation",
+      fieldName: "addSongToLiveJam"
+    })
+
     const createRecording = new NodejsFunction(this, `${props.name}-CreateRecording`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'recording', 'createRecording.ts'),
       timeout: Duration.minutes(5),

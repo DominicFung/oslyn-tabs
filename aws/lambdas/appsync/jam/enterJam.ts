@@ -8,6 +8,7 @@ import { hasSubstring, merge } from '../../util/dynamo'
 import { Band, JamSessionActiveUsers, Participant, User } from '../../API'
 import { _Band, _JamSession, _JamSong, _SetList, _User } from '../../type'
 import { updateDynamoUtil } from '../../util/dynamo'
+import { canJoinJam } from '../../util/jamAccess'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
@@ -48,11 +49,10 @@ export const handler = async (event: AppSyncResolverEvent<{
   } else {
     // check authorization
     if (jamSession.policy === "PRIVATE") {
-      if (!b.userId) { console.error(`This is a private jam session. No guests allowed.`); return }
-      
-      if ((jamSession.adminIds || []).includes(b.userId)) { console.log("is an admin, athorized") }
-      else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
-      else { console.error(`This is a private jam session.`); return }
+      if (!canJoinJam(jamSession, b.userId)) {
+        console.error(`This is a private jam session.`)
+        return
+      }
 
       latest = {
         userId: b.userId,

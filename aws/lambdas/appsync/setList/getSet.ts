@@ -43,10 +43,14 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (hasSubstring(event.info.selectionSetList, "songs")) {
     console.log("getting songs ...")
 
-    const songIds = setList.songs.map((s) => (s! as _JamSong).songId )
+    const songIds = (Array.isArray(setList.songs) ? setList.songs : []).map((s) => (s! as _JamSong).songId)
+    if (!Array.isArray(setList.songs)) setList.songs = []
 
-    const uniq = [...new Set(songIds.flat(1))]
+    const uniq = [...new Set(songIds.flat(1))].filter((id): id is string => typeof id === 'string' && id.length > 0)
     console.log(uniq)
+    if (uniq.length === 0) {
+      console.log('empty set; skipping song BatchGet')
+    } else {
 
     const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
     console.log(keys)
@@ -89,6 +93,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     }
 
     setList.songs = merge(setList.songs, songs, 'songId', 'song')
+    }
   }
 
   if (hasSubstring(event.info.selectionSetList, "creator")) {

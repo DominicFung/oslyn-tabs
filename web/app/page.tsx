@@ -10,6 +10,7 @@ import { listPublicBands, listPublicJamSessions, listUserJamSessions } from '@/c
 import { authOptions } from "@/core/auth"
 import { _Session } from "@/core/utils/frontend"
 import NewFeature from "./(components)/new"
+import StartJamButton from "./(components)/startJam"
 import ListShell from "./(components)/listShell"
 import ListFallback from "./(components)/listFallback"
 import { renderAsync } from "@/core/renderAsync"
@@ -27,6 +28,7 @@ export default async function Home() {
         <div className="pt-8 px-4 pb-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:pb-4 z-10 relative">
           <NewFeature />
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Jam Now!</h1>
+          {userId && <StartJamButton />}
           <Suspense fallback={<ListFallback label="Loading jam rooms…" />}>
             {renderAsync(HomeJams, { userId })}
           </Suspense>

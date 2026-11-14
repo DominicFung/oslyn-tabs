@@ -40,8 +40,20 @@ export const handler = async (event: AppSyncResolverEvent<{
   }))
   if (!res1 || !res1.Item) { console.error(`SetList not found: ${setListId}`); return }
   const set = unmarshall(res1.Item) as _SetList
+  const songsInSet = Array.isArray(set.songs) ? set.songs : []
+  if (songsInSet.length === 0) {
+    console.log(`empty set for ${setListId}; nextSong is a no-op`)
+    return {
+      jamSessionId: b.jamSessionId,
+      song: 0,
+      page: 0,
+      currentPage: 0,
+      key: 'C',
+      queue: jam.queue || [],
+    }
+  }
 
-  const song = set.songs[b.song || 0]
+  const song = songsInSet[b.song || 0]
   if (!song) { console.error(`song at index: ${b.song} not found`); return }
 
   // if song number is not there, check if there is anything queued up. If not, check whats next on the set list.

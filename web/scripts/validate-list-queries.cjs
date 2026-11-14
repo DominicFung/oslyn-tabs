@@ -7,7 +7,11 @@ const path = require('path')
 
 const root = path.resolve(__dirname, '../..')
 const schemaPath = path.join(root, 'aws/schema.graphql')
-const docsPath = path.join(root, 'web/core/graphql/lists.ts')
+const docFiles = [
+  path.join(root, 'web/core/graphql/lists.ts'),
+  path.join(root, 'web/core/graphql/jam.ts'),
+  path.join(root, 'extension/src/popup/graphql.ts'),
+]
 
 const SCALARS = new Set([
   'ID', 'String', 'Int', 'Float', 'Boolean',
@@ -119,6 +123,7 @@ function operationRoot(doc) {
   const trimmed = doc.trim()
   if (trimmed.startsWith('query') || trimmed.startsWith('{')) return 'Query'
   if (trimmed.startsWith('mutation')) return 'Mutation'
+  if (trimmed.startsWith('subscription')) return 'Subscription'
   throw new Error(`unknown operation: ${trimmed.slice(0, 40)}`)
 }
 
@@ -163,7 +168,7 @@ function validateDocument(schema, doc) {
 
 function main() {
   const schema = parseSchema(fs.readFileSync(schemaPath, 'utf8'))
-  const required = ['Query', 'Mutation', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult']
+  const required = ['Query', 'Mutation', 'Subscription', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult', 'JamSongChange']
   for (const name of required) {
     if (!schema.types.has(name)) {
       console.error(`schema is missing type ${name}`)
@@ -171,24 +176,34 @@ function main() {
     }
   }
 
-  const docs = extractDocuments(fs.readFileSync(docsPath, 'utf8'))
+  const docs = docFiles.flatMap((file) => {
+    if (!fs.existsSync(file)) {
+      console.error(`missing GraphQL document file ${file}`)
+      process.exit(1)
+    }
+    return extractDocuments(fs.readFileSync(file, 'utf8')).map((doc) => ({ doc, file }))
+  })
   if (docs.length === 0) {
     console.error('no GraphQL documents found')
     process.exit(1)
   }
 
   let failed = false
-  docs.forEach((doc, index) => {
+  docs.forEach(({ doc, file }, index) => {
     const errors = validateDocument(schema, doc)
-    const label = (doc.trim().split('\n')[0] || `doc ${index}`).trim()
-    const isSheet = doc.includes('getSong(')
-    if (!isSheet) {
-      if (/\bchordSheet\b/.test(doc)) errors.push('list document must not request chordSheet')
-      if (/\brecordings\b/.test(doc)) errors.push('list document must not request recordings')
-      if (/\bsongsCreated\b/.test(doc)) errors.push('list document must not request songsCreated')
-      if (/friends\s*\{[^}]*friends/.test(doc)) errors.push('list document must not request nested friends')
-    } else if (!/\bchordSheet\b/.test(doc)) {
-      errors.push('sheet query must request chordSheet')
+    const label = `${path.relative(root, file)} ${(doc.trim().split('\n')[0] || `doc ${index}`).trim()}`
+    const allowsChordSheet = /\b(getSong|addSongToLiveJam|onJamSongsChanged)\s*\(/.test(doc)
+    const selection = stripParens(doc)
+    if (!allowsChordSheet) {
+      if (/\bchordSheet\b/.test(selection)) errors.push('list document must not request chordSheet')
+      if (/\brecordings\b/.test(selection)) errors.push('list document must not request recordings')
+      if (/\bsongsCreated\b/.test(selection)) errors.push('list document must not request songsCreated')
+      if (/friends\s*\{[^}]*friends/.test(selection)) errors.push('list document must not request nested friends')
+    } else if (!/\bchordSheet\b/.test(selection)) {
+      errors.push('this document must request chordSheet')
+    }
+    if (/\bsearchSongs\s*\(/.test(doc) && /\bchordSheet\b/.test(selection)) {
+      errors.push('searchSongs must not request chordSheet')
     }
     if (errors.length) {
       failed = true
