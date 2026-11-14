@@ -5,14 +5,12 @@ import { GraphQLResult, generateClient } from "aws-amplify/api"
 import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
 import * as q from '@/../src/graphql/queries'
-import { chordSheetPlatform, Song } from '@/../src/API'
+import { Song } from '@/../src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
-
-import OpenAI from 'openai'
-import secret from '@/secret.json'
+import { cleanChordSheetCompletion } from '@/core/cleanChordSheet'
 
 /**
  * Use ChatGPT to clean up chord sheet. A lot of chord sheets are not "formatted" corretly.
@@ -22,11 +20,6 @@ import secret from '@/secret.json'
 
 export async function GET(request: Request) {
   console.log(`${request.method} ${request.url}`)
-
-  const openai = new OpenAI({
-    organization: secret.openai.organization,
-    apiKey: secret.openai.apiKey,
-  })
 
   const session = await getServerSession(authOptions)
   if (!(session?.user as _Session)?.userId) { return NextResponse.json({ error: 'Unauthorized'}, { status: 401 }) }
@@ -50,31 +43,14 @@ export async function GET(request: Request) {
   const song = d.data.getSong
   const csText = song.chordSheet || ""
 
-  let chordsheet = null
-
   try {
-    chordsheet = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
-        { 
-          role: "system", 
-          content: `User will be providing text that represent lyrics and chords of a song. 
-          The text also contain section headers (ie. Intro, Verse 1, Chorus, etc.). 
-          Make sure that all section headers start and end with square brackets.
-          Remove all comments in the text, (these may be in the form of commentary or description of musical dynamics.)
-          If there is an "X" at the end, remove it. If theres nothing to change, say "no change".`
-        },
-        { role: "user",   content: csText }
-      ]
-    })
-  
+    const chordsheet = await cleanChordSheetCompletion(csText)
     console.log(chordsheet)
+    console.log(`${request.method} ${request.url} .. complete`)
+    return NextResponse.json(chordsheet)
   } catch (e) {
     console.error("ChatGPT Error")
     console.error(e)
     return NextResponse.json({ error: 'Internal Server Error'}, { status: 500 })
   }
-
-  console.log(`${request.method} ${request.url} .. complete`)
-  return NextResponse.json(chordsheet)
 }

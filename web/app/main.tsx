@@ -80,7 +80,7 @@ export function JamLists({ sessions, mySessions }: { sessions: JamSession[], myS
     {mySessions && <div className="mb-10">
       <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Your jam rooms</h2>
       {mySessions.length === 0
-        ? <p className="mx-5 text-gray-500 dark:text-gray-300">You don&apos;t have any jam rooms yet. <a className="underline" href="/sets">Create one from a set.</a></p>
+        ? <p className="mx-5 text-gray-500 dark:text-gray-300">You don&apos;t have any jam rooms yet. Start one above, or <a className="underline" href="/sets">create one from a set.</a></p>
         : <JamTable sessions={mySessions} showPolicy />}
     </div>}
     {mySessions && <h2 className="mb-4 text-left text-lg font-semibold text-gray-700 dark:text-gray-200">Public rooms</h2>}

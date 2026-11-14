@@ -3,6 +3,8 @@ import { DynamoDBClient, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/cl
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { hasSubstring, merge } from '../../util/dynamo'
+import { batchGetAll } from '../../util/batch'
+import { canEditJamSongs, canJoinJam } from '../../util/jamAccess'
 
 import { Participant, User } from '../../API'
 import { _JamSession, _JamSong, _SetList } from '../../type'
@@ -31,14 +33,12 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!res1.Item) { console.error(`ERROR: jamSessionId not found: ${b.jamSessionId}`); return }
   let jamSession = unmarshall(res1.Item) as _JamSession
 
-  // check authorization
-  if (jamSession.policy === "PRIVATE") {
-    if (!b.userId) { console.error(`This is a private jam session.`); return }
-    
-    if ((jamSession.adminIds || []).includes(b.userId)) { console.log("is an admin, athorized") }
-    else if ((jamSession.memberIds || []).includes(b.userId)) { console.log("is a member, athorized") }
-    else { console.error(`This is a private jam session.`); return }
+  if (!canJoinJam(jamSession, b.userId)) {
+    console.error(`This is a private jam session.`)
+    return
   }
+  ;(jamSession as _JamSession & { hostId?: string, canEditSongs?: boolean }).hostId = jamSession.userId
+  ;(jamSession as _JamSession & { canEditSongs?: boolean }).canEditSongs = canEditJamSongs(jamSession, b.userId)
 
   if (hasSubstring(event.info.selectionSetList, "setList")) {
     console.log("getting setList ...")
@@ -55,26 +55,21 @@ export const handler = async (event: AppSyncResolverEvent<{
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
       console.log("getting setList/songs ..")
-      const songIds = (setList.songs as _JamSong[]).map((s) => { return s!.songId as string })
+      const rawSongs = Array.isArray(setList.songs) ? setList.songs as _JamSong[] : []
+      setList.songs = rawSongs
+      const songIds = rawSongs.map((s) => s?.songId).filter((id): id is string => !!id)
       const uniq = [...new Set(songIds)]
-  
-      const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
-      console.log(keys)
-  
-      const res1 = await dynamo.send(new BatchGetItemCommand({
-        RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
-      }))
-      console.log(res1)
-      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
-  
-      const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u))
-      console.log(songs)
 
-      if (hasSubstring(event.info.selectionSetList, "creator")) {
-        console.log("getting setList/songs/../creator ..")
+      if (uniq.length > 0) {
+        const rows = await batchGetAll(
+          dynamo,
+          SONG_TABLE_NAME,
+          uniq.map((s) => ({ songId: { S: s } }))
+        )
+        const songs = rows.map((u) => unmarshall(u))
+        console.log(songs)
+        setList.songs = merge(rawSongs, songs, 'songId', 'song')
       }
-
-      setList.songs = merge(setList.songs, songs, 'songId', 'song')
     }
 
     if (hasSubstring(event.info.selectionSetList, "setList/creator")) {

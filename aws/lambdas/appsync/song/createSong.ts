@@ -14,6 +14,7 @@ const BAND_TABLE_NAME = process.env.BAND_TABLE_NAME || ''
 export const handler = async (event: AppSyncResolverEvent<{
   title: string, userId: string, chordSheetKey: string, chordSheet: string, 
   artist?: string, album?: string, albumCover?: string, shareWithBand?: string,
+  originPlatorm?: 'UG' | 'WORSHIPTOGETHER' | 'OTHER', originLink?: string,
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -49,6 +50,8 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (b.album) song.album = b.album
   if (b.artist) song.artist = b.artist
   if (b.albumCover) song.albumCover = b.albumCover
+  if (b.originPlatorm) song.originPlatorm = b.originPlatorm
+  if (b.originLink) song.originLink = b.originLink
 
   const res1 = await dynamo.send(
     new PutItemCommand({

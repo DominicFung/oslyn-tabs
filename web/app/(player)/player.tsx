@@ -26,6 +26,7 @@ import { default as SSlides } from '../(slides)/slides'
 import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
+import { JamSongChange, onJamSongsChanged } from '@/core/graphql/jam'
 
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -33,6 +34,7 @@ export interface PlayerProps {
   jam: JamSession, 
   isSlideShow?: boolean
   user: User|null
+  canEditSongs?: boolean
 }
 
 Amplify.configure(amplifyconfig, { ssr: true })
@@ -63,10 +65,18 @@ export default function Player(p: PlayerProps) {
   useEffect( () => { 
     if (p.jam.jamSessionId) { 
       setActive(p.jam.active as Participant[])
-      setSongs(p.jam.setList.songs as JamSong[])
+      const nextSongs = (p.jam.setList?.songs || []) as JamSong[]
+      setSongs(nextSongs)
 
-      if (!p.jam || p.jam.currentSong! <= -1 || p.jam.currentSong! >= p.jam.setList.songs.length) { 
-        console.warn(`currentSong not within range of setList: ${p.jam.currentPage}`); return 
+      if (nextSongs.length === 0) {
+        setSong(0)
+        setSKey("C")
+        setPage(p.jam.currentPage || 0)
+        return
+      }
+
+      if (p.jam.currentSong == null || p.jam.currentSong < 0 || p.jam.currentSong >= nextSongs.length) { 
+        console.warn(`currentSong not within range of setList: ${p.jam.currentSong}`); return 
       }
       const cp = p.jam.currentSong!
       if (!p.jam || p.jam.currentPage! <= -1) { 
@@ -83,11 +93,11 @@ export default function Player(p: PlayerProps) {
 
   // these are being SUBSCRIBED to, so needs to be moved out of the main JAM object.
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
-  const [ sKey, setSKey ] = useState(p.jam.setList.songs[p.jam.currentSong || 0]?.key || "C")
+  const [ sKey, setSKey ] = useState(p.jam.setList?.songs?.[p.jam.currentSong || 0]?.key || "C")
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
   const [ queue, setQueue ] = useState((p.jam.queue || []))
   const [ active, setActive ] = useState<Participant[]>([])
-  const [ songs, setSongs ] = useState<JamSong[]>([])
+  const [ songs, setSongs ] = useState<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
 
   const [ openController, _setOpenController ] = useState(false)
   const [ guestOpen, setGuestOpen ] = useState(false)
@@ -142,7 +152,8 @@ export default function Player(p: PlayerProps) {
         keyChange: subscribeKeyChange(p.jam.jamSessionId),
         userJoin: subscribeUserJoin(p.jam.jamSessionId),
         queueAdd: subscribeToQueueAdd(p.jam.jamSessionId),
-        queueRemove: subscribeToQueueRemove(p.jam.jamSessionId)
+        queueRemove: subscribeToQueueRemove(p.jam.jamSessionId),
+        songsChanged: subscribeJamSongs(p.jam.jamSessionId)
       })
       console.log("All Subscribed!")
     }
@@ -226,6 +237,48 @@ export default function Player(p: PlayerProps) {
     })
     console.log(sub)
     return sub
+  }
+
+  const applySongChange = (change?: JamSongChange | null) => {
+    if (!change?.song?.songId || change.index == null) return
+  const entry = {
+    __typename: "JamSong",
+    key: change.key || "C",
+    song: change.song as JamSong["song"],
+    order: change.index,
+  } as JamSong
+  setSongs((prev) => {
+    if (prev[change.index]?.song?.songId === change.song.songId) return prev
+    if (change.index === prev.length) return [...prev, entry]
+    if (change.index < prev.length) {
+      const copy = [...prev]
+      copy[change.index] = entry
+      return copy
+    }
+    return [...prev, entry]
+  })
+    if (change.jumpTo) {
+      setSong(change.index)
+      setSKey(change.key || "C")
+      setPage(0)
+    }
+  }
+
+  const subscribeJamSongs = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
+    const observable = client.graphql({
+      query: onJamSongsChanged, variables: { jamSessionId }
+    }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onJamSongsChanged?: JamSongChange } }) => void
+        error: (error: unknown) => void
+      }) => ZenObservable.Subscription
+    }
+    return observable.subscribe({
+      next: ({ data }) => {
+        applySongChange(data?.onJamSongsChanged)
+      },
+      error: (error) => console.error(error)
+    })
   }
 
   const subscribeToQueueRemove = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
@@ -325,6 +378,14 @@ export default function Player(p: PlayerProps) {
       }}) as GraphQLResult<AddSongToJamQueueMutation>
       console.log(d)
     } else console.error(`song ${songId} not found.`)
+  }
+
+  const queueAt = async (index: number) => {
+    const d = await client.graphql({
+      query: m.addSongToJamQueue, variables: {
+      jamSessionId: p.jam.jamSessionId, song: index
+    }}) as GraphQLResult<AddSongToJamQueueMutation>
+    console.log(d)
   }
 
   const removeSongFromJamQueue = async (index: number) => {
@@ -465,18 +526,26 @@ export default function Player(p: PlayerProps) {
   }
 
   useEffect(() => {
-    if (songs.length > 0) {
-      let sid = songs[song].song.songId
-      console.log(`setSong: ${songs[song].song.title} ${sid}`)
+    const current = songs[song]
+    if (current?.song?.songId) {
+      const sid = current.song.songId
+      console.log(`setSong: ${current.song.title} ${sid}`)
       document.body.dispatchEvent(
         new CustomEvent(nextSongEventId, { 
           detail: { songId: sid } 
         })
       )
-    } else console.warn("PLAYER - songs list not set yet.")
+    }
   } , [songs, song])
 
   return <div className={`text-white w-full h-screen flex flex-col overflow-hidden ${localTheme || "light"}`} id="player">
+    {songs.length === 0 && <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+      <p className="text-2xl font-semibold text-gray-900 dark:text-white">Search for a song to start</p>
+      {!p.isSlideShow && p.canEditSongs && <button type="button" onClick={() => setOpenController(true)}
+        className="mt-6 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+        Search for a song
+      </button>}
+    </div>}
     { songs[song]?.song && 
       (p.isSlideShow ? 
         <SSlides
@@ -502,7 +571,7 @@ export default function Player(p: PlayerProps) {
         setOpen={setOpenController}
         jamSessionId={p.jam.jamSessionId}
         capo={{ capo:`${0-transpose}`, setCapo }} 
-        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[] }} 
+        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[], canAddSongs: p.canEditSongs, onSongAdded: applySongChange, queueAt }} 
         sKey={{ skey: sKey, setKey }}
         display={{ textSize, setTextSize, 
           auto: false, setAuto: () => {}, 

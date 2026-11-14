@@ -13,6 +13,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 import Unauth from "@/app/unauthorized"
+import { loadCanEditSongs } from "@/core/jamAccess"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
@@ -55,7 +56,9 @@ export default async function JamPlayer({ params }: { params: Promise<{ id: stri
   // a private jam session cannot have guests
   if (d.policy === "PRIVATE" && !user) return <Unauth />
 
+  const canEditSongs = await loadCanEditSongs(id, userId)
+
   return <>
-    {d && <Player jam={d} isSlideShow={true} user={user}/>}
+    {d && <Player jam={d} isSlideShow={true} user={user} canEditSongs={canEditSongs}/>}
   </>
 }

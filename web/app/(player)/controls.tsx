@@ -4,6 +4,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
 import Capo from "./(controls)/capo"
 import { JamSong, Participant } from "@/../src/API"
+import { JamSongChange } from "@/core/graphql/jam"
 import Song from "./(controls)/song"
 import Key from "./(controls)/key"
 import Display from "./(controls)/display"
@@ -25,6 +26,9 @@ export interface ControlsProp {
     setSong: (n: number) => void
     addToQueue?: (songId: string) => void
     songs: JamSong[]
+    canAddSongs?: boolean
+    onSongAdded?: (change: JamSongChange) => void
+    queueAt?: (index: number) => void
   }
   sKey?: {
     skey: string
@@ -130,7 +134,7 @@ export default function Controls(p: ControlsProp) {
             </div>
 
             <>
-              { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue}  /> }
+              { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} queueAt={p.song.queueAt} /> }
               { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
               { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
               { option === 3 && p.display && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 

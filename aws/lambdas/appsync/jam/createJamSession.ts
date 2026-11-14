@@ -1,9 +1,10 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, PutItemCommand, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { v4 as uuidv4 } from 'uuid'
 import { hasSubstring, merge } from '../../util/dynamo'
+import { batchGetAll } from '../../util/batch'
 import { JamSession, JamSong, SetList, User } from '../../API'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
@@ -64,6 +65,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     policy: policy,
     revision: 0,
     queue: [],
+    adminIds: [b.userId],
 
     pageSettings: {
       pageMax: 3, pageMin: 2
@@ -82,21 +84,23 @@ export const handler = async (event: AppSyncResolverEvent<{
     console.log(setList)
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
-      const songIds = setList.songs.map((s) => { return (s as _JamSong).songId as string })
+      const rawSongs = Array.isArray(setList.songs) ? setList.songs : []
+      setList.songs = rawSongs
+      const songIds = rawSongs
+        .map((s) => (s as _JamSong)?.songId)
+        .filter((id): id is string => typeof id === 'string' && id.length > 0)
       const uniq = [...new Set(songIds)]
-  
-      const keys = uniq.map((s) => { return { songId: { S: s } } as { [songId: string]: any } })
-      console.log(keys)
-  
-      const res1 = await dynamo.send(new BatchGetItemCommand({
-        RequestItems: {[SONG_TABLE_NAME]: { Keys: keys }}
-      }))
-      console.log(res1)
-      if (!res1.Responses) { console.error(`ERROR: unable to BatchGet songId. ${res1.$metadata}`); return  } 
-  
-      const songs = res1.Responses![SONG_TABLE_NAME].map((u) => unmarshall(u))
-      console.log(songs)
-      setList.songs = merge(setList.songs, songs, 'songId', 'song')
+
+      if (uniq.length > 0) {
+        const rows = await batchGetAll(
+          dynamo,
+          SONG_TABLE_NAME,
+          uniq.map((s) => ({ songId: { S: s } }))
+        )
+        const songs = rows.map((u) => unmarshall(u))
+        console.log(songs)
+        setList.songs = merge(rawSongs, songs, 'songId', 'song')
+      }
     }
 
     if (hasSubstring(event.info.selectionSetList, "setList/creator")) {

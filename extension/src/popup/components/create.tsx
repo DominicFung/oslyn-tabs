@@ -5,7 +5,7 @@ import { Listbox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon } from '@heroicons/react/24/solid'
 
 import amplifyconfig from '../../../../src/amplifyconfiguration.json'
-import * as m from '../../../../src/graphql/mutations'
+import { addSongToLiveJam, createImportedSong, listUserJamSessions } from '../graphql'
 import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from 'aws-amplify/api'
 
@@ -27,9 +27,13 @@ export default function CreateSong(p: CreateProps) {
   const [ currentTab, setCurrentTab ] = useState<chrome.tabs.Tab>()
   const [ song, setSong ] = useState<SongRequest>({ title: "", chordSheet: "", chordSheetKey: "C", artist: "" })
   const [ isSupported, setSupported ] = useState(false)
+  const [ rooms, setRooms ] = useState<{ jamSessionId: string, label: string }[]>([])
+  const [ jamId, setJamId ] = useState("")
+  const [ status, setStatus ] = useState("")
+  const [ pending, setPending ] = useState(false)
   const client = generateClient()
 
-  useEffect(() => { getCurrentTab() }, [p.session])
+  useEffect(() => { getCurrentTab(); loadRooms() }, [p.session])
 
   useEffect(() => {
     if (!currentTab) return
@@ -75,26 +79,98 @@ export default function CreateSong(p: CreateProps) {
     )
   }
 
-  const createSong = async () => {
-    if (!p.session.user.userId || !song.chordSheet) { console.error("userId or chordsheet not found."); return }
+  const loadRooms = async () => {
+    const userId = p.session.user.userId
+    if (!userId) return
+    try {
+      const data = await client.graphql({
+        query: listUserJamSessions,
+        variables: { userId },
+      }) as GraphQLResult<{ listUserJamSessions?: {
+        jamSessionId: string
+        description?: string | null
+        startDate?: number | null
+        setList?: { description?: string | null } | null
+      }[] }>
+      const list = (data.data?.listUserJamSessions || [])
+        .slice()
+        .sort((a: { startDate?: number | null }, b: { startDate?: number | null }) => (b.startDate || 0) - (a.startDate || 0))
+        .map((room: { jamSessionId: string, description?: string | null, setList?: { description?: string | null } | null }) => ({
+          jamSessionId: room.jamSessionId,
+          label: room.setList?.description || room.description || room.jamSessionId,
+        }))
+      setRooms(list)
+      if (list[0]) setJamId(list[0].jamSessionId)
+    } catch (e) {
+      console.error(e)
+      setStatus("Could not load your jam rooms.")
+    }
+  }
+
+  const saveSong = async () => {
+    if (!p.session.user.userId || !song.chordSheet || !song.title) {
+      console.error("userId, title, or chordsheet not found.")
+      return null
+    }
     const data = await client.graphql({
-      query: m.createSong, variables: {
+      query: createImportedSong,
+      variables: {
         title: song.title,
         userId: p.session.user.userId,
         chordSheet: song.chordSheet,
         chordSheetKey: song.chordSheetKey,
-        artist: song.artist
+        artist: song.artist,
+        originPlatorm: "UG",
+        originLink: currentTab?.url || undefined,
       }
-    })
+    }) as GraphQLResult<{ createSong?: { songId?: string | null } }>
+    const songId = data.data?.createSong?.songId
+    if (!songId) { console.error('songId not available'); return null }
+    return songId as string
+  }
 
-    if (!data) { console.error('gql did not return'); return }
-    console.log(data)
+  const createSong = async () => {
+    if (pending) return
+    setPending(true)
+    setStatus("")
+    try {
+      const songId = await saveSong()
+      if (!songId) { setStatus("Could not create the song."); return }
+      chrome.tabs.create({ url : `${host}/songs/edit/${songId}?new=true`})
+    } catch (e) {
+      console.error(e)
+      setStatus("Could not create the song.")
+    } finally {
+      setPending(false)
+    }
+  }
 
-    const songId = data.data.createSong.songId
-    if (!songId) { console.error('songId not available'); return }
-    console.log(songId)
-
-    chrome.tabs.create({ url : `${host}/songs/edit/${songId}?new=true`})
+  const addToJam = async () => {
+    if (pending || !jamId) return
+    setPending(true)
+    setStatus("")
+    let createdId: string | null = null
+    try {
+      createdId = await saveSong()
+      if (!createdId) { setStatus("Could not create the song."); return }
+      await client.graphql({
+        query: addSongToLiveJam,
+        variables: {
+          jamSessionId: jamId,
+          songId: createdId,
+          key: song.chordSheetKey || "C",
+          userId: p.session.user.userId,
+          jumpTo: false,
+        }
+      })
+      const room = rooms.find((item) => item.jamSessionId === jamId)
+      setStatus(`Added to ${room?.label || "the jam"}.`)
+    } catch (e) {
+      console.error(e)
+      setStatus(createdId ? "Saved the song, but could not add it to the jam." : "Could not add this chart to the jam.")
+    } finally {
+      setPending(false)
+    }
   }
 
 
@@ -191,13 +267,31 @@ export default function CreateSong(p: CreateProps) {
                     <div className="px-10 py-2.5" >Copy</div>
                     <div className='flex-1' />
               </button>:
-              <button onClick={createSong} disabled={!isSupported || song.chordSheet === "" || song.title === ""}
+              <>
+              <button onClick={createSong} disabled={pending || !isSupported || song.chordSheet === "" || song.title === ""}
                   className="w-full flex flex-row text-oslyn-600 dark:text-white dark:disabled:text-gray-400 bg-oslyn-700 hover:bg-oslyn-800 disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:disabled:bg-gray-800 dark:focus:ring-oslyn-800">
                     <div className='flex-1' />
                     <div className="px-10 py-2.5">Create</div>
                     <div className='flex-1' />
               </button>
+              {rooms.length > 0 && <label className="block mt-3 text-sm text-gray-700 dark:text-gray-200">
+                Current jam
+                <select value={jamId} onChange={(e) => setJamId(e.target.value)}
+                  className="mt-1 block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                  {rooms.map((room) => <option key={room.jamSessionId} value={room.jamSessionId}>{room.label}</option>)}
+                </select>
+              </label>}
+              <button onClick={addToJam} disabled={pending || !isSupported || !jamId || song.chordSheet === "" || song.title === ""}
+                  className="w-full mt-2 flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center">
+                    <div className='flex-1' />
+                    <div className="px-10 py-2.5">{pending ? "Adding…" : "Add to current jam"}</div>
+                    <div className='flex-1' />
+              </button>
+              {rooms.length === 0 && <p className="pt-2 text-xs text-gray-500 dark:text-gray-300">Start a jam on Oslyn first, then add this chart to it.</p>}
+              </>
             }
+
+            {status && <p className="pt-2 text-sm text-gray-700 dark:text-gray-200">{status}</p>}
 
             <div className="pt-4 text-sm font-medium text-gray-500 dark:text-gray-300">
                 Not copying the right stuff anymore? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Report</a>
