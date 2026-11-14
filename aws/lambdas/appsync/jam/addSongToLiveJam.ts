@@ -13,7 +13,7 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 /**
  * Appends one song to the jam's set and returns that song (with chordSheet when selected).
- * Does not write jam.queue. Queueing stays on the existing addSongToJamQueue mutation.
+ * Does not write jam.queue. The Queue button calls setJamQueue.
  */
 export const handler = async (event: AppSyncResolverEvent<{
   jamSessionId: string

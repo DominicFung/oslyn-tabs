@@ -104,6 +104,34 @@ export const onJamSongsChanged = /* GraphQL */ `subscription OnJamSongsChanged($
   }
 }`
 
+export const setJamQueue = /* GraphQL */ `mutation SetJamQueue(
+  $jamSessionId: ID!
+  $queue: [Int!]!
+  $expectedRevision: Int
+  $currentSongIndex: Int
+) {
+  setJamQueue(
+    jamSessionId: $jamSessionId
+    queue: $queue
+    expectedRevision: $expectedRevision
+    currentSongIndex: $currentSongIndex
+  ) {
+    jamSessionId
+    queue
+    revision
+    currentSongIndex
+  }
+}`
+
+export const onJamQueueUpdate = /* GraphQL */ `subscription OnJamQueueUpdate($jamSessionId: ID!) {
+  onJamQueueUpdate(jamSessionId: $jamSessionId) {
+    jamSessionId
+    queue
+    revision
+    currentSongIndex
+  }
+}`
+
 export const createSongForLibrary = /* GraphQL */ `mutation CreateSongForLibrary(
   $title: String!
   $userId: ID!
