@@ -11,13 +11,14 @@ const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string, userId: string
+  setListId: string, userId: string, bandId?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.setListId) { console.error(`b.songId is empty`); return }
   if (!b.userId) { console.error(`b.userId is empty`); return }
+  if (b.bandId) console.log(`getSet bandId hint ${b.bandId}`)
 
   const dynamo = new DynamoDBClient({})
 

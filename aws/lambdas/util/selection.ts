@@ -23,6 +23,7 @@ export function normalizeSong(song: any, selectionSetList?: string[]): any {
   if (!song.recordings) song.recordings = []
   if (!song.editors) song.editors = []
   if (!song.viewers) song.viewers = []
+  if (!Array.isArray(song.bandIds)) song.bandIds = []
 
   for (const field of HEAVY_SONG_FIELDS) {
     if (!selectsField(selectionSetList, field)) delete song[field]
