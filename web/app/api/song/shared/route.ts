@@ -4,7 +4,7 @@ import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from "aws-amplify/api"
 import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
-import * as q from '@/../src/graphql/queries'
+import { listSharedSongs } from '@/core/graphql/lists'
 import { Song } from '@/../src/API'
 
 import { getServerSession } from "next-auth/next"
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   const client = generateClient()
 
   const d = await client.graphql({ 
-    query: q.listSharedSongs, variables: { userId, optimize: true }
+    query: listSharedSongs, variables: { userId, optimize: true }
   }) as GraphQLResult<{ listSharedSongs: Song[] }>
 
   if (!d.data?.listSharedSongs) {

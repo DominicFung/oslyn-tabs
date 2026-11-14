@@ -21,7 +21,7 @@ type _JamSong = JamSong & {
 }
 
 export const handler = async (event: AppSyncResolverEvent<{
-  setListId: string, userId: string, policy: string, bandId: string
+  setListId: string, userId: string, policy?: string, bandId?: string, description?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -49,13 +49,21 @@ export const handler = async (event: AppSyncResolverEvent<{
     })
   )
   if (!res1.Item) { console.error(`ERROR: setListId not found: ${b.setListId}`); return }
-  
+
+  const setListRow = unmarshall(res1.Item)
+  // bandId is optional: the current web and quick-jam omit it. description falls back to the set.
+  const jamSessionDescription = b.description || setListRow.description || undefined
+
   let jamSession = {
     jamSessionId, setListId: b.setListId, userId: b.userId,
+    ...(b.bandId ? { bandId: b.bandId } : {}),
+    ...(jamSessionDescription ? { description: jamSessionDescription } : {}),
 
     currentSong: 0, currentPage: 0,
     startDate: Date.now(),
     policy: policy,
+    revision: 0,
+    queue: [],
 
     pageSettings: {
       pageMax: 3, pageMin: 2

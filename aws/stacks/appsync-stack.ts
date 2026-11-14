@@ -2,7 +2,7 @@ import { App, CfnOutput, Duration, Fn, Stack } from 'aws-cdk-lib'
 // import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { Runtime, RuntimeFamily } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
 import path, { join } from 'path'
 
@@ -37,6 +37,15 @@ export class AppsyncStack extends Stack {
 
     const recordingDynamoName = Fn.importValue(`${props.name}-RecordingTable-Name`)
     const recordingDynamoArn = Fn.importValue(`${props.name}-RecordingTable-Arn`)
+
+    const userBandMembershipDynamoName = Fn.importValue(`${props.name}-UserBandMembershipTable-Name`)
+    const userBandMembershipDynamoArn = Fn.importValue(`${props.name}-UserBandMembershipTable-Arn`)
+
+    const bandSongDynamoName = Fn.importValue(`${props.name}-BandSongTable-Name`)
+    const bandSongDynamoArn = Fn.importValue(`${props.name}-BandSongTable-Arn`)
+
+    const bandSetlistDynamoName = Fn.importValue(`${props.name}-BandSetlistTable-Name`)
+    const bandSetlistDynamoArn = Fn.importValue(`${props.name}-BandSetlistTable-Arn`)
 
     const appsync = new AmplifyGraphqlApi(this, `${props.name}-Appsync`, {
       apiName: `${props.name}`,
@@ -98,7 +107,8 @@ export class AppsyncStack extends Stack {
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
               `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`,
-              `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`
+              `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`,
+              `${userBandMembershipDynamoArn}*`, `${bandSongDynamoArn}*`, `${bandSetlistDynamoArn}*`
             ]
           }),
           new PolicyStatement({
@@ -111,7 +121,11 @@ export class AppsyncStack extends Stack {
 
     const nodeJsFunctionProps: NodejsFunctionProps = {
       role: excRole,
-      bundling: { externalModules: ['aws-sdk'] },
+      bundling: {
+        // Node 22 does not ship aws-sdk v2. esbuild 0.22+ also needs packages bundled
+        // or this CDK version emits a runtime require("module").
+        esbuildArgs: { '--packages': 'bundle' },
+      },
       depsLockFilePath: join(__dirname, '../lambdas', 'package-lock.json'),
       environment: { 
         USER_TABLE_NAME: userDynamoName,
@@ -121,10 +135,15 @@ export class AppsyncStack extends Stack {
         JAM_TABLE_NAME: jamDynamoName,
         INVITE_TABLE_NAME: inviteDynamoName,
         USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName,
-        RECORDING_TABLE_NAME: recordingDynamoName
+        RECORDING_TABLE_NAME: recordingDynamoName,
+        USER_BAND_MEMBERSHIP_TABLE_NAME: userBandMembershipDynamoName,
+        BAND_SONG_TABLE_NAME: bandSongDynamoName,
+        BAND_SETLIST_TABLE_NAME: bandSetlistDynamoName
       },
-      runtime: Runtime.NODEJS_16_X,
+      runtime: new Runtime('nodejs22.x', RuntimeFamily.NODEJS, { supportsInlineCode: true }),
     }
+
+    const listMemory = 1024
 
     const createUser = new NodejsFunction(this, `${props.name}-CreateUser`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'user', 'createUser.ts'),
@@ -225,6 +244,7 @@ export class AppsyncStack extends Stack {
     const listSongs = new NodejsFunction(this, `${props.name}-ListSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSongs.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -237,6 +257,7 @@ export class AppsyncStack extends Stack {
     const listSharedSongs = new NodejsFunction(this, `${props.name}-ListSharedSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSharedSongs.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -309,6 +330,7 @@ export class AppsyncStack extends Stack {
     const listBands = new NodejsFunction(this, `${props.name}-ListBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -321,6 +343,7 @@ export class AppsyncStack extends Stack {
     const listSharedBands = new NodejsFunction(this, `${props.name}-ListSharedBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listSharedBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -333,6 +356,7 @@ export class AppsyncStack extends Stack {
     const listPublicBands = new NodejsFunction(this, `${props.name}-ListPublicBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listPublicBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -393,6 +417,7 @@ export class AppsyncStack extends Stack {
     const listSet = new NodejsFunction(this, `${props.name}-ListSet`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'listSets.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -438,9 +463,47 @@ export class AppsyncStack extends Stack {
       fieldName: "createJamSession"
     })
 
+    const getUserJamSessions = new NodejsFunction(this, `${props.name}-GetUserJamSessions`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'getUserJamSessions.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}GetUserJamSessionsDS`, getUserJamSessions)
+    .createResolver(`${props.name}-GetUserJamSessionsResolver`, {
+      typeName: "Query",
+      fieldName: "getUserJamSessions"
+    })
+
+    const updateJamSessionDescription = new NodejsFunction(this, `${props.name}-UpdateJamSessionDescription`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'updateJamSessionDescription.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}UpdateJamSessionDescriptionDS`, updateJamSessionDescription)
+    .createResolver(`${props.name}-UpdateJamSessionDescriptionResolver`, {
+      typeName: "Mutation",
+      fieldName: "updateJamSessionDescription"
+    })
+
+    const setJamQueue = new NodejsFunction(this, `${props.name}-SetJamQueue`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setJamQueue.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetJamQueueDS`, setJamQueue)
+    .createResolver(`${props.name}-SetJamQueueResolver`, {
+      typeName: "Mutation",
+      fieldName: "setJamQueue"
+    })
+
     const listPublicJamSessions = new NodejsFunction(this, `${props.name}-ListPublicJamSessions`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'listPublicJamSessions.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -544,6 +607,45 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-SetJamSlideConfigResolver`, {
       typeName: "Mutation",
       fieldName: "setJamSlideConfig"
+    })
+
+    const listUserJamSessions = new NodejsFunction(this, `${props.name}-ListUserJamSessions`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'listUserJamSessions.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListUserJamSessionsDS`, listUserJamSessions)
+    .createResolver(`${props.name}-ListUserJamSessionsResolver`, {
+      typeName: "Query",
+      fieldName: "listUserJamSessions"
+    })
+
+    const countJamsForSet = new NodejsFunction(this, `${props.name}-CountJamsForSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'countJamsForSet.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CountJamsForSetDS`, countJamsForSet)
+    .createResolver(`${props.name}-CountJamsForSetResolver`, {
+      typeName: "Query",
+      fieldName: "countJamsForSet"
+    })
+
+    const deleteSet = new NodejsFunction(this, `${props.name}-DeleteSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'deleteSet.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}DeleteSetDS`, deleteSet)
+    .createResolver(`${props.name}-DeleteSetResolver`, {
+      typeName: "Mutation",
+      fieldName: "deleteSet"
     })
 
     const createRecording = new NodejsFunction(this, `${props.name}-CreateRecording`, {

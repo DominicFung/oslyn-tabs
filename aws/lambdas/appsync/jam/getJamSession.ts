@@ -13,12 +13,13 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  jamSessionId: string, userId?: string
+  jamSessionId: string, userId?: string, bandId?: string
 }, null>) => {
   console.log(event)
   const b = event.arguments
   if (!b) { console.error(`event.arguments is empty`); return }
   if (!b.jamSessionId) { console.error(`b.setListId is empty`); return }
+  if (b.bandId) console.log(`getJamSession bandId hint ${b.bandId}`)
   
   const dynamo = new DynamoDBClient({})
   const res1 = await dynamo.send(
