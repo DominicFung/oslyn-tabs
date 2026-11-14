@@ -12,6 +12,7 @@ interface DownloadPdfProps {
   setOpen: (b: boolean) => void
 
   song: Song
+  bandId?: string
 }
 
 const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab']
@@ -22,11 +23,18 @@ export default function DownloadPdf(p: DownloadPdfProps) {
 
   const downloadSheet = async (song: Song, key: string) => {
     console.log("downloading sheet ...")
-    let pdf =  await createSheet(song, key)
+    let source = song
+    if (!source.chordSheet && source.songId) {
+      const query = p.bandId ? `?band=${encodeURIComponent(p.bandId)}` : ""
+      const res = await fetch(`/api/song/${source.songId}${query}`)
+      if (!res.ok) { console.error("unable to load chord sheet"); return }
+      source = await res.json() as Song
+    }
+    let pdf =  await createSheet(source, key)
     let uri = await save(pdf)
 
     const link = document.createElement("a")
-    link.download = `${song.title}.pdf`
+    link.download = `${source.title}.pdf`
     link.href = uri
     document.body.appendChild(link)
     link.click()

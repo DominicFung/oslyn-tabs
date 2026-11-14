@@ -42,7 +42,7 @@ export default async function CreateSet() {
 
   try {
     const { data } = await client.graphql({ 
-      query: q.listSharedSongs, variables: { userId }
+      query: q.listSharedSongs, variables: { userId, optimize: true }
     }) as GraphQLResult<{ listSharedSongs: Song[] }>
 
     if (data?.listSharedSongs) d.push(...data?.listSharedSongs)

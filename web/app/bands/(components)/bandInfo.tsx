@@ -11,7 +11,7 @@ import { sleep } from '@/core/utils/frontend'
 
 interface BandProps {
   standalone?: boolean
-  band: Band
+  band?: Band | null
   setBand?: (b: Band) => void
 }
 
@@ -19,7 +19,7 @@ const INSTRUCTION = "Band cover art with the following description."
 const POLICY = [ "PRIVATE", "PUBLIC_VIEW", "PUBLIC_JOIN" ]
 
 export default function BandInfo(p: BandProps) {
-  const [band, _setBand] = useState(p.band)
+  const [band, _setBand] = useState<Band | undefined>(p.band ?? undefined)
   const setBand = (b: Band) => { if (p.setBand) p.setBand(b); else _setBand(b) }
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -31,6 +31,7 @@ export default function BandInfo(p: BandProps) {
 
     console.log(files)
 
+    if (!band) return
     setBand({ ...band, imageUrl: URL.createObjectURL(acceptedFiles[0]) })
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -38,7 +39,7 @@ export default function BandInfo(p: BandProps) {
   })
 
   const generateBandImage = async () => {
-    if (!band.description) { console.error("description needs to be filled."); return }
+    if (!band?.description) { console.error("description needs to be filled."); return }
 
     const stableDiffusionId = (await (await fetch(`/api/band/generate`, {
       method: 'POST', 
@@ -61,7 +62,7 @@ export default function BandInfo(p: BandProps) {
     } while (status === "processing" || status === "starting")
 
     if (status.startsWith("https")) {
-      setBand({ ...band, imageUrl: status })
+      if (band) setBand({ ...band, imageUrl: status })
     } else console.error(`exit with status: ${status}`)
   }
 
@@ -69,6 +70,8 @@ export default function BandInfo(p: BandProps) {
     let url = `/api/band/generate/${stableDiffusionId}`
     return (await (await fetch(url)).json() as {output: string}).output
   }
+
+  if (!band) return null
 
   return <>
     <div className={p.standalone ? 'mx-auto max-w-4xl' : ''}>

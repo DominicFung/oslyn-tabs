@@ -2,7 +2,7 @@ import { App, CfnOutput, Duration, Fn, Stack } from 'aws-cdk-lib'
 // import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { Runtime, RuntimeFamily } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
 import path, { join } from 'path'
 
@@ -111,7 +111,11 @@ export class AppsyncStack extends Stack {
 
     const nodeJsFunctionProps: NodejsFunctionProps = {
       role: excRole,
-      bundling: { externalModules: ['aws-sdk'] },
+      bundling: {
+        // Node 22 does not ship aws-sdk v2. esbuild 0.22+ also needs packages bundled
+        // or this CDK version emits a runtime require("module").
+        esbuildArgs: { '--packages': 'bundle' },
+      },
       depsLockFilePath: join(__dirname, '../lambdas', 'package-lock.json'),
       environment: { 
         USER_TABLE_NAME: userDynamoName,
@@ -123,8 +127,10 @@ export class AppsyncStack extends Stack {
         USER_BAND_ROLE_TABLE_NAME: userBandRoleDynamoName,
         RECORDING_TABLE_NAME: recordingDynamoName
       },
-      runtime: Runtime.NODEJS_16_X,
+      runtime: new Runtime('nodejs22.x', RuntimeFamily.NODEJS, { supportsInlineCode: true }),
     }
+
+    const listMemory = 1024
 
     const createUser = new NodejsFunction(this, `${props.name}-CreateUser`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'user', 'createUser.ts'),
@@ -225,6 +231,7 @@ export class AppsyncStack extends Stack {
     const listSongs = new NodejsFunction(this, `${props.name}-ListSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSongs.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -237,6 +244,7 @@ export class AppsyncStack extends Stack {
     const listSharedSongs = new NodejsFunction(this, `${props.name}-ListSharedSongs`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'song', 'listSharedSongs.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -309,6 +317,7 @@ export class AppsyncStack extends Stack {
     const listBands = new NodejsFunction(this, `${props.name}-ListBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -321,6 +330,7 @@ export class AppsyncStack extends Stack {
     const listSharedBands = new NodejsFunction(this, `${props.name}-ListSharedBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listSharedBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -333,6 +343,7 @@ export class AppsyncStack extends Stack {
     const listPublicBands = new NodejsFunction(this, `${props.name}-ListPublicBands`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'band', 'listPublicBands.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -393,6 +404,7 @@ export class AppsyncStack extends Stack {
     const listSet = new NodejsFunction(this, `${props.name}-ListSet`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'listSets.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -441,6 +453,7 @@ export class AppsyncStack extends Stack {
     const listPublicJamSessions = new NodejsFunction(this, `${props.name}-ListPublicJamSessions`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'listPublicJamSessions.ts'),
       timeout: Duration.minutes(5),
+      memorySize: listMemory,
       ...nodeJsFunctionProps
     })
 
@@ -544,6 +557,45 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-SetJamSlideConfigResolver`, {
       typeName: "Mutation",
       fieldName: "setJamSlideConfig"
+    })
+
+    const listUserJamSessions = new NodejsFunction(this, `${props.name}-ListUserJamSessions`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'listUserJamSessions.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}ListUserJamSessionsDS`, listUserJamSessions)
+    .createResolver(`${props.name}-ListUserJamSessionsResolver`, {
+      typeName: "Query",
+      fieldName: "listUserJamSessions"
+    })
+
+    const countJamsForSet = new NodejsFunction(this, `${props.name}-CountJamsForSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'countJamsForSet.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}CountJamsForSetDS`, countJamsForSet)
+    .createResolver(`${props.name}-CountJamsForSetResolver`, {
+      typeName: "Query",
+      fieldName: "countJamsForSet"
+    })
+
+    const deleteSet = new NodejsFunction(this, `${props.name}-DeleteSet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'setList', 'deleteSet.ts'),
+      timeout: Duration.minutes(5),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}DeleteSetDS`, deleteSet)
+    .createResolver(`${props.name}-DeleteSetResolver`, {
+      typeName: "Mutation",
+      fieldName: "deleteSet"
     })
 
     const createRecording = new NodejsFunction(this, `${props.name}-CreateRecording`, {

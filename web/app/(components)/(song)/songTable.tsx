@@ -97,7 +97,7 @@ export default function SongTable(p: SongTableProps) {
                 </div>
               </td>
 
-              <DownloadPdf song={songs[i]} open={ openDownload === i } 
+              <DownloadPdf song={songs[i]} bandId={p.bandId} open={ openDownload === i } 
                 setOpen={(b: boolean) => { if (b) setOpenDownload(i); else setOpenDownload(-1) } } 
               />
             </tr>)}

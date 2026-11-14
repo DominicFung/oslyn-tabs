@@ -69,7 +69,7 @@ export default async function BandPage({ params }: { params: Promise<{ id: strin
   
     try {
       const { data } = await client.graphql({ 
-        query: q.listSharedSongs, variables: { userId }
+        query: q.listSharedSongs, variables: { userId, optimize: true }
       }) as GraphQLResult<{ listSharedSongs: Song[] }>
       if (data?.listSharedSongs) songs.push(...data?.listSharedSongs!)
       else throw new Error("data.listSharedSongs is empty.")

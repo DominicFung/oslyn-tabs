@@ -4,7 +4,7 @@ import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from "aws-amplify/api"
 import amplifyconfig from '@/../src/amplifyconfiguration.json'
 
-import * as q from '@/../src/graphql/queries'
+import { listBands } from '@/core/graphql/lists'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   const client = generateClient()
 
   const d = await client.graphql({
-    query: q.listBands, variables: { userId }
+    query: listBands, variables: { userId }
   }) as GraphQLResult<{ listBands: Band[] }>
 
   if (!d.data?.listBands === undefined || !d.data?.listBands === null) {

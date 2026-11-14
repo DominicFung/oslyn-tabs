@@ -25,6 +25,9 @@ type Query {
 
   getJamSession(jamSessionId: ID!, userId: ID): JamSession @aws_iam
   listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+  listUserJamSessions(userId: ID!, limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
+
+  countJamsForSet(setListId: ID!, userId: ID!): Int! @aws_iam
 }
 
 type Mutation {
@@ -89,6 +92,7 @@ type Mutation {
   removeEditorFromSet(setListId: ID!, userId: ID!): SetList @aws_iam
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam
   removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList @aws_iam
+  deleteSet(setListId: ID!, userId: ID!): DeleteSetResult @aws_iam
 
   createJamSession(setListId: ID!, userId: ID!, policy: policy, bandId: ID): JamSession @aws_iam
   endJamSession(jamSessionId: ID!): JamSession @aws_iam
@@ -192,6 +196,12 @@ type SetList {
   editors: [User]!
   creator: User!
   band: Band
+}
+
+type DeleteSetResult {
+  setListId: ID!
+  deleted: Boolean!
+  jamsRemoved: Int!
 }
 
 type Participant {
