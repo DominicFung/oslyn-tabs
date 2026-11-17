@@ -208,6 +208,43 @@ export const setLiveJamChordSheet = /* GraphQL */ `mutation SetLiveJamChordSheet
   }
 }`
 
+export const createChordImport = /* GraphQL */ `mutation CreateChordImport(
+  $userId: ID!
+  $songId: ID!
+  $jamId: ID!
+  $title: String!
+  $artist: String
+) {
+  createChordImport(userId: $userId, songId: $songId, jamId: $jamId, title: $title, artist: $artist) {
+    requestId
+    userId
+    songId
+    jamId
+    title
+    artist
+    status
+    createdAt
+    updatedAt
+  }
+}`
+
+export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($userId: ID, $jamId: ID) {
+  onImportStatusChanged(userId: $userId, jamId: $jamId) {
+    requestId
+    userId
+    songId
+    jamId
+    title
+    artist
+    status
+    chosenUrl
+    error
+    chordSheet
+    createdAt
+    updatedAt
+  }
+}`
+
 export const createSongForLibrary = /* GraphQL */ `mutation CreateSongForLibrary(
   $title: String!
   $userId: ID!

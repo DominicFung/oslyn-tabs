@@ -26,9 +26,9 @@ import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
-import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
+import { JamSongChange, onImportStatusChanged, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
 
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 export interface PlayerProps {
   jam: JamSession, 
@@ -159,7 +159,8 @@ export default function Player(p: PlayerProps) {
         queueAdd: subscribeToQueueAdd(p.jam.jamSessionId),
         queueRemove: subscribeToQueueRemove(p.jam.jamSessionId),
         songsChanged: subscribeJamSongs(p.jam.jamSessionId),
-        queueUpdate: subscribeQueueUpdate(p.jam.jamSessionId)
+        queueUpdate: subscribeQueueUpdate(p.jam.jamSessionId),
+        chordImport: subscribeChordImport(p.jam.jamSessionId)
       })
       console.log("All Subscribed!")
     }
@@ -296,6 +297,30 @@ export default function Player(p: PlayerProps) {
       revisionRef.current = payload.revision
     }
     if (typeof payload.currentSongIndex === 'number') setSong(payload.currentSongIndex)
+  }
+
+  const applyImportedChords = (event?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null) => {
+    if (event?.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
+    const songId = event.songId
+    const chordSheet = event.chordSheet
+    setSongs((prev) => prev.map((row) => row?.song?.songId === songId
+      ? { ...row, song: { ...row.song, chordSheet, chordSheetKey: row.song.chordSheetKey || "C" } }
+      : row))
+  }
+
+  const subscribeChordImport = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
+    const observable = client.graphql({
+      query: onImportStatusChanged, variables: { jamId: jamSessionId }
+    }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onImportStatusChanged?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null } }) => void
+        error: (error: unknown) => void
+      }) => ZenObservable.Subscription
+    }
+    return observable.subscribe({
+      next: ({ data }) => applyImportedChords(data?.onImportStatusChanged),
+      error: (error) => console.error(error)
+    })
   }
 
   const subscribeQueueUpdate = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
@@ -666,6 +691,5 @@ export default function Player(p: PlayerProps) {
     </button>}
 
     <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={p.jam.jamSessionId} signInAsGuest={signInAsGuest} />
-    <Toaster position="bottom-left" />
   </div>
 }

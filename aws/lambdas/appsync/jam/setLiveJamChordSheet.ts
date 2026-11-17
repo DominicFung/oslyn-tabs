@@ -9,25 +9,14 @@ const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 
-/**
- * Writes a chord sheet onto a song the caller owns and publishes it on the jam.
- * Does not fetch Ultimate Guitar. Does not append a second copy of the song.
- */
-export const handler = async (event: AppSyncResolverEvent<{
+export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
   jamSessionId: string
   songId: string
   userId: string
   chordSheet: string
   chordSheetKey?: string | null
   originLink?: string | null
-}, null>) => {
-  const b = event.arguments
-  if (!b?.jamSessionId || !b.songId || !b.userId || !b.chordSheet?.trim()) {
-    console.error('jamSessionId, songId, userId, and chordSheet are required')
-    return
-  }
-
-  const dynamo = new DynamoDBClient({})
+}) {
   const jamRes = await dynamo.send(new GetItemCommand({
     TableName: JAM_TABLE_NAME,
     Key: { jamSessionId: { S: b.jamSessionId } },
@@ -78,7 +67,6 @@ export const handler = async (event: AppSyncResolverEvent<{
   const next = { ...song, ...update }
   if (next.isApproved == null) next.isApproved = false
   if (next.version == null) next.version = 1
-
   return {
     jamSessionId: jam.jamSessionId,
     index,
@@ -86,4 +74,25 @@ export const handler = async (event: AppSyncResolverEvent<{
     jumpTo: false,
     song: next,
   }
+}
+
+/**
+ * Writes a chord sheet onto a song the caller owns and publishes it on the jam.
+ * Does not fetch Ultimate Guitar. Does not append a second copy of the song.
+ */
+export const handler = async (event: AppSyncResolverEvent<{
+  jamSessionId: string
+  songId: string
+  userId: string
+  chordSheet: string
+  chordSheetKey?: string | null
+  originLink?: string | null
+}, null>) => {
+  const b = event.arguments
+  if (!b?.jamSessionId || !b.songId || !b.userId || !b.chordSheet?.trim()) {
+    console.error('jamSessionId, songId, userId, and chordSheet are required')
+    return
+  }
+  const dynamo = new DynamoDBClient({})
+  return writeOwnedChordSheet(dynamo, b)
 }

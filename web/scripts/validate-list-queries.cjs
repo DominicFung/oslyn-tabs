@@ -168,7 +168,7 @@ function validateDocument(schema, doc) {
 
 function main() {
   const schema = parseSchema(fs.readFileSync(schemaPath, 'utf8'))
-  const required = ['Query', 'Mutation', 'Subscription', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult', 'JamSongChange']
+  const required = ['Query', 'Mutation', 'Subscription', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult', 'JamSongChange', 'SpotifySearchResult', 'SpotifyTrack', 'ChordImportRequest']
   for (const name of required) {
     if (!schema.types.has(name)) {
       console.error(`schema is missing type ${name}`)
@@ -192,7 +192,7 @@ function main() {
   docs.forEach(({ doc, file }, index) => {
     const errors = validateDocument(schema, doc)
     const label = `${path.relative(root, file)} ${(doc.trim().split('\n')[0] || `doc ${index}`).trim()}`
-    const allowsChordSheet = /\b(getSong|addSongToLiveJam|onJamSongsChanged|setLiveJamChordSheet)\s*\(/.test(doc)
+    const allowsChordSheet = /\b(getSong|addSongToLiveJam|onJamSongsChanged|setLiveJamChordSheet|completeImport|onImportStatusChanged)\s*\(/.test(doc)
     const selection = stripParens(doc)
     if (!allowsChordSheet) {
       if (/\bchordSheet\b/.test(selection)) errors.push('list document must not request chordSheet')

@@ -7,7 +7,7 @@ import amplifyconfig from '@/../src/amplifyconfiguration.json'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/core/auth'
 import { _Session } from '@/core/utils/frontend'
-import { addSongToLiveJam, createSongFromSpotify, JamSongChange } from '@/core/graphql/jam'
+import { addSongToLiveJam, createChordImport, createSongFromSpotify, JamSongChange } from '@/core/graphql/jam'
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
@@ -69,7 +69,17 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
         songId,
       }, { status: 403 })
     }
-    return NextResponse.json({ ...added.data.addSongToLiveJam, songId })
+    let importRequestId: string | null = null
+    try {
+      const queued = await client.graphql({
+        query: createChordImport,
+        variables: { userId, songId, jamId: jamSessionId, title, artist: artist || undefined },
+      }) as GraphQLResult<{ createChordImport: { requestId: string } | null }>
+      importRequestId = queued.data?.createChordImport?.requestId || null
+    } catch (e) {
+      console.error(e)
+    }
+    return NextResponse.json({ ...added.data.addSongToLiveJam, songId, importRequestId })
   } catch (e) {
     console.error(e)
     return NextResponse.json({
