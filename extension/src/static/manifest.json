@@ -1,7 +1,7 @@
 {
   "manifest_version": 3, 
   "name": "Oslyn",
-  "version": "0.4",
+  "version": "0.5",
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
@@ -10,7 +10,7 @@
   "host_permissions": [
     "http://localhost:3000/*", "https://tabs.oslyn.io/*"
   ],
-  "permissions": [ "activeTab" ], 
+  "permissions": [ "activeTab", "storage" ], 
   "action": {
     "default_title": "Click Me",
     "default_popup": "popup.html"
@@ -23,6 +23,10 @@
     {
         "matches": ["https://tabs.ultimate-guitar.com/tab/*"],
         "js": ["contentScript.js"]
+    },
+    {
+        "matches": ["http://localhost:3000/*", "https://tabs.oslyn.io/*"],
+        "js": ["oslynBridge.js"]
     }
   ]
 }

@@ -63,3 +63,30 @@ export const addSongToLiveJam = /* GraphQL */ `mutation AddSongToLiveJam(
     }
   }
 }`
+
+export const setLiveJamChordSheet = /* GraphQL */ `mutation SetLiveJamChordSheet(
+  $jamSessionId: ID!
+  $songId: ID!
+  $userId: ID!
+  $chordSheet: String!
+  $chordSheetKey: String
+  $originLink: String
+) {
+  setLiveJamChordSheet(
+    jamSessionId: $jamSessionId
+    songId: $songId
+    userId: $userId
+    chordSheet: $chordSheet
+    chordSheetKey: $chordSheetKey
+    originLink: $originLink
+  ) {
+    jamSessionId
+    index
+    song {
+      songId
+      title
+      chordSheet
+      chordSheetKey
+    }
+  }
+}`

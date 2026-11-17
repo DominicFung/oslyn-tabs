@@ -103,6 +103,10 @@ export class AppsyncStack extends Stack {
             resources: ["*"]
           }),
           new PolicyStatement({
+            actions: ["secretsmanager:GetSecretValue"],
+            resources: [`arn:aws:secretsmanager:${this.region}:${this.account}:secret:oslynstudio/secret*`],
+          }),
+          new PolicyStatement({
             actions: [ "dynamodb:*" ],
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
@@ -659,6 +663,31 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-SearchSongsResolver`, {
       typeName: "Query",
       fieldName: "searchSongs"
+    })
+
+    const searchSpotifyTracks = new NodejsFunction(this, `${props.name}-SearchSpotifyTracks`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'spotify', 'searchSpotifyTracks.ts'),
+      timeout: Duration.seconds(30),
+      memorySize: 256,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SearchSpotifyTracksDS`, searchSpotifyTracks)
+    .createResolver(`${props.name}-SearchSpotifyTracksResolver`, {
+      typeName: "Query",
+      fieldName: "searchSpotifyTracks"
+    })
+
+    const setLiveJamChordSheet = new NodejsFunction(this, `${props.name}-SetLiveJamChordSheet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setLiveJamChordSheet.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetLiveJamChordSheetDS`, setLiveJamChordSheet)
+    .createResolver(`${props.name}-SetLiveJamChordSheetResolver`, {
+      typeName: "Mutation",
+      fieldName: "setLiveJamChordSheet"
     })
 
     const addSongToLiveJam = new NodejsFunction(this, `${props.name}-AddSongToLiveJam`, {

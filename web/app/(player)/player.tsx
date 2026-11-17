@@ -25,6 +25,7 @@ import { default as SSlides } from '../(slides)/slides'
 import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
+import MissingChords from './missingChords'
 import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
 
 import toast, { Toaster } from 'react-hot-toast'
@@ -253,7 +254,22 @@ export default function Player(p: PlayerProps) {
       order: change.index,
     } as JamSong
     setSongs((prev) => {
-      if (prev[change.index]?.song?.songId === change.song.songId) return prev
+      const existing = prev.findIndex((row) => row?.song?.songId === change.song.songId)
+      if (existing >= 0) {
+        const copy = [...prev]
+        const current = copy[existing]
+        const incomingSheet = change.song.chordSheet?.trim()
+        copy[existing] = {
+          ...current,
+          song: {
+            ...current.song,
+            ...change.song,
+            chordSheet: incomingSheet || current.song.chordSheet,
+            chordSheetKey: change.song.chordSheetKey || current.song.chordSheetKey,
+          },
+        }
+        return copy
+      }
       if (change.index === prev.length) return [...prev, entry]
       if (change.index < prev.length) {
         const copy = [...prev]
@@ -586,7 +602,15 @@ export default function Player(p: PlayerProps) {
         Search for a song
       </button>}
     </div>}
-    { songs[song]?.song && 
+    {songs[song]?.song && !songs[song].song.chordSheet?.trim() && <MissingChords
+      songId={songs[song].song.songId}
+      jamSessionId={p.jam.jamSessionId}
+      title={songs[song].song.title}
+      artist={songs[song].song.artist}
+      userId={p.user?.userId}
+      canImport={!!p.canEditSongs && !p.isSlideShow}
+    />}
+    { songs[song]?.song?.chordSheet?.trim() && 
       (p.isSlideShow ? 
         <SSlides
           song={songs[song].song} page={page} 

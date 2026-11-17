@@ -15,6 +15,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   title: string, userId: string, chordSheetKey: string, chordSheet: string, 
   artist?: string, album?: string, albumCover?: string, shareWithBand?: string,
   originPlatorm?: 'UG' | 'WORSHIPTOGETHER' | 'OTHER', originLink?: string,
+  spotifyId?: string,
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -23,7 +24,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!b.title) { console.error(`b.title is empty`); return }
   if (!b.userId) { console.error(`b.userId is empty`); return }
   if (!b.chordSheetKey) { console.error(`b.chordSheetKey is empty`); return }
-  if (!b.chordSheet) { console.error(`b.chordSheet is empty`); return }
+  if (b.chordSheet == null) { console.error(`b.chordSheet is missing`); return }
 
   const dynamo = new DynamoDBClient({})
   const songId = uuidv4()
@@ -40,7 +41,6 @@ export const handler = async (event: AppSyncResolverEvent<{
     songId, title: b.title, 
     userId: b.userId,
     chordSheetKey: b.chordSheetKey,
-    chordSheet: b.chordSheet,
 
     isApproved: true,
     version: 1,    
@@ -50,8 +50,10 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (b.album) song.album = b.album
   if (b.artist) song.artist = b.artist
   if (b.albumCover) song.albumCover = b.albumCover
+  if (b.chordSheet.trim()) song.chordSheet = b.chordSheet
   if (b.originPlatorm) song.originPlatorm = b.originPlatorm
   if (b.originLink) song.originLink = b.originLink
+  if (b.spotifyId?.trim()) song.spotifyId = b.spotifyId.trim()
 
   const res1 = await dynamo.send(
     new PutItemCommand({
