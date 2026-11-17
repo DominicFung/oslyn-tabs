@@ -278,6 +278,75 @@ export const getSetForAdd = /* GraphQL */ `query GetSetForAdd($setListId: ID!, $
   }
 }`
 
+export const getSongUsage = /* GraphQL */ `query GetSongUsage($songId: ID!, $userId: ID!) {
+  getSongUsage(songId: $songId, userId: $userId) {
+    songId
+    setCount
+    jamCount
+  }
+}`
+
+export const deleteSong = /* GraphQL */ `mutation DeleteSong($songId: ID!, $userId: ID!) {
+  deleteSong(songId: $songId, userId: $userId) {
+    songId
+    title
+    userId
+    setsAffected
+    jamsAffected
+    jams {
+      jamSessionId
+      currentSong
+      queue
+      songIds
+    }
+  }
+}`
+
+export const onSongDeleted = /* GraphQL */ `subscription OnSongDeleted {
+  onSongDeleted {
+    songId
+    title
+    userId
+    setsAffected
+    jamsAffected
+    jams {
+      jamSessionId
+      currentSong
+      queue
+      songIds
+    }
+  }
+}`
+
+export const removeSongFromJam = /* GraphQL */ `mutation RemoveSongFromJam(
+  $jamSessionId: ID!
+  $songId: ID!
+  $userId: ID!
+  $index: Int
+) {
+  removeSongFromJam(jamSessionId: $jamSessionId, songId: $songId, userId: $userId, index: $index) {
+    jamSessionId
+    songId
+    title
+    index
+    currentSong
+    queue
+    songIds
+  }
+}`
+
+export const onSongRemovedFromJam = /* GraphQL */ `subscription OnSongRemovedFromJam($jamSessionId: ID!) {
+  onSongRemovedFromJam(jamSessionId: $jamSessionId) {
+    jamSessionId
+    songId
+    title
+    index
+    currentSong
+    queue
+    songIds
+  }
+}`
+
 export const addSongToSet = /* GraphQL */ `mutation AddSongToSetAuthed($setListId: ID!, $songId: ID!, $key: String) {
   addSongToSet(setListId: $setListId, songId: $songId, key: $key) {
     setListId

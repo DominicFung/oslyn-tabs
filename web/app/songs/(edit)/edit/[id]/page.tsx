@@ -54,6 +54,6 @@ export default async function EditSong(context: {
   }
   
   return <div>
-    {d && <Edit song={d} />}
+    {d && <Edit song={d} userId={userId} />}
   </div>
 }

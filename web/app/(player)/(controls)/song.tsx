@@ -33,6 +33,7 @@ interface SongProps {
   songs: JamSong[]
   canAddSongs?: boolean
   onSongAdded?: (change: JamSongChange) => void
+  onSongRemoved?: (update: { title: string, songId: string, currentSong: number, queue: Array<number | null>, songIds: Array<string | null> }) => void
   queueAt?: (index: number) => void
 }
 
@@ -159,6 +160,27 @@ export default function SongControl(p: SongProps) {
     }
   }
 
+  const removeFromJam = async (row: SetRow) => {
+    const songId = row.song.song?.songId
+    if (!songId || busy) return
+    setBusy(`remove:${songId}`)
+    setError("")
+    try {
+      const res = await fetch(`/api/jam/${p.jamSessionId}/song/remove`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ songId, index: row.setIndex }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || "Could not remove that song")
+      p.onSongRemoved?.(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not remove that song")
+    } finally {
+      setBusy("")
+    }
+  }
+
   const addLibrarySong = async (hit: LibrarySong, jumpTo: boolean) => {
     const existing = p.songs.findIndex((row) => row.song?.songId === hit.songId)
     if (existing >= 0) {
@@ -223,6 +245,11 @@ export default function SongControl(p: SongProps) {
               <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white mr-2" onClick={() => p.setSong(row.setIndex)}>
                 {row.song.key}
               </div>
+              {p.canAddSongs && row.song.song?.songId ? <button type="button" disabled={!!busy}
+                onClick={() => removeFromJam(row)}
+                className="text-red-700 border border-red-700 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
+                {busy === `remove:${row.song.song.songId}` ? "Removing…" : "Remove from this jam"}
+              </button> : null}
               {p.addToQueue && row.song.song?.songId ? <div className="flex-0 min-w-0">
                 <button type="button" onClick={() => { const id = row.song.song?.songId; if (id) p.addToQueue!(id) }} className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mx-2 hidden">
                   <PlusIcon className="w-4 h-4 mt-1" />

@@ -6,6 +6,7 @@ import { canEditJamSongs } from '../../util/jamAccess'
 import { normalizeSong } from '../../util/selection'
 import { updateDynamoUtil } from '../../util/dynamo'
 import { bandSongIds, loadUser, songSharedWith } from '../song/library'
+import { asPlaylist } from '../../util/songIndex'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
@@ -63,6 +64,35 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!shared && !onBand) { console.error(`user ${b.userId} cannot use song ${b.songId}`); return }
 
   const key = b.key || song.chordSheetKey || 'C'
+  const existingPlaylist = Array.isArray((jam as _JamSession & { playlist?: unknown }).playlist)
+    ? asPlaylist((jam as _JamSession & { playlist?: unknown }).playlist)
+    : null
+  if (existingPlaylist) {
+    const playlist = [...existingPlaylist, { songId: b.songId, key }]
+    const index = playlist.length - 1
+    const jumpTo = !!b.jumpTo
+    await dynamo.send(new UpdateItemCommand({
+      TableName: JAM_TABLE_NAME,
+      Key: { jamSessionId: { S: jam.jamSessionId } },
+      UpdateExpression: jumpTo
+        ? 'SET playlist = :playlist, currentSong = :current, currentPage = :page'
+        : 'SET playlist = :playlist',
+      ExpressionAttributeValues: marshall({
+        ':playlist': playlist,
+        ...(jumpTo ? { ':current': index, ':page': 0 } : {}),
+      }),
+    }))
+    if (song.isApproved == null) song.isApproved = false
+    if (song.version == null) (song as any).version = 1
+    return {
+      jamSessionId: jam.jamSessionId,
+      index,
+      key,
+      jumpTo,
+      song: normalizeSong(song, event.info.selectionSetList),
+    }
+  }
+
   const appended = await dynamo.send(new UpdateItemCommand({
     TableName: SETLIST_TABLE_NAME,
     Key: { setListId: { S: jam.setListId } },

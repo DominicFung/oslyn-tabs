@@ -18,9 +18,11 @@ import Revert from "../../(components)/revert"
 import { SongRequest } from "@/app/api/song/create/route"
 
 import { getArrayBufferFromObjectURL } from "@/core/utils/frontend"
+import DeleteSongButton from "@/app/songs/deleteSongButton"
 
 export interface EditProps {
   song: Song,
+  userId: string
   shareWithBand?: string
 }
 
@@ -144,6 +146,9 @@ export default function Edit(p: EditProps) {
       { step === 0 && <PasteTabs tabs={song.chordSheet || ""} setTabs={(t: string) => { console.log(t); setSong({ ...song, chordSheet: t }) }} /> }
       { step === 1 && <SongInfo song={song} setSong={setSong} searchSpotify={() => searchSpotify(song)}/>}
       { step === 2 && <Review song={song} /> }
+    </div>
+    <div className="flex items-center justify-between px-4 pb-4">
+      {song.creator?.userId === p.userId && song.songId && <DeleteSongButton songId={song.songId} title={song.title} onDeleted={() => router.push("/songs")} />}
     </div>
     <Save song={song} type="update" loading={loading}/> 
     <Revert oldChordSheet={oldChordSheet} newChordSheet={p.song.chordSheet||""} setChordSheet={setChordSheet} />

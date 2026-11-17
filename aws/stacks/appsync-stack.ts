@@ -763,6 +763,41 @@ export class AppsyncStack extends Stack {
       fieldName: "failImport"
     })
 
+    const getSongUsage = new NodejsFunction(this, `${props.name}-GetSongUsage`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'getSongUsage.ts'),
+      timeout: Duration.minutes(1),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}GetSongUsageDS`, getSongUsage)
+    .createResolver(`${props.name}-GetSongUsageResolver`, {
+      typeName: "Query",
+      fieldName: "getSongUsage"
+    })
+
+    const deleteSong = new NodejsFunction(this, `${props.name}-DeleteSong`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'song', 'deleteSong.ts'),
+      timeout: Duration.minutes(2),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}DeleteSongDS`, deleteSong)
+    .createResolver(`${props.name}-DeleteSongResolver`, {
+      typeName: "Mutation",
+      fieldName: "deleteSong"
+    })
+
+    const removeSongFromJam = new NodejsFunction(this, `${props.name}-RemoveSongFromJam`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'removeSongFromJam.ts'),
+      timeout: Duration.seconds(30),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}RemoveSongFromJamDS`, removeSongFromJam)
+    .createResolver(`${props.name}-RemoveSongFromJamResolver`, {
+      typeName: "Mutation",
+      fieldName: "removeSongFromJam"
+    })
+
     const addSongToLiveJam = new NodejsFunction(this, `${props.name}-AddSongToLiveJam`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'addSongToLiveJam.ts'),
       timeout: Duration.minutes(5),

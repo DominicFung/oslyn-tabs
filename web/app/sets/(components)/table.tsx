@@ -14,6 +14,7 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { DraggableTableRow } from "./(table)/dragrow"
 import DragHandle from "./(table)/draghandle"
+import { useSongDeleted } from "@/app/songDeleted"
 
 
 export interface SetTableProps {
@@ -143,6 +144,14 @@ export default function SetTable(p: SetTableProps) {
       setSetList(p.set)
     } else { setSongs(p.songs); setKeys(Array(p.songs.length).fill("C")); setSListCheck(Array(p.songs.length).fill(false)) }
   }, [p.set, p.songs])
+
+  useSongDeleted((songId) => {
+    setSongs((prev) => prev.filter((song) => song.songId !== songId))
+    setSetList((prev) => ({
+      ...prev,
+      songs: (prev.songs || []).filter((row) => row?.song?.songId !== songId),
+    }))
+  })
 
   return <>
   <section className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">

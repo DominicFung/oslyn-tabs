@@ -5,6 +5,7 @@ import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { hasSubstring, merge } from '../../util/dynamo'
 import { batchGetAll } from '../../util/batch'
 import { canEditJamSongs, canJoinJam } from '../../util/jamAccess'
+import { asPlaylist } from '../../util/songIndex'
 
 import { Participant, User } from '../../API'
 import { _JamSession, _JamSong, _SetList } from '../../type'
@@ -55,7 +56,13 @@ export const handler = async (event: AppSyncResolverEvent<{
 
     if (hasSubstring(event.info.selectionSetList, "setList/songs")) {
       console.log("getting setList/songs ..")
-      const rawSongs = Array.isArray(setList.songs) ? setList.songs as _JamSong[] : []
+      const setSongs = Array.isArray(setList.songs) ? setList.songs as _JamSong[] : []
+      const playlist = Array.isArray((jamSession as _JamSession & { playlist?: unknown }).playlist)
+        ? asPlaylist((jamSession as _JamSession & { playlist?: unknown }).playlist)
+        : null
+      const rawSongs = playlist
+        ? playlist.map((row) => ({ songId: row.songId, key: row.key || 'C' })) as _JamSong[]
+        : setSongs
       setList.songs = rawSongs
       const songIds = rawSongs.map((s) => s?.songId).filter((id): id is string => !!id)
       const uniq = [...new Set(songIds)]
