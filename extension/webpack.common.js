@@ -12,7 +12,8 @@ module.exports = {
     popup: path.resolve("./src/popup/index.tsx"),
     options: path.resolve("./src/options/options.tsx"),
     background: path.resolve('./src/background/background.ts'),
-    contentScript: path.resolve("./src/contentScript/contentScript.ts")
+    contentScript: path.resolve("./src/contentScript/contentScript.ts"),
+    oslynBridge: path.resolve("./src/contentScript/oslynBridge.ts")
   },
   module: {
     rules: [

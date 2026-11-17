@@ -132,6 +132,119 @@ export const onJamQueueUpdate = /* GraphQL */ `subscription OnJamQueueUpdate($ja
   }
 }`
 
+export const searchSpotifyTracks = /* GraphQL */ `query SearchSpotifyTracks($userId: ID!, $term: String!, $limit: Int) {
+  searchSpotifyTracks(userId: $userId, term: $term, limit: $limit) {
+    error
+    tracks {
+      spotifyId
+      title
+      artist
+      album
+      albumCover
+    }
+  }
+}`
+
+export const createSongFromSpotify = /* GraphQL */ `mutation CreateSongFromSpotify(
+  $title: String!
+  $userId: ID!
+  $artist: String
+  $album: String
+  $albumCover: String
+  $chordSheet: String!
+  $chordSheetKey: String!
+  $spotifyId: String
+  $originPlatorm: chordSheetPlatform
+) {
+  createSong(
+    title: $title
+    userId: $userId
+    artist: $artist
+    album: $album
+    albumCover: $albumCover
+    chordSheet: $chordSheet
+    chordSheetKey: $chordSheetKey
+    spotifyId: $spotifyId
+    originPlatorm: $originPlatorm
+  ) {
+    songId
+    title
+    artist
+    album
+    spotifyId
+  }
+}`
+
+export const setLiveJamChordSheet = /* GraphQL */ `mutation SetLiveJamChordSheet(
+  $jamSessionId: ID!
+  $songId: ID!
+  $userId: ID!
+  $chordSheet: String!
+  $chordSheetKey: String
+  $originLink: String
+) {
+  setLiveJamChordSheet(
+    jamSessionId: $jamSessionId
+    songId: $songId
+    userId: $userId
+    chordSheet: $chordSheet
+    chordSheetKey: $chordSheetKey
+    originLink: $originLink
+  ) {
+    jamSessionId
+    index
+    key
+    jumpTo
+    song {
+      songId
+      title
+      artist
+      album
+      albumCover
+      chordSheet
+      chordSheetKey
+      spotifyId
+    }
+  }
+}`
+
+export const createChordImport = /* GraphQL */ `mutation CreateChordImport(
+  $userId: ID!
+  $songId: ID!
+  $jamId: ID!
+  $title: String!
+  $artist: String
+) {
+  createChordImport(userId: $userId, songId: $songId, jamId: $jamId, title: $title, artist: $artist) {
+    requestId
+    userId
+    songId
+    jamId
+    title
+    artist
+    status
+    createdAt
+    updatedAt
+  }
+}`
+
+export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($userId: ID, $jamId: ID) {
+  onImportStatusChanged(userId: $userId, jamId: $jamId) {
+    requestId
+    userId
+    songId
+    jamId
+    title
+    artist
+    status
+    chosenUrl
+    error
+    chordSheet
+    createdAt
+    updatedAt
+  }
+}`
+
 export const createSongForLibrary = /* GraphQL */ `mutation CreateSongForLibrary(
   $title: String!
   $userId: ID!

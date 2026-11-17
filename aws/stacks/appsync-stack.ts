@@ -1,9 +1,10 @@
-import { App, CfnOutput, Duration, Fn, Stack } from 'aws-cdk-lib'
+import { App, CfnOutput, Duration, Fn, RemovalPolicy, Stack } from 'aws-cdk-lib'
 // import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Runtime, RuntimeFamily } from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
+import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb'
 import path, { join } from 'path'
 
 interface AppsyncProps {
@@ -46,6 +47,20 @@ export class AppsyncStack extends Stack {
 
     const bandSetlistDynamoName = Fn.importValue(`${props.name}-BandSetlistTable-Name`)
     const bandSetlistDynamoArn = Fn.importValue(`${props.name}-BandSetlistTable-Arn`)
+
+    // New table lives in this stack so a deploy does not touch DynamoStack.
+    // DynamoStack owns the existing tables and uses DESTROY; adding a table there
+    // would require deploying that stack. This table is only created with AppsyncStack.
+    const chordImportTable = new Table(this, `${props.name}-ChordImportTable`, {
+      tableName: `${props.name}-ChordImportTable`,
+      partitionKey: { name: 'requestId', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.RETAIN,
+    })
+    chordImportTable.addGlobalSecondaryIndex({
+      indexName: 'status',
+      partitionKey: { name: 'status', type: AttributeType.STRING },
+    })
 
     const appsync = new AmplifyGraphqlApi(this, `${props.name}-Appsync`, {
       apiName: `${props.name}`,
@@ -103,12 +118,17 @@ export class AppsyncStack extends Stack {
             resources: ["*"]
           }),
           new PolicyStatement({
+            actions: ["secretsmanager:GetSecretValue"],
+            resources: [`arn:aws:secretsmanager:${this.region}:${this.account}:secret:oslynstudio/secret*`],
+          }),
+          new PolicyStatement({
             actions: [ "dynamodb:*" ],
             resources: [ 
               `${userDynamoArn}*`, `${bandDynamoArn}*`, `${songDynamoArn}*`, 
               `${setListDynamoArn}*`, `${jamDynamoArn}*`, `${inviteDynamoArn}*`,
               `${userBandRoleDynamoArn}*`, `${recordingDynamoArn}*`,
-              `${userBandMembershipDynamoArn}*`, `${bandSongDynamoArn}*`, `${bandSetlistDynamoArn}*`
+              `${userBandMembershipDynamoArn}*`, `${bandSongDynamoArn}*`, `${bandSetlistDynamoArn}*`,
+              `${chordImportTable.tableArn}*`
             ]
           }),
           new PolicyStatement({
@@ -138,7 +158,8 @@ export class AppsyncStack extends Stack {
         RECORDING_TABLE_NAME: recordingDynamoName,
         USER_BAND_MEMBERSHIP_TABLE_NAME: userBandMembershipDynamoName,
         BAND_SONG_TABLE_NAME: bandSongDynamoName,
-        BAND_SETLIST_TABLE_NAME: bandSetlistDynamoName
+        BAND_SETLIST_TABLE_NAME: bandSetlistDynamoName,
+        CHORD_IMPORT_TABLE_NAME: chordImportTable.tableName
       },
       runtime: new Runtime('nodejs22.x', RuntimeFamily.NODEJS, { supportsInlineCode: true }),
     }
@@ -659,6 +680,87 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-SearchSongsResolver`, {
       typeName: "Query",
       fieldName: "searchSongs"
+    })
+
+    const searchSpotifyTracks = new NodejsFunction(this, `${props.name}-SearchSpotifyTracks`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'spotify', 'searchSpotifyTracks.ts'),
+      timeout: Duration.seconds(30),
+      memorySize: 256,
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SearchSpotifyTracksDS`, searchSpotifyTracks)
+    .createResolver(`${props.name}-SearchSpotifyTracksResolver`, {
+      typeName: "Query",
+      fieldName: "searchSpotifyTracks"
+    })
+
+    const setLiveJamChordSheet = new NodejsFunction(this, `${props.name}-SetLiveJamChordSheet`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'setLiveJamChordSheet.ts'),
+      timeout: Duration.minutes(5),
+      ...nodeJsFunctionProps
+    })
+
+    appsync.addLambdaDataSource(`${props.name}SetLiveJamChordSheetDS`, setLiveJamChordSheet)
+    .createResolver(`${props.name}-SetLiveJamChordSheetResolver`, {
+      typeName: "Mutation",
+      fieldName: "setLiveJamChordSheet"
+    })
+
+    const createChordImport = new NodejsFunction(this, `${props.name}-CreateChordImport`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'createChordImport.ts'),
+      timeout: Duration.seconds(30),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}CreateChordImportDS`, createChordImport)
+    .createResolver(`${props.name}-CreateChordImportResolver`, {
+      typeName: "Mutation",
+      fieldName: "createChordImport"
+    })
+
+    const listPendingImports = new NodejsFunction(this, `${props.name}-ListPendingImports`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'listPendingImports.ts'),
+      timeout: Duration.seconds(30),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}ListPendingImportsDS`, listPendingImports)
+    .createResolver(`${props.name}-ListPendingImportsResolver`, {
+      typeName: "Query",
+      fieldName: "listPendingImports"
+    })
+
+    const claimImport = new NodejsFunction(this, `${props.name}-ClaimImport`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'claimImport.ts'),
+      timeout: Duration.seconds(30),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}ClaimImportDS`, claimImport)
+    .createResolver(`${props.name}-ClaimImportResolver`, {
+      typeName: "Mutation",
+      fieldName: "claimImport"
+    })
+
+    const completeImport = new NodejsFunction(this, `${props.name}-CompleteImport`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'completeImport.ts'),
+      timeout: Duration.minutes(1),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}CompleteImportDS`, completeImport)
+    .createResolver(`${props.name}-CompleteImportResolver`, {
+      typeName: "Mutation",
+      fieldName: "completeImport"
+    })
+
+    const failImport = new NodejsFunction(this, `${props.name}-FailImport`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'failImport.ts'),
+      timeout: Duration.seconds(30),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}FailImportDS`, failImport)
+    .createResolver(`${props.name}-FailImportResolver`, {
+      typeName: "Mutation",
+      fieldName: "failImport"
     })
 
     const addSongToLiveJam = new NodejsFunction(this, `${props.name}-AddSongToLiveJam`, {

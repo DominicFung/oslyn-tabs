@@ -5,7 +5,7 @@ import { JamSession, JamSongInput, SetList, Song } from "@/../src/API"
 import { SetRequest } from "@/app/api/set/create/route"
 import { useRouter } from "next/navigation"
 import { JamRequest } from "@/app/api/jam/create/route"
-import toast, { Toaster } from "react-hot-toast"
+import toast from "react-hot-toast"
 
 export interface CreateJamProps {
   bandName: string,
@@ -104,6 +104,5 @@ export default function CreateJam(p: CreateJamProps) {
         <div className='flex-1' />
       </div>
     </div>
-    <Toaster position="bottom-left" />
   </>
 }

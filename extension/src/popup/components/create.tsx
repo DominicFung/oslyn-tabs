@@ -5,7 +5,7 @@ import { Listbox, Transition } from '@headlessui/react'
 import { ArrowsUpDownIcon } from '@heroicons/react/24/solid'
 
 import amplifyconfig from '../../../../src/amplifyconfiguration.json'
-import { addSongToLiveJam, createImportedSong, listUserJamSessions } from '../graphql'
+import { addSongToLiveJam, createImportedSong, listUserJamSessions, setLiveJamChordSheet } from '../graphql'
 import { Amplify } from 'aws-amplify'
 import { GraphQLResult, generateClient } from 'aws-amplify/api'
 
@@ -31,9 +31,10 @@ export default function CreateSong(p: CreateProps) {
   const [ jamId, setJamId ] = useState("")
   const [ status, setStatus ] = useState("")
   const [ pending, setPending ] = useState(false)
+  const [ pendingImport, setPendingImport ] = useState<{ songId: string, jamSessionId: string, title: string, userId: string } | null>(null)
   const client = generateClient()
 
-  useEffect(() => { getCurrentTab(); loadRooms() }, [p.session])
+  useEffect(() => { getCurrentTab(); loadRooms(); loadPendingImport() }, [p.session])
 
   useEffect(() => {
     if (!currentTab) return
@@ -77,6 +78,45 @@ export default function CreateSong(p: CreateProps) {
         }) }
       }
     )
+  }
+
+  const loadPendingImport = () => {
+    chrome.storage.local.get("pendingChordImport", (stored) => {
+      const value = stored?.pendingChordImport
+      if (value?.songId && value?.jamSessionId && value?.title && value?.userId) setPendingImport(value)
+      else setPendingImport(null)
+    })
+  }
+
+  const importIntoSong = async () => {
+    if (pending || !pendingImport || !song.chordSheet.trim()) return
+    setPending(true)
+    setStatus("")
+    try {
+      const data = await client.graphql({
+        query: setLiveJamChordSheet,
+        variables: {
+          jamSessionId: pendingImport.jamSessionId,
+          songId: pendingImport.songId,
+          userId: p.session.user.userId,
+          chordSheet: song.chordSheet,
+          chordSheetKey: song.chordSheetKey || "C",
+          originLink: currentTab?.url || undefined,
+        }
+      }) as GraphQLResult<{ setLiveJamChordSheet?: { song?: { songId?: string } | null } | null }>
+      if (!data.data?.setLiveJamChordSheet?.song?.songId) {
+        setStatus("Could not import the chord sheet.")
+        return
+      }
+      await chrome.storage.local.remove("pendingChordImport")
+      setPendingImport(null)
+      setStatus(`Imported into ${pendingImport.title}.`)
+    } catch (e) {
+      console.error(e)
+      setStatus("Could not import the chord sheet.")
+    } finally {
+      setPending(false)
+    }
   }
 
   const loadRooms = async () => {
@@ -268,6 +308,12 @@ export default function CreateSong(p: CreateProps) {
                     <div className='flex-1' />
               </button>:
               <>
+              {pendingImport && <button onClick={importIntoSong} disabled={pending || !isSupported || song.chordSheet === ""}
+                  className="w-full mb-2 flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 text-center">
+                    <div className='flex-1' />
+                    <div className="px-6 py-2.5">Import into {pendingImport.title}</div>
+                    <div className='flex-1' />
+              </button>}
               <button onClick={createSong} disabled={pending || !isSupported || song.chordSheet === "" || song.title === ""}
                   className="w-full flex flex-row text-oslyn-600 dark:text-white dark:disabled:text-gray-400 bg-oslyn-700 hover:bg-oslyn-800 disabled:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-oslyn-300 font-medium rounded-lg text-sm px-5 py-1 text-center dark:bg-oslyn-600 dark:hover:bg-oslyn-700 dark:disabled:bg-gray-800 dark:focus:ring-oslyn-800">
                     <div className='flex-1' />

@@ -25,9 +25,10 @@ import { default as SSlides } from '../(slides)/slides'
 import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
-import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
+import MissingChords from './missingChords'
+import { JamSongChange, onImportStatusChanged, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
 
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 export interface PlayerProps {
   jam: JamSession, 
@@ -158,7 +159,8 @@ export default function Player(p: PlayerProps) {
         queueAdd: subscribeToQueueAdd(p.jam.jamSessionId),
         queueRemove: subscribeToQueueRemove(p.jam.jamSessionId),
         songsChanged: subscribeJamSongs(p.jam.jamSessionId),
-        queueUpdate: subscribeQueueUpdate(p.jam.jamSessionId)
+        queueUpdate: subscribeQueueUpdate(p.jam.jamSessionId),
+        chordImport: subscribeChordImport(p.jam.jamSessionId)
       })
       console.log("All Subscribed!")
     }
@@ -253,7 +255,22 @@ export default function Player(p: PlayerProps) {
       order: change.index,
     } as JamSong
     setSongs((prev) => {
-      if (prev[change.index]?.song?.songId === change.song.songId) return prev
+      const existing = prev.findIndex((row) => row?.song?.songId === change.song.songId)
+      if (existing >= 0) {
+        const copy = [...prev]
+        const current = copy[existing]
+        const incomingSheet = change.song.chordSheet?.trim()
+        copy[existing] = {
+          ...current,
+          song: {
+            ...current.song,
+            ...change.song,
+            chordSheet: incomingSheet || current.song.chordSheet,
+            chordSheetKey: change.song.chordSheetKey || current.song.chordSheetKey,
+          },
+        }
+        return copy
+      }
       if (change.index === prev.length) return [...prev, entry]
       if (change.index < prev.length) {
         const copy = [...prev]
@@ -280,6 +297,30 @@ export default function Player(p: PlayerProps) {
       revisionRef.current = payload.revision
     }
     if (typeof payload.currentSongIndex === 'number') setSong(payload.currentSongIndex)
+  }
+
+  const applyImportedChords = (event?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null) => {
+    if (event?.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
+    const songId = event.songId
+    const chordSheet = event.chordSheet
+    setSongs((prev) => prev.map((row) => row?.song?.songId === songId
+      ? { ...row, song: { ...row.song, chordSheet, chordSheetKey: row.song.chordSheetKey || "C" } }
+      : row))
+  }
+
+  const subscribeChordImport = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
+    const observable = client.graphql({
+      query: onImportStatusChanged, variables: { jamId: jamSessionId }
+    }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onImportStatusChanged?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null } }) => void
+        error: (error: unknown) => void
+      }) => ZenObservable.Subscription
+    }
+    return observable.subscribe({
+      next: ({ data }) => applyImportedChords(data?.onImportStatusChanged),
+      error: (error) => console.error(error)
+    })
   }
 
   const subscribeQueueUpdate = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
@@ -586,7 +627,15 @@ export default function Player(p: PlayerProps) {
         Search for a song
       </button>}
     </div>}
-    { songs[song]?.song && 
+    {songs[song]?.song && !songs[song].song.chordSheet?.trim() && <MissingChords
+      songId={songs[song].song.songId}
+      jamSessionId={p.jam.jamSessionId}
+      title={songs[song].song.title}
+      artist={songs[song].song.artist}
+      userId={p.user?.userId}
+      canImport={!!p.canEditSongs && !p.isSlideShow}
+    />}
+    { songs[song]?.song?.chordSheet?.trim() && 
       (p.isSlideShow ? 
         <SSlides
           song={songs[song].song} page={page} 
@@ -642,6 +691,5 @@ export default function Player(p: PlayerProps) {
     </button>}
 
     <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={p.jam.jamSessionId} signInAsGuest={signInAsGuest} />
-    <Toaster position="bottom-left" />
   </div>
 }

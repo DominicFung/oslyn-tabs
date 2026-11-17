@@ -15,6 +15,16 @@ interface LibrarySong {
   chordSheetKey?: string | null
 }
 
+interface SpotifyTrack {
+  spotifyId: string
+  title: string
+  artist?: string | null
+  album?: string | null
+  albumCover?: string | null
+}
+
+const FEW_LIBRARY_MATCHES = 3
+
 interface SongProps {
   jamSessionId: string
   song: number
@@ -33,6 +43,8 @@ export default function SongControl(p: SongProps) {
   const [filteredList, setFilteredList] = useState<SetRow[]>([])
   const [library, setLibrary] = useState<LibrarySong[]>([])
   const [libraryState, setLibraryState] = useState<"idle" | "loading" | "done" | "error">("idle")
+  const [spotify, setSpotify] = useState<SpotifyTrack[]>([])
+  const [spotifyState, setSpotifyState] = useState<"idle" | "loading" | "done" | "hidden">("idle")
   const [busy, setBusy] = useState("")
   const [error, setError] = useState("")
 
@@ -81,6 +93,71 @@ export default function SongControl(p: SongProps) {
     }, 300)
     return () => clearTimeout(handle)
   }, [search, p.canAddSongs])
+
+  useEffect(() => {
+    if (!p.canAddSongs) {
+      setSpotify([])
+      setSpotifyState("idle")
+      return
+    }
+    const term = search.trim()
+    if (term.length < 2) {
+      setSpotify([])
+      setSpotifyState("idle")
+      return
+    }
+    if (libraryState === "loading" || libraryState === "idle") return
+    if (libraryState === "done" && library.length >= FEW_LIBRARY_MATCHES) {
+      setSpotify([])
+      setSpotifyState("idle")
+      return
+    }
+    setSpotifyState("loading")
+    const handle = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/spotify/tracks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ term, limit: 5 }),
+        })
+        const data = await res.json()
+        if (!res.ok || data?.error) {
+          setSpotify([])
+          setSpotifyState("hidden")
+          return
+        }
+        setSpotify(Array.isArray(data?.tracks) ? data.tracks : [])
+        setSpotifyState("done")
+      } catch {
+        setSpotify([])
+        setSpotifyState("hidden")
+      }
+    }, 300)
+    return () => clearTimeout(handle)
+  }, [search, p.canAddSongs, libraryState, library.length])
+
+  const addSpotifyTrack = async (track: SpotifyTrack) => {
+    setBusy(`spotify:${track.spotifyId}`)
+    setError("")
+    try {
+      const res = await fetch(`/api/jam/${p.jamSessionId}/spotify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(track),
+      })
+      const data = await res.json()
+      if (!res.ok || data?.index == null) {
+        setError(data?.error || "Could not add that song")
+        return
+      }
+      p.onSongAdded?.(data)
+      setSearch("")
+    } catch {
+      setError("Could not add that song")
+    } finally {
+      setBusy("")
+    }
+  }
 
   const addLibrarySong = async (hit: LibrarySong, jumpTo: boolean) => {
     const existing = p.songs.findIndex((row) => row.song?.songId === hit.songId)
@@ -180,6 +257,25 @@ export default function SongControl(p: SongProps) {
               </div>
             </li>
           })}
+        </ul>
+      </div>}
+
+      {p.canAddSongs && spotifyState !== "idle" && spotifyState !== "hidden" && <div className="mt-4">
+        <div className="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500">Spotify</div>
+        {spotifyState === "loading" && <p className="px-4 text-gray-500">Searching Spotify…</p>}
+        {spotifyState === "done" && spotify.length === 0 && <p className="px-4 text-gray-500">No Spotify matches.</p>}
+        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+          {spotify.map((track) => <li key={track.spotifyId} className="py-3 px-4">
+            <button type="button" disabled={!!busy} onClick={() => addSpotifyTrack(track)}
+              className="flex w-full items-center gap-3 text-left disabled:opacity-60">
+              {track.albumCover && <img className="w-10 h-10 rounded" src={track.albumCover} alt="" />}
+              <span className="flex-1 min-w-0">
+                <span className="block text-sm font-medium text-gray-900 truncate dark:text-white">{track.title}</span>
+                <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{track.artist || "Unknown artist"}{track.album ? ` · ${track.album}` : ""}</span>
+              </span>
+              <span className="text-xs text-oslyn-700">{busy === `spotify:${track.spotifyId}` ? "Adding…" : "Add"}</span>
+            </button>
+          </li>)}
         </ul>
       </div>}
 

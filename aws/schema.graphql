@@ -10,6 +10,9 @@ type Query {
   listSongs(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   listSharedSongs(userId: ID!, bandId: ID, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   searchSongs(userId: ID!, query: String!): [Song]! @aws_iam
+  searchSpotifyTracks(userId: ID!, term: String!, limit: Int): SpotifySearchResult @aws_iam
+
+  listPendingImports(limit: Int): [ChordImportRequest]! @aws_iam
   
   getUserById(userId: ID!): User @aws_iam
   getUserByEmail(email: AWSEmail): User @aws_iam
@@ -56,6 +59,7 @@ type Mutation {
     shareWithBand: ID
     originPlatorm: chordSheetPlatform
     originLink: String
+    spotifyId: String
   ): Song @aws_iam
 
   updateSong(
@@ -119,6 +123,24 @@ type Mutation {
     userId: ID!
     jumpTo: Boolean
   ): JamSongChange @aws_iam
+  setLiveJamChordSheet(
+    jamSessionId: ID!
+    songId: ID!
+    userId: ID!
+    chordSheet: String!
+    chordSheetKey: String
+    originLink: String
+  ): JamSongChange @aws_iam
+  createChordImport(
+    userId: ID!
+    songId: ID!
+    jamId: ID!
+    title: String!
+    artist: String
+  ): ChordImportRequest @aws_iam
+  claimImport(requestId: ID!): ChordImportRequest @aws_iam
+  completeImport(requestId: ID!, chordSheet: String!, sourceUrl: String!): ChordImportRequest @aws_iam
+  failImport(requestId: ID!, error: String!): ChordImportRequest @aws_iam
 
   nextPage(jamSessionId: ID!, page: Int!): NextPage
   nextSong(jamSessionId: ID!, song: Int, page: Int): NextSong
@@ -146,7 +168,8 @@ type Subscription {
   onRemoveSongFromJamQueue(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["removeSongFromJamQueue"]) 
   onJamQueueUpdate(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["setJamQueue", "addSongToJamQueue", "removeSongFromJamQueue"])
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
-  onJamSongsChanged(jamSessionId: ID!): JamSongChange @aws_subscribe(mutations: ["addSongToLiveJam"])
+  onJamSongsChanged(jamSessionId: ID!): JamSongChange @aws_subscribe(mutations: ["addSongToLiveJam", "setLiveJamChordSheet"])
+  onImportStatusChanged(userId: ID, jamId: ID): ChordImportRequest @aws_subscribe(mutations: ["createChordImport", "claimImport", "completeImport", "failImport"])
 
   onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
   onExitJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["exitJam"])
@@ -194,6 +217,36 @@ type JamSongChange {
   key: String!
   jumpTo: Boolean
   song: Song!
+}
+
+type SpotifyTrack {
+  spotifyId: ID!
+  title: String!
+  artist: String
+  album: String
+  albumCover: String
+}
+
+type SpotifySearchResult {
+  tracks: [SpotifyTrack]!
+  error: String
+}
+
+enum chordImportStatus { PENDING, IMPORTING, DONE, FAILED }
+
+type ChordImportRequest {
+  requestId: ID!
+  userId: ID!
+  songId: ID!
+  jamId: ID!
+  title: String!
+  artist: String
+  status: chordImportStatus!
+  chosenUrl: String
+  error: String
+  chordSheet: String
+  createdAt: AWSTimestamp
+  updatedAt: AWSTimestamp
 }
 
 type Band {
@@ -350,6 +403,7 @@ type Song {
   chordSheetKey: String
   originPlatorm: chordSheetPlatform 
   originLink: String
+  spotifyId: String
 
   CCLISongTitle: String
   CCLISongWriter: String
