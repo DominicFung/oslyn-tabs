@@ -33,4 +33,4 @@ This prints the chosen URL, rating count, and the first 20 lines. It does not ca
 npm run worker -- --dry 'Friday' 'Rebecca Black'
 ```
 
-Picking rules, in order: the song title matches after normalization (a `(ver N)` suffix is ignored), the artist matches the same way, the type is Chords, and among those the highest rating count wins.
+Picking rules, in order: the song title matches after normalization (a `(ver N)` suffix is ignored), any credited artist matches (Spotify's comma-separated list against Ultimate Guitar's primary artist; case, accents, `feat.` / `ft.` / `&` / `and` / `x`, and a leading `The ` are ignored), the type is Chords, and among those the highest rating count wins. If nobody matches on artist, the highest-rated Chords result for that title is used and the log says it was a fallback. A title-only search that comes back long, or with no artist match, is searched again as `title + primary artist`.

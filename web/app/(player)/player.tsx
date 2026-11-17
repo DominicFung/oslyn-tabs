@@ -26,7 +26,8 @@ import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
-import { JamSongChange, onImportStatusChanged, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
+import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
+import ImportToasts, { ImportEvent } from '../importToasts'
 
 import toast from 'react-hot-toast'
 
@@ -65,7 +66,11 @@ export default function Player(p: PlayerProps) {
   useEffect( () => { 
     if (p.jam.jamSessionId) { 
       setActive(p.jam.active as Participant[])
-      const nextSongs = (p.jam.setList?.songs || []) as JamSong[]
+      const nextSongs = ((p.jam.setList?.songs || []) as JamSong[]).map((row) => {
+        const pending = row?.song?.songId ? importedSheets.current[row.song.songId] : ""
+        if (!pending || row.song?.chordSheet?.trim()) return row
+        return { ...row, song: { ...row.song, chordSheet: pending, chordSheetKey: row.song?.chordSheetKey || "C" } }
+      })
       setSongs(nextSongs)
 
       if (nextSongs.length === 0) {
@@ -103,6 +108,7 @@ export default function Player(p: PlayerProps) {
   useEffect(() => { revisionRef.current = queueRevision }, [queueRevision])
   const [ active, setActive ] = useState<Participant[]>([])
   const [ songs, setSongs ] = useState<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
+  const importedSheets = useRef<Record<string, string>>({})
 
   const [ openController, _setOpenController ] = useState(false)
   const [ guestOpen, setGuestOpen ] = useState(false)
@@ -160,7 +166,6 @@ export default function Player(p: PlayerProps) {
         queueRemove: subscribeToQueueRemove(p.jam.jamSessionId),
         songsChanged: subscribeJamSongs(p.jam.jamSessionId),
         queueUpdate: subscribeQueueUpdate(p.jam.jamSessionId),
-        chordImport: subscribeChordImport(p.jam.jamSessionId)
       })
       console.log("All Subscribed!")
     }
@@ -246,12 +251,18 @@ export default function Player(p: PlayerProps) {
     return sub
   }
 
+  const sheetFor = (songId: string | undefined, incoming?: string | null, current?: string | null) => {
+    const pending = songId ? importedSheets.current[songId] : ""
+    return incoming?.trim() || pending || current || ""
+  }
+
   const applySongChange = (change?: JamSongChange | null) => {
     if (!change?.song?.songId || change.index == null) return
+    const chordSheet = sheetFor(change.song.songId, change.song.chordSheet)
     const entry = {
       __typename: "JamSong",
       key: change.key || "C",
-      song: change.song as JamSong["song"],
+      song: { ...change.song, chordSheet: chordSheet || change.song.chordSheet } as JamSong["song"],
       order: change.index,
     } as JamSong
     setSongs((prev) => {
@@ -259,13 +270,12 @@ export default function Player(p: PlayerProps) {
       if (existing >= 0) {
         const copy = [...prev]
         const current = copy[existing]
-        const incomingSheet = change.song.chordSheet?.trim()
         copy[existing] = {
           ...current,
           song: {
             ...current.song,
             ...change.song,
-            chordSheet: incomingSheet || current.song.chordSheet,
+            chordSheet: sheetFor(change.song.songId, change.song.chordSheet, current.song.chordSheet),
             chordSheetKey: change.song.chordSheetKey || current.song.chordSheetKey,
           },
         }
@@ -299,28 +309,14 @@ export default function Player(p: PlayerProps) {
     if (typeof payload.currentSongIndex === 'number') setSong(payload.currentSongIndex)
   }
 
-  const applyImportedChords = (event?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null) => {
-    if (event?.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
+  const applyImportedChords = (event: ImportEvent) => {
+    if (event.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
     const songId = event.songId
     const chordSheet = event.chordSheet
+    importedSheets.current[songId] = chordSheet
     setSongs((prev) => prev.map((row) => row?.song?.songId === songId
       ? { ...row, song: { ...row.song, chordSheet, chordSheetKey: row.song.chordSheetKey || "C" } }
       : row))
-  }
-
-  const subscribeChordImport = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
-    const observable = client.graphql({
-      query: onImportStatusChanged, variables: { jamId: jamSessionId }
-    }) as {
-      subscribe: (observer: {
-        next: (value: { data?: { onImportStatusChanged?: { songId?: string | null, status?: string | null, chordSheet?: string | null } | null } }) => void
-        error: (error: unknown) => void
-      }) => ZenObservable.Subscription
-    }
-    return observable.subscribe({
-      next: ({ data }) => applyImportedChords(data?.onImportStatusChanged),
-      error: (error) => console.error(error)
-    })
   }
 
   const subscribeQueueUpdate = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
@@ -691,5 +687,11 @@ export default function Player(p: PlayerProps) {
     </button>}
 
     <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={p.jam.jamSessionId} signInAsGuest={signInAsGuest} />
+    <ImportToasts
+      jamId={p.jam.jamSessionId}
+      userId={p.user?.userId}
+      onImported={applyImportedChords}
+      onPaste={() => setOpenController(true)}
+    />
   </div>
 }

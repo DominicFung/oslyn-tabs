@@ -1,6 +1,6 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { getImport, setImportStatus } from './store'
+import { setImportStatus } from './store'
 
 export const handler = async (event: AppSyncResolverEvent<{ requestId: string, error: string }, null>) => {
   const b = event.arguments
@@ -8,5 +8,5 @@ export const handler = async (event: AppSyncResolverEvent<{ requestId: string, e
   const dynamo = new DynamoDBClient({})
   const saved = await setImportStatus(dynamo, b.requestId, 'FAILED', { error: b.error.trim().slice(0, 500) })
   if (!saved) return
-  return getImport(dynamo, b.requestId)
+  return saved
 }

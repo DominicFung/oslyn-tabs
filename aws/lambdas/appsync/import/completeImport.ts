@@ -33,5 +33,5 @@ export const handler = async (event: AppSyncResolverEvent<{
     chordSheet: b.chordSheet,
   })
   if (!saved) return
-  return getImport(dynamo, record.requestId)
+  return saved
 }

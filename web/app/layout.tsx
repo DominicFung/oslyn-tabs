@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import { ContextProvider } from './context'
 import Sidebar from './sidebar'
 import AuthContext from './authcontext'
-import ImportToasts from './importToasts'
+import { Toaster } from "react-hot-toast"
 import { ThemeProvider } from "./theme"
 
 const inter = Inter({ subsets: ['latin'] })
@@ -24,7 +24,7 @@ export default function RootLayout({
         <div className="bg-gradient-to-b from-coral-50 to-oslyn-200 dark:from-oslyn-900 dark:to-black w-full h-full absolute top-0 left-0 z-0 overflow-x-hidden">
         <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false} storageKey={"oslynTheme"}>
           <AuthContext>
-            <ImportToasts />
+            <Toaster position="bottom-left" />
             <ContextProvider>
               {children}
               <Sidebar />
