@@ -1,35 +1,54 @@
 "use client"
 
-import { useEffect } from "react"
-import { useSession } from "next-auth/react"
-import toast, { Toaster } from "react-hot-toast"
+import { useEffect, useRef } from "react"
+import toast from "react-hot-toast"
 import { Amplify } from "aws-amplify"
 import { generateClient } from "aws-amplify/api"
 import amplifyconfig from "@/../src/amplifyconfiguration.json"
 import { onImportStatusChanged } from "@/core/graphql/jam"
-import { _Session } from "@/core/utils/frontend"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-type ImportEvent = {
+export type ImportEvent = {
   requestId: string
+  userId?: string | null
+  songId?: string | null
   jamId: string
   title: string
   artist?: string | null
   status: "PENDING" | "IMPORTING" | "DONE" | "FAILED"
   error?: string | null
+  chordSheet?: string | null
 }
 
-export default function ImportToasts() {
-  const { data: session } = useSession()
-  const userId = (session?.user as _Session | undefined)?.userId
+const TOAST_MS = 5000
+
+function dismissButton(id: string) {
+  return <button type="button" className="ml-3 font-semibold" aria-label="Dismiss" onClick={() => toast.dismiss(id)}>×</button>
+}
+
+/**
+ * Subscribes only while this jam is open. Toasts are for the person who queued
+ * the import. Every participant still hears the event so the chart can update.
+ */
+export default function ImportToasts(p: {
+  jamId: string
+  userId?: string
+  onImported: (event: ImportEvent) => void
+  onPaste: () => void
+}) {
+  const onImported = useRef(p.onImported)
+  const onPaste = useRef(p.onPaste)
+  onImported.current = p.onImported
+  onPaste.current = p.onPaste
 
   useEffect(() => {
-    if (!userId) return
+    if (!p.jamId) return
+    const shown = new Set<string>()
     const client = generateClient()
     const observable = client.graphql({
       query: onImportStatusChanged,
-      variables: { userId },
+      variables: { jamId: p.jamId },
     }) as {
       subscribe: (observer: {
         next: (value: { data?: { onImportStatusChanged?: ImportEvent | null } }) => void
@@ -39,21 +58,22 @@ export default function ImportToasts() {
     const sub = observable.subscribe({
       next: ({ data }) => {
         const event = data?.onImportStatusChanged
-        if (!event?.requestId) return
+        if (!event?.requestId || event.jamId !== p.jamId) return
+        onImported.current(event)
+        if (!p.userId || event.userId !== p.userId) return
         const title = event.title || "Song"
+        shown.add(event.requestId)
         if (event.status === "PENDING" || event.status === "IMPORTING") {
-          toast.loading(`Importing ${title}…`, { id: event.requestId })
+          toast.loading(
+            (t: { id: string }) => <span>Importing {title}…{dismissButton(t.id)}</span>,
+            { id: event.requestId, duration: TOAST_MS },
+          )
           return
         }
         if (event.status === "DONE") {
-          const who = event.artist ? `${title} by ${event.artist}` : title
           toast.success(
-            (t: { id: string }) => (
-              <a href={`/jam/${event.jamId}`} onClick={() => toast.dismiss(t.id)}>
-                {who} is ready and added to your jam
-              </a>
-            ),
-            { id: event.requestId, duration: 8000 },
+            (t: { id: string }) => <span>{title} is ready and added to your jam{dismissButton(t.id)}</span>,
+            { id: event.requestId, duration: TOAST_MS },
           )
           return
         }
@@ -62,17 +82,23 @@ export default function ImportToasts() {
             (t: { id: string }) => (
               <span>
                 Couldn&apos;t import {title}.{" "}
-                <a className="underline" href={`/jam/${event.jamId}`} onClick={() => toast.dismiss(t.id)}>Paste a chart in the jam</a>
+                <button type="button" className="underline" onClick={() => { onPaste.current(); toast.dismiss(t.id) }}>
+                  Paste a chart
+                </button>
+                {dismissButton(t.id)}
               </span>
             ),
-            { id: event.requestId, duration: 10000 },
+            { id: event.requestId, duration: TOAST_MS },
           )
         }
       },
       error: (error) => console.error(error),
     })
-    return () => sub.unsubscribe()
-  }, [userId])
+    return () => {
+      sub.unsubscribe()
+      shown.forEach((id) => toast.dismiss(id))
+    }
+  }, [p.jamId, p.userId])
 
-  return <Toaster position="bottom-left" />
+  return null
 }

@@ -228,8 +228,9 @@ export const createChordImport = /* GraphQL */ `mutation CreateChordImport(
   }
 }`
 
-export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($userId: ID, $jamId: ID) {
-  onImportStatusChanged(userId: $userId, jamId: $jamId) {
+// Only jamId is an argument. A null userId would tell AppSync to match imports with no user.
+export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($jamId: ID!) {
+  onImportStatusChanged(jamId: $jamId) {
     requestId
     userId
     songId
@@ -240,8 +241,6 @@ export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusC
     chosenUrl
     error
     chordSheet
-    createdAt
-    updatedAt
   }
 }`
 

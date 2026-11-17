@@ -31,6 +31,7 @@ export async function getImport(dynamo: DynamoDBClient, requestId: string): Prom
   const res = await dynamo.send(new GetItemCommand({
     TableName: CHORD_IMPORT_TABLE_NAME,
     Key: { requestId: { S: requestId } },
+    ConsistentRead: true,
   }))
   if (!res.Item) return undefined
   return unmarshall(res.Item) as ChordImportRecord
@@ -54,7 +55,7 @@ export async function setImportStatus(
   status: ChordImportStatus,
   extra: { chosenUrl?: string, error?: string, chordSheet?: string } = {},
   onlyFrom?: ChordImportStatus,
-): Promise<boolean> {
+): Promise<ChordImportRecord | null> {
   const names: Record<string, string> = { '#status': 'status', '#updatedAt': 'updatedAt' }
   const values: Record<string, any> = {
     ':status': status,
@@ -82,18 +83,22 @@ export async function setImportStatus(
     condition = '#status = :from'
   }
   try {
-    await dynamo.send(new UpdateItemCommand({
+    const res = await dynamo.send(new UpdateItemCommand({
       TableName: CHORD_IMPORT_TABLE_NAME,
       Key: { requestId: { S: requestId } },
       UpdateExpression: `SET ${sets.join(', ')}`,
       ExpressionAttributeNames: names,
       ExpressionAttributeValues: marshall(values),
       ...(condition ? { ConditionExpression: condition } : {}),
+      // ALL_NEW is the updated item. A follow-up GetItem is eventually consistent
+      // and was publishing the pre-update row, so the jam never saw DONE.
+      ReturnValues: 'ALL_NEW',
     }))
-    return true
+    if (!res.Attributes) return null
+    return unmarshall(res.Attributes) as ChordImportRecord
   } catch (error) {
     const name = (error as { name?: string }).name
-    if (name === 'ConditionalCheckFailedException') return false
+    if (name === 'ConditionalCheckFailedException') return null
     throw error
   }
 }

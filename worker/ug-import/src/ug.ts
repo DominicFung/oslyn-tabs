@@ -1,6 +1,21 @@
+function decodeEntities(value: string): string {
+  const named: Record<string, string> = {
+    amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+    aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', uuml: 'ü',
+    Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', Uuml: 'Ü',
+  }
+  return value.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
+    if (body[0] === '#') {
+      const code = body[1]?.toLowerCase() === 'x' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10)
+      return Number.isFinite(code) ? String.fromCodePoint(code) : entity
+    }
+    return named[body] ?? named[body.toLowerCase()] ?? entity
+  })
+}
+
 /** Turn Ultimate Guitar's wiki markup into the plain chart the extension reads from the page. */
 export function wikiToChart(content: string): string {
-  let text = content.replace(/\r/g, '')
+  let text = decodeEntities(content).replace(/\r/g, '')
   text = text.replace(/^\s*https?:\/\/\S+\s*/i, '')
   text = text.replace(/\[ch\]([\s\S]*?)\[\/ch\]/gi, '$1')
   text = text.replace(/\[\/?tab\]/gi, '\n')

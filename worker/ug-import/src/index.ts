@@ -26,6 +26,8 @@ async function dryRun(title: string, artist: string) {
   console.log(`votes: ${picked.votes}`)
   console.log(`rating: ${picked.rating}`)
   console.log(`version: ${picked.version}`)
+  console.log(`matched artist: ${picked.artistName}`)
+  console.log(`fallback: ${picked.fallback ? 'yes' : 'no'}`)
   console.log('---')
   console.log(picked.chart.split('\n').slice(0, 20).join('\n'))
 }
@@ -58,7 +60,7 @@ async function loop() {
       console.log(`importing ${next.title} by ${next.artist || 'unknown'} (${next.requestId})`)
       const picked = await importChords(next.title, next.artist || '')
       await complete(next.requestId, picked.chart, picked.url)
-      console.log(`done ${picked.url} (${picked.votes} ratings)`)
+      console.log(`done ${picked.url} (${picked.votes} ratings${picked.fallback ? ', artist fallback' : ''})`)
     } catch (error) {
       const message = error instanceof Error ? error.message : 'import failed'
       console.error(message)
