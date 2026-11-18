@@ -4,6 +4,7 @@ import { ContextProvider } from './context'
 import Sidebar from './sidebar'
 import AuthContext from './authcontext'
 import { Toaster } from "react-hot-toast"
+import SongDeletedListener from "./songDeleted"
 import { ThemeProvider } from "./theme"
 
 const inter = Inter({ subsets: ['latin'] })
@@ -25,6 +26,7 @@ export default function RootLayout({
         <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false} storageKey={"oslynTheme"}>
           <AuthContext>
             <Toaster position="bottom-left" />
+            <SongDeletedListener />
             <ContextProvider>
               {children}
               <Sidebar />

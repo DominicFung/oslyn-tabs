@@ -11,6 +11,7 @@ type Query {
   listSharedSongs(userId: ID!, bandId: ID, optimize: Boolean, limit: Int, filter: String, nextToken: String): [Song]! @aws_iam
   searchSongs(userId: ID!, query: String!): [Song]! @aws_iam
   searchSpotifyTracks(userId: ID!, term: String!, limit: Int): SpotifySearchResult @aws_iam
+  getSongUsage(songId: ID!, userId: ID!): SongUsage @aws_iam
 
   listPendingImports(limit: Int): [ChordImportRequest]! @aws_iam
   
@@ -61,6 +62,9 @@ type Mutation {
     originLink: String
     spotifyId: String
   ): Song @aws_iam
+
+  deleteSong(songId: ID!, userId: ID!): SongDeleted @aws_iam
+  removeSongFromJam(jamSessionId: ID!, songId: ID!, userId: ID!, index: Int): JamSongRemoved @aws_iam
 
   updateSong(
     songId: ID!
@@ -170,6 +174,8 @@ type Subscription {
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
   onJamSongsChanged(jamSessionId: ID!): JamSongChange @aws_subscribe(mutations: ["addSongToLiveJam", "setLiveJamChordSheet"])
   onImportStatusChanged(userId: ID, jamId: ID): ChordImportRequest @aws_subscribe(mutations: ["createChordImport", "claimImport", "completeImport", "failImport"])
+  onSongDeleted: SongDeleted @aws_subscribe(mutations: ["deleteSong"])
+  onSongRemovedFromJam(jamSessionId: ID!): JamSongRemoved @aws_subscribe(mutations: ["removeSongFromJam"])
 
   onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
   onExitJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["exitJam"])
@@ -288,6 +294,38 @@ type SetList {
   creator: User!
   band: Band
   bandId: ID!
+}
+
+type SongUsage {
+  songId: ID!
+  setCount: Int!
+  jamCount: Int!
+}
+
+type JamPlaylistUpdate {
+  jamSessionId: ID!
+  currentSong: Int!
+  queue: [Int]!
+  songIds: [ID]!
+}
+
+type SongDeleted {
+  songId: ID!
+  title: String!
+  userId: ID!
+  setsAffected: Int!
+  jamsAffected: Int!
+  jams: [JamPlaylistUpdate]!
+}
+
+type JamSongRemoved {
+  jamSessionId: ID!
+  songId: ID!
+  title: String!
+  index: Int!
+  currentSong: Int!
+  queue: [Int]!
+  songIds: [ID]!
 }
 
 type DeleteSetResult {

@@ -26,8 +26,9 @@ import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
-import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, setJamQueue } from '@/core/graphql/jam'
+import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
 import ImportToasts, { ImportEvent } from '../importToasts'
+import { deletedToast, songDeletedEventName, SongDeletedEvent } from '../songDeleted'
 
 import toast from 'react-hot-toast'
 
@@ -41,6 +42,36 @@ export interface PlayerProps {
 Amplify.configure(amplifyconfig, { ssr: true })
 
 const nextSongEventId = "next-song"
+
+function orderSongs(prev: JamSong[], songIds: Array<string | null> | null | undefined): JamSong[] {
+  const pools = new Map<string, JamSong[]>()
+  for (const row of prev) {
+    const id = row?.song?.songId
+    if (!id) continue
+    const list = pools.get(id) || []
+    list.push(row)
+    pools.set(id, list)
+  }
+  const next: JamSong[] = []
+  for (const id of songIds || []) {
+    if (!id) continue
+    const row = pools.get(id)?.shift()
+    if (row) next.push(row)
+  }
+  return next
+}
+
+function removedToast(title: string, jamId: string, songId: string) {
+  toast.success(
+    (t: { id: string }) => (
+      <span>
+        Removed {title} from this jam
+        <button type="button" className="ml-3 font-semibold" aria-label="Dismiss" onClick={() => toast.dismiss(t.id)}>×</button>
+      </span>
+    ),
+    { id: `removed-${jamId}-${songId}`, duration: 5000 },
+  )
+}
 
 export default function Player(p: PlayerProps) {
   const { theme } = useTheme()
@@ -72,6 +103,7 @@ export default function Player(p: PlayerProps) {
         return { ...row, song: { ...row.song, chordSheet: pending, chordSheetKey: row.song?.chordSheetKey || "C" } }
       })
       setSongs(nextSongs)
+      songsRef.current = nextSongs
 
       if (nextSongs.length === 0) {
         setSong(0)
@@ -109,6 +141,10 @@ export default function Player(p: PlayerProps) {
   const [ active, setActive ] = useState<Participant[]>([])
   const [ songs, setSongs ] = useState<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
   const importedSheets = useRef<Record<string, string>>({})
+  const songsRef = useRef<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
+  const songRef = useRef(song)
+  useEffect(() => { songsRef.current = songs }, [songs])
+  useEffect(() => { songRef.current = song }, [song])
 
   const [ openController, _setOpenController ] = useState(false)
   const [ guestOpen, setGuestOpen ] = useState(false)
@@ -308,6 +344,60 @@ export default function Player(p: PlayerProps) {
     }
     if (typeof payload.currentSongIndex === 'number') setSong(payload.currentSongIndex)
   }
+
+  const applyPlaylist = (update: { songId?: string, title?: string, currentSong?: number | null, queue?: Array<number | null> | null, songIds?: Array<string | null> | null }, toastTitle?: string) => {
+    const currentSong = typeof update.currentSong === 'number' ? update.currentSong : 0
+    const queue = (update.queue || []).map((n) => Number(n)).filter((n) => Number.isFinite(n))
+    const playingId = songsRef.current[songRef.current]?.song?.songId
+    const next = orderSongs(songsRef.current, update.songIds)
+    songsRef.current = next
+    setSongs(next)
+    setSong(currentSong)
+    songRef.current = currentSong
+    setQueue(queue)
+    queueRef.current = queue
+    const nowPlaying = next[currentSong]?.song?.songId
+    if (playingId && nowPlaying !== playingId) setPage(0)
+    if (next[currentSong]?.key) setSKey(next[currentSong].key)
+    if (toastTitle && update.songId) removedToast(toastTitle, p.jam.jamSessionId, update.songId)
+  }
+
+  const applyPlaylistRef = useRef(applyPlaylist)
+  applyPlaylistRef.current = applyPlaylist
+
+  useEffect(() => {
+    const jamId = p.jam.jamSessionId
+    if (!jamId) return
+    const observable = client.graphql({
+      query: onSongRemovedFromJam,
+      variables: { jamSessionId: jamId },
+    }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onSongRemovedFromJam?: { songId: string, title: string, currentSong: number, queue: Array<number | null>, songIds: Array<string | null> } | null } }) => void
+        error: (error: unknown) => void
+      }) => { unsubscribe: () => void }
+    }
+    const sub = observable.subscribe({
+      next: ({ data }) => {
+        const event = data?.onSongRemovedFromJam
+        if (!event?.songId) return
+        applyPlaylistRef.current(event, event.title || "Song")
+      },
+      error: (error) => console.error(error),
+    })
+    const onDeleted = (event: Event) => {
+      const detail = (event as CustomEvent<SongDeletedEvent>).detail
+      const mine = detail?.jams?.find((jam) => jam.jamSessionId === jamId)
+      if (!detail?.songId || !mine) return
+      applyPlaylistRef.current(mine)
+      if (detail.userId !== p.user?.userId) deletedToast(detail.title || "Song", detail.songId)
+    }
+    window.addEventListener(songDeletedEventName, onDeleted)
+    return () => {
+      sub.unsubscribe()
+      window.removeEventListener(songDeletedEventName, onDeleted)
+    }
+  }, [p.jam.jamSessionId, p.user?.userId])
 
   const applyImportedChords = (event: ImportEvent) => {
     if (event.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
@@ -656,7 +746,7 @@ export default function Player(p: PlayerProps) {
         setOpen={setOpenController}
         jamSessionId={p.jam.jamSessionId}
         capo={{ capo:`${0-transpose}`, setCapo }} 
-        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[], canAddSongs: p.canEditSongs, onSongAdded: applySongChange, queueAt }} 
+        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[], canAddSongs: p.canEditSongs, onSongAdded: applySongChange, onSongRemoved: (update) => applyPlaylist(update, update.title), queueAt }} 
         sKey={{ skey: sKey, setKey }}
         display={{ textSize, setTextSize, 
           auto: false, setAuto: () => {}, 

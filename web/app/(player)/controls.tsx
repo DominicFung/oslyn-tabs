@@ -28,6 +28,7 @@ export interface ControlsProp {
     songs: JamSong[]
     canAddSongs?: boolean
     onSongAdded?: (change: JamSongChange) => void
+    onSongRemoved?: (update: { title: string, songId: string, currentSong: number, queue: Array<number | null>, songIds: Array<string | null> }) => void
     queueAt?: (index: number) => void
   }
   sKey?: {
@@ -134,7 +135,7 @@ export default function Controls(p: ControlsProp) {
             </div>
 
             <>
-              { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} queueAt={p.song.queueAt} /> }
+              { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} onSongRemoved={p.song.onSongRemoved} queueAt={p.song.queueAt} /> }
               { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
               { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
               { option === 3 && p.display && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 

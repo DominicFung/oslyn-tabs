@@ -8,6 +8,8 @@ import { Song, User } from "@/../src/API"
 import Share from "./share"
 import { useEffect, useState } from "react"
 import DownloadPdf from "@/app/songs/(components)/pdf"
+import DeleteSongButton from "@/app/songs/deleteSongButton"
+import { useSongDeleted } from "@/app/songDeleted"
 
 export interface SongTableProps {
   bandId?: string,
@@ -34,6 +36,8 @@ export default function SongTable(p: SongTableProps) {
     if (p.songs != undefined) { setSongs(p.songs) } 
     else { listShared() }
   }, [p.songs])
+
+  useSongDeleted((songId) => setSongs((prev) => prev.filter((song) => song.songId !== songId)))
 
   return <>
     <div className="mt-2 relative overflow-x-auto shadow-md sm:rounded-lg mx-5">
@@ -90,6 +94,7 @@ export default function SongTable(p: SongTableProps) {
                     </button>
                   </a>
                   { p.user && <Share user={p.user} song={a} /> }
+                  { p.type === "own" && !p.bandId && a.songId && <DeleteSongButton compact songId={a.songId} title={a.title} onDeleted={() => setSongs((prev) => prev.filter((song) => song.songId !== a.songId))} /> }
                   <button type="button" onClick={() => setOpenDownload(i)}
                     className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2 hidden">
                       <ArrowDownTrayIcon className="w-4 h-4 mt-0.5" />

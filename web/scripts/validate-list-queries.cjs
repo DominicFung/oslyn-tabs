@@ -168,7 +168,7 @@ function validateDocument(schema, doc) {
 
 function main() {
   const schema = parseSchema(fs.readFileSync(schemaPath, 'utf8'))
-  const required = ['Query', 'Mutation', 'Subscription', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult', 'JamSongChange', 'SpotifySearchResult', 'SpotifyTrack', 'ChordImportRequest']
+  const required = ['Query', 'Mutation', 'Subscription', 'Song', 'Band', 'SetList', 'JamSession', 'User', 'JamSong', 'Participant', 'DeleteSetResult', 'JamSongChange', 'SpotifySearchResult', 'SpotifyTrack', 'ChordImportRequest', 'SongUsage', 'SongDeleted', 'JamSongRemoved', 'JamPlaylistUpdate']
   for (const name of required) {
     if (!schema.types.has(name)) {
       console.error(`schema is missing type ${name}`)

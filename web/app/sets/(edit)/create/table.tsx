@@ -8,6 +8,7 @@ import { ArrowsUpDownIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24
 import { useEffect, useState } from "react"
 import Save from "../../(components)/save"
 import EditSlides from "../../(components)/editSlides"
+import { useSongDeleted } from "@/app/songDeleted"
 
 export interface CreateSetTableProps {
   songs: Song[]
@@ -17,6 +18,7 @@ export const chords = ['A', 'Bb', 'B', 'C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G'
 
 export default function CreateSetTable(p: CreateSetTableProps) {
 
+  const [ catalog, setCatalog ] = useState<Song[]>(p.songs)
   const [ description, setDescription ] = useState<string>("") 
   const [ keys, setKeys ] = useState<string[]>(Array(p.songs.length).fill("C"))
   const [ sListCheck, setSListCheck ] = useState<boolean[]>(Array(p.songs.length).fill(false)) 
@@ -34,15 +36,31 @@ export default function CreateSetTable(p: CreateSetTableProps) {
   useEffect(() => {
     const b = { ...setList, description, songs: [] as JamSong[] } as SetList
     if (sListCheck.length !== keys.length) { console.error("CheckList needs to be the same length as keys."); return }
-    if (sListCheck.length !== p.songs.length) { console.error("CheckList needs to be the same length as p.songs."); return }
+    if (sListCheck.length !== catalog.length) { console.error("CheckList needs to be the same length as p.songs."); return }
 
     for (let i = 0; i < sListCheck.length; i++) {
-      if (sListCheck[i]) { b.songs.push({ song: p.songs[i] as Song, key: keys[i] } as JamSong) }
+      if (sListCheck[i]) { b.songs.push({ song: catalog[i] as Song, key: keys[i] } as JamSong) }
     }
 
     console.log(b)
     setSetList(b)
-  }, [description, sListCheck, keys])
+  }, [description, sListCheck, keys, catalog])
+
+  useEffect(() => {
+    setCatalog(p.songs)
+    setKeys(Array(p.songs.length).fill("C"))
+    setSListCheck(Array(p.songs.length).fill(false))
+  }, [p.songs])
+
+  useSongDeleted((songId) => {
+    setCatalog((prev) => {
+      const index = prev.findIndex((song) => song.songId === songId)
+      if (index < 0) return prev
+      setKeys((current) => current.filter((_, i) => i !== index))
+      setSListCheck((current) => current.filter((_, i) => i !== index))
+      return prev.filter((song) => song.songId !== songId)
+    })
+  })
 
   useEffect(() => {
     let allTrue = true
@@ -106,7 +124,7 @@ export default function CreateSetTable(p: CreateSetTableProps) {
             </tr>
         </thead>
         <tbody>
-            {p.songs.map((a, i) => <tr key={i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+            {catalog.map((a, i) => <tr key={a.songId || i} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                 <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-oslyn-600 bg-coral-100 border-coral-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
                     checked={sListCheck[i]} onChange={() => { sListCheck[i] = !sListCheck[i]; setSListCheck([...sListCheck]) }}
