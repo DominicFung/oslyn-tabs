@@ -810,6 +810,17 @@ export class AppsyncStack extends Stack {
       fieldName: "addSongToLiveJam"
     })
 
+    const ensureJamJoinToken = new NodejsFunction(this, `${props.name}-EnsureJamJoinToken`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'ensureJamJoinToken.ts'),
+      timeout: Duration.seconds(15),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}EnsureJamJoinTokenDS`, ensureJamJoinToken)
+    .createResolver(`${props.name}-EnsureJamJoinTokenResolver`, {
+      typeName: "Mutation",
+      fieldName: "ensureJamJoinToken"
+    })
+
     const createRecording = new NodejsFunction(this, `${props.name}-CreateRecording`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'recording', 'createRecording.ts'),
       timeout: Duration.minutes(5),

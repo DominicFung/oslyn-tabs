@@ -17,8 +17,16 @@ import { loadCanEditSongs } from "@/core/jamAccess"
 
 Amplify.configure(amplifyconfig, { ssr: true })
 
-export default async function JamPlayer({ params }: { params: Promise<{ id: string }> }) {
+export default async function JamPlayer({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ join?: string | string[] }>
+}) {
   const { id } = await params
+  const joinParam = (await searchParams).join
+  const joinToken = (Array.isArray(joinParam) ? joinParam[0] : joinParam) || undefined
   const req = { headers: { cookie: (await headers()).get('cookie') } }
   const client = generateClient()
 
@@ -26,7 +34,7 @@ export default async function JamPlayer({ params }: { params: Promise<{ id: stri
   const userId = (session?.user as _Session)?.userId
 
   let d = null as JamSession | null
-  let p = { jamSessionId: id as string } as any
+  let p = { jamSessionId: id as string, ...(joinToken ? { joinToken } : {}) } as any
   if (userId) p.userId = userId
 
   try {
@@ -56,12 +64,9 @@ export default async function JamPlayer({ params }: { params: Promise<{ id: stri
 
   
 
-  // a private jam session cannot have guests
-  if (d.policy === "PRIVATE" && !user) return <Unauth />
-
   const canEditSongs = await loadCanEditSongs(id, userId)
 
   return <>
-    {d && <Player jam={d} user={user} canEditSongs={canEditSongs}/>}
+    {d && <Player jam={d} user={user} canEditSongs={canEditSongs} joinToken={joinToken}/>}
   </>
 }

@@ -12,6 +12,7 @@ import { EnterJamMutation } from '@/../src/API'
 export interface AddGuestRequest {
   name: string,
   colour: string
+  joinToken?: string
 }
 
 export async function POST(request: NextRequest) {
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const d = await client.graphql({ 
-      query: m.enterJam, variables: { jamSessionId: jamId, guestName: b.name, colour: b.colour, ip }
+      query: m.enterJam, variables: { jamSessionId: jamId, guestName: b.name, colour: b.colour, ip, joinToken: b.joinToken }
     }) as GraphQLResult<EnterJamMutation>
 
     if (!d.data?.enterJam) {

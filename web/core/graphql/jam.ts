@@ -30,6 +30,13 @@ export const searchSongs = /* GraphQL */ `query SearchSongs($userId: ID!, $query
   }
 }`
 
+export const ensureJamJoinToken = /* GraphQL */ `mutation EnsureJamJoinToken($jamSessionId: ID!, $userId: ID!) {
+  ensureJamJoinToken(jamSessionId: $jamSessionId, userId: $userId) {
+    jamSessionId
+    joinToken
+  }
+}`
+
 export const jamAccess = /* GraphQL */ `query JamAccess($jamSessionId: ID!, $userId: ID) {
   getJamSession(jamSessionId: $jamSessionId, userId: $userId) {
     jamSessionId

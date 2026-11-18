@@ -66,6 +66,8 @@ export interface ControlsProp {
   }
   
   qrCode?: boolean
+  joinToken?: string
+  canShareJam?: boolean
   pt?: boolean | undefined
 }
 
@@ -144,7 +146,7 @@ export default function Controls(p: ControlsProp) {
                                     fullScreen={p.display!.fullScreen} setFullScreen={p.display!.setFullScreen}
                                     headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
                                 /> }
-              { option === 4 && p.qrCode && <QrCode /> }
+              { option === 4 && p.qrCode && <QrCode jamSessionId={p.jamSessionId} joinToken={p.joinToken} canShare={!!p.canShareJam} /> }
               { option === 5 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
               { option === 6 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
               { option === 7 && p.queue && <Queue songs={p.queue.songs} queue={p.queue.queueOrder} removeFromQueue={p.queue.removeFromQueue}/> }

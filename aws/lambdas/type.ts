@@ -37,6 +37,7 @@ export type _JamSession = JamSession & {
   memberIds?: string[]
   guestIds?: string[]
   activeIds?: string[]
+  joinToken?: string
 }
 
 export type _Participant = Participant & {

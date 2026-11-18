@@ -8,7 +8,7 @@ import { hasSubstring, merge } from '../../util/dynamo'
 import { Band, JamSessionActiveUsers, Participant, User } from '../../API'
 import { _Band, _JamSession, _JamSong, _SetList, _User } from '../../type'
 import { updateDynamoUtil } from '../../util/dynamo'
-import { canJoinJam } from '../../util/jamAccess'
+import { canJoinJam, joinTokenMatches, memberIdsWith } from '../../util/jamAccess'
 
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
@@ -21,7 +21,7 @@ const COLORS = [
 ]
 
 export const handler = async (event: AppSyncResolverEvent<{
-  jamSessionId: string, userId?: string, guestName?: string, colour?: string, ip?: string
+  jamSessionId: string, userId?: string, guestName?: string, colour?: string, ip?: string, joinToken?: string | null
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -47,28 +47,12 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (b.userId && uniq.includes(b.userId)) {
     console.error(`${b.userId} is already a part of this session, continuing ...`); return
   } else {
-    // check authorization
-    if (jamSession.policy === "PRIVATE") {
-      if (!canJoinJam(jamSession, b.userId)) {
-        console.error(`This is a private jam session.`)
-        return
-      }
+    if (jamSession.policy === "PRIVATE" && !canJoinJam(jamSession, b.userId, b.joinToken)) {
+      console.error(`This is a private jam session.`)
+      return
+    }
 
-      latest = {
-        userId: b.userId,
-        colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
-        joinTime: Date.now(),
-        lastPing: Date.now(),
-        participantType: "USER"
-      } as Participant
-
-      param = updateDynamoUtil({
-        table: JAM_TABLE_NAME,
-        item: { active: [ ...(jamSession.active || []), latest ] },
-        key: { jamSessionId: b.jamSessionId }
-      })
-    } else {
-      if (b.userId) {
+    if (b.userId) {
         latest = {
           userId: b.userId,
           colour: COLORS[(Math.floor(Math.random() * COLORS.length))],
@@ -76,10 +60,17 @@ export const handler = async (event: AppSyncResolverEvent<{
           lastPing: Date.now(),
           participantType: "USER"
         } as Participant
-    
+
+        const item: { active: Array<Participant | null | undefined>, memberIds?: string[] } = {
+          active: [ ...(jamSession.active || []), latest ],
+        }
+        if (joinTokenMatches(jamSession, b.joinToken)) {
+          const memberIds = memberIdsWith(jamSession, b.userId)
+          if (memberIds) item.memberIds = memberIds
+        }
         param = updateDynamoUtil({
           table: JAM_TABLE_NAME,
-          item: { active: [ ...(jamSession.active || []), latest ] },
+          item,
           key: { jamSessionId: b.jamSessionId }
         })
 
@@ -193,7 +184,6 @@ export const handler = async (event: AppSyncResolverEvent<{
           key: { jamSessionId: b.jamSessionId }
         })
       } else { console.error(`Neither guest name nor userId provided.`); return }
-    }
   }
 
   if (param) {

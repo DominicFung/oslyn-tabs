@@ -11,7 +11,7 @@ import { authOptions } from "@/core/auth"
 import { _Session } from '@/core/utils/frontend'
 import { EnterJamMutation } from '@/../src/API'
 
-export interface AddUserRequest {}
+export interface AddUserRequest { joinToken?: string }
 
 export async function POST(request: NextRequest) {
   console.log(`${request.method} ${request.url}`)
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const d = await client.graphql({ 
-      query: m.enterJam, variables: { jamSessionId: jamId, userId, ip }
+      query: m.enterJam, variables: { jamSessionId: jamId, userId, ip, joinToken: b.joinToken }
     }) as GraphQLResult<EnterJamMutation>
 
     if (!d.data?.enterJam) {

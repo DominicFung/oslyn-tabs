@@ -28,7 +28,7 @@ type Query {
   getSetCount(userId: ID!, bandId: ID, addSharedCount:Boolean): Int! @aws_iam
   listSets(userId: ID!, bandId: ID, limit: Int, filter: String, nextToken: String): [SetList]! @aws_iam
 
-  getJamSession(jamSessionId: ID!, userId: ID, bandId: ID): JamSession @aws_iam
+  getJamSession(jamSessionId: ID!, userId: ID, bandId: ID, joinToken: String): JamSession @aws_iam
   getJamSessionByPin(pin: String!): JamSession @aws_iam
   getUserJamSessions(userId: ID!): [JamSession]! @aws_iam
   listPublicJamSessions(limit: Int, filter: String, nextToken: String): [JamSession]! @aws_iam
@@ -154,7 +154,8 @@ type Mutation {
   setJamQueue(jamSessionId: ID!, queue: [Int!]!, expectedRevision: Int, currentSongIndex: Int): JamQueue
   setJamSlideConfig(jamSessionId:ID!, textSize: String): JamSessionSlideConfig 
 
-  enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String): JamSessionActiveUsers
+  enterJam(jamSessionId: ID!, userId: ID, guestName: String, colour: String, ip: String, joinToken: String): JamSessionActiveUsers
+  ensureJamJoinToken(jamSessionId: ID!, userId: ID!): JamJoinLink @aws_iam
   exitJam(jamSessionId: ID!, userId: ID, guestName: String): JamSessionActiveUsers
 
   createRecording(
@@ -345,6 +346,11 @@ type Participant {
   ip: String
 
   user: User # can be empty - then this is a guest
+}
+
+type JamJoinLink {
+  jamSessionId: ID!
+  joinToken: String!
 }
 
 type JamSessionActiveUsers {

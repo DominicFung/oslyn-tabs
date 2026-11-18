@@ -66,6 +66,7 @@ export const handler = async (event: AppSyncResolverEvent<{
     revision: 0,
     queue: [],
     adminIds: [b.userId],
+    joinToken: uuidv4(),
 
     pageSettings: {
       pageMax: 3, pageMin: 2

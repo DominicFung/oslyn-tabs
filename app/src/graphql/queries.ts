@@ -10156,8 +10156,8 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
   }
 }
 ` as GeneratedQuery<APITypes.ListSetsQueryVariables, APITypes.ListSetsQuery>;
-export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: ID!, $userId: ID) {
-  getJamSession(jamSessionId: $jamSessionId, userId: $userId) {
+export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: ID!, $userId: ID, $joinToken: String) {
+  getJamSession(jamSessionId: $jamSessionId, userId: $userId, joinToken: $joinToken) {
     jamSessionId
     setList {
       setListId
