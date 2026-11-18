@@ -12,6 +12,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
 import { Session } from "next-auth"
 import Unauth from "@/app/unauthorized"
+import DeleteSetButton from "../../../(components)/deleteSet"
 
 type _Session = Session & {
   userId: string
@@ -56,6 +57,9 @@ export default async function EditSets({ params }: { params: Promise<{ id: strin
   }
   
   return <>
+    { d2 && <div className="flex justify-end px-5 pt-4">
+      <DeleteSetButton setListId={d2.setListId} description={d2.description} redirectTo="/sets" />
+    </div> }
     { d2 && <SetTable songs={d1} set={d2}/> }
   </>
 }

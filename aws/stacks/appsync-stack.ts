@@ -810,6 +810,18 @@ export class AppsyncStack extends Stack {
       fieldName: "addSongToLiveJam"
     })
 
+    const deleteJamSession = new NodejsFunction(this, `${props.name}-DeleteJamSession`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'deleteJamSession.ts'),
+      timeout: Duration.minutes(2),
+      memorySize: listMemory,
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}DeleteJamSessionDS`, deleteJamSession)
+    .createResolver(`${props.name}-DeleteJamSessionResolver`, {
+      typeName: "Mutation",
+      fieldName: "deleteJamSession"
+    })
+
     const ensureJamJoinToken = new NodejsFunction(this, `${props.name}-EnsureJamJoinToken`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'jam', 'ensureJamJoinToken.ts'),
       timeout: Duration.seconds(15),

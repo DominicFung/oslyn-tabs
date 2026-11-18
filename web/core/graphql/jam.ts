@@ -30,6 +30,25 @@ export const searchSongs = /* GraphQL */ `query SearchSongs($userId: ID!, $query
   }
 }`
 
+export const deleteJamSession = /* GraphQL */ `mutation DeleteJamSession($jamSessionId: ID!, $userId: ID!) {
+  deleteJamSession(jamSessionId: $jamSessionId, userId: $userId) {
+    jamSessionId
+  }
+}`
+
+export const onJamDeleted = /* GraphQL */ `subscription OnJamDeleted($jamSessionId: ID!) {
+  onJamDeleted(jamSessionId: $jamSessionId) {
+    jamSessionId
+  }
+}`
+
+export const onSetJamsDeleted = /* GraphQL */ `subscription OnSetJamsDeleted {
+  onSetJamsDeleted {
+    setListId
+    jamSessionIds
+  }
+}`
+
 export const ensureJamJoinToken = /* GraphQL */ `mutation EnsureJamJoinToken($jamSessionId: ID!, $userId: ID!) {
   ensureJamJoinToken(jamSessionId: $jamSessionId, userId: $userId) {
     jamSessionId

@@ -1,15 +1,18 @@
 "use client"
 
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Band, JamSession } from "@/../src/API"
 
 import ClickableCell from "./(components)/clikableCell"
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid"
 
 import BandCard from "./(components)/bandCard"
+import DeleteJamButton from "./(components)/deleteJam"
 import { getTimeDifferenceFromNowToEpoch } from "@/core/utils/frontend"
 
 function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy?: boolean }) {
+  const router = useRouter()
   return (
     <div className="relative overflow-x-auto shadow-md rounded-md sm:rounded-lg mx-5">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -19,7 +22,7 @@ function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy
                 <th scope="col" className="px-6 py-3">Room ID or Description</th>
                 <th scope="col" className="px-6 py-3 hidden sm:table-cell">Active Users</th>
                 <th scope="col" className="px-6 py-3 hidden sm:table-cell">Time</th>
-                <th scope="col" className="px-6 py-3 hidden sm:table-cell">Action</th>
+                <th scope="col" className="px-6 py-3">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -58,7 +61,7 @@ function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy
                     <span className="flex-1 text-center pt-0.5 text-white">{a.startDate ? `${getTimeDifferenceFromNowToEpoch(a.startDate)} ago` : ""}</span>
                     </div>
                   </ClickableCell>
-                <td className="px-6 py-4 hidden sm:table-cell">
+                <td className="px-6 py-4">
                   <div className="flex flex-row">
                     <a href={`/jam/${a.jamSessionId}`}>
                       <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
@@ -66,6 +69,7 @@ function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy
                         <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
                       </button>
                     </a>
+                    {showPolicy && <DeleteJamButton jamSessionId={a.jamSessionId} description={a.description || a.setList?.description} onDeleted={() => router.refresh()} />}
                   </div>
                 </td>
             </tr>)}
