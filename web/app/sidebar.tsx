@@ -20,6 +20,7 @@ export default function Sidebar () {
 
   const [ songCount, setSongCount ] = useState(0)
   const [ setCount, setSetCount ] = useState(0)
+  const [ bandCount, setBandCount ] = useState(0)
   
   const { data: session, status } = useSession()
 
@@ -33,6 +34,7 @@ export default function Sidebar () {
       setOpenLogin(false)
       getSongCount()
       getSetCount()
+      getBandCount()
     } else if (status === "unauthenticated" && searchParams.get("login") === "true") { 
       setOpenLogin(true)
     }
@@ -46,6 +48,11 @@ export default function Sidebar () {
   const getSetCount = async () => {
     const d = await (await fetch(`/api/set/count`, { method: "GET" })).json() as { count: number }
     console.log(d); setSetCount(d.count)
+  }
+
+  const getBandCount = async () => {
+    const d = await (await fetch(`/api/band/list`, { method: "GET" })).json()
+    if (Array.isArray(d)) setBandCount(d.length)
   }
 
   return <>
@@ -100,6 +107,9 @@ export default function Sidebar () {
             path.startsWith('/band') ? "bg-gray-100 dark:bg-gray-700" : "hover:bg-gray-100 dark:hover:bg-gray-700"
           } disabled:dark:text-gray-500 disabled:text-gray-300`} disabled={status != "authenticated"}>
               <span className="flex-1 ml-3 whitespace-nowrap text-left">My Bands</span>
+              { bandCount > 0 && status === "authenticated" && <span className={`inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-oslyn-800 bg-oslyn-100 rounded-full dark:bg-oslyn-900 dark:text-oslyn-300`}>
+                {bandCount}
+              </span> }
            </button>
         </li>
      </ul>
