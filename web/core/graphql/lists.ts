@@ -141,6 +141,7 @@ export const deleteSet = /* GraphQL */ `mutation DeleteSet($setListId: ID!, $use
     setListId
     deleted
     jamsRemoved
+    jamSessionIds
   }
 }`
 

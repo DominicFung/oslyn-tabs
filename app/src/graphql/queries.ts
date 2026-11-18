@@ -10159,6 +10159,7 @@ export const listSets = /* GraphQL */ `query ListSets($userId: ID!, $limit: Int,
 export const getJamSession = /* GraphQL */ `query GetJamSession($jamSessionId: ID!, $userId: ID, $joinToken: String) {
   getJamSession(jamSessionId: $jamSessionId, userId: $userId, joinToken: $joinToken) {
     jamSessionId
+    hostId
     setList {
       setListId
       description

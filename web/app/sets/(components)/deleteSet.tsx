@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 interface DeleteSetButtonProps {
   setListId: string
   description: string
+  redirectTo?: string
 }
 
 export default function DeleteSetButton(p: DeleteSetButtonProps) {
@@ -46,7 +47,8 @@ export default function DeleteSetButton(p: DeleteSetButtonProps) {
       const body = await res.json() as { error?: string, jamsRemoved?: number }
       if (!res.ok) throw new Error(body.error || "Could not delete this set")
       setOpen(false)
-      router.refresh()
+      if (p.redirectTo) router.push(p.redirectTo)
+      else router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not delete this set")
       setBusy(false)
@@ -71,7 +73,7 @@ export default function DeleteSetButton(p: DeleteSetButtonProps) {
             <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">{p.description}</p>
             {count === null && !error && <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Checking jam rooms…</p>}
             {count !== null && <p className="mb-4 text-sm text-gray-700 dark:text-gray-200">
-              This will end and remove <span className="font-semibold">{count}</span> {rooms} that use this set.
+              This will also delete <span className="font-semibold">{count}</span> {rooms}.
               Songs in the set stay in your library. This cannot be undone.
             </p>}
             {error && <p className="mb-4 text-sm text-red-600 dark:text-red-400">{error}</p>}

@@ -115,6 +115,7 @@ type Mutation {
   addSongToSet(setListId: ID!, songId: ID!, key: String): SetList @aws_iam
   removeSongFromSet(setListId: ID!, jamSongId: [ID]!): SetList @aws_iam
   deleteSet(setListId: ID!, userId: ID!): DeleteSetResult @aws_iam
+  deleteJamSession(jamSessionId: ID!, userId: ID!): JamDeleted @aws_iam
 
   createJamSession(setListId: ID!, userId: ID!, bandId: ID, policy: policy, description: String): JamSession @aws_iam
   updateJamSessionDescription(jamSessionId: ID!, description: String!): JamSession @aws_iam
@@ -176,6 +177,8 @@ type Subscription {
   onJamSongsChanged(jamSessionId: ID!): JamSongChange @aws_subscribe(mutations: ["addSongToLiveJam", "setLiveJamChordSheet"])
   onImportStatusChanged(userId: ID, jamId: ID): ChordImportRequest @aws_subscribe(mutations: ["createChordImport", "claimImport", "completeImport", "failImport"])
   onSongDeleted: SongDeleted @aws_subscribe(mutations: ["deleteSong"])
+  onJamDeleted(jamSessionId: ID!): JamDeleted @aws_subscribe(mutations: ["deleteJamSession"])
+  onSetJamsDeleted: DeleteSetResult @aws_subscribe(mutations: ["deleteSet"])
   onSongRemovedFromJam(jamSessionId: ID!): JamSongRemoved @aws_subscribe(mutations: ["removeSongFromJam"])
 
   onEnterJam(jamSessionId: ID!): JamSessionActiveUsers @aws_subscribe(mutations: ["enterJam"])
@@ -329,10 +332,15 @@ type JamSongRemoved {
   songIds: [ID]!
 }
 
+type JamDeleted {
+  jamSessionId: ID!
+}
+
 type DeleteSetResult {
   setListId: ID!
   deleted: Boolean!
   jamsRemoved: Int!
+  jamSessionIds: [ID!]!
 }
 
 type Participant {

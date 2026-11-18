@@ -16,6 +16,7 @@ import {
 } from "@/../src/API"
 
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { ChevronDoubleRightIcon, ArrowsPointingOutIcon } from '@heroicons/react/24/solid'
 import Controls from './controls'
 import { useSideBarContext } from '../context'
@@ -26,7 +27,7 @@ import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
-import { JamSongChange, onJamQueueUpdate, onJamSongsChanged, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
+import { JamSongChange, onJamDeleted, onJamQueueUpdate, onJamSongsChanged, onSetJamsDeleted, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
 import ImportToasts, { ImportEvent } from '../importToasts'
 import { deletedToast, songDeletedEventName, SongDeletedEvent } from '../songDeleted'
 
@@ -87,7 +88,9 @@ export default function Player(p: PlayerProps) {
 
   const { setOpenSidebar, guestIdentity, addGuestIdentity } = useSideBarContext()
   const { data: session, status } = useSession()
+  const router = useRouter()
   const client = generateClient()
+  const [jamDeleted, setJamDeleted] = useState(false)
   
   const [ isLogin, setIsLogin ] = useState(false)
 
@@ -399,6 +402,41 @@ export default function Player(p: PlayerProps) {
       window.removeEventListener(songDeletedEventName, onDeleted)
     }
   }, [p.jam.jamSessionId, p.user?.userId])
+
+  useEffect(() => {
+    const jamId = p.jam.jamSessionId
+    if (!jamId) return
+    const direct = client.graphql({
+      query: onJamDeleted,
+      variables: { jamSessionId: jamId },
+    }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onJamDeleted?: { jamSessionId?: string | null } | null } }) => void
+        error: (error: unknown) => void
+      }) => { unsubscribe: () => void }
+    }
+    const cascaded = client.graphql({ query: onSetJamsDeleted }) as {
+      subscribe: (observer: {
+        next: (value: { data?: { onSetJamsDeleted?: { jamSessionIds?: Array<string | null> | null } | null } }) => void
+        error: (error: unknown) => void
+      }) => { unsubscribe: () => void }
+    }
+    const directSub = direct.subscribe({
+      next: ({ data }) => { if (data?.onJamDeleted?.jamSessionId === jamId) setJamDeleted(true) },
+      error: (error) => console.error(error),
+    })
+    const cascadeSub = cascaded.subscribe({
+      next: ({ data }) => {
+        const ids = data?.onSetJamsDeleted?.jamSessionIds || []
+        if (ids.includes(jamId)) setJamDeleted(true)
+      },
+      error: (error) => console.error(error),
+    })
+    return () => {
+      directSub.unsubscribe()
+      cascadeSub.unsubscribe()
+    }
+  }, [p.jam.jamSessionId])
 
   const applyImportedChords = (event: ImportEvent) => {
     if (event.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
@@ -766,6 +804,8 @@ export default function Player(p: PlayerProps) {
         qrCode={true}
         joinToken={p.joinToken}
         canShareJam={!!p.canEditSongs}
+        canDeleteJam={!!p.user?.userId && p.user.userId === (p.jam as { hostId?: string | null }).hostId}
+        onJamDeleted={() => setJamDeleted(true)}
         queue={{
           songs: songs as JamSong[],
           queueOrder: queue,
@@ -780,6 +820,17 @@ export default function Player(p: PlayerProps) {
     </button>}
 
     <SignInAsGuest open={guestOpen} setOpen={setGuestOpen} jamId={p.jam.jamSessionId} signInAsGuest={signInAsGuest} />
+    {jamDeleted && <div role="dialog" aria-modal="true" aria-labelledby="jam-deleted-title"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/80 p-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow dark:bg-gray-800">
+        <h2 id="jam-deleted-title" className="text-xl font-semibold text-gray-900 dark:text-white">This jam was deleted</h2>
+        <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">The host removed this room. It is no longer available.</p>
+        <button type="button" onClick={() => router.push("/")}
+          className="mt-6 rounded-lg bg-oslyn-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-oslyn-800">
+          OK
+        </button>
+      </div>
+    </div>}
     <ImportToasts
       jamId={p.jam.jamSessionId}
       userId={p.user?.userId}

@@ -1,6 +1,6 @@
 import { DeleteItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { endAndDeleteJam, jamsForSet, loadOwnedSet, removeSetFromBands } from './setCleanup'
+import { deleteJamRoom, jamsForSet, loadOwnedSet, removeSetFromBands } from './setCleanup'
 
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 
@@ -24,9 +24,9 @@ export const handler = async (event: AppSyncResolverEvent<{
   }
 
   const jams = await jamsForSet(dynamo, b.setListId)
-  for (const jam of jams) {
-    if (!jam.jamSessionId) continue
-    await endAndDeleteJam(dynamo, jam.jamSessionId)
+  const jamSessionIds = jams.map((jam) => jam.jamSessionId).filter((id): id is string => !!id)
+  for (const jamSessionId of jamSessionIds) {
+    await deleteJamRoom(dynamo, jamSessionId)
   }
 
   await removeSetFromBands(dynamo, b.setListId)
@@ -41,6 +41,7 @@ export const handler = async (event: AppSyncResolverEvent<{
   return {
     setListId: b.setListId,
     deleted: true,
-    jamsRemoved: jams.length,
+    jamsRemoved: jamSessionIds.length,
+    jamSessionIds,
   }
 }
