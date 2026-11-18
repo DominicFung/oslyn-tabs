@@ -21872,6 +21872,7 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
   $guestName: String
   $colour: String
   $ip: String
+  $joinToken: String
 ) {
   enterJam(
     jamSessionId: $jamSessionId
@@ -21879,6 +21880,7 @@ export const enterJam = /* GraphQL */ `mutation EnterJam(
     guestName: $guestName
     colour: $colour
     ip: $ip
+    joinToken: $joinToken
   ) {
     jamSessionId
     active {

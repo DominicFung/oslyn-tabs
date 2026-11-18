@@ -4,13 +4,39 @@ import { QRCode } from 'react-qrcode-logo'
 import { useTheme } from "next-themes"
 import { useEffect, useState } from 'react'
 
-export default function QrCode() {
-  const { theme, setTheme } = useTheme()
+function withQuery(path: string, params: URLSearchParams) {
+  const query = params.toString()
+  return query ? `${path}?${query}` : path
+}
+
+export default function QrCode(p: { jamSessionId: string, canShare?: boolean, joinToken?: string }) {
+  const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [addLogin, setAddLogin] = useState(true)
+  const [token, setToken] = useState(p.joinToken || "")
 
   useEffect(() => { setMounted(true) }, [])
 
-  const [ addLogin, setAddLogin ] = useState(true)
+  useEffect(() => {
+    if (!p.canShare) return
+    let cancelled = false
+    fetch(`/api/jam/${p.jamSessionId}/join-link`, { method: "POST" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && typeof data?.joinToken === "string" && data.joinToken) setToken(data.joinToken)
+      })
+      .catch((error) => console.error(error))
+    return () => { cancelled = true }
+  }, [p.canShare, p.jamSessionId])
+
+  const origin = mounted ? window.location.origin : ""
+  const jamParams = new URLSearchParams()
+  if (token) jamParams.set("join", token)
+  if (addLogin) jamParams.set("login", "true")
+  const slidesParams = new URLSearchParams()
+  if (token) slidesParams.set("join", token)
+  const jamUrl = withQuery(`${origin}/jam/${p.jamSessionId}`, jamParams)
+  const slidesUrl = withQuery(`${origin}/jam/${p.jamSessionId}/slides`, slidesParams)
 
   return <>
     <div className="ml-3 text-sm font-normal overflow-auto">
@@ -31,7 +57,7 @@ export default function QrCode() {
       <div className="max-h-[calc(100vh-20rem)] pl-2 pr-6">
         {mounted && <div className='mx-auto w-[170px] flex flex-row'>
         <div className="mt-16 mr-6 text-lg font-normal text-gray-900 dark:text-gray-50">Slides</div>
-          <QRCode value={`${window.location.href}/slides`}
+          <QRCode value={slidesUrl}
               bgColor={ theme === "dark" ? "#1f2937" : "#FFFFFF" }
               fgColor={ theme === "dark" ? "#FFFFFF" : "#1f2937" }
           />
@@ -41,7 +67,7 @@ export default function QrCode() {
 
         {mounted && <div className='mx-auto w-[170px] flex flex-row-reverse'>
           <div className="mt-16 ml-4 px-2 text-lg font-normal text-gray-900 dark:text-gray-50">Jam</div> 
-            <QRCode value={`${window.location.href}${addLogin&&"?login=true"}`}
+            <QRCode value={jamUrl}
                 bgColor={ theme === "dark" ? "#1f2937" : "#FFFFFF" }
                 fgColor={ theme === "dark" ? "#FFFFFF" : "#1f2937" }
             />

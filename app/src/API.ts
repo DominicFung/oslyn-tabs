@@ -22136,6 +22136,7 @@ export type EnterJamMutationVariables = {
   guestName?: string | null,
   colour?: string | null,
   ip?: string | null,
+  joinToken?: string | null,
 };
 
 export type EnterJamMutation = {
@@ -32688,6 +32689,7 @@ export type ListSetsQuery = {
 export type GetJamSessionQueryVariables = {
   jamSessionId: string,
   userId?: string | null,
+  joinToken?: string | null,
 };
 
 export type GetJamSessionQuery = {

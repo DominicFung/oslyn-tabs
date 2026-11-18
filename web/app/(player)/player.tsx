@@ -37,6 +37,7 @@ export interface PlayerProps {
   isSlideShow?: boolean
   user: User|null
   canEditSongs?: boolean
+  joinToken?: string
 }
 
 Amplify.configure(amplifyconfig, { ssr: true })
@@ -614,7 +615,7 @@ export default function Player(p: PlayerProps) {
     console.log("sign in as user ..")
     try {
       const data = await (await fetch(`/api/jam/${p.jam.jamSessionId}/add/user`, {
-        method: "POST", body: JSON.stringify({ userId: u.userId })
+        method: "POST", body: JSON.stringify({ userId: u.userId, joinToken: p.joinToken })
       })).json() as JamSessionActiveUsers
 
       if (typeof data === "string") { return data }
@@ -627,7 +628,7 @@ export default function Player(p: PlayerProps) {
   const signInAsGuest = async (name: string, colour: string): Promise<string> => {
     try {
       const data = await (await fetch(`/api/jam/${p.jam.jamSessionId}/add/guest`, {
-        method: "POST", body: JSON.stringify({ name, colour })
+        method: "POST", body: JSON.stringify({ name, colour, joinToken: p.joinToken })
       })).json() as JamSessionActiveUsers  
       
       if (typeof data === "string") { return data }
@@ -763,6 +764,8 @@ export default function Player(p: PlayerProps) {
           removeActive: () => {}
         }}
         qrCode={true}
+        joinToken={p.joinToken}
+        canShareJam={!!p.canEditSongs}
         queue={{
           songs: songs as JamSong[],
           queueOrder: queue,

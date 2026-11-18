@@ -1,10 +1,10 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
-import { DynamoDBClient, GetItemCommand, BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { DynamoDBClient, GetItemCommand, BatchGetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { hasSubstring, merge } from '../../util/dynamo'
 import { batchGetAll } from '../../util/batch'
-import { canEditJamSongs, canJoinJam } from '../../util/jamAccess'
+import { canEditJamSongs, canJoinJam, joinTokenMatches, memberIdsWith } from '../../util/jamAccess'
 import { asPlaylist } from '../../util/songIndex'
 
 import { Participant, User } from '../../API'
@@ -16,7 +16,7 @@ const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 
 export const handler = async (event: AppSyncResolverEvent<{
-  jamSessionId: string, userId?: string, bandId?: string
+  jamSessionId: string, userId?: string, bandId?: string, joinToken?: string | null
 }, null>) => {
   console.log(event)
   const b = event.arguments
@@ -34,9 +34,21 @@ export const handler = async (event: AppSyncResolverEvent<{
   if (!res1.Item) { console.error(`ERROR: jamSessionId not found: ${b.jamSessionId}`); return }
   let jamSession = unmarshall(res1.Item) as _JamSession
 
-  if (!canJoinJam(jamSession, b.userId)) {
+  if (!canJoinJam(jamSession, b.userId, b.joinToken)) {
     console.error(`This is a private jam session.`)
     return
+  }
+  if (b.userId && joinTokenMatches(jamSession, b.joinToken)) {
+    const memberIds = memberIdsWith(jamSession, b.userId)
+    if (memberIds) {
+      await dynamo.send(new UpdateItemCommand({
+        TableName: JAM_TABLE_NAME,
+        Key: { jamSessionId: { S: b.jamSessionId } },
+        UpdateExpression: 'SET memberIds = :members',
+        ExpressionAttributeValues: marshall({ ':members': memberIds }),
+      }))
+      jamSession.memberIds = memberIds
+    }
   }
   ;(jamSession as _JamSession & { hostId?: string, canEditSongs?: boolean }).hostId = jamSession.userId
   ;(jamSession as _JamSession & { canEditSongs?: boolean }).canEditSongs = canEditJamSongs(jamSession, b.userId)
