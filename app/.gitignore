@@ -31,5 +31,13 @@ yarn-error.*
 # local env files
 .env*.local
 
+# Android Play upload key and Play Console API credentials
+android/keystore.properties
+android/play-service-account.json
+android/*.keystore
+android/*.jks
+android/app/*.keystore
+!android/app/debug.keystore
+
 # typescript
 *.tsbuildinfo

@@ -102,7 +102,7 @@ export default function Controls(p: ControlsProp) {
       setH(Dimensions.get('window').height)
     })
 
-    const sub2 = Dimensions.addEventListener('change', ({ window }) => {
+    const sub2 = Dimensions.addEventListener('change', ({ window }: { window: { width: number; height: number } }) => {
       setH(window.height); setW(window.width)
     })
 

@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 
 import { useKeepAwake } from 'expo-keep-awake'
 import Svg, { Path } from 'react-native-svg'
-import { BlurView } from "@react-native-community/blur"
+import { BlurView } from "expo-blur"
 
 import { addOrientationChangeListener, removeOrientationChangeListener } from 'expo-screen-orientation'
 
@@ -62,7 +62,7 @@ export default function Slides(p: SlidesProps) {
       setH(Dimensions.get('window').height)
     })
 
-    const sub2 = Dimensions.addEventListener('change', ({ window }) => {
+    const sub2 = Dimensions.addEventListener('change', ({ window }: { window: { width: number; height: number } }) => {
       setH(window.height); setW(window.width)
     })
 
@@ -177,8 +177,8 @@ export default function Slides(p: SlidesProps) {
     </View>
     { loading && <BlurView
       style={{ width: w, height: h, position: "absolute" }}
-      blurType="dark"
-      blurAmount={3}
+      tint="dark"
+      intensity={15}
     /> }
 
     <Pressable className="absolute z-90 left-4 top-4" onPress={p.resetJam}>
