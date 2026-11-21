@@ -1,0 +1,25 @@
+name: import regressions
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Worker import regressions
+        working-directory: worker/ug-import
+        run: |
+          npm install
+          npm test
+      - name: Jam chord-sheet regressions
+        working-directory: aws/lambdas
+        run: |
+          npm install
+          npm test

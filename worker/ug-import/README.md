@@ -20,6 +20,24 @@ export APPSYNC_API_KEY="<existing api key>"
 ## Run
 
 ```bash
+npm start
+```
+
+`npm start` and `./start-worker.sh` run the Jest suite first and refuse to start the poller if a test fails. `npm run worker` skips the tests and is what the start script execs after they pass.
+
+## Regression tests
+
+When an import fails, add one Jest test so the next deploy cannot repeat it.
+
+1. Save the Ultimate Guitar search rows for that title as `src/fixtures/<song>.json`. The tests read this file and do not open the network.
+2. Add a test in `src/__tests__/import-regressions.test.ts`. The title and artist are the Spotify strings. Assert the `tabUrl` that should have been chosen.
+3. Put a one-line comment above the test naming the song and what broke.
+
+`npm test` in this directory runs that file together with the other worker suites. From `aws/`, `npm run deploy` runs those tests and `aws/lambdas` Jest before CDK. There is no `amplify.yml` in this repo. Amplify codegen in the deploy script does not build the worker, so the Amplify hosting build is not where these tests run.
+
+## Worker only
+
+```bash
 npm run worker
 ```
 

@@ -1,5 +1,8 @@
 #!/bin/zsh
 
+# Jest runs first when this is started with `npm run deploy` from aws/.
+# Example: npm run deploy -- oslynstudio-AppsyncStack --exclusively --profile a1
+
 PROJECT=oslynstudio
 
 echo "checking old cdk-output.json ..."
@@ -8,7 +11,12 @@ echo $OLDAPPSYNC
 echo
 
 echo "tsc & cdk deploy ..."
-tsc & cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
+tsc &
+if [ "$#" -gt 0 ]; then
+  cdk deploy "$@" --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
+else
+  cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
+fi
 
 echo "copying cdk-outputs.json ..."
 cp -f cdk-outputs.json ../web/cdk-outputs.json 
