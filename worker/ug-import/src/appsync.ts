@@ -30,18 +30,32 @@ const listQuery = `query ListPendingImports($limit: Int) {
   }
 }`
 
+// AppSync forwards only the mutation selection set to subscribers.
+// onImportStatusChanged asks for these fields; leaving any of them out
+// makes that field null in the jam, and a missing jamId drops the event.
+const importSelection = `
+  requestId
+  userId
+  songId
+  jamId
+  title
+  artist
+  status
+  chosenUrl
+  error
+  chordSheet
+`
+
 const claimMutation = `mutation ClaimImport($requestId: ID!) {
-  claimImport(requestId: $requestId) { requestId status }
+  claimImport(requestId: $requestId) { ${importSelection} }
 }`
 
 const completeMutation = `mutation CompleteImport($requestId: ID!, $chordSheet: String!, $sourceUrl: String!) {
-  completeImport(requestId: $requestId, chordSheet: $chordSheet, sourceUrl: $sourceUrl) {
-    requestId status chosenUrl
-  }
+  completeImport(requestId: $requestId, chordSheet: $chordSheet, sourceUrl: $sourceUrl) { ${importSelection} }
 }`
 
 const failMutation = `mutation FailImport($requestId: ID!, $error: String!) {
-  failImport(requestId: $requestId, error: $error) { requestId status error }
+  failImport(requestId: $requestId, error: $error) { ${importSelection} }
 }`
 
 export async function listPending(): Promise<ImportRequest[]> {

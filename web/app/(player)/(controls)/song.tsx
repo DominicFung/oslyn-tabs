@@ -216,16 +216,16 @@ export default function SongControl(p: SongProps) {
   const nothingInLibrary = p.canAddSongs && libraryState === "done" && library.length === 0
   const showMiss = nothingInJam && (!p.canAddSongs || nothingInLibrary || libraryState === "error")
 
-  return <div className="ml-3 text-sm font-normal w-full">
+  return <div className="min-w-0 max-w-full text-sm font-normal">
     <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Song</div>
     <div className="pb-3 text-sm font-normal">Choose a new Song! <br /><span className="text-xs italic">Note: this affects everyone in the session.</span></div>
 
-    <div className="w-full flex mb-6 pl-6">
+    <div className="mb-6 flex min-w-0 items-center gap-2">
       <input type="text" name="search" id="search" value={search} onChange={(e) => { setSearch(e.currentTarget.value) }}
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Holy Forever ..."
+        className="min-w-0 flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Holy Forever ..."
         required />
-      <button type="button" className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mx-2 hidden">
-        <MagnifyingGlassIcon className="w-4 h-4 mt-1" />
+      <button type="button" aria-label="Search" className="shrink-0 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5">
+        <MagnifyingGlassIcon className="w-4 h-4" />
       </button>
     </div>
 
@@ -233,28 +233,26 @@ export default function SongControl(p: SongProps) {
       {filteredList.length === 0 && search.trim() === "" && <p className="px-4 text-gray-500 dark:text-gray-300">Search for a song to start</p>}
       <ul className="divide-y divide-gray-200 dark:divide-gray-700 w-full">
         {filteredList.map((row) =>
-          <li className="py-3 px-4 my-0.5 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={`${row.setIndex}-${row.song.song?.songId}`}>
-            <div className="flex items-center space-x-4">
-              <div className="flex-shrink-0" onClick={() => p.setSong(row.setIndex)}>
+          <li className="min-w-0 py-3 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={`${row.setIndex}-${row.song.song?.songId}`}>
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <div className="shrink-0" onClick={() => p.setSong(row.setIndex)}>
                 {row.song.song?.albumCover && <img className="w-8 h-8 rounded-full" src={row.song.song.albumCover} alt="" />}
               </div>
-              <div className="flex-1 min-w-0" onClick={() => p.setSong(row.setIndex)}>
-                <p className="text-sm font-medium text-gray-900 truncate dark:text-white">{row.song.song?.title}</p>
-                <p className="text-sm text-gray-500 truncate dark:text-gray-400">{row.song.song?.artist} | {row.song.song?.album}</p>
+              <div className="min-w-0 flex-1" onClick={() => p.setSong(row.setIndex)}>
+                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{row.song.song?.title}</p>
+                <p className="truncate text-sm text-gray-500 dark:text-gray-400">{row.song.song?.artist} | {row.song.song?.album}</p>
               </div>
-              <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white mr-2" onClick={() => p.setSong(row.setIndex)}>
+              <div className="shrink-0 text-base font-semibold text-gray-900 dark:text-white" onClick={() => p.setSong(row.setIndex)}>
                 {row.song.key}
               </div>
               {p.canAddSongs && row.song.song?.songId ? <button type="button" disabled={!!busy}
                 onClick={() => removeFromJam(row)}
-                className="text-red-700 border border-red-700 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
+                className="shrink-0 text-red-700 border border-red-700 rounded-lg text-xs px-2 py-2 disabled:opacity-60">
                 {busy === `remove:${row.song.song.songId}` ? "Removing…" : "Remove from this jam"}
               </button> : null}
-              {p.addToQueue && row.song.song?.songId ? <div className="flex-0 min-w-0">
-                <button type="button" onClick={() => { const id = row.song.song?.songId; if (id) p.addToQueue!(id) }} className="sm:flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-4 py-2.5 text-center mx-2 hidden">
-                  <PlusIcon className="w-4 h-4 mt-1" />
-                </button>
-              </div> : null}
+              {p.addToQueue && row.song.song?.songId ? <button type="button" aria-label="Add to queue" onClick={() => { const id = row.song.song?.songId; if (id) p.addToQueue!(id) }} className="shrink-0 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm p-2.5">
+                  <PlusIcon className="w-4 h-4" />
+                </button> : null}
             </div>
           </li>
         )}
@@ -267,18 +265,18 @@ export default function SongControl(p: SongProps) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {library.map((hit) => {
             const inJam = p.songs.some((row) => row.song?.songId === hit.songId)
-            return <li key={hit.songId} className="py-3 px-4">
-              <div className="flex items-center gap-3">
-                <div className="flex-1 min-w-0">
+            return <li key={hit.songId} className="min-w-0 py-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <div className="min-w-0 flex-1 basis-40">
                   <p className="text-sm font-medium text-gray-900 truncate dark:text-white">{hit.title}</p>
                   <p className="text-sm text-gray-500 truncate dark:text-gray-400">{hit.artist || "Unknown artist"}{inJam ? " · In this jam" : ""}</p>
                 </div>
                 <button type="button" disabled={!!busy} onClick={() => addLibrarySong(hit, true)}
-                  className="text-white bg-oslyn-700 hover:bg-oslyn-800 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
+                  className="shrink-0 text-white bg-oslyn-700 hover:bg-oslyn-800 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
                   {busy === `${hit.songId}:play` ? "Adding…" : "Play"}
                 </button>
                 <button type="button" disabled={!!busy} onClick={() => addLibrarySong(hit, false)}
-                  className="text-oslyn-700 border border-oslyn-700 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
+                  className="shrink-0 text-oslyn-700 border border-oslyn-700 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
                   {busy === `${hit.songId}:queue` ? "Adding…" : "Queue"}
                 </button>
               </div>
@@ -292,9 +290,9 @@ export default function SongControl(p: SongProps) {
         {spotifyState === "loading" && <p className="px-4 text-gray-500">Searching Spotify…</p>}
         {spotifyState === "done" && spotify.length === 0 && <p className="px-4 text-gray-500">No Spotify matches.</p>}
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {spotify.map((track) => <li key={track.spotifyId} className="py-3 px-4">
+          {spotify.map((track) => <li key={track.spotifyId} className="min-w-0 py-3">
             <button type="button" disabled={!!busy} onClick={() => addSpotifyTrack(track)}
-              className="flex w-full items-center gap-3 text-left disabled:opacity-60">
+              className="flex w-full min-w-0 items-center gap-3 text-left disabled:opacity-60">
               {track.albumCover && <img className="w-10 h-10 rounded" src={track.albumCover} alt="" />}
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-medium text-gray-900 truncate dark:text-white">{track.title}</span>

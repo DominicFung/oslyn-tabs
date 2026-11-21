@@ -139,7 +139,7 @@ export default function Controls(p: ControlsProp) {
               </ul>
             </div>
 
-            <>
+            <div className="min-w-0 flex-1 w-full overflow-x-hidden">
               { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} onSongRemoved={p.song.onSongRemoved} queueAt={p.song.queueAt} /> }
               { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
               { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
@@ -156,7 +156,7 @@ export default function Controls(p: ControlsProp) {
               {p.canDeleteJam && <div className="px-4 pt-4">
                 <DeleteJamButton jamSessionId={p.jamSessionId} onDeleted={p.onJamDeleted} />
               </div>}
-            </>
+            </div>
             <button type="button" className="hidden sm:inline-block fixed right-12 top-7 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => p.setOpen(false)}
             >

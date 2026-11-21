@@ -55,15 +55,21 @@ export const addSongToLiveJam = /* GraphQL */ `mutation AddSongToLiveJam(
     jamSessionId
     index
     key
+    jumpTo
     song {
       songId
       title
+      artist
+      album
+      albumCover
       chordSheet
       chordSheetKey
     }
   }
 }`
 
+// JamSongChange.key is non-null. AppSync forwards only this selection set to
+// onJamSongsChanged, so a missing key makes every open jam reject the update.
 export const setLiveJamChordSheet = /* GraphQL */ `mutation SetLiveJamChordSheet(
   $jamSessionId: ID!
   $songId: ID!
@@ -82,9 +88,14 @@ export const setLiveJamChordSheet = /* GraphQL */ `mutation SetLiveJamChordSheet
   ) {
     jamSessionId
     index
+    key
+    jumpTo
     song {
       songId
       title
+      artist
+      album
+      albumCover
       chordSheet
       chordSheetKey
     }
