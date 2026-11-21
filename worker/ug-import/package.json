@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "worker": "tsx src/index.ts"
+    "worker": "tsx src/index.ts",
+    "test": "tsx --test src/choose.test.ts"
   },
   "dependencies": {
     "playwright": "^1.49.0"
