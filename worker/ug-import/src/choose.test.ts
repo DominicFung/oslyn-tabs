@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict'
-import { describe, it } from 'node:test'
 import { baseSongTitle, chooseResult, songTitleKey, titleSearchValue, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
