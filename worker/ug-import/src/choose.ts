@@ -33,14 +33,23 @@ export function baseSongTitle(value: string): string {
       .replace(/\s*\(ver\s*\d+\)\s*$/i, '')
       .replace(/\s*[([]\s*(?:featuring|feat\.?|ft\.?)\s+[^)\]]*[)\]]\s*$/i, '')
       .replace(/\s+-\s+(?:featuring|feat\.?|ft\.?)\s+.*$/i, '')
+      .replace(/\s+-\s+from\s+["“”][^"“”]+["“”]\s+soundtrack\s*$/i, '')
+      .replace(/\s*[([]\s*from\s+["“”][^"“”]+["“”](?:\s+soundtrack)?\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+from\s+the\s+(?:\S+\s+){0,6}series\s*$/i, '')
+      .replace(/\s+-\s+original\s+motion\s+picture\s+soundtrack\s*$/i, '')
+      .replace(/\s*[([]\s*original\s+motion\s+picture\s+soundtrack\s*[)\]]\s*$/i, '')
       .replace(/\s+-\s+live(?:\s+version)?(?:\s+at\b.*)?$/i, '')
       .replace(/\s*[([]\s*live(?:\s+version)?(?:\s+at\b[^)\]]*)?\s*[)\]]\s*$/i, '')
-      .replace(/\s+-\s+remastered(?:\s+\d{4})?$/i, '')
-      .replace(/\s*[([]\s*remastered(?:\s+\d{4})?\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+(?:\d{4}\s+)?remaster(?:ed)?(?:\s+\d{4})?$/i, '')
+      .replace(/\s*[([]\s*(?:\d{4}\s+)?remaster(?:ed)?(?:\s+\d{4})?\s*[)\]]\s*$/i, '')
       .replace(/\s+-\s+radio\s+edit$/i, '')
       .replace(/\s*[([]\s*radio\s+edit\s*[)\]]\s*$/i, '')
       .replace(/\s+-\s+acoustic(?:\s+version)?$/i, '')
       .replace(/\s*[([]\s*acoustic(?:\s+version)?\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+single\s+version$/i, '')
+      .replace(/\s*[([]\s*single\s+version\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+mono(?:\s+version)?$/i, '')
+      .replace(/\s*[([]\s*mono(?:\s+version)?\s*[)\]]\s*$/i, '')
       .trim()
   }
   return title
@@ -54,6 +63,21 @@ export function titleSearchValue(title: string): string {
 
 export function songTitleKey(value: string): string {
   return normalizeName(baseSongTitle(value))
+}
+
+/**
+ * A one-word title such as "Home" is too generic to treat as part of a longer song.
+ * "Mon Soleil" is specific enough to match "Emily In Paris - Mon Soleil".
+ */
+function allowsContainsMatch(baseKey: string): boolean {
+  return baseKey.split(' ').filter(Boolean).length >= 2
+}
+
+export function titleContainsBase(candidate: string, baseKey: string): boolean {
+  if (!allowsContainsMatch(baseKey)) return false
+  const haystack = songTitleKey(candidate)
+  if (!haystack || haystack === baseKey) return false
+  return ` ${haystack} `.includes(` ${baseKey} `)
 }
 
 function stripAccents(value: string): string {
@@ -97,19 +121,23 @@ export function isChordChart(type: string): boolean {
 }
 
 /**
- * Title match, then any credited artist, then Chords, then the highest rating count.
+ * Exact title first, then any credited artist, then Chords, then the highest rating count.
  * If no artist matches, the highest-rated title match is used and marked fallback.
+ * A whole-word title inside a longer UG title is used only when nothing matches exactly,
+ * and only when the base title is more than one word.
  */
 export function chooseResult(results: UgResult[], title: string, artist: string): ChosenResult | null {
   const wantTitle = songTitleKey(title)
-  const chords = results.filter((row) =>
-    songTitleKey(row.songName) === wantTitle && isChordChart(row.type)
-  )
-  if (chords.length === 0) return null
+  const chords = results.filter((row) => isChordChart(row.type))
+  const exact = chords.filter((row) => songTitleKey(row.songName) === wantTitle)
+  const poolSource = exact.length
+    ? exact
+    : chords.filter((row) => titleContainsBase(row.songName, wantTitle))
+  if (poolSource.length === 0) return null
   const matched = artistNames(artist).length
-    ? chords.filter((row) => artistsOverlap(artist, row.artistName))
+    ? poolSource.filter((row) => artistsOverlap(artist, row.artistName))
     : []
-  const pool = matched.length ? matched : chords
+  const pool = matched.length ? matched : poolSource
   pool.sort((a, b) => b.votes - a.votes || b.rating - a.rating)
   return { ...pool[0], fallback: matched.length === 0 }
 }
