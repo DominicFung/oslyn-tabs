@@ -1,7 +1,10 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { JamSession } from '../../API'
+import { asPlaylist } from '../../util/songIndex'
+import { liveIndex } from '../../util/liveJamSong'
+import { _SetList } from '../../type'
 
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
@@ -30,13 +33,38 @@ export const handler = async (event: AppSyncResolverEvent<{
   )
 
   if (!res0.Item) { console.error(`ERROR: jamSessionId not found: ${b.jamSessionId}`); return }
-  const jam = unmarshall(res0.Item) as _JamSession
+  const jam = unmarshall(res0.Item) as _JamSession & { playlist?: unknown }
   
-  let song = b.song || 0
-  if (b.song === undefined) {
-    song = jam.currentSong || 0
+  let song = b.song
+  if (song === undefined || song === null) song = jam.currentSong || 0
+
+  const playlist = Array.isArray(jam.playlist) ? asPlaylist(jam.playlist) : null
+  if (playlist) {
+    if (liveIndex(song, [], jam.playlist) == null) {
+      console.error(`song at index: ${song} not found`)
+      return
+    }
+    playlist[song] = { ...playlist[song], key: b.key }
+    await dynamo.send(new UpdateItemCommand({
+      TableName: JAM_TABLE_NAME,
+      Key: { jamSessionId: { S: b.jamSessionId } },
+      UpdateExpression: 'SET playlist = :playlist',
+      ExpressionAttributeValues: marshall({ ':playlist': playlist }),
+    }))
+    return { jamSessionId: b.jamSessionId, song, key: b.key }
   }
-  
+
+  const setRes = await dynamo.send(new GetItemCommand({
+    TableName: SETLIST_TABLE_NAME,
+    Key: { setListId: { S: jam.setListId } },
+    ProjectionExpression: 'songs',
+  }))
+  const setSongs = setRes.Item ? ((unmarshall(setRes.Item) as _SetList).songs || []) : []
+  if (liveIndex(song, setSongs, undefined) == null) {
+    console.error(`song at index: ${song} not found`)
+    return
+  }
+
   const res1 = await dynamo.send(
     new UpdateItemCommand({
       TableName: SETLIST_TABLE_NAME,

@@ -19,6 +19,18 @@ export function liveJamRows(
  * Where a song sits in the live jam. The playlist counts, and so does a queue
  * index that points at the song. This does not decide who may edit the jam.
  */
+/** True when this index addresses the playlist, or the set if the jam has no playlist. */
+export function liveIndex(index: number | null | undefined, setSongs: { songId?: string | null, key?: string | null }[] | null | undefined, playlist: unknown): number | null {
+  if (typeof index !== 'number' || !Number.isInteger(index) || index < 0) return null
+  const live = liveJamRows(setSongs, playlist)
+  return index < live.length ? index : null
+}
+
+export function liveIndexes(indexes: number[], setSongs: { songId?: string | null, key?: string | null }[] | null | undefined, playlist: unknown): number[] {
+  const live = liveJamRows(setSongs, playlist)
+  return indexes.filter((index) => Number.isInteger(index) && index >= 0 && index < live.length)
+}
+
 export function findLiveJamSong(input: {
   songId: string
   setSongs?: { songId?: string | null, key?: string | null }[] | null
