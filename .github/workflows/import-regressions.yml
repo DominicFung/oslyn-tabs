@@ -13,6 +13,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Deploy requires a stack name
+        run: bash scripts/require-deploy-stack.test.sh
       - name: Worker import regressions
         working-directory: worker/ug-import
         run: |

@@ -58,8 +58,10 @@ I would really appreciate help :)
 
 ```
 cd aws && npm i
-npm run deploy
+npm run deploy -- oslynstudio-AppsyncStack --exclusively --profile a1
 ```
+
+`npm run deploy` with no stack name, or with `--all`, stops before the tests and before CDK.
 
 maximum statement depth is **4**
 

@@ -33,7 +33,7 @@ When an import fails, add one Jest test so the next deploy cannot repeat it.
 2. Add a test in `src/__tests__/import-regressions.test.ts`. The title and artist are the Spotify strings. Assert the `tabUrl` that should have been chosen.
 3. Put a one-line comment above the test naming the song and what broke.
 
-`npm test` in this directory runs that file together with the other worker suites. From `aws/`, `npm run deploy` runs those tests and `aws/lambdas` Jest before CDK. There is no `amplify.yml` in this repo. Amplify codegen in the deploy script does not build the worker, so the Amplify hosting build is not where these tests run.
+`npm test` in this directory runs that file together with the other worker suites. From `aws/`, `npm run deploy -- oslynstudio-AppsyncStack --exclusively --profile a1` refuses a missing stack name and `--all`, then runs these tests and `aws/lambdas` Jest before CDK. There is no `amplify.yml` in this repo. Amplify codegen in the deploy script does not build the worker, so the Amplify hosting build is not where these tests run.
 
 ## Worker only
 

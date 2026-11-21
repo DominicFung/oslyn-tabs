@@ -1,9 +1,17 @@
-#!/bin/zsh
+#!/bin/bash
+set -euo pipefail
 
 # Jest runs first when this is started with `npm run deploy` from aws/.
+# A stack name is required. --all is refused.
 # Example: npm run deploy -- oslynstudio-AppsyncStack --exclusively --profile a1
 
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+"$SCRIPT_DIR/require-deploy-stack.sh" "$@" >/dev/null
+
 PROJECT=oslynstudio
+
+echo "running import regression tests ..."
+npm test
 
 echo "checking old cdk-output.json ..."
 OLDAPPSYNC=$( cat cdk-outputs.json | python3 -c "import sys, json; print(json.load(sys.stdin)['$PROJECT-AppsyncStack']['${PROJECT}AppsyncId'])" )
@@ -12,11 +20,7 @@ echo
 
 echo "tsc & cdk deploy ..."
 tsc &
-if [ "$#" -gt 0 ]; then
-  cdk deploy "$@" --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
-else
-  cdk deploy --all --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
-fi
+cdk deploy "$@" --outputs-file ./cdk-outputs.json --profile a1 --require-approval never
 
 echo "copying cdk-outputs.json ..."
 cp -f cdk-outputs.json ../web/cdk-outputs.json 
