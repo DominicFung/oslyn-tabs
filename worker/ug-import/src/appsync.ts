@@ -68,10 +68,38 @@ export async function claim(requestId: string): Promise<boolean> {
   return !!data.claimImport?.requestId
 }
 
+export type ImportCompletion = {
+  requestId?: string | null
+  status?: string | null
+} | null | undefined
+
+/** A null payload is how AppSync reports a Lambda that returned nothing. */
+export function completionFailure(result: ImportCompletion): string | null {
+  if (!result?.requestId || result.status !== 'DONE') return 'completeImport returned no result'
+  return null
+}
+
 export async function complete(requestId: string, chordSheet: string, sourceUrl: string) {
-  await gql(completeMutation, { requestId, chordSheet, sourceUrl })
+  const data = await gql<{ completeImport: ImportCompletion }>(completeMutation, { requestId, chordSheet, sourceUrl })
+  const failure = completionFailure(data.completeImport)
+  if (failure) throw new Error(failure)
 }
 
 export async function fail(requestId: string, error: string) {
   await gql(failMutation, { requestId, error })
+}
+
+/** Runs one claimed import. A thrown error, including a null completeImport, is failed. */
+export async function settleImport(
+  requestId: string,
+  work: () => Promise<void>,
+  failImport: (requestId: string, error: string) => Promise<unknown> = fail,
+) {
+  try {
+    await work()
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'import failed'
+    console.error(message)
+    await failImport(requestId, message).catch((failError) => console.error('failImport failed', failError))
+  }
 }

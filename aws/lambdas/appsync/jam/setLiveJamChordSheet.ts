@@ -3,6 +3,7 @@ import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/clie
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { _JamSession, _SetList, _Song } from '../../type'
 import { canEditJamSongs } from '../../util/jamAccess'
+import { findLiveJamSong } from '../../util/liveJamSong'
 import { updateDynamoUtil } from '../../util/dynamo'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
@@ -22,22 +23,30 @@ export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
     Key: { jamSessionId: { S: b.jamSessionId } },
   }))
   if (!jamRes.Item) { console.error(`jam not found: ${b.jamSessionId}`); return }
-  const jam = unmarshall(jamRes.Item) as _JamSession
+  const jam = unmarshall(jamRes.Item) as _JamSession & { playlist?: unknown, queue?: unknown }
   if (jam.endDate) { console.error(`jam has ended: ${b.jamSessionId}`); return }
   if (!canEditJamSongs(jam, b.userId)) {
     console.error(`user ${b.userId} cannot edit ${b.jamSessionId}`)
     return
   }
 
-  const setRes = await dynamo.send(new GetItemCommand({
-    TableName: SETLIST_TABLE_NAME,
-    Key: { setListId: { S: jam.setListId } },
-  }))
-  if (!setRes.Item) { console.error(`set not found: ${jam.setListId}`); return }
-  const setList = unmarshall(setRes.Item) as _SetList
-  const songs = Array.isArray(setList.songs) ? setList.songs : []
-  const index = songs.findIndex((row) => row?.songId === b.songId)
-  if (index < 0) { console.error(`song ${b.songId} is not in the jam`); return }
+  let setSongs: { songId?: string | null, key?: string | null }[] = []
+  if (!Array.isArray(jam.playlist)) {
+    const setRes = await dynamo.send(new GetItemCommand({
+      TableName: SETLIST_TABLE_NAME,
+      Key: { setListId: { S: jam.setListId } },
+    }))
+    if (!setRes.Item) { console.error(`set not found: ${jam.setListId}`); return }
+    const setList = unmarshall(setRes.Item) as _SetList
+    setSongs = Array.isArray(setList.songs) ? setList.songs : []
+  }
+  const live = findLiveJamSong({
+    songId: b.songId,
+    setSongs,
+    playlist: jam.playlist,
+    queue: jam.queue,
+  })
+  if (!live) { console.error(`song ${b.songId} is not in the jam`); return }
 
   const songRes = await dynamo.send(new GetItemCommand({
     TableName: SONG_TABLE_NAME,
@@ -69,8 +78,8 @@ export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
   if (next.version == null) next.version = 1
   return {
     jamSessionId: jam.jamSessionId,
-    index,
-    key: songs[index].key || chordSheetKey,
+    index: live.index,
+    key: live.key || chordSheetKey,
     jumpTo: false,
     song: next,
   }

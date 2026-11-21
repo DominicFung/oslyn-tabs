@@ -1,4 +1,4 @@
-import { claim, complete, fail, listPending } from './appsync'
+import { claim, complete, listPending, settleImport } from './appsync'
 import { importChords } from './fetchChart'
 
 const BETWEEN_JOBS_MS = 3000
@@ -56,16 +56,12 @@ async function loop() {
       await sleep(5000)
       continue
     }
-    try {
+    await settleImport(next.requestId, async () => {
       console.log(`importing ${next.title} by ${next.artist || 'unknown'} (${next.requestId})`)
       const picked = await importChords(next.title, next.artist || '')
       await complete(next.requestId, picked.chart, picked.url)
       console.log(`done ${picked.url} (${picked.votes} ratings${picked.fallback ? ', artist fallback' : ''})`)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'import failed'
-      console.error(message)
-      await fail(next.requestId, message).catch((failError) => console.error('failImport failed', failError))
-    }
+    })
     await sleep(BETWEEN_JOBS_MS)
   }
 }
