@@ -1,6 +1,8 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { liveIndex, liveIndexes } from '../../util/liveJamSong'
+import { _SetList } from '../../type'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 
@@ -21,9 +23,23 @@ export const handler = async (event: AppSyncResolverEvent<{
     Key: { jamSessionId: { S: b.jamSessionId } }
   }))
   if (!res.Item) { console.error(`Jam not found: ${b.jamSessionId}`); return }
-  const jam = unmarshall(res.Item) as { jamSessionId: string, queue?: number[], revision?: number }
+  const jam = unmarshall(res.Item) as { jamSessionId: string, setListId?: string, playlist?: unknown, queue?: number[], revision?: number }
+  let setSongs: { songId?: string | null, key?: string | null }[] = []
+  if (!Array.isArray(jam.playlist)) {
+    if (!jam.setListId) { console.error('setListId is empty'); return }
+    const setRes = await dynamo.send(new GetItemCommand({
+      TableName: process.env.SETLIST_TABLE_NAME || '',
+      Key: { setListId: { S: jam.setListId } },
+      ProjectionExpression: 'songs',
+    }))
+    setSongs = setRes.Item ? ((unmarshall(setRes.Item) as _SetList).songs || []) : []
+  }
 
-  const cleanQueue = (b.queue || []).map((n) => Number.isFinite(n) ? Number(n) : 0).filter((n) => n >= 0)
+  const cleanQueue = liveIndexes(
+    (b.queue || []).map((n) => Number.isFinite(n) ? Number(n) : -1),
+    setSongs,
+    jam.playlist,
+  )
   const currentRevision = typeof jam.revision === 'number' ? jam.revision : 0
   const nextRevision = currentRevision + 1
 
@@ -37,10 +53,13 @@ export const handler = async (event: AppSyncResolverEvent<{
     ':nextRevision': { N: String(nextRevision) },
   }
 
-  if (b.currentSongIndex !== undefined && b.currentSongIndex !== null) {
-    updateExpressions.push('#currentSong = :currentSong')
+  const nextSong = liveIndex(b.currentSongIndex, setSongs, jam.playlist)
+  if (b.currentSongIndex !== undefined && b.currentSongIndex !== null && nextSong != null) {
+    updateExpressions.push('#currentSong = :currentSong', '#currentPage = :currentPage')
     expressionAttributeNames['#currentSong'] = 'currentSong'
-    expressionAttributeValues[':currentSong'] = { N: String(b.currentSongIndex) }
+    expressionAttributeNames['#currentPage'] = 'currentPage'
+    expressionAttributeValues[':currentSong'] = { N: String(nextSong) }
+    expressionAttributeValues[':currentPage'] = { N: '0' }
   }
 
   try {
@@ -56,7 +75,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       jamSessionId: b.jamSessionId,
       queue: cleanQueue,
       revision: nextRevision,
-      currentSongIndex: b.currentSongIndex
+      currentSongIndex: nextSong
     }
   } catch (e) {
     console.error('Failed to setJamQueue', e)
@@ -64,7 +83,7 @@ export const handler = async (event: AppSyncResolverEvent<{
       jamSessionId: b.jamSessionId,
       queue: jam.queue || [],
       revision: currentRevision,
-      currentSongIndex: b.currentSongIndex
+      currentSongIndex: nextSong
     }
   }
 }

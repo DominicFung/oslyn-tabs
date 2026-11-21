@@ -1,6 +1,7 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { GetItemCommand, DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 import { updateDynamoUtil } from '../../util/dynamo'
+import { liveIndex } from '../../util/liveJamSong'
 import { _JamSession, _SetList } from '../../type'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
@@ -25,20 +26,24 @@ export const handler = async (event: AppSyncResolverEvent<{
   const res0 = (await (r0))?.Item
   if (!res0) { console.error(`Jam not found: ${b.jamSessionId}`); return }
 
-  const jam = unmarshall(res0) as _JamSession
-  const setListId = jam.setListId
-  
-  const res1 = await dynamo.send(new GetItemCommand({
-    TableName: SETLIST_TABLE_NAME, Key: { setListId: { S: setListId } }
-  }))
-  if (!res1 || !res1.Item) { console.error(`SetList not found: ${setListId}`); return }
-  const set = unmarshall(res1.Item) as _SetList
+  const jam = unmarshall(res0) as _JamSession & { playlist?: unknown }
+  let setSongs: { songId?: string | null, key?: string | null }[] = []
+  if (!Array.isArray(jam.playlist)) {
+    const res1 = await dynamo.send(new GetItemCommand({
+      TableName: SETLIST_TABLE_NAME, Key: { setListId: { S: jam.setListId } }
+    }))
+    if (!res1 || !res1.Item) { console.error(`SetList not found: ${jam.setListId}`); return }
+    const set = unmarshall(res1.Item) as _SetList
+    setSongs = Array.isArray(set.songs) ? set.songs : []
+  }
 
-  const song = set.songs[b.song || 0]
-  if (!song) { console.error(`song at index: ${b.song} not found`); return }
+  if (liveIndex(b.song, setSongs, jam.playlist) == null) {
+    console.error(`song at index: ${b.song} not found`)
+    return
+  }
 
   let queue = jam.queue || []
-  queue.push(b.song || 0)
+  queue.push(b.song)
 
   const res2 = dynamo.send(new UpdateItemCommand(
     updateDynamoUtil({

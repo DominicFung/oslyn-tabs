@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { findLiveJamSong } from './liveJamSong'
+import { findLiveJamSong, liveIndex, liveIndexes } from './liveJamSong'
 
 const setSongs = [
   { songId: 'on-set', key: 'C' },
@@ -40,6 +40,13 @@ describe('findLiveJamSong', () => {
       queue: [],
     })
     assert.equal(found, null)
+  })
+
+  it('accepts playlist index 6 when the set only has one song', () => {
+    const playlist = Array.from({ length: 7 }, (_, i) => ({ songId: `s${i}`, key: 'C' }))
+    expect(liveIndex(6, [{ songId: 's0', key: 'C' }], playlist)).toBe(6)
+    expect(liveIndexes([1, 6, 9], [{ songId: 's0', key: 'C' }], playlist)).toEqual([1, 6])
+    expect(liveIndex(6, [{ songId: 's0', key: 'C' }, { songId: 's1', key: 'C' }], undefined)).toBeNull()
   })
 
   it('rejects a song that is on neither the playlist nor the queue', () => {

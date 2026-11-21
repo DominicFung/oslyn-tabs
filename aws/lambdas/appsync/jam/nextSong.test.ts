@@ -45,6 +45,18 @@ describe('resolveNextSong', () => {
     expect(chosen).toEqual({ song: 1, page: 0, key: 'D', queue: [] })
   })
 
+  it('accepts playlist index 6 when the set is shorter', () => {
+    const chosen = resolveNextSong({
+      requestedSong: 6,
+      currentSong: 1,
+      queue: [],
+      setSongs: [{ songId: '935197ff', key: 'C' }],
+      playlist,
+    })
+    expect(chosen?.song).toBe(6)
+    expect(chosen?.page).toBe(0)
+  })
+
   it('still rejects an index past the live list', () => {
     expect(resolveNextSong({
       requestedSong: 9,
