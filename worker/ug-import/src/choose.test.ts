@@ -50,6 +50,17 @@ describe('baseSongTitle', () => {
     assert.equal(titleSearchValue(' - Live'), '- Live')
   })
 
+  it('treats apostrophes as optional in search and matching', () => {
+    const straight = "You're Still The One"
+    const curly = "You’re Still The One"
+    const missing = "Youre Still The One"
+    assert.equal(songTitleKey(straight), songTitleKey(curly))
+    assert.equal(songTitleKey(straight), songTitleKey(missing))
+    assert.equal(songTitleKey(straight), 'youre still the one')
+    assert.equal(titleSearchValue(straight), missing)
+    assert.equal(titleSearchValue(curly), missing)
+  })
+
   const soleil = 'Mon Soleil - from "Emily in Paris Season 3" Soundtrack - from "Emily in Paris" Soundtrack'
 
   it('strips repeated soundtrack suffixes down to the song', () => {
@@ -120,6 +131,18 @@ describe('chooseResult', () => {
     const chosen = chooseResult(withExact, 'Mon Soleil', 'Ashley Park')
     assert.equal(chosen?.tabUrl, 'https://tabs.example/ashley')
     assert.equal(chosen?.fallback, false)
+  })
+
+  it('matches Youre when Spotify spells You\'re', () => {
+    const rows: UgResult[] = [
+      { songName: 'Youre Still The One', artistName: 'Shania Twain', type: 'Tabs', votes: 20, rating: 4, tabUrl: 'https://tabs.example/youre-tab', version: 1 },
+      { songName: 'Youre Still The One', artistName: 'Shania Twain', type: 'Chords', votes: 5568, rating: 4.8, tabUrl: 'https://tabs.example/youre-chords', version: 1 },
+      { songName: 'Youre Still The One', artistName: 'Shania Twain', type: 'Chords', votes: 377, rating: 4.5, tabUrl: 'https://tabs.example/youre-v2', version: 2 },
+    ]
+    const chosen = chooseResult(rows, "You're Still The One", 'Shania Twain')
+    assert.equal(chosen?.tabUrl, 'https://tabs.example/youre-chords')
+    assert.equal(chosen?.fallback, false)
+    assert.equal(chooseResult(rows, "You’re Still The One", 'Shania Twain')?.tabUrl, 'https://tabs.example/youre-chords')
   })
 
   it('does not let a short title take a longer unrelated song', () => {

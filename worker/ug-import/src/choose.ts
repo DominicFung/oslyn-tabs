@@ -10,9 +10,13 @@ export type UgResult = {
 
 export type ChosenResult = UgResult & { fallback: boolean }
 
+/** ASCII apostrophe, curly quotes, and the modifier letter. Dropped, not turned into a space. */
+const APOSTROPHES = /['’‘ʼ´]/g
+
 export function normalizeName(value: string): string {
   return (value || '')
     .replace(/\(ver\s*\d+\)/gi, ' ')
+    .replace(APOSTROPHES, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
@@ -55,10 +59,10 @@ export function baseSongTitle(value: string): string {
   return title
 }
 
-/** Title sent to Ultimate Guitar. Falls back to the original when stripping leaves nothing. */
+/** Title sent to Ultimate Guitar. Apostrophes are removed so "You're" searches as "Youre". */
 export function titleSearchValue(title: string): string {
-  const base = baseSongTitle(title).trim()
-  return base || (title || '').trim()
+  const base = baseSongTitle(title).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
+  return base || (title || '').replace(APOSTROPHES, '').trim()
 }
 
 export function songTitleKey(value: string): string {
