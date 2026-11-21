@@ -6,6 +6,7 @@ import { User } from '../../API'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { _Song } from '../../type'
+import { resolvedChordSheetKey } from '../../util/detectKey'
 
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
 const USER_TABLE_NAME = process.env.USER_TABLE_NAME || ''
@@ -49,6 +50,14 @@ export const handler = async (event: AppSyncResolverEvent<{
   let updateSong = {...b} as any
   if (updateSong.songId) delete updateSong.songId
   if (updateSong.userId) delete updateSong.userId
+  const existing = unmarshall(res0.Item) as _Song
+  const detectedKey = resolvedChordSheetKey({
+    chordSheet: b.chordSheet ?? existing.chordSheet,
+    currentKey: existing.chordSheetKey,
+    providedKey: b.chordSheetKey,
+    importPath: false,
+  })
+  if (detectedKey) updateSong.chordSheetKey = detectedKey
 
   const params = updateDynamoUtil({ table: SONG_TABLE_NAME, item: updateSong, key: { songId: b.songId } })
   const res1 = await dynamo.send(new UpdateItemCommand(params))

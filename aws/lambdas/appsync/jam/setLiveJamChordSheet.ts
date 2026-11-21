@@ -4,6 +4,7 @@ import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { _JamSession, _SetList, _Song } from '../../type'
 import { canEditJamSongs } from '../../util/jamAccess'
 import { findLiveJamSong } from '../../util/liveJamSong'
+import { resolvedChordSheetKey } from '../../util/detectKey'
 import { updateDynamoUtil } from '../../util/dynamo'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
@@ -59,7 +60,12 @@ export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
     return
   }
 
-  const chordSheetKey = b.chordSheetKey?.trim() || song.chordSheetKey || 'C'
+  const chordSheetKey = resolvedChordSheetKey({
+    chordSheet: b.chordSheet,
+    currentKey: song.chordSheetKey,
+    providedKey: b.chordSheetKey,
+    importPath: true,
+  }) || b.chordSheetKey?.trim() || song.chordSheetKey || 'C'
   const update: Record<string, string> = {
     chordSheet: b.chordSheet,
     chordSheetKey,
