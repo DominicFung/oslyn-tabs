@@ -1,5 +1,5 @@
 import { chromium, Page } from 'playwright'
-import { chooseResult, primaryArtist, UgResult } from './choose'
+import { chooseResult, primaryArtist, titleSearchValue, UgResult } from './choose'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
 
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
@@ -56,13 +56,14 @@ export async function importChords(title: string, artist: string): Promise<Impor
   try {
     const context = await browser.newContext({ userAgent: USER_AGENT, locale: 'en-US' })
     const page = await context.newPage()
-    const titleOnly = resultsFromStore(await readStore(page, searchUrl(title))) as UgResult[]
+    const queryTitle = titleSearchValue(title)
+    const titleOnly = resultsFromStore(await readStore(page, searchUrl(queryTitle))) as UgResult[]
     let results = titleOnly
     const first = chooseResult(titleOnly, title, artist)
     const primary = primaryArtist(artist)
     // A title-only page mixes in other songs. Narrow it with the primary artist.
     if (primary && (titleOnly.length >= TOO_MANY_RESULTS || !first || first.fallback)) {
-      const narrowed = resultsFromStore(await readStore(page, searchUrl(`${title} ${primary}`))) as UgResult[]
+      const narrowed = resultsFromStore(await readStore(page, searchUrl(`${queryTitle} ${primary}`))) as UgResult[]
       const second = narrowed.length ? chooseResult(narrowed, title, artist) : null
       if (second && (!first || first.fallback || !second.fallback)) {
         results = narrowed

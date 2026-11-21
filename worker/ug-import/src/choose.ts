@@ -19,6 +19,43 @@ export function normalizeName(value: string): string {
     .replace(/\s+/g, ' ')
 }
 
+/**
+ * Spotify version suffixes that are not part of the song title.
+ * "No Other Name - Live" and "No Other Name (feat. Someone)" both become "No Other Name".
+ * The stored song title is left unchanged; this is only for search and matching.
+ */
+export function baseSongTitle(value: string): string {
+  let title = (value || '').replace(/[–—]/g, '-').trim()
+  let previous = ''
+  while (title && title !== previous) {
+    previous = title
+    title = title
+      .replace(/\s*\(ver\s*\d+\)\s*$/i, '')
+      .replace(/\s*[([]\s*(?:featuring|feat\.?|ft\.?)\s+[^)\]]*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+(?:featuring|feat\.?|ft\.?)\s+.*$/i, '')
+      .replace(/\s+-\s+live(?:\s+version)?(?:\s+at\b.*)?$/i, '')
+      .replace(/\s*[([]\s*live(?:\s+version)?(?:\s+at\b[^)\]]*)?\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+remastered(?:\s+\d{4})?$/i, '')
+      .replace(/\s*[([]\s*remastered(?:\s+\d{4})?\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+radio\s+edit$/i, '')
+      .replace(/\s*[([]\s*radio\s+edit\s*[)\]]\s*$/i, '')
+      .replace(/\s+-\s+acoustic(?:\s+version)?$/i, '')
+      .replace(/\s*[([]\s*acoustic(?:\s+version)?\s*[)\]]\s*$/i, '')
+      .trim()
+  }
+  return title
+}
+
+/** Title sent to Ultimate Guitar. Falls back to the original when stripping leaves nothing. */
+export function titleSearchValue(title: string): string {
+  const base = baseSongTitle(title).trim()
+  return base || (title || '').trim()
+}
+
+export function songTitleKey(value: string): string {
+  return normalizeName(baseSongTitle(value))
+}
+
 function stripAccents(value: string): string {
   return (value || '').normalize('NFD').replace(/\p{M}/gu, '')
 }
@@ -64,9 +101,9 @@ export function isChordChart(type: string): boolean {
  * If no artist matches, the highest-rated title match is used and marked fallback.
  */
 export function chooseResult(results: UgResult[], title: string, artist: string): ChosenResult | null {
-  const wantTitle = normalizeName(title)
+  const wantTitle = songTitleKey(title)
   const chords = results.filter((row) =>
-    normalizeName(row.songName) === wantTitle && isChordChart(row.type)
+    songTitleKey(row.songName) === wantTitle && isChordChart(row.type)
   )
   if (chords.length === 0) return null
   const matched = artistNames(artist).length
