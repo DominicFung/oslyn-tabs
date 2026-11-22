@@ -1,9 +1,11 @@
 import { chromium, Page } from 'playwright'
 import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, titleSearchValues, UgResult, ChosenResult } from './choose'
+import { withTimeout } from './timeout'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
 
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 const PAUSE_MS = 2000
+const NAV_TIMEOUT_MS = 30_000
 
 const TOO_MANY_RESULTS = 10
 
@@ -27,7 +29,7 @@ async function storeRaw(page: Page): Promise<string> {
 async function readStore(page: Page, url: string) {
   // React removes .js-store after hydration, so read the document response,
   // which still embeds the js-store data-content JSON.
-  const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 })
+  const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT_MS })
   await page.waitForTimeout(PAUSE_MS)
   const html = response ? await response.text().catch(() => '') : ''
   const embedded = storeJsonFromHtml(html)
@@ -60,10 +62,12 @@ export type ImportPick = {
 }
 
 export async function importChords(title: string, artist: string): Promise<ImportPick> {
-  const browser = await chromium.launch({ headless: true })
+  const browser = await withTimeout(chromium.launch({ headless: true }), NAV_TIMEOUT_MS, 'playwright launch')
   try {
     const context = await browser.newContext({ userAgent: USER_AGENT, locale: 'en-US' })
     const page = await context.newPage()
+    page.setDefaultTimeout(NAV_TIMEOUT_MS)
+    page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
     const primary = primaryArtist(artist)
     let chosen: ChosenResult | null = null
     for (const queryTitle of titleSearchValues(title)) {

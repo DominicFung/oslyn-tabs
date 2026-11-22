@@ -23,7 +23,7 @@ export APPSYNC_API_KEY="<existing api key>"
 npm start
 ```
 
-`npm start` and `./start-worker.sh` run the Jest suite first and refuse to start the poller if a test fails. `npm run worker` skips the tests and is what the start script execs after they pass.
+`npm start` and `./start-worker.sh` run the Jest suite first and refuse to start the poller if a test fails. `./start-worker.sh` loads `.env` when that file is present, writes `worker.pid`, installs `node_modules` or Chromium when either is missing, then restarts the poller if the process exits or its heartbeat goes stale. A stop signal lets the current import finish, or puts that claim back to pending, before the process exits. `npm run worker` skips the tests.
 
 ## Regression tests
 
