@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { artistsOverlap, baseSongTitle, chooseResult, songTitleKey, titleSearchValue, titleSearchValues, UgResult } from './choose'
+import { artistsOverlap, baseSongTitle, chooseResult, quotedWorks, songTitleKey, titleSearchValue, titleSearchValues, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
   const base = 'No Other Name'
@@ -64,6 +64,23 @@ describe('baseSongTitle', () => {
     assert.equal(songTitleKey("J'ai demandé à la lune"), songTitleKey('Jai Demand&eacute; &Agrave; La Lune'))
     assert.equal(songTitleKey('Ça plane pour moi'), songTitleKey('&Ccedil;a Plane Pour Moi'))
     assert.equal(songTitleKey('Ca plane pour moi'), 'ca plane pour moi')
+  })
+
+  it('strips re-record tags and keeps a 10 minute version', () => {
+    const full = "All Too Well (10 Minute Version) (Taylor's Version) (From The Vault)"
+    const curly = "All Too Well (10 Minute Version) (Taylor’s Version) [From The Vault]"
+    assert.equal(baseSongTitle(full), 'All Too Well (10 Minute Version)')
+    assert.equal(baseSongTitle(curly), 'All Too Well (10 Minute Version)')
+    assert.equal(baseSongTitle("All Too Well (Taylor's Version) (From The Vault)"), 'All Too Well')
+    assert.equal(baseSongTitle('All Too Well - Taylor\'s Version'), 'All Too Well')
+    assert.equal(baseSongTitle('All Too Well (Re-Recorded)'), 'All Too Well')
+    assert.equal(songTitleKey(full), songTitleKey('All Too Well 10 Minute Version'))
+    assert.deepEqual(quotedWorks(full), [])
+    assert.deepEqual(titleSearchValues(full), [
+      'All Too Well (10 Minute Version)',
+      'All Too Well',
+    ])
+    assert.deepEqual(quotedWorks('I Knew It, I Knew You - From "Toy Story 5"'), ['Toy Story 5'])
   })
 
   it('searches From "X" as X - Title and ignores a dropped comma', () => {
