@@ -54,7 +54,7 @@ export function baseSongTitle(value: string): string {
       .replace(/\s*\(ver\s*\d+\)\s*$/i, '')
       .replace(/\s*[([]\s*(?:featuring|feat\.?|ft\.?)\s+[^)\]]*[)\]]\s*$/i, '')
       .replace(/\s+-\s+(?:featuring|feat\.?|ft\.?)\s+.*$/i, '')
-      .replace(/\s+-\s+from\s+["“”][^"“”]+["“”]\s+soundtrack\s*$/i, '')
+      .replace(/\s+-\s+from\s+["“”][^"“”]+["“”](?:\s+soundtrack)?\s*$/i, '')
       .replace(/\s*[([]\s*from\s+["“”][^"“”]+["“”](?:\s+soundtrack)?\s*[)\]]\s*$/i, '')
       .replace(/\s+-\s+from\s+the\s+(?:\S+\s+){0,6}series\s*$/i, '')
       .replace(/\s+-\s+original\s+motion\s+picture\s+soundtrack\s*$/i, '')
@@ -76,10 +76,37 @@ export function baseSongTitle(value: string): string {
   return title
 }
 
+/** Work named in a Spotify `From "X"` suffix. Soundtrack after the quotes is not part of the name. */
+export function quotedWorks(title: string): string[] {
+  const works: string[] = []
+  for (const match of (title || '').matchAll(/from\s+["“”]([^"“”]+)["“”]/gi)) {
+    const work = match[1].replace(/\s+soundtrack\s*$/i, '').trim()
+    if (work && !works.some((item) => item.toLowerCase() === work.toLowerCase())) works.push(work)
+  }
+  return works
+}
+
 /** Title sent to Ultimate Guitar. Apostrophes are removed and accents are folded. */
 export function titleSearchValue(title: string): string {
   const base = foldAccents(baseSongTitle(title)).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
   return base || foldAccents(title || '').replace(APOSTROPHES, '').trim()
+}
+
+/**
+ * Search `X - Title` before the bare title. UG files "I Knew It, I Knew You - From \"Toy Story 5\""
+ * as "Toy Story 5 - I Knew It, I Knew You", and the bare title is a different page.
+ * The comma stays in the query: dropping it makes UG return a different song.
+ */
+export function titleSearchValues(title: string): string[] {
+  const base = titleSearchValue(title)
+  const values: string[] = []
+  const add = (value: string) => {
+    const folded = value.replace(/\s+/g, ' ').trim()
+    if (folded && !values.some((item) => item.toLowerCase() === folded.toLowerCase())) values.push(folded)
+  }
+  for (const work of quotedWorks(title)) add(`${work} - ${base}`)
+  add(base)
+  return values
 }
 
 export function songTitleKey(value: string): string {
@@ -92,6 +119,27 @@ export function songTitleKey(value: string): string {
  */
 function allowsContainsMatch(baseKey: string): boolean {
   return baseKey.split(' ').filter(Boolean).length >= 2
+}
+
+function workKey(work: string): string {
+  return normalizeName(work)
+}
+
+/** True when the UG title contains the movie or show named in From "X", as whole words. */
+export function coversQuotedWork(songName: string, spotifyTitle: string): boolean {
+  const haystack = ` ${songTitleKey(songName)} `
+  return quotedWorks(spotifyTitle).some((work) => {
+    const key = workKey(work)
+    if (key.split(' ').filter(Boolean).length < 2) return false
+    return haystack.includes(` ${key} `)
+  })
+}
+
+const MISC_CREDIT = /^(?:misc )?(?:cartoons|soundtrack|television)$/
+
+function miscWorkCredit(ugArtist: string, ugTitle: string, spotifyTitle: string): boolean {
+  if (!coversQuotedWork(ugTitle, spotifyTitle)) return false
+  return artistNames(ugArtist).some((name) => MISC_CREDIT.test(name))
 }
 
 export function titleContainsBase(candidate: string, baseKey: string): boolean {
@@ -147,12 +195,14 @@ export function chooseResult(results: UgResult[], title: string, artist: string)
   const wantTitle = songTitleKey(title)
   const chords = results.filter((row) => isChordChart(row.type))
   const exact = chords.filter((row) => songTitleKey(row.songName) === wantTitle)
-  const poolSource = exact.length
+  let poolSource = exact.length
     ? exact
     : chords.filter((row) => titleContainsBase(row.songName, wantTitle))
   if (poolSource.length === 0) return null
+  const withWork = poolSource.filter((row) => coversQuotedWork(row.songName, title))
+  if (withWork.length) poolSource = withWork
   const matched = artistNames(artist).length
-    ? poolSource.filter((row) => artistsOverlap(artist, row.artistName))
+    ? poolSource.filter((row) => artistsOverlap(artist, row.artistName) || miscWorkCredit(row.artistName, row.songName, title))
     : []
   const pool = matched.length ? matched : poolSource
   pool.sort((a, b) => b.votes - a.votes || b.rating - a.rating)

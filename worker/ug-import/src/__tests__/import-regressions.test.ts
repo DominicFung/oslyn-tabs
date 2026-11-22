@@ -12,6 +12,7 @@ const noOtherName = fixture('no-other-name.json')
 const monSoleil = fixture('mon-soleil.json')
 const youre = fixture('youre-still-the-one.json')
 const home = fixture('home.json')
+const knew = fixture('i-knew-it-i-knew-you.json')
 const onEcrit = fixture('on-ecrit-sur-les-murs.json')
 const champs = fixture('les-champs-elysees.json')
 const memes = fixture('tous-les-memes.json')
@@ -25,11 +26,30 @@ describe('import regressions', () => {
   })
 
   // Mon Soleil soundtrack title: UG files it as Emily In Paris - Mon Soleil by Misc Television.
-  it('falls back to Misc Television for the Emily in Paris soundtrack title', () => {
+  it('accepts Misc Television when the show is in the title', () => {
     const title = 'Mon Soleil - from "Emily in Paris Season 3" Soundtrack - from "Emily in Paris" Soundtrack'
     const chosen = chooseResult(monSoleil, title, 'Ashley Park')
     expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-television/emily-in-paris-mon-soleil-chords-4004281')
-    expect(chosen?.fallback).toBe(true)
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  // I Knew It, I Knew You: UG drops the comma and files it under Toy Story 5 by Misc Cartoons.
+  it.each([
+    'I Knew It, I Knew You - From "Toy Story 5"',
+    'I Knew It, I Knew You - From “Toy Story 5”',
+  ])('picks Misc Cartoons for %s', (title) => {
+    const medley = {
+      songName: 'I Knew It I Knew You - August - All Too Well',
+      artistName: 'Taylor Swift',
+      type: 'Chords',
+      votes: 5000,
+      rating: 4.9,
+      tabUrl: 'https://tabs.ultimate-guitar.com/tab/taylor-swift/i-knew-it-i-knew-you-august-all-too-well-chords-6580241',
+      version: 1,
+    }
+    const chosen = chooseResult([...knew, medley], title, 'Taylor Swift')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-cartoons/toy-story-5-i-knew-it-i-knew-you-chords-6471680')
+    expect(chosen?.fallback).toBe(false)
   })
 
   // On écrit sur les murs: UG stores É as the letters &Eacute;, which became the word "eacute".
