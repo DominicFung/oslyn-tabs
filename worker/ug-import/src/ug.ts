@@ -1,8 +1,22 @@
-function decodeEntities(value: string): string {
+export function decodeEntities(value: string): string {
   const named: Record<string, string> = {
     amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
-    aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', uuml: 'ü',
-    Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', Uuml: 'Ü',
+    aacute: 'á', agrave: 'à', acirc: 'â', auml: 'ä', atilde: 'ã', aring: 'å', aelig: 'æ',
+    ccedil: 'ç',
+    eacute: 'é', egrave: 'è', ecirc: 'ê', euml: 'ë',
+    iacute: 'í', igrave: 'ì', icirc: 'î', iuml: 'ï',
+    ntilde: 'ñ',
+    oacute: 'ó', ograve: 'ò', ocirc: 'ô', ouml: 'ö', otilde: 'õ', oelig: 'œ',
+    uacute: 'ú', ugrave: 'ù', ucirc: 'û', uuml: 'ü',
+    yacute: 'ý', yuml: 'ÿ',
+    Aacute: 'Á', Agrave: 'À', Acirc: 'Â', Auml: 'Ä', Atilde: 'Ã', Aring: 'Å', AElig: 'Æ',
+    Ccedil: 'Ç',
+    Eacute: 'É', Egrave: 'È', Ecirc: 'Ê', Euml: 'Ë',
+    Iacute: 'Í', Igrave: 'Ì', Icirc: 'Î', Iuml: 'Ï',
+    Ntilde: 'Ñ',
+    Oacute: 'Ó', Ograve: 'Ò', Ocirc: 'Ô', Ouml: 'Ö', Otilde: 'Õ', OElig: 'Œ',
+    Uacute: 'Ú', Ugrave: 'Ù', Ucirc: 'Û', Uuml: 'Ü',
+    Yacute: 'Ý', Yuml: 'Ÿ',
   }
   return value.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
     if (body[0] === '#') {
@@ -32,12 +46,9 @@ export function wikiToChart(content: string): string {
 }
 
 function unescapeAttr(value: string): string {
-  return value
-    .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, '&')
-    .replace(/&#039;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+  // The attribute source keeps named characters such as &Eacute; inside the JSON.
+  // A browser would decode those when it read the attribute. This regex does not.
+  return decodeEntities(value)
 }
 
 export function storeJsonFromHtml(html: string): string {

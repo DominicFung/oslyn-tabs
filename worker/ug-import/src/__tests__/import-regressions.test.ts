@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 import { chooseResult, UgResult } from '../choose'
 import { completionFailure, settleImport } from '../appsync'
+import { resultsFromStore, storeJsonFromHtml } from '../ug'
 
 function fixture(name: string): UgResult[] {
   return JSON.parse(readFileSync(join(__dirname, '../fixtures', name), 'utf8'))
@@ -11,6 +12,9 @@ const noOtherName = fixture('no-other-name.json')
 const monSoleil = fixture('mon-soleil.json')
 const youre = fixture('youre-still-the-one.json')
 const home = fixture('home.json')
+const onEcrit = fixture('on-ecrit-sur-les-murs.json')
+const champs = fixture('les-champs-elysees.json')
+const memes = fixture('tous-les-memes.json')
 
 describe('import regressions', () => {
   // No Other Name - Live / ICF Worship: the Live suffix hid ICF's plain title behind higher-rated copies.
@@ -26,6 +30,29 @@ describe('import regressions', () => {
     const chosen = chooseResult(monSoleil, title, 'Ashley Park')
     expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-television/emily-in-paris-mon-soleil-chords-4004281')
     expect(chosen?.fallback).toBe(true)
+  })
+
+  // On écrit sur les murs: UG stores É as the letters &Eacute;, which became the word "eacute".
+  it.each(['On écrit sur les murs', 'On ecrit sur les murs'])('picks Kids United for %s', (title) => {
+    const chosen = chooseResult(onEcrit, title, 'Kids United')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/1839977')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  // Les Champs-Élysées: UG stores both É and é as HTML entities, and the hyphen is not part of the word.
+  it.each(['Les Champs-Élysées', 'Les Champs-Elysees'])('picks Joe Dassin for %s', (title) => {
+    const chosen = chooseResult(champs, title, 'Joe Dassin')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/1077469')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  // Tous les mêmes: ê is an entity, and "Tous les mômes" must stay a different song.
+  it.each(['Tous les mêmes', 'Tous les memes'])('picks Stromae for %s', (title) => {
+    const chosen = chooseResult(memes, title, 'Stromae')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/1493396')
+    expect(chosen?.fallback).toBe(false)
+    const momes = memes.filter((row) => row.songName.includes('ocirc'))
+    expect(chooseResult(momes, title, 'Stromae')).toBeNull()
   })
 
   // You're Still The One: UG deletes the apostrophe, so You're and Youre were different strings.
@@ -55,6 +82,14 @@ describe('import regressions', () => {
     expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/edward-sharpe-and-the-magnetic-zeros/home-chords-923641')
     const onlyRoads = home.filter((row) => row.songName !== 'Home')
     expect(chooseResult(onlyRoads, 'Home', 'Edward Sharpe and the Magnetic Zeros')).toBeNull()
+  })
+
+  // The search page keeps &Eacute; inside the js-store attribute. A browser would decode it; the regex parser must too.
+  it('decodes an accent entity in the search page before choosing a chart', () => {
+    const html = '<div class="js-store" data-content="{&quot;store&quot;:{&quot;page&quot;:{&quot;data&quot;:{&quot;results&quot;:[{&quot;song_name&quot;:&quot;On &Eacute;crit Sur Les Murs&quot;,&quot;artist_name&quot;:&quot;Kids United&quot;,&quot;type&quot;:&quot;Chords&quot;,&quot;votes&quot;:294,&quot;rating&quot;:4.8,&quot;tab_url&quot;:&quot;https://tabs.ultimate-guitar.com/tab/1839977&quot;,&quot;version&quot;:1}]}}}}"></div>'
+    const rows = resultsFromStore(storeJsonFromHtml(html))
+    expect(rows[0]?.songName).toBe('On Écrit Sur Les Murs')
+    expect(chooseResult(rows, 'On ecrit sur les murs', 'Kids United')?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/1839977')
   })
 
   // completeImport returned null after the song was missing from the set, and the worker still logged done.

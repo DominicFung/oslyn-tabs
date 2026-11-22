@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { baseSongTitle, chooseResult, songTitleKey, titleSearchValue, UgResult } from './choose'
+import { artistsOverlap, baseSongTitle, chooseResult, songTitleKey, titleSearchValue, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
   const base = 'No Other Name'
@@ -47,6 +47,23 @@ describe('baseSongTitle', () => {
   it('searches the base title and keeps a title that is only a suffix', () => {
     assert.equal(titleSearchValue('No Other Name - Live'), 'No Other Name')
     assert.equal(titleSearchValue(' - Live'), '- Live')
+  })
+
+  it('folds accents and Ultimate Guitar HTML entities', () => {
+    const accented = 'On écrit sur les murs'
+    const plain = 'On ecrit sur les murs'
+    const entity = 'On &Eacute;crit Sur Les Murs'
+    assert.equal(songTitleKey(accented), 'on ecrit sur les murs')
+    assert.equal(songTitleKey(plain), songTitleKey(accented))
+    assert.equal(songTitleKey(entity), songTitleKey(accented))
+    assert.equal(titleSearchValue(accented), plain)
+    assert.equal(songTitleKey('Les Champs-Élysées'), songTitleKey('Les Champs-&Eacute;lys&eacute;es'))
+    assert.equal(songTitleKey('Les Champs-Elysees'), 'les champs elysees')
+    assert.equal(songTitleKey('Tous les mêmes'), songTitleKey('Tous Les M&ecirc;mes'))
+    assert.equal(songTitleKey('Tous les memes'), 'tous les memes')
+    assert.equal(songTitleKey("J'ai demandé à la lune"), songTitleKey('Jai Demand&eacute; &Agrave; La Lune'))
+    assert.equal(songTitleKey('Ça plane pour moi'), songTitleKey('&Ccedil;a Plane Pour Moi'))
+    assert.equal(songTitleKey('Ca plane pour moi'), 'ca plane pour moi')
   })
 
   it('treats apostrophes as optional in search and matching', () => {
@@ -130,6 +147,21 @@ describe('chooseResult', () => {
     const chosen = chooseResult(withExact, 'Mon Soleil', 'Ashley Park')
     assert.equal(chosen?.tabUrl, 'https://tabs.example/ashley')
     assert.equal(chosen?.fallback, false)
+  })
+
+  it('matches Kids United when Ultimate Guitar stores É as an HTML entity', () => {
+    const rows: UgResult[] = [
+      { songName: 'On &Eacute;crit Sur Les Murs', artistName: 'Kids United', type: 'Chords', votes: 294, rating: 4.8, tabUrl: 'https://tabs.ultimate-guitar.com/tab/1839977', version: 1 },
+      { songName: 'On &Eacute;crit Sur Les Murs', artistName: 'Kids United', type: 'Chords', votes: 13, rating: 4.7, tabUrl: 'https://tabs.ultimate-guitar.com/tab/1845579', version: 2 },
+      { songName: 'On &Eacute;crit Sur Les Murs', artistName: 'Demis Roussos', type: 'Chords', votes: 34, rating: 4.5, tabUrl: 'https://tabs.ultimate-guitar.com/tab/1781707', version: 1 },
+    ]
+    for (const title of ['On écrit sur les murs', 'On ecrit sur les murs']) {
+      const chosen = chooseResult(rows, title, 'Kids United')
+      assert.equal(chosen?.tabUrl, 'https://tabs.ultimate-guitar.com/tab/1839977')
+      assert.equal(chosen?.fallback, false)
+    }
+    assert.equal(artistsOverlap('Edith Piaf', '&Eacute;dith Piaf'), true)
+    assert.equal(artistsOverlap('Édith Piaf', 'Edith Piaf'), true)
   })
 
   it('matches Youre when Spotify spells You\'re', () => {
