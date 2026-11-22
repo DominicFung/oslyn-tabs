@@ -1,5 +1,6 @@
 const endpoint = process.env.APPSYNC_ENDPOINT || ''
 const apiKey = process.env.APPSYNC_API_KEY || ''
+const AWS_TIMEOUT_MS = 20_000
 
 export type ImportRequest = {
   requestId: string
@@ -9,15 +10,26 @@ export type ImportRequest = {
   title: string
   artist?: string | null
   status: string
+  updatedAt?: number | null
 }
 
 async function gql<T>(query: string, variables: Record<string, unknown>): Promise<T> {
   if (!endpoint || !apiKey) throw new Error('Set APPSYNC_ENDPOINT and APPSYNC_API_KEY')
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': apiKey },
-    body: JSON.stringify({ query, variables }),
-  })
+  let res: Response
+  try {
+    res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': apiKey },
+      body: JSON.stringify({ query, variables }),
+      signal: AbortSignal.timeout(AWS_TIMEOUT_MS),
+    })
+  } catch (error) {
+    const name = error instanceof Error ? error.name : ''
+    if (name === 'TimeoutError' || name === 'AbortError') {
+      throw new Error(`AppSync call timed out after ${AWS_TIMEOUT_MS}ms`)
+    }
+    throw error
+  }
   const body = await res.json() as { data?: T, errors?: { message: string }[] }
   if (body.errors?.length) throw new Error(body.errors.map((error) => error.message).join('; '))
   if (!body.data) throw new Error('AppSync returned no data')
@@ -26,7 +38,7 @@ async function gql<T>(query: string, variables: Record<string, unknown>): Promis
 
 const listQuery = `query ListPendingImports($limit: Int) {
   listPendingImports(limit: $limit) {
-    requestId userId songId jamId title artist status
+    requestId userId songId jamId title artist status updatedAt
   }
 }`
 
@@ -58,6 +70,10 @@ const failMutation = `mutation FailImport($requestId: ID!, $error: String!) {
   failImport(requestId: $requestId, error: $error) { ${importSelection} }
 }`
 
+const releaseMutation = `mutation ReleaseImport($requestId: ID!) {
+  releaseImport(requestId: $requestId) { ${importSelection} }
+}`
+
 export async function listPending(): Promise<ImportRequest[]> {
   const data = await gql<{ listPendingImports: ImportRequest[] }>(listQuery, { limit: 5 })
   return data.listPendingImports || []
@@ -87,6 +103,10 @@ export async function complete(requestId: string, chordSheet: string, sourceUrl:
 
 export async function fail(requestId: string, error: string) {
   await gql(failMutation, { requestId, error })
+}
+
+export async function release(requestId: string) {
+  await gql(releaseMutation, { requestId })
 }
 
 /** Runs one claimed import. A thrown error, including a null completeImport, is failed. */

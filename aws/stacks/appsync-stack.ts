@@ -741,6 +741,17 @@ export class AppsyncStack extends Stack {
       fieldName: "claimImport"
     })
 
+    const releaseImport = new NodejsFunction(this, `${props.name}-ReleaseImport`, {
+      entry: join(__dirname, '../lambdas', 'appsync', 'import', 'releaseImport.ts'),
+      timeout: Duration.seconds(30),
+      ...nodeJsFunctionProps
+    })
+    appsync.addLambdaDataSource(`${props.name}ReleaseImportDS`, releaseImport)
+    .createResolver(`${props.name}-ReleaseImportResolver`, {
+      typeName: "Mutation",
+      fieldName: "releaseImport"
+    })
+
     const completeImport = new NodejsFunction(this, `${props.name}-CompleteImport`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'import', 'completeImport.ts'),
       timeout: Duration.minutes(1),

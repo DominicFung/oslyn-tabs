@@ -144,6 +144,7 @@ type Mutation {
     artist: String
   ): ChordImportRequest @aws_iam
   claimImport(requestId: ID!): ChordImportRequest @aws_iam
+  releaseImport(requestId: ID!): ChordImportRequest @aws_iam
   completeImport(requestId: ID!, chordSheet: String!, sourceUrl: String!): ChordImportRequest @aws_iam
   failImport(requestId: ID!, error: String!): ChordImportRequest @aws_iam
 
@@ -175,7 +176,7 @@ type Subscription {
   onJamQueueUpdate(jamSessionId: ID!): JamQueue @aws_subscribe(mutations: ["setJamQueue", "addSongToJamQueue", "removeSongFromJamQueue"])
   onJamSlideConfigChange(jamSessionId: ID!): JamSessionSlideConfig @aws_subscribe(mutations: ["setJamSlideConfig"])
   onJamSongsChanged(jamSessionId: ID!): JamSongChange @aws_subscribe(mutations: ["addSongToLiveJam", "setLiveJamChordSheet"])
-  onImportStatusChanged(userId: ID, jamId: ID): ChordImportRequest @aws_subscribe(mutations: ["createChordImport", "claimImport", "completeImport", "failImport"])
+  onImportStatusChanged(userId: ID, jamId: ID): ChordImportRequest @aws_subscribe(mutations: ["createChordImport", "claimImport", "releaseImport", "completeImport", "failImport"])
   onSongDeleted: SongDeleted @aws_subscribe(mutations: ["deleteSong"])
   onJamDeleted(jamSessionId: ID!): JamDeleted @aws_subscribe(mutations: ["deleteJamSession"])
   onSetJamsDeleted: DeleteSetResult @aws_subscribe(mutations: ["deleteSet"])

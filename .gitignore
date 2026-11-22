@@ -37,6 +37,8 @@ next-env.d.ts
 node_modules
 
 secret.json
+worker/ug-import/worker.pid
+worker/ug-import/worker.heartbeat
 /output
 token.txt
 /aws/**/*.js

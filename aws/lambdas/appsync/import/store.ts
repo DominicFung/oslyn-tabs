@@ -37,16 +37,31 @@ export async function getImport(dynamo: DynamoDBClient, requestId: string): Prom
   return unmarshall(res.Item) as ChordImportRecord
 }
 
-export async function listPending(dynamo: DynamoDBClient, limit: number): Promise<ChordImportRecord[]> {
+export const STALE_IMPORT_MS = 3 * 60 * 1000
+
+export function isStaleImporting(status: string, updatedAt: number | undefined, now: number, maxAgeMs = STALE_IMPORT_MS): boolean {
+  return status === 'IMPORTING' && typeof updatedAt === 'number' && Number.isFinite(updatedAt) && now - updatedAt >= maxAgeMs
+}
+
+async function listByStatus(dynamo: DynamoDBClient, status: ChordImportStatus, limit: number): Promise<ChordImportRecord[]> {
   const res = await dynamo.send(new QueryCommand({
     TableName: CHORD_IMPORT_TABLE_NAME,
     IndexName: 'status',
-    KeyConditionExpression: '#status = :pending',
+    KeyConditionExpression: '#status = :status',
     ExpressionAttributeNames: { '#status': 'status' },
-    ExpressionAttributeValues: { ':pending': { S: 'PENDING' } },
+    ExpressionAttributeValues: { ':status': { S: status } },
     Limit: limit,
   }))
   return (res.Items || []).map((item) => unmarshall(item) as ChordImportRecord)
+}
+
+export async function listPending(dynamo: DynamoDBClient, limit: number, now = Date.now()): Promise<ChordImportRecord[]> {
+  const [pending, importing] = await Promise.all([
+    listByStatus(dynamo, 'PENDING', limit),
+    listByStatus(dynamo, 'IMPORTING', 50),
+  ])
+  const stale = importing.filter((row) => isStaleImporting(row.status, row.updatedAt, now))
+  return [...stale, ...pending].slice(0, limit)
 }
 
 export async function setImportStatus(
@@ -55,6 +70,7 @@ export async function setImportStatus(
   status: ChordImportStatus,
   extra: { chosenUrl?: string, error?: string, chordSheet?: string } = {},
   onlyFrom?: ChordImportStatus,
+  expectedUpdatedAt?: number,
 ): Promise<ChordImportRecord | null> {
   const names: Record<string, string> = { '#status': 'status', '#updatedAt': 'updatedAt' }
   const values: Record<string, any> = {
@@ -81,6 +97,10 @@ export async function setImportStatus(
   if (onlyFrom) {
     values[':from'] = onlyFrom
     condition = '#status = :from'
+  }
+  if (typeof expectedUpdatedAt === 'number') {
+    values[':seenUpdatedAt'] = expectedUpdatedAt
+    condition = `${condition ? `${condition} AND ` : ''}#updatedAt = :seenUpdatedAt`
   }
   try {
     const res = await dynamo.send(new UpdateItemCommand({
