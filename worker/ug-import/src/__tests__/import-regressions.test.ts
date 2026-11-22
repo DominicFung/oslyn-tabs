@@ -13,6 +13,7 @@ const monSoleil = fixture('mon-soleil.json')
 const youre = fixture('youre-still-the-one.json')
 const home = fixture('home.json')
 const knew = fixture('i-knew-it-i-knew-you.json')
+const allTooWell = fixture('all-too-well.json')
 const onEcrit = fixture('on-ecrit-sur-les-murs.json')
 const champs = fixture('les-champs-elysees.json')
 const memes = fixture('tous-les-memes.json')
@@ -31,6 +32,29 @@ describe('import regressions', () => {
     const chosen = chooseResult(monSoleil, title, 'Ashley Park')
     expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-television/emily-in-paris-mon-soleil-chords-4004281')
     expect(chosen?.fallback).toBe(false)
+  })
+
+  // All Too Well (10 Minute Version) (Taylor's Version) (From The Vault): the re-record tags hid the 10 minute chart.
+  it.each([
+    "All Too Well (10 Minute Version) (Taylor's Version) (From The Vault)",
+    "All Too Well (10 Minute Version) (Taylor's Version)",
+    'All Too Well (10 Minute Version)',
+  ])('picks the 10 minute chart for %s', (title) => {
+    const chosen = chooseResult(allTooWell, title, 'Taylor Swift')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/taylor-swift/all-too-well-10-minute-version-chords-3946031')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  it('falls back to All Too Well when the 10 minute chart is absent', () => {
+    const without = allTooWell.filter((row) => !row.songName.includes('10 Minute'))
+    const chosen = chooseResult(without, "All Too Well (10 Minute Version) (Taylor's Version) (From The Vault)", 'Taylor Swift')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/taylor-swift/all-too-well-chords-1189554')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  it('keeps the short All Too Well chart ahead of the 10 minute version', () => {
+    const chosen = chooseResult(allTooWell, 'All Too Well', 'Taylor Swift')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/taylor-swift/all-too-well-chords-1189554')
   })
 
   // I Knew It, I Knew You: UG drops the comma and files it under Toy Story 5 by Misc Cartoons.

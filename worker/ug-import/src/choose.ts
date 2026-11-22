@@ -45,12 +45,28 @@ export function normalizeName(value: string): string {
  * "No Other Name - Live" and "No Other Name (feat. Someone)" both become "No Other Name".
  * The stored song title is left unchanged; this is only for search and matching.
  */
+/**
+ * Re-record and vault tags. They are not the song.
+ * "(10 Minute Version)" is not one of these.
+ * "From The Vault" has no quotes, so it is not a From "X" work name.
+ */
+const RELEASE_TAG = String.raw`taylor'?s\s+version|taylors\s+version|from\s+the\s+vault|(?:the\s+)?vault(?:\s+track)?|re-?record(?:ed|ing)?`
+
+function stripReleaseTags(title: string): string {
+  const text = title.replace(APOSTROPHES, "'")
+  return text
+    .replace(new RegExp(String.raw`\s*[([]\s*(?:${RELEASE_TAG})\s*[)\]]`, 'gi'), ' ')
+    .replace(new RegExp(String.raw`\s+-\s+(?:${RELEASE_TAG})\s*$`, 'i'), '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export function baseSongTitle(value: string): string {
-  let title = (value || '').replace(/[–—]/g, '-').trim()
+  let title = stripReleaseTags((value || '').replace(/[–—]/g, '-').trim())
   let previous = ''
   while (title && title !== previous) {
     previous = title
-    title = title
+    title = stripReleaseTags(title)
       .replace(/\s*\(ver\s*\d+\)\s*$/i, '')
       .replace(/\s*[([]\s*(?:featuring|feat\.?|ft\.?)\s+[^)\]]*[)\]]\s*$/i, '')
       .replace(/\s+-\s+(?:featuring|feat\.?|ft\.?)\s+.*$/i, '')
@@ -71,6 +87,20 @@ export function baseSongTitle(value: string): string {
       .replace(/\s*[([]\s*single\s+version\s*[)\]]\s*$/i, '')
       .replace(/\s+-\s+mono(?:\s+version)?$/i, '')
       .replace(/\s*[([]\s*mono(?:\s+version)?\s*[)\]]\s*$/i, '')
+      .trim()
+  }
+  return title
+}
+
+/** Title with release tags removed, then version notes such as "(10 Minute Version)" removed. */
+export function bareSongTitle(value: string): string {
+  let title = baseSongTitle(value)
+  let previous = ''
+  while (title && title !== previous) {
+    previous = title
+    title = title
+      .replace(/\s*[([]\s*[^)\]]*(?:version|remix|mix|edit|demo)\s*[)\]]\s*/gi, ' ')
+      .replace(/\s+/g, ' ')
       .trim()
   }
   return title
@@ -106,6 +136,8 @@ export function titleSearchValues(title: string): string[] {
   }
   for (const work of quotedWorks(title)) add(`${work} - ${base}`)
   add(base)
+  const bare = foldAccents(bareSongTitle(title)).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
+  if (bare.toLowerCase() !== base.toLowerCase()) add(bare)
   return values
 }
 
@@ -198,6 +230,12 @@ export function chooseResult(results: UgResult[], title: string, artist: string)
   let poolSource = exact.length
     ? exact
     : chords.filter((row) => titleContainsBase(row.songName, wantTitle))
+  if (poolSource.length === 0) {
+    const bare = normalizeName(bareSongTitle(title))
+    if (bare && bare !== wantTitle) {
+      poolSource = chords.filter((row) => songTitleKey(row.songName) === bare)
+    }
+  }
   if (poolSource.length === 0) return null
   const withWork = poolSource.filter((row) => coversQuotedWork(row.songName, title))
   if (withWork.length) poolSource = withWork
