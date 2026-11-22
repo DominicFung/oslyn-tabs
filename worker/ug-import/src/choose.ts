@@ -141,6 +141,30 @@ export function titleSearchValues(title: string): string[] {
   return values
 }
 
+/**
+ * Used when the plain search has no artist match.
+ * "High School Musical 2 - Bet On It" is not on that search page; "Bet On It soundtrack" is.
+ */
+export function soundtrackSearchValues(title: string): string[] {
+  const base = titleSearchValue(title)
+  const values: string[] = []
+  const add = (value: string) => {
+    const folded = value.replace(/\s+/g, ' ').trim()
+    if (!folded || folded.toLowerCase() === base.toLowerCase()) return
+    if (!values.some((item) => item.toLowerCase() === folded.toLowerCase())) values.push(folded)
+  }
+  add(`${base} soundtrack`)
+  const parts = base.split(/\s+-\s+/)
+  if (parts.length >= 2) {
+    const song = parts[parts.length - 1].trim()
+    if (song) {
+      add(`${song} soundtrack`)
+      add(song)
+    }
+  }
+  return values
+}
+
 export function songTitleKey(value: string): string {
   return normalizeName(baseSongTitle(value))
 }
@@ -168,6 +192,19 @@ export function coversQuotedWork(songName: string, spotifyTitle: string): boolea
 }
 
 const MISC_CREDIT = /^(?:misc )?(?:cartoons|soundtrack|television)$/
+
+/** "High School Musical 2 - Bet On It" is the movie form of "Bet On It". */
+export function movieTitleMatch(songName: string, spotifyTitle: string): boolean {
+  const parts = (songName || '').split(/\s+-\s+/)
+  if (parts.length < 2) return false
+  const want = songTitleKey(spotifyTitle)
+  if (!allowsContainsMatch(want)) return false
+  return songTitleKey(parts[parts.length - 1]) === want
+}
+
+export function isMiscCredit(artist: string): boolean {
+  return artistNames(artist).some((name) => MISC_CREDIT.test(name))
+}
 
 function miscWorkCredit(ugArtist: string, ugTitle: string, spotifyTitle: string): boolean {
   if (!coversQuotedWork(ugTitle, spotifyTitle)) return false
@@ -244,5 +281,14 @@ export function chooseResult(results: UgResult[], title: string, artist: string)
     : []
   const pool = matched.length ? matched : poolSource
   pool.sort((a, b) => b.votes - a.votes || b.rating - a.rating)
+  if (matched.length === 0) {
+    const soundtrack = chords
+      .filter((row) => movieTitleMatch(row.songName, title) && isMiscCredit(row.artistName))
+      .sort((a, b) => b.votes - a.votes || b.rating - a.rating)
+    const fallback = pool[0]
+    if (soundtrack.length && fallback && soundtrack[0].votes > fallback.votes) {
+      return { ...soundtrack[0], fallback: false }
+    }
+  }
   return { ...pool[0], fallback: matched.length === 0 }
 }

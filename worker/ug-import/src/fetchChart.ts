@@ -1,5 +1,5 @@
 import { chromium, Page } from 'playwright'
-import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, titleSearchValues, UgResult, ChosenResult } from './choose'
+import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, soundtrackSearchValues, titleSearchValues, UgResult, ChosenResult } from './choose'
 import { withTimeout } from './timeout'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
 
@@ -70,7 +70,7 @@ export async function importChords(title: string, artist: string): Promise<Impor
     page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
     const primary = primaryArtist(artist)
     let chosen: ChosenResult | null = null
-    for (const queryTitle of titleSearchValues(title)) {
+    const consider = async (queryTitle: string) => {
       let rows = resultsFromStore(await readStore(page, searchUrl(queryTitle))) as UgResult[]
       let pick = chooseResult(rows, title, artist)
       const keepWork = pick && coversQuotedWork(pick.songName, title) && !pick.fallback
@@ -79,14 +79,22 @@ export async function importChords(title: string, artist: string): Promise<Impor
         const second = narrowed.length ? chooseResult(narrowed, title, artist) : null
         if (second && (!pick || pick.fallback || !second.fallback)) {
           if (!pick || !coversQuotedWork(pick.songName, title) || coversQuotedWork(second.songName, title)) {
-            rows = narrowed
             pick = second
           }
         }
       }
-      if (!pick) continue
+      if (!pick) return
       if (!chosen || preferPick(pick, chosen, title)) chosen = pick
+    }
+    for (const queryTitle of titleSearchValues(title)) {
+      await consider(queryTitle)
       if (chosen && !chosen.fallback && (quotedWorks(title).length === 0 || coversQuotedWork(chosen.songName, title))) break
+    }
+    if (!chosen || chosen.fallback) {
+      for (const queryTitle of soundtrackSearchValues(title)) {
+        await consider(queryTitle)
+        if (chosen && !chosen.fallback) break
+      }
     }
     if (!chosen) throw new Error(`no Chords result matched ${title} by ${artist}`)
     if (chosen.fallback) {

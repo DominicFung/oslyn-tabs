@@ -14,6 +14,7 @@ const youre = fixture('youre-still-the-one.json')
 const home = fixture('home.json')
 const knew = fixture('i-knew-it-i-knew-you.json')
 const allTooWell = fixture('all-too-well.json')
+const betOnIt = fixture('bet-on-it.json')
 const onEcrit = fixture('on-ecrit-sur-les-murs.json')
 const champs = fixture('les-champs-elysees.json')
 const memes = fixture('tous-les-memes.json')
@@ -31,6 +32,19 @@ describe('import regressions', () => {
     const title = 'Mon Soleil - from "Emily in Paris Season 3" Soundtrack - from "Emily in Paris" Soundtrack'
     const chosen = chooseResult(monSoleil, title, 'Ashley Park')
     expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-television/emily-in-paris-mon-soleil-chords-4004281')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  // Bet On It / Troy, Disney: a 0-rating exact title hid High School Musical 2 under Misc Soundtrack.
+  it('picks the High School Musical chart for Bet On It by Troy, Disney', () => {
+    const chosen = chooseResult(betOnIt, 'Bet On It', 'Troy, Disney')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-soundtrack/high-school-musical-2-bet-on-it-chords-612502')
+    expect(chosen?.fallback).toBe(false)
+  })
+
+  it('picks the same chart when the title is already High School Musical 2 - Bet On It', () => {
+    const chosen = chooseResult(betOnIt, 'High School Musical 2 - Bet On It', 'Misc Soundtrack')
+    expect(chosen?.tabUrl).toBe('https://tabs.ultimate-guitar.com/tab/misc-soundtrack/high-school-musical-2-bet-on-it-chords-612502')
     expect(chosen?.fallback).toBe(false)
   })
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { artistsOverlap, baseSongTitle, chooseResult, quotedWorks, songTitleKey, titleSearchValue, titleSearchValues, UgResult } from './choose'
+import { artistsOverlap, baseSongTitle, chooseResult, quotedWorks, songTitleKey, soundtrackSearchValues, titleSearchValue, titleSearchValues, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
   const base = 'No Other Name'
@@ -64,6 +64,27 @@ describe('baseSongTitle', () => {
     assert.equal(songTitleKey("J'ai demandé à la lune"), songTitleKey('Jai Demand&eacute; &Agrave; La Lune'))
     assert.equal(songTitleKey('Ça plane pour moi'), songTitleKey('&Ccedil;a Plane Pour Moi'))
     assert.equal(songTitleKey('Ca plane pour moi'), 'ca plane pour moi')
+  })
+
+  it('searches a movie dash title as the song plus soundtrack', () => {
+    assert.deepEqual(soundtrackSearchValues('High School Musical 2 - Bet On It'), [
+      'High School Musical 2 - Bet On It soundtrack',
+      'Bet On It soundtrack',
+      'Bet On It',
+    ])
+    assert.deepEqual(soundtrackSearchValues('Bet On It'), ['Bet On It soundtrack'])
+  })
+
+  it('prefers a rated Misc Soundtrack title over a zero-rating exact title', () => {
+    const rows: UgResult[] = [
+      { songName: 'Bet On It', artistName: 'Jessica Lynn', type: 'Chords', votes: 0, rating: 0, tabUrl: 'https://tabs.ultimate-guitar.com/tab/jessica-lynn/bet-on-it-chords-5631996', version: 1 },
+      { songName: 'High School Musical 2 - Bet On It', artistName: 'Misc Soundtrack', type: 'Chords', votes: 180, rating: 4.6, tabUrl: 'https://tabs.ultimate-guitar.com/tab/misc-soundtrack/high-school-musical-2-bet-on-it-chords-612502', version: 1 },
+    ]
+    const chosen = chooseResult(rows, 'Bet On It', 'Troy, Disney')
+    assert.equal(chosen?.tabUrl, 'https://tabs.ultimate-guitar.com/tab/misc-soundtrack/high-school-musical-2-bet-on-it-chords-612502')
+    assert.equal(chosen?.fallback, false)
+    const troy: UgResult = { songName: 'Bet On It', artistName: 'Troy', type: 'Chords', votes: 1, rating: 4, tabUrl: 'https://tabs.example/troy', version: 1 }
+    assert.equal(chooseResult([...rows, troy], 'Bet On It', 'Troy, Disney')?.tabUrl, 'https://tabs.example/troy')
   })
 
   it('strips re-record tags and keeps a 10 minute version', () => {
