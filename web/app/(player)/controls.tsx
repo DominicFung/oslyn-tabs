@@ -117,9 +117,9 @@ export default function Controls(p: ControlsProp) {
   return <>
       <div id="authentication-modal" tabIndex={-1} aria-hidden="true" className={`${p.open?"":"hidden"} fixed top-0 left-0 right-0 z-40 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-gray-900/75`} 
         onClick={() => { p.setOpen(false) }} />
-      { p.open && <div id="toast-bottom-right" className={`z-50 fixed ${option===0?"md:max-w-4xl w-full":"sm:max-w-lg w-full"} max-h-[calc(100vh-2rem)] flex items-center w-50 p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow right-0 sm:right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800`} role="alert">
-        <div className="text-sm font-normal w-full">
-          <div className="flex flex-col sm:flex-row w-full">
+      { p.open && <div id="toast-bottom-right" className={`z-50 fixed ${option===0?"md:max-w-4xl w-full":"sm:max-w-lg w-full"} max-h-[calc(100vh-2rem)] overflow-hidden flex flex-col w-50 p-4 text-gray-500 bg-white divide-gray-200 rounded-lg shadow right-0 sm:right-10 ${p.pt?"top-32":"top-4"} dark:text-gray-400 dark:divide-gray-700 dark:bg-gray-800`} role="alert">
+        <div className="flex min-h-0 w-full flex-1 flex-col text-sm font-normal">
+          <div className="flex min-h-0 w-full flex-1 flex-col sm:flex-row">
             <div className="flex-shrink-0 sm:flex hidden flex-col space-y-2 mr-4">
               {options.map((o, i) => 
                 o.disabled ? <></> : <button key={i} disabled={o.disabled} onClick={() => setOption(i)}
@@ -139,7 +139,8 @@ export default function Controls(p: ControlsProp) {
               </ul>
             </div>
 
-            <div className="min-w-0 flex-1 w-full overflow-x-hidden">
+            <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">
+              <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
               { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} onSongRemoved={p.song.onSongRemoved} queueAt={p.song.queueAt} /> }
               { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
               { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
@@ -153,9 +154,10 @@ export default function Controls(p: ControlsProp) {
               { option === 5 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
               { option === 6 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
               { option === 7 && p.queue && <Queue songs={p.queue.songs} queue={p.queue.queueOrder} removeFromQueue={p.queue.removeFromQueue}/> }
-              {p.canDeleteJam && <div className="px-4 pt-4">
+              {p.canDeleteJam && <div className="px-4 pt-4 pb-2">
                 <DeleteJamButton jamSessionId={p.jamSessionId} onDeleted={p.onJamDeleted} />
               </div>}
+              </div>
             </div>
             <button type="button" className="hidden sm:inline-block fixed right-12 top-7 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"
               onClick={() => p.setOpen(false)}

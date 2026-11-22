@@ -40,7 +40,7 @@ export default function Display(p: DisplayProps) {
   useEffect(() => { if (theme && theme != mode) { setMode(theme) }}, [theme])
 
   return <>
-    <div className="ml-3 text-sm font-normal w-[calc(100vw-4rem)] sm:w-full overflow-auto">
+    <div className="w-full min-w-0 max-w-full text-sm font-normal">
       <div className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Display</div>
       <div className="pb-3 text-sm font-normal">Set your text size to make it easier to read! 
         <span className="text-xs italic">(only affects you)</span>
@@ -48,7 +48,7 @@ export default function Display(p: DisplayProps) {
 
       <div className="max-h-[calc(100vh-10rem)]">
         <div className='flex-0'>
-          <Listbox as="div" value={p.textSize} onChange={(e) => { p.setTextSize(e)}} className="relative p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <Listbox as="div" value={p.textSize} onChange={(e) => { p.setTextSize(e)}} className="relative w-full min-w-0 max-w-full p-1 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
           {({ open }) => (
             <>
             <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
