@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { artistsOverlap, baseSongTitle, chooseResult, songTitleKey, titleSearchValue, UgResult } from './choose'
+import { artistsOverlap, baseSongTitle, chooseResult, songTitleKey, titleSearchValue, titleSearchValues, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
   const base = 'No Other Name'
@@ -64,6 +64,18 @@ describe('baseSongTitle', () => {
     assert.equal(songTitleKey("J'ai demandé à la lune"), songTitleKey('Jai Demand&eacute; &Agrave; La Lune'))
     assert.equal(songTitleKey('Ça plane pour moi'), songTitleKey('&Ccedil;a Plane Pour Moi'))
     assert.equal(songTitleKey('Ca plane pour moi'), 'ca plane pour moi')
+  })
+
+  it('searches From "X" as X - Title and ignores a dropped comma', () => {
+    const title = 'I Knew It, I Knew You - From "Toy Story 5"'
+    assert.equal(baseSongTitle(title), 'I Knew It, I Knew You')
+    assert.equal(songTitleKey(title), songTitleKey('I Knew It I Knew You'))
+    assert.equal(songTitleKey('TOY STORY 5 - I KNEW IT I KNEW YOU'), 'toy story 5 i knew it i knew you')
+    assert.deepEqual(titleSearchValues(title), [
+      'Toy Story 5 - I Knew It, I Knew You',
+      'I Knew It, I Knew You',
+    ])
+    assert.equal(titleSearchValue('Mon Soleil - from "Emily in Paris" Soundtrack'), 'Mon Soleil')
   })
 
   it('treats apostrophes as optional in search and matching', () => {
@@ -132,11 +144,23 @@ describe('chooseResult', () => {
     { songName: 'Emily In Paris - Mon Soleil', artistName: 'Misc Cartoons', type: 'Tab', votes: 100, rating: 5, tabUrl: 'https://tabs.example/soleil-tab', version: 1 },
   ]
 
+  it('matches Toy Story 5 - I Knew It I Knew You and not the Taylor Swift medley', () => {
+    const rows: UgResult[] = [
+      { songName: 'I Knew It I Knew You - August - All Too Well', artistName: 'Taylor Swift', type: 'Chords', votes: 5000, rating: 4.9, tabUrl: 'https://tabs.example/medley', version: 1 },
+      { songName: 'Toy Story 5 - I Knew It I Knew You', artistName: 'Misc Cartoons', type: 'Chords', votes: 276, rating: 4.7, tabUrl: 'https://tabs.ultimate-guitar.com/tab/misc-cartoons/toy-story-5-i-knew-it-i-knew-you-chords-6471680', version: 1 },
+      { songName: 'Toy Story 5 - I Knew It I Knew You', artistName: 'Misc Cartoons /Taylor Swift', type: 'Chords', votes: 1, rating: 4, tabUrl: 'https://tabs.example/slash', version: 3 },
+    ]
+    const chosen = chooseResult(rows, 'I Knew It, I Knew You - From "Toy Story 5"', 'Taylor Swift')
+    assert.equal(chosen?.tabUrl, 'https://tabs.ultimate-guitar.com/tab/misc-cartoons/toy-story-5-i-knew-it-i-knew-you-chords-6471680')
+    assert.equal(chosen?.fallback, false)
+    assert.equal(artistsOverlap('Taylor Swift', 'Misc Cartoons /Taylor Swift'), true)
+  })
+
   it('matches a soundtrack title inside a longer UG title when nothing is exact', () => {
     const spotify = 'Mon Soleil - from "Emily in Paris Season 3" Soundtrack - from "Emily in Paris" Soundtrack'
     const chosen = chooseResult(soleilRows, spotify, 'Ashley Park')
     assert.equal(chosen?.tabUrl, 'https://tabs.example/soleil-2')
-    assert.equal(chosen?.fallback, true)
+    assert.equal(chosen?.fallback, false)
   })
 
   it('keeps an exact artist match ahead of a longer soundtrack title', () => {

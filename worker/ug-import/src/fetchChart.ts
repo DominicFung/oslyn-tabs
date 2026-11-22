@@ -1,11 +1,19 @@
 import { chromium, Page } from 'playwright'
-import { chooseResult, primaryArtist, titleSearchValue, UgResult } from './choose'
+import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, titleSearchValues, UgResult, ChosenResult } from './choose'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
 
 const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 const PAUSE_MS = 2000
 
 const TOO_MANY_RESULTS = 10
+
+function preferPick(next: ChosenResult, prev: ChosenResult, title: string): boolean {
+  const nextWork = coversQuotedWork(next.songName, title)
+  const prevWork = coversQuotedWork(prev.songName, title)
+  if (nextWork !== prevWork) return nextWork
+  if (next.fallback !== prev.fallback) return !next.fallback
+  return next.votes > prev.votes
+}
 
 function searchUrl(value: string) {
   return `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(value)}`
@@ -56,20 +64,26 @@ export async function importChords(title: string, artist: string): Promise<Impor
   try {
     const context = await browser.newContext({ userAgent: USER_AGENT, locale: 'en-US' })
     const page = await context.newPage()
-    const queryTitle = titleSearchValue(title)
-    const titleOnly = resultsFromStore(await readStore(page, searchUrl(queryTitle))) as UgResult[]
-    let results = titleOnly
-    const first = chooseResult(titleOnly, title, artist)
     const primary = primaryArtist(artist)
-    // A title-only page mixes in other songs. Narrow it with the primary artist.
-    if (primary && (titleOnly.length >= TOO_MANY_RESULTS || !first || first.fallback)) {
-      const narrowed = resultsFromStore(await readStore(page, searchUrl(`${queryTitle} ${primary}`))) as UgResult[]
-      const second = narrowed.length ? chooseResult(narrowed, title, artist) : null
-      if (second && (!first || first.fallback || !second.fallback)) {
-        results = narrowed
+    let chosen: ChosenResult | null = null
+    for (const queryTitle of titleSearchValues(title)) {
+      let rows = resultsFromStore(await readStore(page, searchUrl(queryTitle))) as UgResult[]
+      let pick = chooseResult(rows, title, artist)
+      const keepWork = pick && coversQuotedWork(pick.songName, title) && !pick.fallback
+      if (primary && !keepWork && (rows.length >= TOO_MANY_RESULTS || !pick || pick.fallback)) {
+        const narrowed = resultsFromStore(await readStore(page, searchUrl(`${queryTitle} ${primary}`))) as UgResult[]
+        const second = narrowed.length ? chooseResult(narrowed, title, artist) : null
+        if (second && (!pick || pick.fallback || !second.fallback)) {
+          if (!pick || !coversQuotedWork(pick.songName, title) || coversQuotedWork(second.songName, title)) {
+            rows = narrowed
+            pick = second
+          }
+        }
       }
+      if (!pick) continue
+      if (!chosen || preferPick(pick, chosen, title)) chosen = pick
+      if (chosen && !chosen.fallback && (quotedWorks(title).length === 0 || coversQuotedWork(chosen.songName, title))) break
     }
-    const chosen = results === titleOnly ? first : chooseResult(results, title, artist)
     if (!chosen) throw new Error(`no Chords result matched ${title} by ${artist}`)
     if (chosen.fallback) {
       console.warn(`artist fallback for "${title}" by "${artist}": ${chosen.artistName} (${chosen.votes} ratings) ${chosen.tabUrl}`)
