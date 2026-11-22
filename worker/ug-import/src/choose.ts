@@ -1,3 +1,5 @@
+import { decodeEntities } from './ug'
+
 export type UgResult = {
   songName: string
   artistName: string
@@ -13,8 +15,23 @@ export type ChosenResult = UgResult & { fallback: boolean }
 /** ASCII apostrophe, curly quotes, and the modifier letter. Dropped, not turned into a space. */
 const APOSTROPHES = /['’‘ʼ´]/g
 
+/**
+ * Ultimate Guitar's search JSON stores "É" as the letters "&Eacute;".
+ * Decode that, then fold accents so "écrit", "ecrit", and "&Eacute;crit" compare equal.
+ * œ and æ do not decompose under NFD, so they are spelled out first.
+ */
+export function foldAccents(value: string): string {
+  return decodeEntities(value || '')
+    .replace(/œ/g, 'oe')
+    .replace(/Œ/g, 'Oe')
+    .replace(/æ/g, 'ae')
+    .replace(/Æ/g, 'Ae')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+}
+
 export function normalizeName(value: string): string {
-  return (value || '')
+  return foldAccents(value)
     .replace(/\(ver\s*\d+\)/gi, ' ')
     .replace(APOSTROPHES, '')
     .toLowerCase()
@@ -59,10 +76,10 @@ export function baseSongTitle(value: string): string {
   return title
 }
 
-/** Title sent to Ultimate Guitar. Apostrophes are removed so "You're" searches as "Youre". */
+/** Title sent to Ultimate Guitar. Apostrophes are removed and accents are folded. */
 export function titleSearchValue(title: string): string {
-  const base = baseSongTitle(title).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
-  return base || (title || '').replace(APOSTROPHES, '').trim()
+  const base = foldAccents(baseSongTitle(title)).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
+  return base || foldAccents(title || '').replace(APOSTROPHES, '').trim()
 }
 
 export function songTitleKey(value: string): string {
@@ -84,10 +101,6 @@ export function titleContainsBase(candidate: string, baseKey: string): boolean {
   return ` ${haystack} `.includes(` ${baseKey} `)
 }
 
-function stripAccents(value: string): string {
-  return (value || '').normalize('NFD').replace(/\p{M}/gu, '')
-}
-
 /** First credited name, before a comma. "Luis Fonsi, Daddy Yankee" → "Luis Fonsi". */
 export function primaryArtist(artist: string): string {
   return (artist || '').split(',')[0].trim()
@@ -98,7 +111,7 @@ export function primaryArtist(artist: string): string {
  * commas, feat./ft./featuring, &, and, x. Then ignore case, accents, and a leading "The ".
  */
 export function artistNames(value: string): string[] {
-  const prepared = stripAccents(value)
+  const prepared = foldAccents(value)
     .replace(/\bfeaturing\b/gi, ',')
     .replace(/\bfeat\.?\b/gi, ',')
     .replace(/\bft\.?\b/gi, ',')
