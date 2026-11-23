@@ -1,3 +1,5 @@
+import { cleanChart } from './chart'
+
 export function decodeEntities(value: string): string {
   const named: Record<string, string> = {
     amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
@@ -9,6 +11,7 @@ export function decodeEntities(value: string): string {
     oacute: 'ó', ograve: 'ò', ocirc: 'ô', ouml: 'ö', otilde: 'õ', oelig: 'œ',
     uacute: 'ú', ugrave: 'ù', ucirc: 'û', uuml: 'ü',
     yacute: 'ý', yuml: 'ÿ',
+    ndash: '-', mdash: '-', hellip: '...',
     Aacute: 'Á', Agrave: 'À', Acirc: 'Â', Auml: 'Ä', Atilde: 'Ã', Aring: 'Å', AElig: 'Æ',
     Ccedil: 'Ç',
     Eacute: 'É', Egrave: 'È', Ecirc: 'Ê', Euml: 'Ë',
@@ -37,12 +40,13 @@ export function wikiToChart(content: string): string {
     const label = name.toLowerCase() === 'prechorus' ? 'Pre-Chorus' : name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
     return `[${label}${rest}]`
   })
-  return text
+  text = text
     .split('\n')
     .map((line) => line.replace(/\u00a0/g, ' ').replace(/\s+$/, ''))
     .join('\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
+  return cleanChart(text)
 }
 
 function unescapeAttr(value: string): string {
