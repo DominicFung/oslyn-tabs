@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Alert, Text } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Alert, PanResponder, Text, View } from 'react-native'
 import { gql } from '../../src/graphql/client'
 import * as d from '../../src/graphql/documents'
 import { Account } from '../../src/session'
+import { moveSong, nextSetKey, setSongInputs } from '../../src/setOrder'
 import { useTheme } from '../../src/theme'
 import { Body, Btn, Card, Field, Notice, Row, Screen } from '../ui'
 import { SongRow } from './songs'
@@ -24,8 +25,13 @@ export default function SetForm(p: {
   const [busy, setBusy] = useState(false)
 
   useEffect(() => {
-    gql<{ listSongs: SongRow[] | null }>(d.listSongs, { userId: p.account.userId }).then((res) => {
-      setLibrary((res.data?.listSongs || []).filter(Boolean))
+    Promise.all([
+      gql<{ listSongs: SongRow[] | null }>(d.listSongs, { userId: p.account.userId }),
+      gql<{ listSharedSongs: SongRow[] | null }>(d.listSharedSongs, { userId: p.account.userId, optimize: true }),
+    ]).then(([own, shared]) => {
+      const rows = [...(own.data?.listSongs || []), ...(shared.data?.listSharedSongs || [])].filter(Boolean)
+      const seen = new Set<string>()
+      setLibrary(rows.filter((song) => seen.has(song.songId) ? false : (seen.add(song.songId), true)))
     })
     if (!p.setListId) return
     gql<{ getSet: { description: string, songs?: Array<{ key?: string | null, song?: { songId: string, title: string } | null } | null> | null } | null }>(
@@ -39,22 +45,15 @@ export default function SetForm(p: {
     })
   }, [p.account.userId, p.setListId])
 
-  const move = (index: number, dir: -1 | 1) => {
-    const next = index + dir
-    if (next < 0 || next >= songs.length) return
-    const copy = songs.slice()
-    const [item] = copy.splice(index, 1)
-    copy.splice(next, 0, item)
-    setSongs(copy)
-  }
+  const move = (from: number, to: number) => setSongs((current) => moveSong(current, from, to))
 
   const save = async () => {
     if (!description.trim()) { setError('Give the set a name.'); return }
     setBusy(true)
-    const payload = songs.map((song, order) => ({ songId: song.songId, key: song.key, order }))
+    const payload = setSongInputs(songs)
     if (p.setListId) {
       const res = await gql<{ updateSet: { setListId: string } | null }>(d.updateSet, {
-        setListId: p.setListId, userId: p.account.userId, description: description.trim(), songs: payload,
+        setListId: p.setListId, description: description.trim(), songs: payload,
       })
       setBusy(false)
       if (!res.data?.updateSet) { setError(res.error || 'Could not save the set.'); return }
@@ -96,14 +95,17 @@ export default function SetForm(p: {
 
   return <Screen title={p.setListId ? 'Edit set' : 'New set'} onBack={p.onBack}>
     <Body>
-      <Field label="Description" value={description} onChangeText={setDescription} />
-      {songs.map((song, index) => <Card key={`${song.songId}-${index}`}>
-        <Text style={{ color: colors.text, fontWeight: '700' }}>{index + 1}. {song.title}</Text>
-        <Text style={{ color: colors.muted }}>Key {song.key}</Text>
-        <Btn label="Up" tone="plain" onPress={() => move(index, -1)} />
-        <Btn label="Down" tone="plain" onPress={() => move(index, 1)} />
-        <Btn label="Remove" tone="danger" onPress={() => setSongs(songs.filter((_, songIndex) => songIndex !== index))} />
-      </Card>)}
+      <Field label="Name" value={description} onChangeText={setDescription} placeholder="May 12 2023 Jam" />
+      <Text style={{ color: colors.muted, marginBottom: 8 }}>Drag a song, or use the arrows. Save stores the order with updateSet, the same mutation as the website. The name is the set description.</Text>
+      {songs.map((song, index) => <SetSongRow
+        key={`${song.songId}-${index}`}
+        song={song}
+        index={index}
+        count={songs.length}
+        onMove={move}
+        onKey={() => setSongs(songs.map((item, songIndex) => songIndex === index ? { ...item, key: nextSetKey(item.key) } : item))}
+        onRemove={() => setSongs(songs.filter((_, songIndex) => songIndex !== index))}
+      />)}
       <Text style={{ color: colors.muted, fontWeight: '700', marginBottom: 8 }}>ADD A SONG</Text>
       {library.map((song) => <Row key={song.songId} title={song.title} detail={song.artist || ''} onPress={() => setSongs([...songs, { songId: song.songId, title: song.title, key: song.chordSheetKey || 'C' }])} />)}
       <Notice text={error} tone="error" />
@@ -112,4 +114,39 @@ export default function SetForm(p: {
       {p.setListId && <Btn label="Delete set" tone="danger" onPress={remove} />}
     </Body>
   </Screen>
+}
+
+function SetSongRow(p: {
+  song: { title: string, key: string }
+  index: number
+  count: number
+  onMove: (from: number, to: number) => void
+  onKey: () => void
+  onRemove: () => void
+}) {
+  const { colors } = useTheme()
+  const latest = useRef(p)
+  latest.current = p
+  const pan = useRef(PanResponder.create({
+    onMoveShouldSetPanResponder: (_, gesture) => Math.abs(gesture.dy) > 12,
+    onPanResponderRelease: (_, gesture) => {
+      const current = latest.current
+      const rows = Math.round(gesture.dy / 88)
+      const next = Math.max(0, Math.min(current.count - 1, current.index + rows))
+      if (next !== current.index) current.onMove(current.index, next)
+    },
+  })).current
+
+  return <Card>
+    <View {...pan.panHandlers}>
+      <Text style={{ color: colors.text, fontWeight: '700' }}>{p.index + 1}. {p.song.title}</Text>
+      <Text style={{ color: colors.muted }}>Drag to reorder</Text>
+    </View>
+    <View style={{ flexDirection: 'row', gap: 8 }}>
+      <View style={{ flex: 1 }}><Btn label="Up" tone="plain" onPress={() => p.onMove(p.index, p.index - 1)} /></View>
+      <View style={{ flex: 1 }}><Btn label="Down" tone="plain" onPress={() => p.onMove(p.index, p.index + 1)} /></View>
+      <View style={{ flex: 1 }}><Btn label={p.song.key} tone="plain" onPress={p.onKey} /></View>
+    </View>
+    <Btn label="Remove" tone="danger" onPress={p.onRemove} />
+  </Card>
 }
