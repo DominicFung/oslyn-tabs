@@ -14,6 +14,7 @@ type Query {
   getSongUsage(songId: ID!, userId: ID!): SongUsage @aws_iam
 
   listPendingImports(limit: Int): [ChordImportRequest]! @aws_iam
+  importerStatus: ImporterStatus! @aws_iam
   
   getUserById(userId: ID!): User @aws_iam
   getUserByEmail(email: AWSEmail): User @aws_iam
@@ -147,6 +148,7 @@ type Mutation {
   releaseImport(requestId: ID!): ChordImportRequest @aws_iam
   completeImport(requestId: ID!, chordSheet: String!, sourceUrl: String!): ChordImportRequest @aws_iam
   failImport(requestId: ID!, error: String!): ChordImportRequest @aws_iam
+  setImporterRunning(on: Boolean!): ImporterStatus! @aws_iam
 
   nextPage(jamSessionId: ID!, page: Int!): NextPage
   nextSong(jamSessionId: ID!, song: Int, page: Int): NextSong
@@ -244,6 +246,13 @@ type SpotifySearchResult {
 }
 
 enum chordImportStatus { PENDING, IMPORTING, DONE, FAILED }
+
+type ImporterStatus {
+  running: Int!
+  desired: Int!
+  pending: Int!
+  lastStarted: AWSTimestamp
+}
 
 type ChordImportRequest {
   requestId: ID!

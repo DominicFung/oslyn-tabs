@@ -1,4 +1,5 @@
 import { chromium, Page } from 'playwright'
+import { chromiumLaunchOptions } from './browser'
 import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, soundtrackSearchValues, titleSearchValues, UgResult, ChosenResult } from './choose'
 import { withTimeout } from './timeout'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
@@ -62,7 +63,7 @@ export type ImportPick = {
 }
 
 export async function importChords(title: string, artist: string): Promise<ImportPick> {
-  const browser = await withTimeout(chromium.launch({ headless: true }), NAV_TIMEOUT_MS, 'playwright launch')
+  const browser = await withTimeout(chromium.launch(chromiumLaunchOptions), NAV_TIMEOUT_MS, 'playwright launch')
   try {
     const context = await browser.newContext({ userAgent: USER_AGENT, locale: 'en-US' })
     const page = await context.newPage()

@@ -9,6 +9,7 @@ import { User } from '@/../src/API'
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/core/auth"
+import { isImporterAdmin } from "@/core/importerAdmin"
 import { _Session } from '@/core/utils/frontend'
 import Unauth from "@/app/unauthorized"
 import Profile from './profile'
@@ -37,7 +38,7 @@ export default async function _Profile () {
   }
 
   if (d) return <>
-    <Profile user={d} />
+    <Profile user={d} showImporter={isImporterAdmin(session?.user?.email)} />
   </>
   else return <Unauth />
 }

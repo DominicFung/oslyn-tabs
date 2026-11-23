@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+.env
+.env.*
+worker.pid
+worker.heartbeat
+coverage
+.git

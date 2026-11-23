@@ -4,6 +4,7 @@ import { S3Stack } from './stacks/s3-stack'
 import { DynamoStack } from './stacks/dynamo-stack'
 import { AppsyncStack } from './stacks/appsync-stack'
 import { IamStack } from './stacks/iam-stack'
+import { ImporterStack } from './stacks/importer-stack'
 
 const PROJECT_NAME = 'oslynstudio'
 
@@ -14,8 +15,11 @@ const app = new App()
 const s3Stack = new S3Stack(app, `${PROJECT_NAME}-S3Stack`, { name: PROJECT_NAME })
 const dynamoStack = new DynamoStack(app, `${PROJECT_NAME}-DynamoStack`, { name: PROJECT_NAME })
 
+const importerStack = new ImporterStack(app, `${PROJECT_NAME}-ImporterStack`, { name: PROJECT_NAME })
+
 const appsyncStack = new AppsyncStack(app, `${PROJECT_NAME}-AppsyncStack`, { name: PROJECT_NAME })
 appsyncStack.addDependency(dynamoStack)
+appsyncStack.addDependency(importerStack)
 
 const iamStack = new IamStack(app, `${PROJECT_NAME}-IamStack`, { name: PROJECT_NAME})
 iamStack.addDependency(s3Stack)
