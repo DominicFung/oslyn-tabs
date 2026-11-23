@@ -15,9 +15,11 @@ import InviteFriend from "./(friend)/invite"
 import { useSideBarContext } from "../context"
 import RemoveFriend from "./(friend)/remove"
 import NewFeature from "../(components)/new"
+import ImporterCard from "./importer"
 
 interface ProfileProps {
   user: User
+  showImporter?: boolean
 }
 
 const MODE = ["dark", "light", "system"]
@@ -76,6 +78,7 @@ export default function Profile(p: ProfileProps) {
       </ul>
     </div> }
 
+    { p.showImporter && <ImporterCard /> }
     <InviteFriend user={p.user} />
     <div className="relative overflow-x-auto shadow-md rounded-md sm:rounded-lg mx-5 mt-1">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

@@ -2,6 +2,10 @@
 
 This runs on a machine that stays on. It does not log into Ultimate Guitar. It takes one pending chord-import request at a time, opens the public search page, picks a Chords result, and writes the chart back through AppSync.
 
+## AWS
+
+The same process can run as a Fargate Spot service in us-east-1 instead of on a machine that sleeps. The service is off until it is turned on from the profile page. Deploy order, the two SSM parameters to fill in, and the cost (about $0.01–$0.02 per hour while on, $0 while off) are in the root [README](../../README.md#ultimate-guitar-importer-fargate).
+
 ## Setup
 
 ```bash

@@ -2,7 +2,8 @@ import { App, CfnOutput, Duration, Fn, RemovalPolicy, Stack } from 'aws-cdk-lib'
 // import { GraphqlApi, SchemaFile, AuthorizationType, FieldLogLevel } from 'aws-cdk-lib/aws-appsync'
 import { AmplifyGraphqlApi, AmplifyGraphqlDefinition } from '@aws-amplify/graphql-api-construct'
 import { ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
-import { Runtime, RuntimeFamily } from 'aws-cdk-lib/aws-lambda'
+import { CfnPermission, Function, Runtime, RuntimeFamily } from 'aws-cdk-lib/aws-lambda'
+import { IMPORTER_CONTROL_EXPORT } from '../importerNames'
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs'
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb'
 import path, { join } from 'path'
@@ -854,6 +855,30 @@ export class AppsyncStack extends Stack {
     .createResolver(`${props.name}-CreateRecordingResolver`, {
       typeName: "Mutation",
       fieldName: "createRecording"
+    })
+
+    // The function, its ECS permissions, and the Fargate service live in ImporterStack.
+    // sameEnvironment lets AppSync's invoke permission be added in this stack only,
+    // so ImporterStack does not take a reference back to this API.
+    const importerControl = Function.fromFunctionAttributes(this, `${props.name}-ImporterControlFn`, {
+      functionArn: Fn.importValue(IMPORTER_CONTROL_EXPORT),
+      sameEnvironment: true,
+    })
+    appsync.addLambdaDataSource(`${props.name}ImporterStatusDS`, importerControl)
+    .createResolver(`${props.name}-ImporterStatusResolver`, {
+      typeName: "Query",
+      fieldName: "importerStatus"
+    })
+    appsync.addLambdaDataSource(`${props.name}SetImporterRunningDS`, importerControl)
+    .createResolver(`${props.name}-SetImporterRunningResolver`, {
+      typeName: "Mutation",
+      fieldName: "setImporterRunning"
+    })
+    new CfnPermission(this, `${props.name}-ImporterControlInvoke`, {
+      action: 'lambda:InvokeFunction',
+      functionName: Fn.importValue(IMPORTER_CONTROL_EXPORT),
+      principal: 'appsync.amazonaws.com',
+      sourceArn: appsync.resources.graphqlApi.arn,
     })
   }
 }
