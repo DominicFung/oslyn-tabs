@@ -34,6 +34,20 @@ I love how music brings people together. Most chord sheet apps focus on the indi
  - QR Code to enter the jam session
  - Oauth Login (Facebook, Google) .. Apple help wanted!
 
+### Installable app (PWA)
+
+Production builds of `web/` register a service worker ([Serwist](https://serwist.pages.dev/docs/next)) that precaches the static shell and shows `web/public/offline.html` when a page can't be loaded. Login (`/api/auth/*`), other `/api` responses, and AppSync calls always go to the network. `next dev` does not register the worker.
+
+To check installability with Lighthouse:
+
+```
+cd web && npm run build && npm start
+```
+
+Open the site in Chrome, then run DevTools → Lighthouse → Progressive Web App (or Application → Manifest). You should get an install prompt. In Application → Service workers, set Offline and reload: the offline page should appear.
+
+`web/customHttp.yml` tells Amplify Hosting to serve `/sw.js` with `Cache-Control: no-cache`. After deploy, `curl -I https://tabs.oslyn.io/sw.js` should show that header and `Content-Type: application/javascript`.
+
 ## Getting started - Developers
 
 I would really appreciate help :) 

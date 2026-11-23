@@ -1,4 +1,5 @@
 import './globals.css'
+import type { Metadata, Viewport } from "next"
 import { Inter } from 'next/font/google'
 import { ContextProvider } from './context'
 import Sidebar from './sidebar'
@@ -6,12 +7,44 @@ import AuthContext from './authcontext'
 import { Toaster } from "react-hot-toast"
 import SongDeletedListener from "./songDeleted"
 import { ThemeProvider } from "./theme"
+import RegisterServiceWorker from "./registerServiceWorker"
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Oslyn Tabs',
-  description: 'Oslyn Tabs',
+  description: 'Synchronized chord sheets for jam sessions.',
+  applicationName: 'Oslyn Tabs',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Oslyn Tabs',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  // Next emits `mobile-web-app-capable`. iOS still reads the apple-prefixed tag.
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#e4bcbb' },
+    { media: '(prefers-color-scheme: dark)', color: '#2a1a4a' },
+  ],
 }
 
 export default function RootLayout({
@@ -26,6 +59,7 @@ export default function RootLayout({
         <ThemeProvider attribute='class' defaultTheme='light' enableSystem={false} storageKey={"oslynTheme"}>
           <AuthContext>
             <Toaster position="bottom-left" />
+            <RegisterServiceWorker />
             <SongDeletedListener />
             <ContextProvider>
               {children}

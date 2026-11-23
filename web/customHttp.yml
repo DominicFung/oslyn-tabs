@@ -1,0 +1,15 @@
+# Amplify Hosting custom headers. Applied when the app root is `web/`.
+# /sw.js must not be cached at the CDN, or clients keep running a stale worker.
+customHeaders:
+  - pattern: "/sw.js"
+    headers:
+      - key: "Cache-Control"
+        value: "no-cache, no-store, must-revalidate"
+      - key: "Service-Worker-Allowed"
+        value: "/"
+  - pattern: "/manifest.webmanifest"
+    headers:
+      - key: "Content-Type"
+        value: "application/manifest+json"
+      - key: "Cache-Control"
+        value: "public, max-age=0, must-revalidate"
