@@ -13,9 +13,11 @@ import SongsScreen from './screens/songs'
 import SongDetail from './screens/songDetail'
 import SongForm from './screens/songForm'
 import ImportSong from './screens/importSong'
+import SetsScreen from './screens/sets'
+import SetForm from './screens/setForm'
 import { SongRow } from './screens/songs'
 
-type Tab = 'jam' | 'songs' | 'you'
+type Tab = 'jam' | 'songs' | 'sets' | 'you'
 type Sheet = SongRow & { chordSheet?: string | null, originLink?: string | null }
 type Route =
   | { name: 'tabs' }
@@ -24,6 +26,7 @@ type Route =
   | { name: 'song', songId: string, owned: boolean }
   | { name: 'songForm', song?: Sheet }
   | { name: 'import' }
+  | { name: 'set', setListId?: string }
 
 export default function Root(p: { nonce: number, onOpenJam: (jam: JamSession) => void }) {
   const { account, signIn } = useSession()
@@ -52,7 +55,9 @@ export default function Root(p: { nonce: number, onOpenJam: (jam: JamSession) =>
     if (route.name === 'song' && account) return <SongDetail account={account} songId={route.songId} owned={route.owned} onBack={() => setRoute({ name: 'tabs' })} onDeleted={() => setRoute({ name: 'tabs' })} onEdit={(song) => setRoute({ name: 'songForm', song })} />
     if (route.name === 'songForm' && account) return <SongForm account={account} song={route.song} onBack={() => setRoute({ name: 'tabs' })} onSaved={(songId) => setRoute({ name: 'song', songId, owned: true })} />
     if (route.name === 'import' && account) return <ImportSong account={account} onBack={() => setRoute({ name: 'tabs' })} onOpenSong={(songId) => setRoute({ name: 'song', songId, owned: true })} />
+    if (route.name === 'set' && account) return <SetForm account={account} setListId={route.setListId} onBack={() => setRoute({ name: 'tabs' })} onDeleted={() => setRoute({ name: 'tabs' })} onStarted={openJam} />
     if (tab === 'songs') return <SongsScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onOpen={(songId, owned) => setRoute({ name: 'song', songId, owned })} onCreate={() => setRoute({ name: 'songForm' })} onImport={() => setRoute({ name: 'import' })} />
+    if (tab === 'sets') return <SetsScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onOpen={(setListId) => setRoute({ name: 'set', setListId })} onCreate={() => setRoute({ name: 'set' })} />
     if (tab === 'you') return <SignInScreen onDone={async (next) => { await signIn(next); setTab('jam') }} />
     return <HomeScreen
       account={account}
@@ -71,6 +76,7 @@ export default function Root(p: { nonce: number, onOpenJam: (jam: JamSession) =>
       {([
         ['jam', 'Jam'],
         ['songs', 'Songs'],
+        ['sets', 'Sets'],
         ['you', 'You'],
       ] as Array<[Tab, string]>).map(([id, label]) => <Pressable key={id} onPress={() => setTab(id)} style={{ flex: 1, alignItems: 'center', paddingVertical: 12 }}>
         <Text style={{ color: tab === id ? colors.accent : colors.muted, fontWeight: '700' }}>{label}</Text>
