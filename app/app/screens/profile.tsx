@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Linking, Text } from 'react-native'
 import { gql } from '../../src/graphql/client'
 import * as d from '../../src/graphql/documents'
+import { readImporter, writeImporter, type ImporterStatus } from '../../src/oslynApi'
 import { Account } from '../../src/session'
 import { ThemeMode, useTheme } from '../../src/theme'
 import { Body, Btn, Field, NeedAccount, Notice, Row, Screen } from '../ui'
@@ -61,17 +62,64 @@ export default function ProfileScreen(p: { account: Account | null, onSignIn: ()
       <Notice text={error} tone="error" />
       {friends.map((friend) => <Row key={friend.userId || ''} title={friend.username || 'Friend'} detail={friend.email || friend.userId || ''} onPress={() => friend.userId && remove(friend.userId, friend.username || 'this friend')} />)}
       {friends.length === 0 ? <Text style={{ color: colors.muted, marginBottom: 12 }}>No friends yet. Tap a friend later to remove them.</Text> : <Text style={{ color: colors.muted, marginBottom: 12 }}>Tap a friend to remove them.</Text>}
-      {admin && <>
-        <Text style={{ color: colors.text, fontWeight: '800', marginBottom: 8 }}>Importer</Text>
-        <Text style={{ color: colors.muted, marginBottom: 8 }}>
-          Ultimate Guitar imports run as one small task, about $0.01–$0.02 an hour while it is on. The phone cannot sign the request the API requires, so the switch stays on the website.
-        </Text>
-        <Btn label="Open importer on the website" tone="plain" onPress={() => Linking.openURL('https://tabs.oslyn.io/profile')} />
-      </>}
+      {admin && <ImporterCard token={account.sessionToken} />}
       <Btn label="Send feedback" tone="plain" onPress={() => Linking.openURL('https://github.com/DominicFung/oslyn-tabs/issues/new')} />
       <Btn label="Open tabs.oslyn.io" tone="plain" onPress={() => Linking.openURL('https://tabs.oslyn.io')} />
-      <Text style={{ color: colors.muted, marginBottom: 8 }}>User id: {account.userId}</Text>
       <Btn label="Sign out" tone="danger" onPress={p.onSignOut} />
     </Body>
   </Screen>
+}
+
+function importerBadge(status: ImporterStatus) {
+  if (status.running > 0) return 'Running'
+  if (status.desired > 0 || status.pending > 0) return 'Starting'
+  return 'Stopped'
+}
+
+function ImporterCard(p: { token: string }) {
+  const { colors } = useTheme()
+  const [status, setStatus] = useState<ImporterStatus | null>(null)
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  const load = async () => {
+    try {
+      setStatus(await readImporter(p.token))
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not read importer status')
+    }
+  }
+
+  useEffect(() => {
+    load()
+    const timer = setInterval(load, 10_000)
+    return () => clearInterval(timer)
+  }, [p.token])
+
+  const on = !!status && (status.desired > 0 || status.running > 0 || status.pending > 0)
+  const toggle = async () => {
+    if (!status || busy) return
+    setBusy(true)
+    try {
+      setStatus(await writeImporter(p.token, !on))
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not update the importer')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return <>
+    <Text style={{ color: colors.text, fontWeight: '800', marginBottom: 8 }}>Importer {status ? importerBadge(status) : ''}</Text>
+    <Text style={{ color: colors.muted, marginBottom: 8 }}>
+      Ultimate Guitar chord imports. About $0.01–$0.02 an hour while a task is running, and $0 while it is off.
+    </Text>
+    {status && <Text style={{ color: colors.muted, marginBottom: 8 }}>
+      desired {status.desired} · running {status.running} · pending {status.pending}
+    </Text>}
+    <Btn label={busy ? 'Working…' : on ? 'Turn off' : 'Turn on'} onPress={toggle} busy={busy} disabled={!status} />
+    <Notice text={error} tone="error" />
+  </>
 }

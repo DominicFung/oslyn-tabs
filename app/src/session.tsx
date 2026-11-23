@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const KEY = 'oslyn.account.v1'
+const KEY = 'oslyn.account.v2'
 
 export type Account = {
   userId: string
@@ -10,6 +10,7 @@ export type Account = {
   firstName?: string | null
   lastName?: string | null
   imageUrl?: string | null
+  sessionToken: string
 }
 
 type SessionValue = {
@@ -36,7 +37,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       if (cancelled || !raw) return
       try {
         const parsed = JSON.parse(raw) as Account
-        if (parsed?.userId && parsed.email) setAccount(parsed)
+        if (parsed?.userId && parsed.email && parsed.sessionToken) setAccount(parsed)
       } catch {
         /* ignore a corrupt saved account */
       }

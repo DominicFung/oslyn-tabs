@@ -39,11 +39,3 @@ export function parseJamTarget(input: string): { jamSessionId: string, joinToken
     return null
   }
 }
-
-export function signInKind(input: string): 'email' | 'userId' | 'invalid' {
-  const raw = input.trim()
-  if (!raw) return 'invalid'
-  if (raw.includes('@')) return 'email'
-  if (/^[0-9a-f-]{8,}(_usr)?$/i.test(raw)) return 'userId'
-  return 'invalid'
-}

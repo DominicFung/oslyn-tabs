@@ -191,19 +191,6 @@ export class AppsyncStack extends Stack {
       fieldName: "getUserById"
     })
 
-    // Schema already exposes getUserByEmail. The live API has no resolver, so the field returns null.
-    const getUserByEmail = new NodejsFunction(this, `${props.name}-GetUserByEmail`, {
-      entry: join(__dirname, '../lambdas', 'appsync', 'user', 'getUserByEmail.ts'),
-      timeout: Duration.minutes(5),
-      ...nodeJsFunctionProps
-    })
-
-    appsync.addLambdaDataSource(`${props.name}GetUserByEmailDS`, getUserByEmail)
-    .createResolver(`${props.name}-GetUserByEmailResolver`, {
-      typeName: "Query",
-      fieldName: "getUserByEmail"
-    })
-
     const addFriendByEmail = new NodejsFunction(this, `${props.name}-AddFriendByEmail`, {
       entry: join(__dirname, '../lambdas', 'appsync', 'user', 'addFriendByEmail.ts'),
       timeout: Duration.minutes(5),

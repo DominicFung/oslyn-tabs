@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { jamLabel, jamRows, parseJamTarget, signInKind } from './jamList.ts'
+import { jamLabel, jamRows, parseJamTarget } from './jamList.ts'
 
 describe('jamRows', () => {
   it('drops null rows and ended rooms', () => {
@@ -32,13 +32,5 @@ describe('parseJamTarget', () => {
       jamSessionId: '11111111-1111-4111-8111-111111111111',
     })
     assert.equal(parseJamTarget('not a room'), null)
-  })
-})
-
-describe('signInKind', () => {
-  it('tells an email from a user id', () => {
-    assert.equal(signInKind('a@b.com'), 'email')
-    assert.equal(signInKind('11111111-1111-4111-8111-111111111111_usr'), 'userId')
-    assert.equal(signInKind('hello'), 'invalid')
   })
 })

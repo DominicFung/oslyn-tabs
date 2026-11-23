@@ -190,7 +190,7 @@ type Subscription {
 
 enum gender { MALE, FEMALE }
 enum chordSheetPlatform { UG, WORSHIPTOGETHER, OTHER }
-enum provider { google, facebook }
+enum provider { google, facebook, apple }
 enum access { admin, edit, view }
 
 type JamSessionSlideConfig {
