@@ -77,4 +77,8 @@ amplifytools.xcconfig
 AuthKey_*.p8
 web/public/models
 web/._*
+# Serwist writes the service worker during `next build`.
+web/public/sw.js
+web/public/sw.js.map
+web/public/swe-worker*
 ._*
