@@ -2,7 +2,6 @@
 
 import { Cog6ToothIcon } from "@heroicons/react/24/solid"
 import { useEffect, useState } from "react"
-import Capo from "./(controls)/capo"
 import { JamSong, Participant } from "@/../src/API"
 import { JamSongChange } from "@/core/graphql/jam"
 import Song from "./(controls)/song"
@@ -12,7 +11,6 @@ import QrCode from "./(controls)/qrcode"
 import Slides from "./(controls)/slides"
 import Users from "./(controls)/users"
 import Queue from "./(controls)/queue"
-import DeleteJamButton from "@/app/(components)/deleteJam"
 
 export interface ControlsProp {
   jamSessionId: string
@@ -78,7 +76,6 @@ export default function Controls(p: ControlsProp) {
   const [ options, setOptions ] = useState([
     { name: "Song", disabled: false },
     { name: "Key", disabled: false },
-    { name: "Capo", disabled: false },
     { name: "Text", disabled: false },
     { name: "QR", disabled: false },
     { name: "Slides", disabled: false },
@@ -89,8 +86,7 @@ export default function Controls(p: ControlsProp) {
   useEffect(() => {
     const ops = [
       { name: "Song", disabled: !p.song || !p.song.songs || !p.song.setSong },
-      { name: "Key", disabled: !p.sKey || !p.sKey.skey || !p.sKey.setKey },
-      { name:"Capo", disabled: !p.capo || !p.capo.capo || !p.capo.setCapo },
+      { name: "Key", disabled: (!p.sKey || !p.sKey.skey || !p.sKey.setKey) && (!p.capo || !p.capo.capo || !p.capo.setCapo) },
       { name: "Display", disabled: !p.display || !p.display.textSize || !p.display.setTextSize || !p.display.setAuto || !p.display.setComplex },
       { name: "QR", disabled: p.qrCode ? false : true },
       { name: "Slides", disabled: p.users ? false : true },
@@ -139,24 +135,20 @@ export default function Controls(p: ControlsProp) {
               </ul>
             </div>
 
-            <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
               <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
               { option === 0 && p.song && <Song jamSessionId={p.jamSessionId} song={p.song!.song} setSong={(n) => {p.song!.setSong(n); p.setOpen(false)}} songs={p.song!.songs} addToQueue={p.song.addToQueue} canAddSongs={p.song.canAddSongs} onSongAdded={p.song.onSongAdded} onSongRemoved={p.song.onSongRemoved} queueAt={p.song.queueAt} /> }
-              { option === 1 && p.sKey && <Key skey={p.sKey!.skey} setKey={p.sKey!.setKey} togglePreview={p.sKey.togglePreview} /> }
-              { option === 2 && p.capo && <Capo capo={p.capo!.capo} setCapo={p.capo!.setCapo} />}
-              { option === 3 && p.display && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 
+              { option === 1 && <Key skey={p.sKey?.skey} setKey={p.sKey?.setKey} togglePreview={p.sKey?.togglePreview} capo={p.capo?.capo} setCapo={p.capo?.setCapo} /> }
+              { option === 2 && p.display && <Display textSize={p.display!.textSize} setTextSize={p.display!.setTextSize} 
                                     auto={p.display!.auto} setAuto={p.display!.setAuto} 
                                     complex={p.display!.complex} setComplex={p.display!.setComplex}
                                     fullScreen={p.display!.fullScreen} setFullScreen={p.display!.setFullScreen}
                                     headsUp={p.display!.headsUp} setHeadsUp={p.display!.setHeadsUp}
                                 /> }
-              { option === 4 && p.qrCode && <QrCode jamSessionId={p.jamSessionId} joinToken={p.joinToken} canShare={!!p.canShareJam} /> }
-              { option === 5 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
-              { option === 6 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
-              { option === 7 && p.queue && <Queue songs={p.queue.songs} queue={p.queue.queueOrder} removeFromQueue={p.queue.removeFromQueue}/> }
-              {p.canDeleteJam && <div className="px-4 pt-4 pb-2">
-                <DeleteJamButton jamSessionId={p.jamSessionId} onDeleted={p.onJamDeleted} />
-              </div>}
+              { option === 3 && p.qrCode && <QrCode jamSessionId={p.jamSessionId} joinToken={p.joinToken} canShare={!!p.canShareJam} /> }
+              { option === 4 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
+              { option === 5 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
+              { option === 6 && p.queue && <Queue songs={p.queue.songs} queue={p.queue.queueOrder} removeFromQueue={p.queue.removeFromQueue}/> }
               </div>
             </div>
             <button type="button" className="hidden sm:inline-block fixed right-12 top-7 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"

@@ -53,9 +53,9 @@ export default function Display(p: DisplayProps) {
             <>
             <Listbox.Button className="relative w-full min-w-0 inline-flex items-center appearance-none focus:outline-none h-9 px-3 py-0 text-sm rounded-base pr-6 cursor-base shadow-sm text-neutral-900 dark:text-neutral-100 dark:bg-base dark:hover:border-neutral-600">
               <span className="p-1 px-4 text-sm truncate">{p.textSize}</span>
-              <span className="absolute flex items-center ml-3 pointer-events-none right-1">
+              <span className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
               <ArrowsUpDownIcon
-                className={`"w-4 h-4 ${open ? "text-blue-500" : "text-gray-400"}`}
+                className={`h-4 w-4 ${open ? "text-blue-500" : "text-gray-400"}`}
               />
             </span>
             </Listbox.Button>
