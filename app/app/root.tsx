@@ -17,6 +17,7 @@ import SetsScreen from './screens/sets'
 import SetForm from './screens/setForm'
 import BandsScreen from './screens/bands'
 import BandForm from './screens/bandForm'
+import ProfileScreen from './screens/profile'
 import { SongRow } from './screens/songs'
 
 type Tab = 'jam' | 'songs' | 'sets' | 'bands' | 'you'
@@ -32,7 +33,7 @@ type Route =
   | { name: 'band', bandId?: string }
 
 export default function Root(p: { nonce: number, onOpenJam: (jam: JamSession) => void }) {
-  const { account, signIn } = useSession()
+  const { account, signIn, signOut } = useSession()
   const { colors } = useTheme()
   const insets = useSafeAreaInsets()
   const [tab, setTab] = useState<Tab>('jam')
@@ -63,7 +64,7 @@ export default function Root(p: { nonce: number, onOpenJam: (jam: JamSession) =>
     if (tab === 'songs') return <SongsScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onOpen={(songId, owned) => setRoute({ name: 'song', songId, owned })} onCreate={() => setRoute({ name: 'songForm' })} onImport={() => setRoute({ name: 'import' })} />
     if (tab === 'sets') return <SetsScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onOpen={(setListId) => setRoute({ name: 'set', setListId })} onCreate={() => setRoute({ name: 'set' })} />
     if (tab === 'bands') return <BandsScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onOpen={(bandId) => setRoute({ name: 'band', bandId })} onCreate={() => setRoute({ name: 'band' })} />
-    if (tab === 'you') return <SignInScreen onDone={async (next) => { await signIn(next); setTab('jam') }} />
+    if (tab === 'you') return <ProfileScreen account={account} onSignIn={() => setRoute({ name: 'signin' })} onSignOut={async () => { await signOut(); setTab('jam') }} />
     return <HomeScreen
       account={account}
       nonce={p.nonce}
