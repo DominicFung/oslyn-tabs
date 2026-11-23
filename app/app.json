@@ -49,9 +49,7 @@
         {
           "initialOrientation": "DEFAULT"
         }
-      ],
-      "expo-apple-authentication",
-      "expo-web-browser"
+      ]
     ],
     "extra": {
       "eas": {

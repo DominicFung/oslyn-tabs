@@ -7,6 +7,7 @@
     "android": "expo run:android",
     "ios": "./scripts/prebuild.sh && expo run:ios -d",
     "web": "expo start --web",
+    "postinstall": "patch-package",
     "ts:check": "tsc",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
@@ -52,6 +53,7 @@
     "@babel/core": "^7.20.0",
     "@types/react": "~18.3.12",
     "babel-plugin-module-resolver": "^5.0.0",
+    "patch-package": "^8.0.1",
     "tailwindcss": "3.3.2",
     "typescript": "^5.1.3"
   },
