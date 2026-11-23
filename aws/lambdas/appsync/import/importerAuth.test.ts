@@ -94,7 +94,7 @@ describe('importer resolver', () => {
     const harness = deps()
     await expect(runImporter({
       info: { fieldName: 'setImporterRunning' },
-      arguments: { on: true },
+      arguments: { enabled: true },
       request: { headers: { 'x-importer-email': 'other@gmail.com' } },
     }, harness.deps)).rejects.toThrow('Not authorized')
     expect(harness.update).not.toHaveBeenCalled()
@@ -108,12 +108,12 @@ describe('importer resolver', () => {
     })
     await expect(runImporter({
       info: { fieldName: 'setImporterRunning' },
-      arguments: { on: true },
+      arguments: { enabled: true },
       request: { headers },
     }, harness.deps)).resolves.toMatchObject({ desired: 1, pending: 1 })
     await expect(runImporter({
       info: { fieldName: 'setImporterRunning' },
-      arguments: { on: false },
+      arguments: { enabled: false },
       request: { headers },
     }, harness.deps)).resolves.toMatchObject({ desired: 0 })
     expect(harness.update).toHaveBeenNthCalledWith(1, 1)
@@ -126,7 +126,7 @@ describe('importer resolver', () => {
       info: { fieldName: 'setImporterRunning' },
       arguments: {},
       identity: { claims: { email: IMPORTER_ADMIN_EMAIL } },
-    }, harness.deps)).rejects.toThrow('on must be boolean')
+    }, harness.deps)).rejects.toThrow('enabled must be boolean')
   })
 })
 
@@ -136,7 +136,7 @@ describe('importer wiring', () => {
   it('publishes the admin operations on the schema', () => {
     const schema = readFileSync(join(repo, 'aws/schema.graphql'), 'utf8')
     expect(schema).toContain('importerStatus: ImporterStatus!')
-    expect(schema).toContain('setImporterRunning(on: Boolean!): ImporterStatus!')
+    expect(schema).toContain('setImporterRunning(enabled: Boolean!): ImporterStatus!')
     expect(schema).toContain('type ImporterStatus')
   })
 

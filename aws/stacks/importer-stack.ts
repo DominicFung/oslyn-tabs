@@ -65,12 +65,13 @@ export class ImporterStack extends Stack {
         iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AmazonECSTaskExecutionRolePolicy'),
       ],
     })
-    const endpointRef = ssm.StringParameter.fromStringParameterName(this, 'EndpointRef', IMPORTER_ENDPOINT_PARAMETER)
-    const apiKeyRef = ssm.StringParameter.fromSecureStringParameterAttributes(this, 'ApiKeyRef', {
-      parameterName: IMPORTER_API_KEY_PARAMETER,
-    })
-    endpointRef.grantRead(executionRole)
-    apiKeyRef.grantRead(executionRole)
+    // Do not import these with StringParameter.fromStringParameterName.
+    // That adds a template parameter of type AWS::SSM::Parameter::Value<String>,
+    // and CloudFormation resolves it before the custom resource can create it.
+    const endpointSecret = this.ssmParameterSecret(IMPORTER_ENDPOINT_PARAMETER)
+    const apiKeySecret = this.ssmParameterSecret(IMPORTER_API_KEY_PARAMETER)
+    endpointSecret.grantRead(executionRole)
+    apiKeySecret.grantRead(executionRole)
     executionRole.addToPolicy(new iam.PolicyStatement({
       sid: 'DecryptImporterParameters',
       actions: ['kms:Decrypt'],
@@ -99,8 +100,8 @@ export class ImporterStack extends Stack {
       }),
       logging: ecs.LogDrivers.awsLogs({ logGroup, streamPrefix: 'ug-import' }),
       secrets: {
-        APPSYNC_ENDPOINT: ecs.Secret.fromSsmParameter(endpointRef),
-        APPSYNC_API_KEY: ecs.Secret.fromSsmParameter(apiKeyRef),
+        APPSYNC_ENDPOINT: endpointSecret,
+        APPSYNC_API_KEY: apiKeySecret,
       },
       stopTimeout: Duration.seconds(120),
       essential: true,
@@ -206,9 +207,32 @@ export class ImporterStack extends Stack {
   }
 
   /**
+   * ECS secret by ARN only. StringParameter.fromStringParameterName would add
+   * AWS::SSM::Parameter::Value<String>, which CloudFormation resolves before
+   * ensureParameter runs. The task definition stores the ARN; ECS reads the
+   * value when a task starts.
+   */
+  private ssmParameterSecret(name: string): ecs.Secret {
+    const parameterArn = this.formatArn({
+      service: 'ssm',
+      resource: `parameter${name}`,
+    })
+    const parameter = {
+      parameterArn,
+      grantRead: (grantee: iam.IGrantable) => iam.Grant.addToPrincipal({
+        grantee,
+        actions: ['ssm:DescribeParameters', 'ssm:GetParameters', 'ssm:GetParameter', 'ssm:GetParameterHistory'],
+        resourceArns: [parameterArn],
+      }),
+    }
+    return ecs.Secret.fromSsmParameter(parameter as ssm.IParameter)
+  }
+
+  /**
    * Creates the parameter once. Later deploys describe it and do not write the value,
    * so replacing REPLACE_ME in the console is not undone by the next stack update.
-   * The placeholder is not a real credential.
+   * The placeholder is not a real credential. The physical id is the parameter name;
+   * changing it would delete the parameter on the next deploy.
    */
   private ensureParameter(id: string, name: string, type: 'String' | 'SecureString', description: string) {
     const parameterArn = `arn:aws:ssm:${this.region}:${this.account}:parameter${name}`

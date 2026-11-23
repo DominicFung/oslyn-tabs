@@ -59,7 +59,7 @@ export default function ImporterCard() {
       const res = await fetch("/api/profile/importer", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ on: !on }),
+        body: JSON.stringify({ enabled: !on }),
       })
       const body = await res.json().catch(() => ({}))
       if (!res.ok) {

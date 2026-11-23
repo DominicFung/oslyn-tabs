@@ -14,8 +14,8 @@ const STATUS_QUERY = `query ImporterStatus {
   importerStatus { running desired pending lastStarted }
 }`
 
-const SET_MUTATION = `mutation SetImporterRunning($on: Boolean!) {
-  setImporterRunning(on: $on) { running desired pending lastStarted }
+const SET_MUTATION = `mutation SetImporterRunning($enabled: Boolean!) {
+  setImporterRunning(enabled: $enabled) { running desired pending lastStarted }
 }`
 
 async function requireAdmin() {
@@ -84,8 +84,8 @@ export async function POST(request: Request) {
   const gate = await requireAdmin()
   if ('error' in gate) return gate.error
   const body = await request.json().catch(() => null) as { on?: unknown } | null
-  if (!body || typeof body.on !== 'boolean') {
-    return NextResponse.json({ error: 'on must be boolean' }, { status: 400 })
+  if (!body || typeof body.enabled !== 'boolean') {
+    return NextResponse.json({ error: 'enabled must be boolean' }, { status: 400 })
   }
-  return appsync(gate.email, SET_MUTATION, { on: body.on })
+  return appsync(gate.email, SET_MUTATION, { enabled: body.enabled })
 }

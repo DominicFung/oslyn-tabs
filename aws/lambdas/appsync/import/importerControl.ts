@@ -20,7 +20,7 @@ let cachedSecret = ''
 
 export type ImporterEvent = {
   info?: { fieldName?: string }
-  arguments?: { on?: boolean | null }
+  arguments?: { enabled?: boolean | null }
   identity?: unknown
   request?: { headers?: Record<string, string | undefined> | null }
 }
@@ -47,8 +47,8 @@ export async function runImporter(event: ImporterEvent, deps: ImporterDeps): Pro
     return { ...counts, lastStarted: await deps.lastStarted() }
   }
   if (field === 'setImporterRunning') {
-    if (typeof event.arguments?.on !== 'boolean') throw new Error('on must be boolean')
-    const counts = await deps.update(event.arguments.on ? 1 : 0)
+    if (typeof event.arguments?.enabled !== 'boolean') throw new Error('enabled must be boolean')
+    const counts = await deps.update(event.arguments.enabled ? 1 : 0)
     return { ...counts, lastStarted: await deps.lastStarted() }
   }
   throw new Error('Unsupported field')
