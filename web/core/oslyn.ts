@@ -1,6 +1,6 @@
 import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
 
-const CHORD_BODY = "(?:N\\.?C\\.?|[A-G](?:#|b|♯|♭)?(?:maj|min|dim|aug|sus|add|m|M|\\+|ø|°)?(?:6\\/9|\\d+)?(?:(?:(?:add|sus|maj|min|dim|aug|m|M)?(?:#|b|♯|♭)?\\d+|\\((?:#|b|♯|♭)?\\d+\\)|6\\/9))*(?:\\/[A-G](?:#|b|♯|♭)?)?)"
+const CHORD_BODY = "(?:[A-G](?:#|b|♯|♭)?(?:maj|min|dim|aug|sus|add|m|M|\\+|ø|°)?(?:6\\/9|\\d+)?(?:(?:(?:add|sus|maj|min|dim|aug|m|M)?(?:#|b|♯|♭)?\\d+|\\((?:#|b|♯|♭)?\\d+\\)|6\\/9))*(?:\\/[A-G](?:#|b|♯|♭)?)?)"
 export const chordRegexForTextBlock = `(^| |\\n)(${CHORD_BODY})(\\n| |$)`
 export const chordRegex = `^(${CHORD_BODY})$`
 export const keyRegex = "^[A-Ga-g](##?|bb?)?$"
@@ -29,22 +29,26 @@ const isDiagramOrTab = (line: string): boolean => {
   return text.split(/\s+/).some((token) => fretToken.test(token))
 }
 
+const isNoChordToken = (token: string): boolean => /^(?:\(N\.?C\.?\)|N\.?C\.?)$/i.test(token.trim())
+
 const isChordLine = (line: string): boolean => {
   if (isDiagramOrTab(line)) return false
-  let tempLine = line.trim()
+  const tokens = line.trim()
     .replace(/&ndash;|&mdash;|\u2013|\u2014/g, '-')
     .replace(/[|]/g, ' ')
     .replace(/-/g, ' ')
-    .replace(/[^A-Za-z0-9#/()ø°+♯♭\s]/g, '')
-    .replace(/\s\s+/g, ' ')
-    .split(' ')
+    .split(/\s+/)
+    .filter(Boolean)
+  if (tokens.length > 0 && tokens.every(isNoChordToken)) return true
   let numOfChords = 0
   let numOfNonChords = 0
 
-  for (let item of tempLine) {
-    if (!new RegExp(chordRegex).test(item)) {
-      numOfNonChords = numOfNonChords + 1
-    } else numOfChords = numOfChords + 1
+  for (let item of tokens) {
+    if (isNoChordToken(item)) continue
+    const cleaned = item.replace(/[^A-Za-z0-9#/()ø°+♯♭]/g, '')
+    if (cleaned && new RegExp(chordRegex).test(cleaned)) {
+      numOfChords = numOfChords + 1
+    } else numOfNonChords = numOfNonChords + 1
   }
 
   //console.log(`"${line}" ${numOfChords} vs ${numOfNonChords}`)
@@ -57,6 +61,7 @@ function chordScanLine(line: string): string {
     .replace(/&ndash;/g, '       ')
     .replace(/&mdash;/g, '      ')
     .replace(/[\u2013\u2014|-]/g, ' ')
+    .replace(/\(N\.?C\.?\)|N\.?C\.?/gi, (mark) => ' '.repeat(mark.length))
 }
 
 const getSectionName = (line: string): string => {
@@ -394,16 +399,79 @@ const findClosestDivisor = (x: number, min: number, max: number): number => {
   return closestDivisor
 }
 
+const CHART_ENTITIES: Record<string, string> = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', hellip: '...',
+  ndash: '-', mdash: '-',
+  lsquo: '\u2018', rsquo: '\u2019', sbquo: '\u201a',
+  ldquo: '\u201c', rdquo: '\u201d', bdquo: '\u201e',
+  aacute: 'á', agrave: 'à', acirc: 'â', auml: 'ä', atilde: 'ã', aring: 'å', aelig: 'æ',
+  ccedil: 'ç', eacute: 'é', egrave: 'è', ecirc: 'ê', euml: 'ë',
+  iacute: 'í', igrave: 'ì', icirc: 'î', iuml: 'ï', ntilde: 'ñ',
+  oacute: 'ó', ograve: 'ò', ocirc: 'ô', ouml: 'ö', otilde: 'õ', oelig: 'œ',
+  uacute: 'ú', ugrave: 'ù', ucirc: 'û', uuml: 'ü', yacute: 'ý', yuml: 'ÿ',
+}
+
+function stripSongMeta(text: string): string {
+  const lines = text.split('\n')
+  const header = (line: string) => /^\s*\[[^\]]+\]\s*$/.test(line.trim())
+  const pureUrl = (line: string) => /^(?:https?:\/\/|www\.)\S+$/i.test(line.trim())
+  const meta = /\b(?:based on|capo|tuning|tabbed by|transcribed by|version|strum(?:ming)?|bpm|tempo|difficulty|key\s*:|chords used|transpose)\b/i
+  const hasHeader = lines.some(header)
+  let inSong = !hasHeader
+  let seenChord = false
+  const kept: string[] = []
+  for (const line of lines) {
+    if (!inSong) {
+      if (header(line)) { inSong = true; kept.push(line) }
+      continue
+    }
+    if (header(line) || line.trim() === '') { kept.push(line); continue }
+    if (pureUrl(line)) continue
+    if (!seenChord && !isChordLine(line) && meta.test(line)) continue
+    if (isChordLine(line)) seenChord = true
+    kept.push(line)
+  }
+  const out: string[] = []
+  let i = 0
+  while (i < kept.length) {
+    if (!header(kept[i])) { out.push(kept[i]); i += 1; continue }
+    let j = i + 1
+    while (j < kept.length && kept[j].trim() === '') j += 1
+    if (j >= kept.length || header(kept[j])) { i = j; continue }
+    out.push(kept[i])
+    i += 1
+  }
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim()
+}
+
+function decodeChartText(value: string): string {
+  let text = value || ''
+  for (let pass = 0; pass < 3; pass++) {
+    const next = text.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
+      if (body[0] === '#') {
+        const code = body[1]?.toLowerCase() === 'x' ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10)
+        return Number.isFinite(code) ? String.fromCodePoint(code) : entity
+      }
+      return CHART_ENTITIES[body] ?? CHART_ENTITIES[body.toLowerCase()] ?? entity
+    })
+    if (next === text) break
+    text = next
+  }
+  return text
+}
+
 export const chordSheetToOslynSong = (sheet: string, key: string): OslynSong => {
-  const song = rawChordsheetToSectionJson(sheet)
+  const text = stripSongMeta(decodeChartText(sheet))
+  const song = rawChordsheetToSectionJson(text)
   console.log(song)
-  return convertOslynSong(sheet, song, key)
+  return convertOslynSong(text, song, key)
 }
 
 export const chordSheetToSlides = (sheet: string, key: string): OslynSlide => {
-  const song = rawChordsheetToSectionJson(sheet)
+  const text = stripSongMeta(decodeChartText(sheet))
+  const song = rawChordsheetToSectionJson(text)
   console.log(song)
-  const oslynSong = convertOslynSong(sheet, song, key)
+  const oslynSong = convertOslynSong(text, song, key)
   console.log(oslynSong)
   return convertOslynSongToPages(oslynSong)
 }
