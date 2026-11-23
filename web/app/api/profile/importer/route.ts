@@ -83,7 +83,7 @@ export async function POST(request: Request) {
   console.log(`${request.method} ${request.url}`)
   const gate = await requireAdmin()
   if ('error' in gate) return gate.error
-  const body = await request.json().catch(() => null) as { on?: unknown } | null
+  const body = await request.json().catch(() => null) as { enabled?: unknown } | null
   if (!body || typeof body.enabled !== 'boolean') {
     return NextResponse.json({ error: 'enabled must be boolean' }, { status: 400 })
   }
