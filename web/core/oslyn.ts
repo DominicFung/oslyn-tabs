@@ -1,7 +1,8 @@
 import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
 
-export const chordRegexForTextBlock = "(^| |\n)([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)(\n| |$)"
-export const chordRegex =  "^([A-Ga-g](##?|bb?)?(m|M)?[2-9]?(add|sus|maj|min|aug|dim)?[2-9]?(\/[A-G](##?|bb?)?)?)$"
+const CHORD_BODY = "(?:N\\.?C\\.?|[A-G](?:#|b|♯|♭)?(?:maj|min|dim|aug|sus|add|m|M|\\+|ø|°)?(?:6\\/9|\\d+)?(?:(?:(?:add|sus|maj|min|dim|aug|m|M)?(?:#|b|♯|♭)?\\d+|\\((?:#|b|♯|♭)?\\d+\\)|6\\/9))*(?:\\/[A-G](?:#|b|♯|♭)?)?)"
+export const chordRegexForTextBlock = `(^| |\\n)(${CHORD_BODY})(\\n| |$)`
+export const chordRegex = `^(${CHORD_BODY})$`
 export const keyRegex = "^[A-Ga-g](##?|bb?)?$"
 
 const KeyDistanceMap = [
@@ -19,11 +20,24 @@ const KeyDistanceMap = [
   [ 'Ab', 'G#',                ],
 ]
 
+const fretToken = /^(?:[xX\d]{4,6})(?:\(\d\))?$/
+const isDiagramOrTab = (line: string): boolean => {
+  const text = line.trim()
+  if (/^[eEbBgGdDaA]\||\|[-0-9phbr/\\~xX]{4,}\|/.test(text)) return true
+  if (/^\s*(?:guitar\s+\d+\s*:|.*\bplays for\b)/i.test(text)) return true
+  if (/^\s*chords\s*:\s*$/i.test(text)) return true
+  return text.split(/\s+/).some((token) => fretToken.test(token))
+}
+
 const isChordLine = (line: string): boolean => {
+  if (isDiagramOrTab(line)) return false
   let tempLine = line.trim()
-    .replace(/[^a-zA-Z0-9#\/\s]/g, '')  // removes unwanted chars such as %^& etc.
-    .replace(/\s\s+/g, ' ')             // turns "multi space" into a single space
-    .split(' ')                         // turn into array
+    .replace(/&ndash;|&mdash;|\u2013|\u2014/g, '-')
+    .replace(/[|]/g, ' ')
+    .replace(/-/g, ' ')
+    .replace(/[^A-Za-z0-9#/()ø°+♯♭\s]/g, '')
+    .replace(/\s\s+/g, ' ')
+    .split(' ')
   let numOfChords = 0
   let numOfNonChords = 0
 
@@ -38,12 +52,21 @@ const isChordLine = (line: string): boolean => {
   else return false
 }
 
+function chordScanLine(line: string): string {
+  return line
+    .replace(/&ndash;/g, '       ')
+    .replace(/&mdash;/g, '      ')
+    .replace(/[\u2013\u2014|-]/g, ' ')
+}
+
 const getSectionName = (line: string): string => {
   let temp = line.split("[")
   return temp[temp.length-1].split("]")[0]
 }
 
 export const getLineType = (line: string): 'chord'|'lyric'|'annotation'|'blank' => {
+  if (isDiagramOrTab(line)) return 'blank'
+  if (/^\s*\([^)]*\briff\b[^)]*\)$/i.test(line.trim()) || /^\s*\(play riff[^)]*\)$/i.test(line.trim())) return 'blank'
   if (isChordLine(line)) { /*console.log(`getLineType() "${line}" chord`);*/ return 'chord' }
   else if (line.trim().replace(/\s\s+/g, ' ') === ' ') return 'blank'
   else if (line.trim().replace(/\s\s+/g, '').startsWith('[') &&
@@ -143,7 +166,7 @@ const rawChordsheetToSectionJson = (text: string): _Song => {
       let matchArr, start, end
       let regex = new RegExp(chordRegexForTextBlock, 'g')
 
-      while ((matchArr = regex.exec(line)) !== null) {
+      while ((matchArr = regex.exec(chordScanLine(line))) !== null) {
         start = index + matchArr.index
         end = start + matchArr[0].length - 2
 
@@ -243,7 +266,7 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
       let matchArr
       let regex = new RegExp(chordRegexForTextBlock, 'g')
       
-      while ((matchArr = regex.exec(line)) !== null) {
+      while ((matchArr = regex.exec(chordScanLine(line))) !== null) {
         console.log(`${matchArr[0].trim()} :: ${currentIntermediaryJasonSection.chords[c]?.chord} :: ${c} ${p}`)
         if (currentIntermediaryJasonSection.chords[c] && currentIntermediaryJasonSection.chords[c].chord === matchArr[0].trim()) {
           let currentIntermediaryJasonChord = currentIntermediaryJasonSection.chords[c] as _Chord
@@ -274,6 +297,19 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
       if (currentPhrase.chords[ currentPhrase.chords.length-1 ])
         currentPhrase.lyric = addSpacesToEnd(currentPhrase.lyric, currentPhrase.chords[ currentPhrase.chords.length-1 ].meta.end)
       oslynSongJson.song.push(currentPhrase)
+    } else if (lineType === 'lyric' && line.trim()) {
+      if (i > 0 && getLineType(textArray[i - 1]) === 'chord') {
+        // The chord line above already kept this lyric.
+      } else {
+        oslynSongJson.song.push({
+          lyric: line,
+          section: currentIntermediaryJasonSection.name,
+          chords: [],
+          phrase: p,
+          phraseDuration: null,
+          start: null
+        } as OslynPhrase)
+      }
     } else if (lineType === 'annotation') {
       //console.log(getSectionName(line))
 
