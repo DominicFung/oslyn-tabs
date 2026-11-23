@@ -3,6 +3,7 @@ import { DynamoDBClient, PutItemCommand, GetItemCommand, UpdateItemCommand } fro
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
 import { updateDynamoUtil } from '../../util/dynamo'
+import { resolvedChordSheetKey } from '../../util/detectKey'
 
 import { v4 as uuidv4 } from 'uuid'
 import { _Band } from '../../type'
@@ -40,7 +41,11 @@ export const handler = async (event: AppSyncResolverEvent<{
   let song = {
     songId, title: b.title, 
     userId: b.userId,
-    chordSheetKey: b.chordSheetKey,
+    chordSheetKey: resolvedChordSheetKey({
+      chordSheet: b.chordSheet,
+      providedKey: b.chordSheetKey,
+      importPath: b.originPlatorm === 'UG',
+    }) || b.chordSheetKey,
 
     isApproved: true,
     version: 1,    
