@@ -2,7 +2,7 @@ import { OslynPhrase } from "../../core/types"
 import { getChordByNumber } from "../../core/oslyn"
 import React, { useEffect, useState } from "react"
 
-import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'
+import { TextLayoutEvent, Text, View } from 'react-native'
 import { randomUUID } from "expo-crypto"
 
 export interface LineProps {
@@ -37,7 +37,7 @@ export default function Line(p: LineProps) {
     }
   }, [p.phrase])
 
-  const onLyricLayout = (event: NativeSyntheticEvent<TextLayoutEventData>, i: number) => {
+  const onLyricLayout = (event: TextLayoutEvent, i: number) => {
     const w = event.nativeEvent?.lines[0]?.width || 0
     setWidths((prev) => {
       if (prev.length <= 0) { return [] }
@@ -46,15 +46,15 @@ export default function Line(p: LineProps) {
     })
   }
 
-  const onMaxWidth = (event: NativeSyntheticEvent<TextLayoutEventData>, e: "line"|"chord") => {
+  const onMaxWidth = (event: TextLayoutEvent, e: "line"|"chord") => {
     const w = event.nativeEvent?.lines[0]?.width || 0
     console.log(`ON MAX WIDTH - ${ w } , ${e} "${event.nativeEvent?.lines[0].text}"`)
     if (e === "line") { setMaxWidth((prev) => { return { ...prev, lineWidth: w } }) }
     if (e === "chord") { setMaxWidth((prev) => { return { ...prev, lastChordWidth: w } }) }
   }
 
-  const onMaxLineWidth = (event: NativeSyntheticEvent<TextLayoutEventData>) => { onMaxWidth(event, "line") }
-  const onMaxChordWidth = (event: NativeSyntheticEvent<TextLayoutEventData>) => { onMaxWidth(event, "chord") }
+  const onMaxLineWidth = (event: TextLayoutEvent) => { onMaxWidth(event, "line") }
+  const onMaxChordWidth = (event: TextLayoutEvent) => { onMaxWidth(event, "chord") }
 
   useEffect(() => {
     if (!maxWidth.lineWidth || !maxWidth.lastChordWidth) return

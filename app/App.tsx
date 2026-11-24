@@ -1,6 +1,8 @@
 // https://docs.expo.dev/guides/monorepos/#modify-the-metro-config
 //"node_modules/expo/AppEntry.js",
 
+import "./global.css"
+
 import React, { View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'

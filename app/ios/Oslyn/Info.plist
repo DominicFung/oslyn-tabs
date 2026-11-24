@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.4</string>
+    <string>$(MARKETING_VERSION)</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -27,38 +27,54 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>oslyn</string>
           <string>TJR9Q2Q4KU.com.oslyn.tabs</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>10</string>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
     <key>EXDefaultScreenOrientationMask</key>
     <string>UIInterfaceOrientationMaskAllButUpsideDown</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
+      <false/>
+      <key>NSAllowsLocalNetworking</key>
       <true/>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-      </dict>
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your camera.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <key>RCTMetroPort</key>
+    <string>$(RCT_METRO_PORT)</string>
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+      <key>UIApplicationSupportsMultipleScenes</key>
+      <false/>
+      <key>UISceneConfigurations</key>
+      <dict>
+        <key>UIWindowSceneSessionRoleApplication</key>
+        <array>
+          <dict>
+            <key>UISceneConfigurationName</key>
+            <string>Default Configuration</string>
+            <key>UISceneDelegateClassName</key>
+            <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+          </dict>
+        </array>
+      </dict>
+    </dict>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
     <array>
-      <string>armv7</string>
+      <string>arm64</string>
     </array>
     <key>UIRequiresFullScreen</key>
     <true/>
@@ -72,6 +88,6 @@
     <key>UIUserInterfaceStyle</key>
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
+    <true/>
   </dict>
 </plist>
