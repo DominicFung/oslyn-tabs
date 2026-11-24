@@ -10,7 +10,12 @@ podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties
 ENV['RCT_NEW_ARCH_ENABLED'] = podfile_properties['newArchEnabled'] == 'true' ? '1' : '0'
 ENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] = podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']
 
-platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
+# Xcode 27's simulator SDK rejects anything below 15.0. Keep the floor at 15.1
+# even if Podfile.properties.json asks for less.
+ios_deployment_target = podfile_properties['ios.deploymentTarget'] || '15.1'
+ios_deployment_target = '15.1' if Gem::Version.new(ios_deployment_target) < Gem::Version.new('15.1')
+
+platform :ios, ios_deployment_target
 install! 'cocoapods',
   :deterministic_uuids => false
 
@@ -63,6 +68,16 @@ target 'Oslyn' do
         resource_bundle_target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
+      end
+    end
+
+    # Resource bundles such as RNCAsyncStorage-RNCAsyncStorage_resources still
+    # ship IPHONEOS_DEPLOYMENT_TARGET = 9.0. Xcode 27 only accepts 15.0–27.2.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        current = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_s.strip
+        next if !current.empty? && Gem::Version.new(current) >= Gem::Version.new(ios_deployment_target)
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = ios_deployment_target
       end
     end
   end
