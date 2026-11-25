@@ -1,9 +1,19 @@
 #import "AppDelegate.h"
+#import "SceneDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    // iOS 27 requires a UIScene. SceneDelegate creates the window.
+    self.automaticallyLoadReactNativeWindow = NO;
+  }
+  return self;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -14,6 +24,16 @@
   self.initialProps = @{};
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (UISceneConfiguration *)application:(UIApplication *)application
+    configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession
+                                   options:(UISceneConnectionOptions *)options
+{
+  UISceneConfiguration *configuration = [[UISceneConfiguration alloc] initWithName:@"Default Configuration"
+                                                                       sessionRole:connectingSceneSession.role];
+  configuration.delegateClass = [SceneDelegate class];
+  return configuration;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
