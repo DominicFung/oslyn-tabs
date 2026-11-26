@@ -112,7 +112,7 @@ def oslynUploadStorePassword = oslynUploadValue("OSLYN_UPLOAD_STORE_PASSWORD")
 def oslynUploadKeyAlias = oslynUploadValue("OSLYN_UPLOAD_KEY_ALIAS")
 def oslynUploadKeyPassword = oslynUploadValue("OSLYN_UPLOAD_KEY_PASSWORD")
 def oslynHasUploadSigning = oslynUploadStoreFile && oslynUploadStorePassword && oslynUploadKeyAlias && oslynUploadKeyPassword
-def oslynVersionCode = (findProperty("OSLYN_VERSION_CODE") ?: System.getenv("OSLYN_VERSION_CODE") ?: "1").toString().toInteger()
+def oslynVersionCode = (findProperty("OSLYN_VERSION_CODE") ?: System.getenv("OSLYN_VERSION_CODE") ?: "2").toString().toInteger()
 
 android {
     ndkVersion rootProject.ext.ndkVersion
