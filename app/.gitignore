@@ -11,6 +11,10 @@ web-build/
 # Native
 *.orig.*
 *.jks
+*.keystore
+!android/app/debug.keystore
+keystore.properties
+play-store-key.json
 *.p8
 AuthKey_*.p8
 *.p12

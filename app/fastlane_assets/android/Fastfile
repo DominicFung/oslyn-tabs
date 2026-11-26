@@ -1,0 +1,68 @@
+require "json"
+
+# Android Play internal-track lane.
+# Run from app/android after ./scripts/fastlane-android.sh:
+#   bundle exec fastlane android internal
+
+default_platform(:android)
+
+platform :android do
+  desc "Build a release AAB and upload a draft to the Play internal track"
+  lane :internal do
+    version_code = oslyn_next_version_code
+
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      project_dir: ".",
+      properties: {
+        "OSLYN_VERSION_CODE" => version_code.to_s
+      }
+    )
+
+    aab = lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]
+    UI.user_error!("Gradle did not report an AAB output path") if aab.to_s.empty?
+
+    # Metadata, images, and changelogs are not in this repo. Upload the binary only.
+    upload_to_play_store(
+      track: "internal",
+      aab: aab,
+      release_status: "draft",
+      json_key: File.expand_path("play-store-key.json", __dir__),
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+end
+
+# Highest version code already on the internal track, plus one.
+# The Play API cannot see a version until the first AAB has been uploaded by hand,
+# so a missing app or an empty track falls back to expo.android.versionCode in app.json.
+def oslyn_next_version_code
+  json_key = File.expand_path("play-store-key.json", __dir__)
+  begin
+    codes = google_play_track_version_codes(
+      package_name: "com.oslyn.tabs",
+      track: "internal",
+      json_key: json_key
+    )
+    numeric = Array(codes).map { |code| Integer(code) }
+    if numeric.any?
+      bumped = numeric.max + 1
+      UI.message("Play internal track highest versionCode is #{numeric.max}; building #{bumped}")
+      return bumped
+    end
+    UI.important("Play internal track has no version codes. Falling back to app.json.")
+  rescue StandardError => e
+    UI.important("Could not read Play internal version codes (#{e.message}). Falling back to app.json.")
+  end
+
+  app_json = File.expand_path("../../app.json", __dir__)
+  data = JSON.parse(File.read(app_json))
+  code = data.dig("expo", "android", "versionCode")
+  fallback = code.nil? ? 1 : Integer(code)
+  UI.message("Using versionCode #{fallback} from app.json")
+  fallback
+end
