@@ -1,6 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { SCREEN_SAFE_EDGES } from '../src/phoneLayout'
 import { useTheme } from '../src/theme'
 
 export function Screen({
@@ -10,25 +11,25 @@ export function Screen({
   action,
   children,
 }: {
-  title: string
+  title?: string
   subtitle?: string
   onBack?: () => void
   action?: React.ReactNode
   children: React.ReactNode
 }) {
   const { colors } = useTheme()
-  const insets = useSafeAreaInsets()
-  return <View style={{ flex: 1, paddingTop: insets.top }}>
-    <View style={styles.header}>
+  const showHeader = title != null || onBack != null || action != null
+  return <SafeAreaView edges={SCREEN_SAFE_EDGES} style={{ flex: 1 }}>
+    {showHeader ? <View style={styles.header}>
       {onBack ? <Pressable onPress={onBack} style={styles.back}><Text style={{ color: colors.accent, fontWeight: '700' }}>Back</Text></Pressable> : <View style={styles.back} />}
       <View style={{ flex: 1 }}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        {title != null ? <Text style={[styles.title, { color: colors.text }]}>{title}</Text> : null}
         {subtitle ? <Text style={{ color: colors.muted, marginTop: 2 }}>{subtitle}</Text> : null}
       </View>
       {action}
-    </View>
+    </View> : null}
     {children}
-  </View>
+  </SafeAreaView>
 }
 
 export function Body({ children, onRefresh }: { children: React.ReactNode, onRefresh?: React.ReactNode }) {

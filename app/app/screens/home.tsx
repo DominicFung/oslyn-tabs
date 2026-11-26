@@ -7,6 +7,7 @@ import { JamListRow, jamLabel, jamRows } from '../../src/jamList'
 import { jamTitle } from '../../src/jamTitle'
 import { Account } from '../../src/session'
 import Main from '../main'
+import { Screen } from '../ui'
 
 export default function HomeScreen(p: {
   account: Account | null
@@ -95,19 +96,27 @@ export default function HomeScreen(p: {
     ])
   }
 
-  return <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => { setRefreshing(true); await load(); setRefreshing(false) }} />}>
-    <Main
-      bands={bands}
-      sessions={sessions}
-      mine={mine}
-      error={error}
-      onJoin={p.onJoin}
-      onDelete={p.account ? remove : undefined}
-      onStart={p.account ? start : undefined}
-      starting={starting}
-      onSignIn={p.onSignIn}
-      onJoinByCode={p.onJoinByCode}
-      onOpenBand={p.onOpenBand}
-    />
-  </ScrollView>
+  return <Screen>
+    <ScrollView
+      style={{ flex: 1 }}
+      directionalLockEnabled
+      contentInsetAdjustmentBehavior="never"
+      contentContainerStyle={{ paddingBottom: 24 }}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => { setRefreshing(true); await load(); setRefreshing(false) }} />}
+    >
+      <Main
+        bands={bands}
+        sessions={sessions}
+        mine={mine}
+        error={error}
+        onJoin={p.onJoin}
+        onDelete={p.account ? remove : undefined}
+        onStart={p.account ? start : undefined}
+        starting={starting}
+        onSignIn={p.onSignIn}
+        onJoinByCode={p.onJoinByCode}
+        onOpenBand={p.onOpenBand}
+      />
+    </ScrollView>
+  </Screen>
 }
