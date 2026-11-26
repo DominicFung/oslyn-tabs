@@ -2,7 +2,7 @@
   "expo": {
     "name": "Oslyn",
     "slug": "Tabs",
-    "version": "1.0.0",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,7 +32,8 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.oslyn.tabs"
+      "package": "com.oslyn.tabs",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -50,7 +51,8 @@
           "initialOrientation": "DEFAULT"
         }
       ],
-      "./plugins/withSceneLifecycle"
+      "./plugins/withSceneLifecycle",
+      "./plugins/withAndroidReleaseSigning"
     ],
     "extra": {
       "eas": {

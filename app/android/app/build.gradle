@@ -80,6 +80,40 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+
+// oslyn-upload-signing
+// Release uploads use the Play upload key when OSLYN_UPLOAD_* is set
+// (android/keystore.properties, Gradle properties, or the environment).
+// Local release builds fall back to the debug keystore so `yarn android` still works.
+def oslynKeystoreProperties = new Properties()
+def oslynKeystorePropertiesFile = rootProject.file("keystore.properties")
+if (oslynKeystorePropertiesFile.exists()) {
+    oslynKeystorePropertiesFile.withInputStream { stream -> oslynKeystoreProperties.load(stream) }
+}
+
+def oslynUploadValue = { String name ->
+    def fromFile = oslynKeystoreProperties.getProperty(name)
+    if (fromFile != null && !fromFile.trim().isEmpty()) {
+        return fromFile.trim()
+    }
+    def fromGradle = findProperty(name)
+    if (fromGradle != null && !fromGradle.toString().trim().isEmpty()) {
+        return fromGradle.toString().trim()
+    }
+    def fromEnv = System.getenv(name)
+    if (fromEnv != null && !fromEnv.trim().isEmpty()) {
+        return fromEnv.trim()
+    }
+    return null
+}
+
+def oslynUploadStoreFile = oslynUploadValue("OSLYN_UPLOAD_STORE_FILE")
+def oslynUploadStorePassword = oslynUploadValue("OSLYN_UPLOAD_STORE_PASSWORD")
+def oslynUploadKeyAlias = oslynUploadValue("OSLYN_UPLOAD_KEY_ALIAS")
+def oslynUploadKeyPassword = oslynUploadValue("OSLYN_UPLOAD_KEY_PASSWORD")
+def oslynHasUploadSigning = oslynUploadStoreFile && oslynUploadStorePassword && oslynUploadKeyAlias && oslynUploadKeyPassword
+def oslynVersionCode = (findProperty("OSLYN_VERSION_CODE") ?: System.getenv("OSLYN_VERSION_CODE") ?: "1").toString().toInteger()
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -91,8 +125,8 @@ android {
         applicationId 'com.oslyn.tabs'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode oslynVersionCode
+        versionName "1.0.5"
     }
     signingConfigs {
         debug {
@@ -100,6 +134,15 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+        }
+        release {
+            if (oslynHasUploadSigning) {
+                def resolvedStore = new File(oslynUploadStoreFile)
+                storeFile resolvedStore.isAbsolute() ? resolvedStore : rootProject.file(oslynUploadStoreFile)
+                storePassword oslynUploadStorePassword
+                keyAlias oslynUploadKeyAlias
+                keyPassword oslynUploadKeyPassword
+            }
         }
     }
     buildTypes {
@@ -109,7 +152,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig oslynHasUploadSigning ? signingConfigs.release : signingConfigs.debug
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
