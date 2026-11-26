@@ -29,6 +29,16 @@ platform :ios do
     )
 
     increment_build_number(xcodeproj: "Oslyn.xcodeproj")
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Oslyn.xcodeproj",
+      targets: ["Oslyn"],
+      team_id: "TJR9Q2Q4KU",
+      code_sign_identity: "Apple Distribution",
+      profile_name: "match AppStore TJR9Q2Q4KU.com.oslyn.tabs"
+    )
+
     build_app(workspace: "Oslyn.xcworkspace", scheme: "Oslyn")
     upload_to_testflight(api_key: api_key)
   end
