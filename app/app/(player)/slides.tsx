@@ -1,4 +1,4 @@
-import { chordSheetToSlides } from '../../core/oslyn'
+import { chordSheetToSlides, clampSlideIndex } from '../../core/oslyn'
 import { OslynSlide } from '../../core/types'
 import { Song } from '../../src/API'
 import React, { useEffect, useState } from 'react'
@@ -36,7 +36,8 @@ export default function Slides(p: SlidesProps) {
   const { width: w, height: h } = useWindowDimensions()
 
   const [slides, setSlides] = useState<OslynSlide>()
-  const [page, _setPage] = useState(p.page || 0)
+  const [requestedPage, _setPage] = useState(p.page || 0)
+  const page = clampSlideIndex(requestedPage, slides?.pages.length || 0)
   const [transposedKey, setTransposedKey] = useState(p.skey || p.song.chordSheetKey || 'C')
   const [headerH, setHeaderH] = useState(96)
   const [stage, setStage] = useState({ width: 0, height: 0 })

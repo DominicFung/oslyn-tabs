@@ -9,5 +9,7 @@ export {
   convertOslynSong,
   convertOslynSongToPages,
   chordSheetToOslynSong,
-  chordSheetToSlides
+  chordSheetToSlides,
+  slideChunkSizes,
+  clampSlideIndex
 } from './oslyn'

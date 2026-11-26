@@ -39,7 +39,10 @@ const isChordLine = (line: string): boolean => {
     .replace(/-/g, ' ')
     .split(/\s+/)
     .filter(Boolean)
-  if (tokens.length > 0 && tokens.every(isNoChordToken)) return true
+  // An empty line has no tokens. 0 >= 0 used to call that a chord line, which
+  // inserted a blank phrase between every real line and left one lyric per slide.
+  if (tokens.length === 0) return false
+  if (tokens.every(isNoChordToken)) return true
   let numOfChords = 0
   let numOfNonChords = 0
 
@@ -70,13 +73,28 @@ const getSectionName = (line: string): string => {
 }
 
 export const getLineType = (line: string): 'chord'|'lyric'|'annotation'|'blank' => {
-  if (isDiagramOrTab(line)) return 'blank'
+  if (!line || line.trim() === '' || isDiagramOrTab(line)) return 'blank'
   if (/^\s*\([^)]*\briff\b[^)]*\)$/i.test(line.trim()) || /^\s*\(play riff[^)]*\)$/i.test(line.trim())) return 'blank'
   if (isChordLine(line)) { /*console.log(`getLineType() "${line}" chord`);*/ return 'chord' }
   else if (line.trim().replace(/\s\s+/g, ' ') === ' ') return 'blank'
   else if (line.trim().replace(/\s\s+/g, '').startsWith('[') &&
           line.trim().replace(/\s\s+/g, '').startsWith('[')) return 'annotation'
   else return 'lyric'
+}
+
+/** Lyric under a chord row, skipping the blank lines charts store between rows. */
+function lyricUnderChordLine(lines: string[], index: number): string {
+  let j = index + 1
+  while (j < lines.length && getLineType(lines[j]) === 'blank') j++
+  if (j < lines.length && getLineType(lines[j]) === 'lyric') return lines[j]
+  return ''
+}
+
+/** True when this lyric was already attached to the chord row above it. */
+function lyricPairedWithChordAbove(lines: string[], index: number): boolean {
+  let j = index - 1
+  while (j >= 0 && getLineType(lines[j]) === 'blank') j--
+  return j >= 0 && getLineType(lines[j]) === 'chord'
 }
 
 export const getIsMinor = (chord: string): boolean => {
@@ -253,10 +271,7 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
     let lineType = getLineType(line)
 
     if (lineType === 'chord') {
-      var lyricLine = ""
-      if (i<textArray.length-1 && getLineType(textArray[i+1]) === 'lyric') {
-        lyricLine = textArray[i+1]
-      }
+      var lyricLine = lyricUnderChordLine(textArray, i)
 
       var currentPhrase = {
         lyric: lyricLine,
@@ -301,9 +316,10 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
 
       if (currentPhrase.chords[ currentPhrase.chords.length-1 ])
         currentPhrase.lyric = addSpacesToEnd(currentPhrase.lyric, currentPhrase.chords[ currentPhrase.chords.length-1 ].meta.end)
-      oslynSongJson.song.push(currentPhrase)
+      if (currentPhrase.lyric.trim() || currentPhrase.chords.length > 0)
+        oslynSongJson.song.push(currentPhrase)
     } else if (lineType === 'lyric' && line.trim()) {
-      if (i > 0 && getLineType(textArray[i - 1]) === 'chord') {
+      if (lyricPairedWithChordAbove(textArray, i)) {
         // The chord line above already kept this lyric.
       } else {
         oslynSongJson.song.push({
@@ -339,63 +355,62 @@ export const convertOslynSong = (text: string, sectionJson: _Song, key: string):
   return oslynSongJson
 }
 
-const addPhraseToSlides = (
-  pages: { lines: OslynPhrase[], extra: OslynPhrase | null }[], cache: OslynPhrase[], min: number, max: number
-): { lines: OslynPhrase[], extra: OslynPhrase | null }[] => {
-  const r = findClosestDivisor(cache.length, min, max)
-  let a = 0
-  while (cache.length > 0) {
-    const c = cache.shift() as OslynPhrase
-    if (a%r === 0) { 
-      pages.push({ lines: [c], extra: null }) 
-      if (pages.length-1 > 0) pages[pages.length-2].extra = c
-    }
-    else { pages[pages.length-1].lines.push(c) }
-    a++
+/**
+ * Split `count` lines into chunks of `min`..`max` (default 2..3) that differ
+ * by at most one, larger chunks first. A single line stays one chunk.
+ * 4 → 2+2, 5 → 3+2, 6 → 3+3, 7 → 3+2+2, 1 → 1.
+ */
+export function slideChunkSizes(count: number, min = 2, max = 3): number[] {
+  if (count <= 0) return []
+  const lo = Math.max(1, Math.floor(min))
+  const hi = Math.max(lo, Math.floor(max))
+  if (count <= hi) return [count]
+  let chunks = Math.ceil(count / hi)
+  while (chunks > 1 && chunks * lo > count) chunks -= 1
+  const base = Math.floor(count / chunks)
+  let extra = count - base * chunks
+  const sizes: number[] = []
+  for (let i = 0; i < chunks; i++) {
+    const size = base + (extra > 0 ? 1 : 0)
+    extra -= extra > 0 ? 1 : 0
+    sizes.push(size)
   }
-  return pages
+  return sizes
+}
+
+/** Keep a saved jam page inside the slides that exist now. */
+export function clampSlideIndex(page: number, pageCount: number): number {
+  if (pageCount <= 0) return 0
+  const index = Number.isFinite(page) ? Math.floor(page) : 0
+  if (index < 0) return 0
+  if (index >= pageCount) return pageCount - 1
+  return index
+}
+
+function sameSectionRun(a: OslynPhrase, b: OslynPhrase): boolean {
+  if (a.section !== b.section) return false
+  if (a.phrase == null || b.phrase == null) return true
+  return a.phrase === b.phrase
 }
 
 export const convertOslynSongToPages = (s: OslynSong, min?: number, max?: number): OslynSlide => {
-  let pages = [] as { lines: OslynPhrase[], extra: OslynPhrase | null }[]
-  const _minLines = 2
-  const _maxLines = 3
-  
-  /**
-   * 1. Find the number of lines in each SECTION
-   * 2. Break up the SECTION into equally sized lines (if possible)
-   * 3. if not - last line from the previous section + (max-1 lines) from the next section.
-   */
-
-  let currentSectionName = s.song[0].section
-  let currentSectionCache = [s.song[0]]
-
-  for (let i=1; i<s.song.length; i++) {
-    //console.log(`${i} ${s.song[i].lyric}`)
-    if (currentSectionName != s.song[i].section) {
-      currentSectionName = s.song[i].section
-      pages = addPhraseToSlides(pages, currentSectionCache, min || _minLines, max || _maxLines)
+  const lines = (s?.song || []).filter((line) => line.lyric?.trim() || line.chords?.length)
+  const pages = [] as { lines: OslynPhrase[], extra: OslynPhrase | null }[]
+  const lo = min ?? 2
+  const hi = max ?? 3
+  let start = 0
+  while (start < lines.length) {
+    let end = start + 1
+    while (end < lines.length && sameSectionRun(lines[start], lines[end])) end += 1
+    let cursor = start
+    for (const size of slideChunkSizes(end - start, lo, hi)) {
+      pages.push({ lines: lines.slice(cursor, cursor + size), extra: null })
+      cursor += size
     }
-    currentSectionCache.push(s.song[i])
+    start = end
   }
-
-  pages = addPhraseToSlides(pages, currentSectionCache, min || _minLines, max || _maxLines)
-  return { pages } as OslynSlide
-}
-
-const findClosestDivisor = (x: number, min: number, max: number): number => {
-  let closestDivisor: number = 1;
-  let smallestRemainder = Number.MAX_SAFE_INTEGER;
-
-  for (let divisor = max; divisor >= min; divisor--) {
-    const remainder = x % divisor
-    if (remainder < smallestRemainder) {
-      smallestRemainder = remainder
-      closestDivisor = divisor
-    }
-    if (smallestRemainder === 0) { break }
-  }
-  return closestDivisor
+  for (let i = 0; i < pages.length - 1; i++) pages[i].extra = pages[i + 1].lines[0] || null
+  return { pages }
 }
 
 const CHART_ENTITIES: Record<string, string> = {
