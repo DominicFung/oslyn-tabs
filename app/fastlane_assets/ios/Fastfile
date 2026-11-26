@@ -23,7 +23,7 @@ platform :ios do
     api_key = app_store_connect_api_key(
       key_id: "6889KV46S3",
       issuer_id: "3c6fa2e8-6b73-4081-a4ab-b9268ffc549a",
-      key_filepath: "./AuthKey_6889KV46S3.p8",
+      key_filepath: "./fastlane/AuthKey_6889KV46S3.p8",
       duration: 1200, # optional (maximum 1200)
       in_house: false # optional but may be required if using match/sigh
     )
