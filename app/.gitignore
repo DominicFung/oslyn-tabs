@@ -12,6 +12,7 @@ web-build/
 *.orig.*
 *.jks
 *.p8
+AuthKey_*.p8
 *.p12
 *.key
 *.mobileprovision
