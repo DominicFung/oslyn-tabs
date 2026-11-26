@@ -17,6 +17,8 @@
 
 # misc
 .DS_Store
+# macOS Finder duplicates, e.g. "file 2.ts"
+* [0-9].*
 *.pem
 
 # debug
