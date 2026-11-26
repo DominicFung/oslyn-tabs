@@ -1,135 +1,52 @@
 import React, { useState } from 'react'
-
-import {Text, View, Pressable, StyleSheet } from 'react-native'
-
-import { Dropdown } from 'react-native-element-dropdown'
-import Ionicons from '@expo/vector-icons/Ionicons'
-
+import { Pressable, Text, View } from 'react-native'
 import { CheckBox } from '@rneui/themed'
+import { ChoiceRow } from './choiceRow'
+import { CAPO_VALUES, stepCapo } from '../../../src/sessionSteps'
+import { useTheme } from '../../../src/theme'
 
 export interface CapoProps {
-  w: number
   capo: string
-  setCapo:  (capo: string) => void
+  setCapo: (capo: string) => void
 }
-
-const capos = [
-  { label: '0', value: '0' },
-  { label: '1', value: '1' },
-  { label: '2', value: '2' },
-  { label: '3', value: '3' },
-  { label: '4', value: '4' },
-  { label: '5', value: '5' },
-  { label: '6', value: '6' },
-  { label: '7', value: '7' },
-  { label: '8', value: '8' },
-  { label: '9', value: '9' },
-  { label: '10', value: '10' },
-  { label: '11', value: '11' },
-]
 
 export default function Capo(p: CapoProps) {
+  const { colors } = useTheme()
+  const [isLead, setIsLead] = useState(false)
+  const atMin = stepCapo(p.capo, -1) === p.capo
+  const atMax = stepCapo(p.capo, 1) === p.capo
 
-  const [ isLead, setIsLead ] = useState(true)
-  const [isFocus, setIsFocus] = useState(true)
-
-  return <>
-    <View className="ml-3 text-sm font-normal" style={{width: p.w-100}}>
-      <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Capo</Text>
-      <Text className="pb-3 text-sm font-normal" style={{width: p.w-150}}>Set your Capo to make chords easier to play! 
-        { !isLead && <Text className="text-xs italic">(only affects you)</Text> }
-      </Text> 
-
-      <View style={{width: p.w-150}}>
-        <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }, { width: p.w-150 }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={capos}
-          search
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? 'Select item' : '...'}
-          searchPlaceholder="Search..."
-          value={p.capo}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-            p.setCapo(item.value);
-            setIsFocus(false);
-          }}
-          renderLeftIcon={() => (
-            <Ionicons
-              style={styles.icon}
-              color={isFocus ? 'blue' : 'black'}
-              name="musical-note"
-              size={20}
-            />
-          )}
-        />
-      </View>
-      
-      <View className="flex flex-row mt-10 mb-5">
-        <View className="h-24">
-          {/* <input id="helper-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" checked={isLead} onChange={() => setIsLead(!isLead)}
-              className="w-4 h-4 text-oslyn-600 bg-gray-100 border-gray-300 rounded focus:ring-oslyn-500 dark:focus:ring-oslyn-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" /> */}
-            <CheckBox
-              checked={isLead}
-              onPress={() => { setIsLead(!isLead) }}
-              iconType="material-community"
-              checkedIcon="checkbox-outline"
-              uncheckedIcon={'checkbox-blank-outline'}
-            />          
-        </View>
-        <Pressable className="ml-2 text-sm" onPress={() => { setIsLead(!isLead) }}>
-          <Text className="font-medium text-gray-900 dark:text-gray-300">Lead Guarist?</Text>
-          <Text className="text-xs font-normal text-gray-500 dark:text-gray-300 w-80 pr-2" style={{width: p.w-200}}>
-            This will change the key for everyone else when you change the capo! <Text className="text-xs italic">(Because you are the lead and you are all that matters. JK.)</Text></Text>
-        </Pressable>
-      </View>
+  return <View>
+    <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text, marginBottom: 6 }}>Capo</Text>
+    <Text style={{ color: colors.text, marginBottom: 12 }}>
+      Set your Capo to make chords easier to play!{' '}
+      {!isLead && <Text style={{ fontSize: 12, fontStyle: 'italic', color: colors.muted }}>(only affects you)</Text>}
+    </Text>
+    <ChoiceRow
+      value={p.capo}
+      options={CAPO_VALUES}
+      onChange={p.setCapo}
+      onStep={(direction) => p.setCapo(stepCapo(p.capo, direction))}
+      lowerLabel="Lower the capo"
+      raiseLabel="Raise the capo"
+      lowerDisabled={atMin}
+      raiseDisabled={atMax}
+    />
+    <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginTop: 20 }}>
+      <CheckBox
+        checked={isLead}
+        onPress={() => setIsLead(!isLead)}
+        iconType="material-community"
+        checkedIcon="checkbox-outline"
+        uncheckedIcon="checkbox-blank-outline"
+        containerStyle={{ backgroundColor: 'transparent', margin: 0, padding: 0 }}
+      />
+      <Pressable style={{ flex: 1, marginLeft: 8 }} onPress={() => setIsLead(!isLead)}>
+        <Text style={{ fontWeight: '600', color: colors.text }}>Lead Guarist?</Text>
+        <Text style={{ fontSize: 12, color: colors.muted, marginTop: 2 }}>
+          This will change the key for everyone else when you change the capo! (Because you are the lead and you are all that matters. JK.)
+        </Text>
+      </Pressable>
     </View>
-  </>
+  </View>
 }
-
-const styles = StyleSheet.create({
-  checkBox: {
-    
-  },
-  dropdown: {
-    backgroundColor: 'white',
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-})

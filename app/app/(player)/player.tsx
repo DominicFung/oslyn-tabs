@@ -1,7 +1,7 @@
 import ZenObservable from "zen-observable-ts"
 
-import React, { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Text, View } from 'react-native'
 
 import { default as PlayerSlides } from "./slides"
 
@@ -15,12 +15,14 @@ import * as m from '../../src/graphql/mutations'
 import { 
   JamSession, JamSong, Participant, User, NextPageMutation, 
   SetSongKeyMutation, SetJamSlideConfigMutation, 
-  AddSongToJamQueueMutation,
   RemoveSongFromJamQueueMutation
 } from "@/src/API"
 
 import amplifyconfig from '../../src/amplifyconfiguration.json'
 import Controls from "./controls"
+import { useSession } from '../../src/session'
+import * as docs from '../../src/graphql/documents'
+import { appendQueue, JamSongChange, mergeSongChange, orderSongs, PlaylistUpdate, withImportedSheet } from '../../src/jamPlaylist'
 Amplify.configure(amplifyconfig)
 
 export interface PlayerProps {
@@ -35,6 +37,9 @@ export interface PlayerProps {
 
 export default function Player(p: PlayerProps){
   const client = generateClient()
+  const { account } = useSession()
+  const live = p.jam as JamSession & { hostId?: string | null, canEditSongs?: boolean | null, revision?: number | null }
+  const canEdit = !!live.canEditSongs && !!account?.userId
 
   // after onload, we need to sync jam manually
   useEffect( () => { 
@@ -65,8 +70,82 @@ export default function Player(p: PlayerProps){
   const [ queue, setQueue ] = useState((p.jam.queue || []))
   const [ active, setActive ] = useState<Participant[]>([])
   const [ songs, setSongs ] = useState<JamSong[]>([])
+  const songsRef = useRef(songs)
+  songsRef.current = songs
+  const songRef = useRef(song)
+  songRef.current = song
+  const queueRef = useRef(queue)
+  queueRef.current = queue
+  const revisionRef = useRef<number | null>(typeof live.revision === 'number' ? live.revision : null)
 
-  const [ isLastPage, setLastPage ] = useState(false)
+  const applySongChange = (change?: JamSongChange | null) => {
+    if (!change?.song?.songId || change.index == null) return
+    setSongs((prev) => mergeSongChange(prev, change) as JamSong[])
+    if (change.jumpTo) {
+      setSong(change.index)
+      setSKey(change.key || 'C')
+      setPage(0)
+    }
+  }
+  const applyPlaylist = (update: PlaylistUpdate) => {
+    const currentSong = typeof update.currentSong === 'number' ? update.currentSong : 0
+    const nextQueue = (update.queue || []).map((n) => Number(n)).filter((n) => Number.isFinite(n))
+    const playingId = songsRef.current[songRef.current]?.song?.songId
+    const next = orderSongs(songsRef.current, update.songIds) as JamSong[]
+    setSongs(next)
+    setSong(currentSong)
+    setQueue(nextQueue)
+    queueRef.current = nextQueue
+    const nowPlaying = next[currentSong]?.song?.songId
+    if (playingId && nowPlaying !== playingId) setPage(0)
+    if (next[currentSong]?.key) setSKey(next[currentSong].key)
+  }
+  const applyQueueUpdate = (payload?: { queue?: Array<number | null> | null, revision?: number | null, currentSongIndex?: number | null } | null) => {
+    if (!payload) return
+    if (payload.queue) {
+      setQueue(payload.queue)
+      queueRef.current = payload.queue
+    }
+    if (typeof payload.revision === 'number') revisionRef.current = payload.revision
+    if (typeof payload.currentSongIndex === 'number') setSong(payload.currentSongIndex)
+  }
+  const applySongChangeRef = useRef(applySongChange)
+  applySongChangeRef.current = applySongChange
+  const applyPlaylistRef = useRef(applyPlaylist)
+  applyPlaylistRef.current = applyPlaylist
+  const applyQueueUpdateRef = useRef(applyQueueUpdate)
+  applyQueueUpdateRef.current = applyQueueUpdate
+
+  useEffect(() => {
+    const jamSessionId = p.jam.jamSessionId
+    if (!jamSessionId) return
+    const opened: { unsubscribe: () => void }[] = []
+    const listen = (query: string, variables: object, onData: (data: Record<string, any> | undefined) => void) => {
+      const observable = client.graphql({ query, variables }) as {
+        subscribe: (observer: {
+          next: (value: { data?: Record<string, any> }) => void
+          error: (error: unknown) => void
+        }) => { unsubscribe: () => void }
+      }
+      opened.push(observable.subscribe({
+        next: ({ data }) => onData(data),
+        error: (error) => console.error(error),
+      }))
+    }
+    listen(docs.onJamSongsChanged, { jamSessionId }, (data) => applySongChangeRef.current(data?.onJamSongsChanged))
+    listen(docs.onSongRemovedFromJam, { jamSessionId }, (data) => {
+      const event = data?.onSongRemovedFromJam
+      if (event?.songId) applyPlaylistRef.current(event)
+    })
+    listen(docs.onJamQueueUpdate, { jamSessionId }, (data) => applyQueueUpdateRef.current(data?.onJamQueueUpdate))
+    listen(docs.onImportStatusChanged, { jamId: jamSessionId }, (data) => {
+      const event = data?.onImportStatusChanged
+      if (event?.status === 'DONE' && event.songId && event.chordSheet?.trim()) {
+        setSongs((prev) => withImportedSheet(prev, event.songId, event.chordSheet) as JamSong[])
+      }
+    })
+    return () => { opened.forEach((sub) => sub.unsubscribe()) }
+  }, [p.jam.jamSessionId])
 
   const [transpose, setTranspose] = useState(0)
   const setCapo = (c: string) => { setTranspose(0-Number(c)) }
@@ -290,29 +369,31 @@ export default function Player(p: PlayerProps){
     console.log(d)
   }
 
-  const addSongToJamQueue = async (songId: string) => {
-    let song=0; let found = false
-    for(song=0; song<songs.length; song++) { if (songs[song].song.songId === songId) { found=true; break; } }
+  const queueAt = async (index: number) => {
+    const next = appendQueue(queueRef.current, index)
+    const d = await client.graphql({
+      query: docs.setJamQueue,
+      variables: {
+        jamSessionId: p.jam.jamSessionId,
+        queue: next,
+        ...(revisionRef.current != null ? { expectedRevision: revisionRef.current } : {}),
+      },
+    }) as GraphQLResult<{ setJamQueue?: { queue?: Array<number | null> | null, revision?: number | null, currentSongIndex?: number | null } | null }>
+    applyQueueUpdate(d.data?.setJamQueue)
+  }
 
-    if (found) {
-      console.log(`song found: ${songId}, index: ${song}, title: ${songs[song].song.title}`)
-      const d = await client.graphql({
-        query: m.addSongToJamQueue, variables: {
-        jamSessionId: p.jam.jamSessionId, song
-      }}) as GraphQLResult<AddSongToJamQueueMutation>
-      console.log(d)
-    } else console.error(`song ${songId} not found.`)
+  const addSongToJamQueue = async (songId: string) => {
+    const index = songs.findIndex((row) => row.song.songId === songId)
+    if (index < 0) { console.error(`song ${songId} not found.`); return }
+    await queueAt(index)
   }
 
   const removeSongFromJamQueue = async (index: number) => {
-    let queue = p.jam.queue || []
     if (index < 0 || index >= queue.length) return
-
-    const d = await client.graphql({
+    await client.graphql({
       query: m.removeSongFromJamQueue, variables: {
       jamSessionId: p.jam.jamSessionId, queueIndex: index
     }}) as GraphQLResult<RemoveSongFromJamQueueMutation>
-    console.log(d)
   }
 
   const setJamConfig = async (textSize: string) => {
@@ -322,23 +403,32 @@ export default function Player(p: PlayerProps){
     console.log(d)
   }
 
-  return <View className={`text-white w-full h-screen flex flex-col overflow-hidden`} id="player">
+  return <View style={{ flex: 1 }} id="player">
+    {songs.length === 0 && <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <Text style={{ fontSize: 22, fontWeight: '700', color: '#1f2937', textAlign: 'center' }}>Search for a song to start</Text>
+    </View>}
     { songs[song]?.song && 
       <PlayerSlides
         song={songs[song]!.song} skey={sKey} page={page} 
-        setPage={setNextPage} setLastPage={setLastPage} transpose={transpose} 
+        setPage={setNextPage} transpose={transpose} 
         textSize={textSize} complex={complex} headsUp={headsUp}
         resetJam={p.resetJam}
+        canImport={canEdit}
+        userId={account?.userId}
       />
     }
 
-    { songs && !p.isSlideShow &&
+    { !p.isSlideShow &&
       <Controls 
         open={p.openController}
         setOpen={p.setOpenController}
         jamSessionId={p.jam.jamSessionId}
         capo={{ capo:`${0-transpose}`, setCapo }} 
-        song={{ song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[] }} 
+        song={{
+          song, setSong: setNextSong, addToQueue: addSongToJamQueue, songs: songs as JamSong[],
+          canAddSongs: canEdit, userId: account?.userId,
+          onSongAdded: applySongChange, onSongRemoved: applyPlaylist, queueAt,
+        }} 
         sKey={{ skey: sKey, setKey }}
         display={{ textSize, setTextSize, 
           auto: false, setAuto: () => {}, 
@@ -353,6 +443,9 @@ export default function Player(p: PlayerProps){
           active: active as Participant[],
           removeActive: () => {}
         }}
+        qrCode
+        canShareJam={canEdit}
+        userId={account?.userId}
         queue={{
           songs: songs as JamSong[],
           queueOrder: queue,

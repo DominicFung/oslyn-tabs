@@ -1,191 +1,171 @@
-import { chordSheetToSlides } from "../../core/oslyn"
-import { OslynSlide } from "../../core/types"
-import { Song } from "../../src/API"
-import React, { useEffect, useState } from "react"
-import Line from "./line"
-
-import { transpose as trans } from "../../core/oslyn"
-import {Text, View, Image, Pressable, Dimensions } from 'react-native'
+import { chordSheetToSlides } from '../../core/oslyn'
+import { OslynSlide } from '../../core/types'
+import { Song } from '../../src/API'
+import React, { useEffect, useState } from 'react'
+import Line from './line'
+import { transpose as trans } from '../../core/oslyn'
+import { Image, Linking, Pressable, Text, View, useWindowDimensions } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-
 import { useKeepAwake } from 'expo-keep-awake'
 import Svg, { Path } from 'react-native-svg'
-import { BlurView } from "@react-native-community/blur"
-
-import { addOrientationChangeListener, removeOrientationChangeListener } from 'expo-screen-orientation'
-
-const AVERAGE_LINE_H = 45
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { lyricPlacement } from '../../src/jamLayout'
+import { ultimateGuitarSearchUrl } from '../../src/jamPlaylist'
+import { useTheme } from '../../src/theme'
 
 interface SlidesProps {
   song: Song
   skey?: string
-
   transpose?: number
   textSize?: string
   complex?: boolean
   headsUp?: boolean
-
-  /** page can be externalized / enable graphql call to sync pages */
   page?: number
   setPage?: (p: number) => void
-
-  /** padding top */
   pt?: boolean
-
-  /**  */
   setLastPage?: (b: boolean) => void
   resetJam: () => void
+  canImport?: boolean
+  userId?: string
 }
 
-//const _STARTMAX = 500
 export default function Slides(p: SlidesProps) {
   useKeepAwake()
+  const { colors } = useTheme()
+  const insets = useSafeAreaInsets()
+  const { width: w, height: h } = useWindowDimensions()
 
-  const [ slides, setSlides ] = useState<OslynSlide>()
-  const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
-  const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
-
-  const [ loading, setLoading ] = useState(false)
-  const setPage = (n: number) => { if (p.setPage) p.setPage(n); else _setPage(n); }
-  useEffect(() => { _setPage(p.page || 0); setLoading(true) }, [p.page])
-  /** NOTE: DELAY needed to wait for page to render, THEN fix width. This is an ugly solution, but I cannot find a better one :( */
-  useEffect(() => { setTimeout(() => { setMaxWidth(0); setLoading(false) }, 500) }, [page])
-
+  const [slides, setSlides] = useState<OslynSlide>()
+  const [page, _setPage] = useState(p.page || 0)
+  const [transposedKey, setTransposedKey] = useState(p.skey || p.song.chordSheetKey || 'C')
+  const [headerH, setHeaderH] = useState(96)
+  const [stage, setStage] = useState({ width: 0, height: 0 })
   const [maxWidth, setMaxWidth] = useState(0)
-  
-  const [ w, setW ] = useState(Dimensions.get('window').width)
-  const [ h, setH ] = useState(Dimensions.get('window').height)
+  const [blockH, setBlockH] = useState(0)
 
-  useEffect(() => { 
-    const sub = addOrientationChangeListener((e) => {
-      setW(Dimensions.get('window').width)
-      setH(Dimensions.get('window').height)
-    })
-
-    const sub2 = Dimensions.addEventListener('change', ({ window }) => {
-      setH(window.height); setW(window.width)
-    })
-
-    return () => { removeOrientationChangeListener(sub); sub2?.remove() }
-  }, [])
+  const setPage = (n: number) => { if (p.setPage) p.setPage(n); else _setPage(n) }
+  useEffect(() => { _setPage(p.page || 0) }, [p.page])
 
   useEffect(() => {
-    let baseKey = p.skey || p.song.chordSheetKey || "C"
-    if (p.transpose) baseKey = trans(baseKey, p.transpose) || "C"
+    let baseKey = p.skey || p.song.chordSheetKey || 'C'
+    if (p.transpose) baseKey = trans(baseKey, p.transpose) || 'C'
     setTransposedKey(baseKey)
-  }, [p.transpose, p.skey])
+  }, [p.transpose, p.skey, p.song.chordSheetKey])
 
   useEffect(() => {
-    console.log(p.song)
     if (p.song.chordSheet && p.song.chordSheetKey) {
-      console.log(p.song.chordSheet)
-      const oslynSlides = chordSheetToSlides(p.song.chordSheet, p.song.chordSheetKey || "C")
-      console.log(oslynSlides)
-      setSlides(oslynSlides)
+      setSlides(chordSheetToSlides(p.song.chordSheet, p.song.chordSheetKey || 'C'))
+    } else {
+      setSlides(undefined)
     }
   }, [p.song])
 
+  useEffect(() => {
+    setMaxWidth(0)
+    setBlockH(0)
+  }, [page, p.song.songId, p.textSize, transposedKey, p.complex])
+
   const onMaxWidth = (i: number) => {
-    setMaxWidth((prev) => { 
-      console.log(`prev: ${prev}, i: ${i} ==> max: ${Math.max(prev, i)}`)
-      return Math.max(prev, i)
-    })
+    setMaxWidth((prev) => Math.max(prev, i))
   }
 
-  
+  const current = slides?.pages?.[page]
+  const place = maxWidth > 0 && blockH > 0
+    ? lyricPlacement(stage, { width: maxWidth, height: blockH })
+    : { scale: 1, left: 0, top: 0 }
+  const hasSheet = !!p.song.chordSheet?.trim()
 
-  return <>
-    <View className="flex flex-row align-middle justify-center"
-      style={{ height: h, width: w }}
+  return <View style={{ width: w, height: h }}>
+    <View
+      onLayout={(event) => {
+        const next = event.nativeEvent.layout.height
+        setHeaderH((prev) => prev === next ? prev : next)
+      }}
+      style={{
+        paddingTop: insets.top + 8,
+        paddingLeft: insets.left + 8,
+        paddingRight: insets.right + 68,
+        paddingBottom: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        zIndex: 3,
+      }}
     >
-      <View className="flex-1" />
-      <View /*className={`bg-purple-300`}*/ style={{
-        width: maxWidth ? maxWidth : w, paddingTop: (h/2) - 
-        (AVERAGE_LINE_H * (slides?.pages ? slides?.pages[page]?.lines.length : 0) ) -
-        ( p.headsUp ?  AVERAGE_LINE_H  : 0 )
-      }}>
-        { slides?.pages[page] && <View>
-          { slides?.pages && slides?.pages[page]?.lines[0] && <Text className="text-gray-500 text-sm italic bold">
-            {slides?.pages && slides?.pages[page].lines[0].section}
-          </Text> }
-          { slides?.pages && slides?.pages[page] && slides?.pages[page].lines.map((a, i) => 
-            <Line key={i} onMaxWidth={onMaxWidth} phrase={a} skey={transposedKey} transpose={0} textSize={p.textSize || "text-lg"} decorate={p.complex || false} loaded={!loading}/>
-          )}
-
-          { p.headsUp && <View className="h-20" /> }
-
-          { p.headsUp && slides?.pages[page] && slides?.pages[page].extra && slides?.pages[page].extra?.section != slides?.pages[page].lines[0].section && <Text className="text-gray-500 text-sm italic bold">
-            {slides?.pages && slides?.pages[page].extra?.section}
-          </Text> }
-          { p.headsUp && slides?.pages && slides?.pages[page]?.extra && <View>
-            <Line onMaxWidth={onMaxWidth} phrase={slides!.pages[page].extra!} skey={transposedKey} transpose={0} secondary textSize={p.textSize || "text-lg"} decorate={p.complex || false} loaded={!loading}/>
-          </View> }
-        </View> }
-
+      <Pressable accessibilityLabel="Close jam" onPress={p.resetJam} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+        <Svg width={28} height={28} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#4c1d95">
+          <Path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </Svg>
+      </Pressable>
+      {p.song.albumCover ? <Image source={{ uri: p.song.albumCover }} style={{ width: 72, height: 72, borderRadius: 8, marginRight: 12 }} /> : null}
+      <View style={{ flex: 1 }}>
+        <Text numberOfLines={2} style={{ color: '#4b5563', fontWeight: '700', fontSize: 16 }}>{p.song.title}</Text>
+        <Text numberOfLines={1} style={{ color: '#4b5563', fontSize: 12, marginTop: 2 }}>{p.song.artist}</Text>
       </View>
-      <View className="flex-1" />
     </View>
 
-    {/* Buttons */}
-    <View className="absolute top-0 left-0 ml-0 flex flex-row"
-      style={{ height: h, width: w }}
+    <View
+      style={{ flex: 1, marginBottom: insets.bottom }}
+      onLayout={(event) => {
+        const next = { width: event.nativeEvent.layout.width, height: event.nativeEvent.layout.height }
+        setStage((prev) => prev.width === next.width && prev.height === next.height ? prev : next)
+      }}
     >
-    { page > 0 ? <Pressable onPress={() => setPage(page-1)}>
-        <LinearGradient colors={["rgba(95,40,212,0.5)", "rgba(95,40,212,0)" ]} start={{x: 0, y: 0}} end={{x:1, y:0}}>
-          <View className={`pl-16 w-32 flex justify-center items-start`}
-            style={{ 
-              width: p.pt?(w/2)-90:w/2, 
-              height: h //o <= 2 ? h : w
-            }}
-          >
-            <View className="p-4 text-white w-16 h-16">
-              <Svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="text-purple-800 w-16 h-16">
-                <Path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </Svg>
-            </View>
-          </View>
-        </LinearGradient>
-      </Pressable> : <View style={{ width: p.pt?(w/2)-90:w/2, height: h }} /> }
+      {hasSheet && current && <View
+        onLayout={(event) => {
+          const next = event.nativeEvent.layout.height
+          setBlockH((prev) => prev === next ? prev : next)
+        }}
+        style={{
+          position: 'absolute',
+          width: maxWidth || undefined,
+          left: place.left,
+          top: place.top,
+          opacity: maxWidth > 0 && blockH > 0 && stage.width > 0 ? 1 : 0,
+          transform: [{ scale: place.scale }],
+        }}
+      >
+        {current.lines[0] && <Text style={{ color: '#6b7280', fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.lines[0].section}</Text>}
+        {current.lines.map((line, index) => (
+          <Line key={index} onMaxWidth={onMaxWidth} phrase={line} skey={transposedKey} transpose={0} textSize={p.textSize || 'text-lg'} decorate={p.complex || false} loaded />
+        ))}
+        {p.headsUp && <View style={{ height: 24 }} />}
+        {p.headsUp && current.extra && current.extra.section !== current.lines[0]?.section && (
+          <Text style={{ color: '#6b7280', fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.extra.section}</Text>
+        )}
+        {p.headsUp && current.extra && (
+          <Line onMaxWidth={onMaxWidth} phrase={current.extra} skey={transposedKey} transpose={0} secondary textSize={p.textSize || 'text-lg'} decorate={p.complex || false} loaded />
+        )}
+      </View>}
 
-      { slides && slides?.pages.length-1 > page ? <Pressable onPress={() => setPage(page+1)}>
-        <LinearGradient colors={["rgba(95,40,212,0)", "rgba(95,40,212,0.5)"]} start={{x: 0, y: 0}} end={{x:1, y:0}} >
-          <View className={`pr-16 w-32 flex justify-center items-end`}
-            style={{ 
-              width: p.pt?(w/2)-90:w/2, 
-              height: h //o <= 2 ? h : w
-            }}
-          >
-            <View className="p-4 text-white w-16 h-16">
-              <Svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="text-purple-800 w-16 h-16">
-                <Path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </Svg>
-            </View>
-          </View>
-        </LinearGradient>
-      </Pressable> : <View style={{ width: p.pt?(w/2)-90:w/2, height: h }} /> }
-
-      <View className={`absolute left-10 ${p.pt?"top-28":"top-3"} rounded-lg`}>
-        <View className="flex flex-row hover:cursor-pointer">
-          {p.song.albumCover && <Image source={{ uri: p.song.albumCover }} alt={p.song.album || ""} style={{width: 100, height: 100}} className="w-20 m-2"/> }
-          <View className="m-2">
-            <Text className="text-gray-500 bold">{p.song.title}</Text>
-            <Text className="text-gray-600 text-xs">{p.song.artist}</Text>
-          </View>
-        </View>
-      </View>
-
+      {!hasSheet && <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
+        <Text style={{ fontSize: 22, fontWeight: '700', color: colors.text, textAlign: 'center' }}>{p.song.title}</Text>
+        {p.song.artist ? <Text style={{ marginTop: 8, color: colors.muted, textAlign: 'center' }}>{p.song.artist}</Text> : null}
+        <Text style={{ marginTop: 16, color: colors.text, textAlign: 'center' }}>This song does not have a chord sheet yet.</Text>
+        {p.canImport && p.userId ? <Pressable
+          onPress={() => Linking.openURL(ultimateGuitarSearchUrl(p.song.title, p.song.artist))}
+          style={{ marginTop: 20, backgroundColor: colors.accent, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }}
+        >
+          <Text style={{ color: colors.accentText, fontWeight: '700' }}>Import chords from Ultimate Guitar</Text>
+        </Pressable> : null}
+        {p.canImport ? <Text style={{ marginTop: 12, color: colors.muted, textAlign: 'center', fontSize: 12 }}>Opens a search in the browser. You can also paste a chart from the song menu.</Text> : null}
+      </View>}
     </View>
-    { loading && <BlurView
-      style={{ width: w, height: h, position: "absolute" }}
-      blurType="dark"
-      blurAmount={3}
-    /> }
 
-    <Pressable className="absolute z-90 left-4 top-4" onPress={p.resetJam}>
-      <Svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-8 h-8 text-oslyn-800">
-        <Path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </Svg>
-    </Pressable>
-  </>
+    <View pointerEvents="box-none" style={{ position: 'absolute', left: 0, right: 0, top: headerH, bottom: 0, flexDirection: 'row' }}>
+      {page > 0 ? <Pressable onPress={() => setPage(page - 1)} style={{ flex: 1 }}>
+        <LinearGradient colors={['rgba(95,40,212,0.5)', 'rgba(95,40,212,0)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flex: 1, justifyContent: 'center', paddingLeft: insets.left + 8 }}>
+          <Svg width={48} height={48} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#6b21a8">
+            <Path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </Svg>
+        </LinearGradient>
+      </Pressable> : <View style={{ flex: 1 }} />}
+      {slides && slides.pages.length - 1 > page ? <Pressable onPress={() => setPage(page + 1)} style={{ flex: 1 }}>
+        <LinearGradient colors={['rgba(95,40,212,0)', 'rgba(95,40,212,0.5)']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: insets.right + 8 }}>
+          <Svg width={48} height={48} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#6b21a8">
+            <Path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </Svg>
+        </LinearGradient>
+      </Pressable> : <View style={{ flex: 1 }} />}
+    </View>
+  </View>
 }
-

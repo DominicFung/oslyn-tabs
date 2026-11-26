@@ -1,108 +1,40 @@
-import React, { useState } from 'react'
-
-import {Text, View, Image, Pressable, StyleSheet } from 'react-native'
-
-import { Dropdown } from 'react-native-element-dropdown'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import React from 'react'
+import { Text, View } from 'react-native'
+import Capo from './capo'
+import { ChoiceRow } from './choiceRow'
+import { SONG_KEYS, stepKey } from '../../../src/sessionSteps'
+import { useTheme } from '../../../src/theme'
 
 export interface KeyProps {
-  w: number
-  skey: string
-  setKey:  (capo: string) => void
+  skey?: string
+  setKey?: (key: string) => void
+  capo?: string
+  setCapo?: (capo: string) => void
 }
-
-const chords = [
-  { label: 'A', value: 'A' },
-  { label: 'Bb', value: 'Bb' },
-  { label: 'B', value: 'B' },
-  { label: 'C', value: 'C' },
-  { label: 'C#', value: 'C#' },
-  { label: 'D', value: 'D' },
-  { label: 'Eb', value: 'Eb' },
-  { label: 'E', value: 'E' },
-  { label: 'F', value: 'F' },
-  { label: 'F#', value: 'F#' },
-  { label: 'G', value: 'G' },
-  { label: 'Ab', value: 'Ab' },
-]
 
 export default function Key(p: KeyProps) {
+  const { colors } = useTheme()
+  const showKey = !!p.setKey && p.skey != null
+  const showCapo = !!p.setCapo && p.capo != null
 
-  const [isFocus, setIsFocus] = useState(true)
-
-  return <>
-    <View className="ml-3 text-sm font-normal" style={{width: p.w-100}}>
-      <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Key</Text>
-      <Text className="pb-3 text-sm font-normal" style={{width: p.w-150}}>Set the current song key for the entire team! <Text className="text-xs italic">Note: this affects everyone in the session.</Text></Text>
-
-      <View style={{width: p.w-150}}>
-        <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'black' }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={chords}
-          search
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? 'Select item' : '...'}
-          searchPlaceholder="Search..."
-          value={p.skey}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-            p.setKey(item.value)
-            setIsFocus(false)
-          }}
-          renderLeftIcon={() => (
-            <Ionicons
-              style={styles.icon}
-              color={isFocus ? 'black' : 'black'}
-              name="musical-note"
-              size={20}
-            />
-          )}
-        />
-      </View>
-    </View>
-  </>
+  return <View>
+    {showKey && <>
+      <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 6 }}>Key</Text>
+      <Text style={{ color: colors.text, marginBottom: 12 }}>
+        Set the current song key for the entire team!{' '}
+        <Text style={{ fontSize: 12, fontStyle: 'italic', color: colors.muted }}>Note: this affects everyone in the session.</Text>
+      </Text>
+      <ChoiceRow
+        value={p.skey!}
+        options={SONG_KEYS}
+        onChange={p.setKey!}
+        onStep={(direction) => p.setKey!(stepKey(p.skey!, direction))}
+        lowerLabel="Lower the key"
+        raiseLabel="Raise the key"
+      />
+    </>}
+    {showCapo && <View style={{ marginTop: showKey ? 28 : 0 }}>
+      <Capo capo={p.capo!} setCapo={p.setCapo!} />
+    </View>}
+  </View>
 }
-
-const styles = StyleSheet.create({
-  dropdown: {
-    backgroundColor: 'white',
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-})

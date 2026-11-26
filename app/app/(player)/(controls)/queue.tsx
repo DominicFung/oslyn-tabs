@@ -1,53 +1,37 @@
 import React from 'react'
-
-import { JamSong } from "../../../src/API"
-import {Text, View, Image, Pressable, ScrollView, TextInput } from 'react-native'
-import Svg, { Path } from 'react-native-svg'
+import { Image, Pressable, Text, View } from 'react-native'
+import { JamSong } from '../../../src/API'
+import { useTheme } from '../../../src/theme'
 
 interface QueueProps {
-  w: number
-  songs: JamSong[],
-  queue: (number|null)[],
+  songs: JamSong[]
+  queue: (number | null)[]
   removeFromQueue: (index: number) => void
 }
 
-export default function Users(p: QueueProps) {
-  return <View className="ml-3 text-sm font-normal" style={{width: p.w-120}}>
-        <Text className="pb-2 text-xl font-semibold text-gray-900 dark:text-white">Queued Songs</Text>
-        <Text className="pb-3 text-sm font-normal">These are the songs currently queued up! <Text className="text-xs italic">Note: this affects everyone in the session.</Text></Text>
-        
-  
-        <ScrollView className="divide-y divide-gray-200 dark:divide-gray-700" style={{width: p.w-140}}>
-          { p.queue.map((a, i) => {
-              if (a === null) return <></>
-              let e = p.songs[a]
-              return <View className="py-3 px-1 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={i}>
-              <View className="max-w-sm flex flex-row space-x-4" style={{width: p.w-145}}>
-                <Pressable className="flex-shrink-0" onPress={() => { p.removeFromQueue(i) }}>
-                    {e.song.albumCover && <Image className="w-8 h-8 rounded-full" source={{uri: e.song.albumCover}} alt="Neil image" />}
-                </Pressable>
-                <Pressable className="flex flex-col flex-1 min-w-0" onPress={() => { p.removeFromQueue(i) }}>
-                  <View className='flex-row' style={{justifyContent: "space-between"}}>
-                    <Text className="grow-0 flex-1 text-md mt-0.5 font-bold text-gray-900 dark:text-white mr-1" numberOfLines={1} ellipsizeMode='tail'>
-                      {e.song.title} 
-                    </Text>
-                    <Text className="font-medium text-gray-500 dark:text-oslyn-500 mx-2 text-sm">
-                      {e.key}
-                    </Text>
-                  </View>
-                  <Text className="text-sm text-gray-500 truncate dark:text-gray-400" numberOfLines={1} ellipsizeMode='tail'>
-                    {e.song.artist} | {e.song.album}
-                  </Text>
-                </Pressable>
-                <Pressable className='flex flex-row text-white bg-oslyn-800 font-medium rounded-lg text-sm px-2 py-2.5 text-center mx-1' 
-                    onPress={() => { p.removeFromQueue(i) }}>
-                  <Svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mt-1 size-6 text-white">
-                    <Path fill-rule="evenodd" d="M4.25 12a.75.75 0 0 1 .75-.75h14a.75.75 0 0 1 0 1.5H5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </Svg>
-                </Pressable>
-              </View>
-            </View>
-            })}
-        </ScrollView>
+export default function Queue(p: QueueProps) {
+  const { colors } = useTheme()
+  return <View>
+    <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 6 }}>Queued Songs</Text>
+    <Text style={{ color: colors.text, marginBottom: 12 }}>
+      These are the songs currently queued up!{' '}
+      <Text style={{ fontSize: 12, fontStyle: 'italic', color: colors.muted }}>Note: this affects everyone in the session.</Text>
+    </Text>
+    {p.queue.map((index, position) => {
+      if (index === null || index === undefined) return null
+      const row = p.songs[index]
+      if (!row?.song) return null
+      return <View key={`${position}-${row.song.songId}`} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 10, borderTopWidth: 1, borderTopColor: colors.line }}>
+        {row.song.albumCover ? <Image source={{ uri: row.song.albumCover }} style={{ width: 32, height: 32, borderRadius: 16 }} /> : null}
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text numberOfLines={1} style={{ fontWeight: '700', color: colors.text }}>{row.song.title}</Text>
+          <Text numberOfLines={1} style={{ color: colors.muted, fontSize: 13 }}>{row.song.artist} | {row.song.album}</Text>
+        </View>
+        <Text style={{ color: colors.text }}>{row.key}</Text>
+        <Pressable accessibilityLabel="Remove from queue" onPress={() => p.removeFromQueue(position)} style={{ backgroundColor: colors.accent, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 }}>
+          <Text style={{ color: colors.accentText, fontWeight: '700' }}>−</Text>
+        </Pressable>
       </View>
+    })}
+  </View>
 }
