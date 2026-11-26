@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Pressable, ScrollView, Text, View } from 'react-native'
 import { Band } from '../src/API'
 import { JamListRow, jamLabel } from '../src/jamList'
 import { getTimeDifferenceFromNowToEpoch } from '../core/utils/frontend'
@@ -43,11 +43,9 @@ export default function Main(p: {
     </Section>
 
     <Text style={{ paddingHorizontal: 16, paddingTop: 18, fontSize: 18, fontWeight: '800', color: colors.text }}>Artists and Bands:</Text>
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 12 }}>
-      {p.bands.map((band) => <View key={band.bandId} style={{ width: '50%', padding: 4 }}>
-        <BandCard band={band} onPress={() => p.onOpenBand(band.bandId)} />
-      </View>)}
-    </View>
+    <ScrollView horizontal nestedScrollEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8, gap: 12 }}>
+      {p.bands.map((band) => <BandCard key={band.bandId} band={band} onPress={() => p.onOpenBand(band.bandId)} />)}
+    </ScrollView>
   </View>
 }
 

@@ -1,7 +1,8 @@
 import React from 'react'
-import {Text, View, Image, Pressable } from 'react-native'
-
-import { Band } from "../../src/API"
+import { Image, Pressable, Text, View } from 'react-native'
+import { Band } from '../../src/API'
+import { BAND_THUMB_RESIZE_MODE, bandThumbFrame } from '../../src/phoneLayout'
+import { useTheme } from '../../src/theme'
 
 interface BandCardProps {
   band: Band
@@ -9,13 +10,13 @@ interface BandCardProps {
 }
 
 export default function BandCard(p: BandCardProps) {
-  return <View className="bg-white border w-full border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <Pressable onPress={p.onPress}>
-        <Image className="p-4 rounded-t-lg w-full" source={{ uri: p.band.imageUrl||"" }} width={500} height={500} alt="product image" />
-    </Pressable>
-    <View className="px-4 pb-4 w-full">
-      <Text className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">{p.band.name}</Text>
-      <Text className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap truncate">{p.band.description}</Text>
-    </View>
-  </View>
+  const { colors } = useTheme()
+  const frame = bandThumbFrame()
+  const uri = p.band.imageUrl?.trim()
+  return <Pressable onPress={p.onPress} accessibilityRole="button" style={{ width: frame.width }}>
+    {uri
+      ? <Image source={{ uri }} resizeMode={BAND_THUMB_RESIZE_MODE} accessibilityLabel={p.band.name} style={[frame, { backgroundColor: colors.card }]} />
+      : <View style={[frame, { backgroundColor: colors.chip }]} />}
+    <Text numberOfLines={2} style={{ width: frame.width, marginTop: 6, fontSize: 12, lineHeight: 15, fontWeight: '600', color: colors.text, textAlign: 'center' }}>{p.band.name}</Text>
+  </Pressable>
 }
