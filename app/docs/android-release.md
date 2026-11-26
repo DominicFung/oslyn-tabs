@@ -1,6 +1,6 @@
 # Android release
 
-Package name: `com.oslyn.tabs`. The app is not on Google Play yet. `versionName` tracks the iOS app version on main (`1.0.5` in `app.json` / `ios/Oslyn/Info.plist`). `versionCode` starts at `1` (`android.versionCode` in `app.json`).
+Package name: `com.oslyn.tabs`. The app is not on Google Play yet. `versionName` tracks the iOS app version on main (`1.0.5` in `app.json` / `ios/Oslyn/Info.plist`). `versionCode` is `2` (`android.versionCode` in `app.json`). Release builds compile and target Android API 36 (`expo-build-properties` in `app.json`). Install Android SDK Platform 36 and Build-Tools 36.0.0 before `./gradlew bundleRelease`.
 
 AWS calls use profile `a1` and region `us-east-1`, same as `scripts/fastlane.sh`. The scripts do not print secret values.
 
