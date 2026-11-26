@@ -1,98 +1,99 @@
-import React, { useEffect } from "react"
-import {Text, View, Image, Pressable, ScrollView } from 'react-native'
-import { Band, JamSession } from "../src/API"
-
-import ClickableCell from "./(components)/clickableCell"
-import BandCard from "./(components)/bandCard"
-
-import Svg, { Path } from 'react-native-svg'
+import React from 'react'
+import { Image, Pressable, Text, View } from 'react-native'
+import { Band } from '../src/API'
+import { JamListRow, jamLabel } from '../src/jamList'
 import { getTimeDifferenceFromNowToEpoch } from '../core/utils/frontend'
+import BandCard from './(components)/bandCard'
+import { Btn, Card, Empty, Notice } from './ui'
+import { useTheme } from '../src/theme'
 
-interface MainProps {
+export default function Main(p: {
   bands: Band[]
-  sessions: JamSession[]
+  sessions: JamListRow[]
+  mine: JamListRow[] | null
+  error: string
+  onJoin: (jamSessionId: string) => void
+  onDelete?: (jamSessionId: string) => void
+  onStart?: () => void
+  starting?: boolean
+  onSignIn: () => void
+  onJoinByCode: () => void
+  onOpenBand: (bandId: string) => void
+}) {
+  const { colors } = useTheme()
+  return <View>
+    <Text style={{ fontSize: 40, fontWeight: '800', color: colors.text, textAlign: 'center', marginTop: 12, marginBottom: 12 }}>Jam Now!</Text>
+    <View style={{ paddingHorizontal: 16 }}>
+      {p.onStart ? <Btn label={p.starting ? 'Starting…' : 'Start Jam'} onPress={p.onStart} busy={p.starting} /> : <Btn label="Sign in to start a jam" onPress={p.onSignIn} />}
+      <Btn label="Join with a code or link" onPress={p.onJoinByCode} tone="plain" />
+      <Notice text={p.error} tone="error" />
+    </View>
 
-  setJam: (jamId: string) => void
+    {p.mine && <Section title="Your jam rooms">
+      {p.mine.length === 0
+        ? <Empty title="You don't have any jam rooms yet." body="Start one above, or create one from a set." />
+        : p.mine.map((room, index) => <RoomRow key={room.jamSessionId} room={room} index={index} onJoin={p.onJoin} onDelete={p.onDelete} />)}
+    </Section>}
+
+    <Section title={p.mine ? 'Public rooms' : 'Rooms'}>
+      <Header />
+      {p.sessions.length === 0
+        ? <Empty title="No public rooms right now." body={p.mine ? undefined : 'Your own rooms are private. Sign in to see them.'} />
+        : p.sessions.map((room, index) => <RoomRow key={room.jamSessionId} room={room} index={index} onJoin={p.onJoin} />)}
+    </Section>
+
+    <Text style={{ paddingHorizontal: 16, paddingTop: 18, fontSize: 18, fontWeight: '800', color: colors.text }}>Artists and Bands:</Text>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', padding: 12 }}>
+      {p.bands.map((band) => <View key={band.bandId} style={{ width: '50%', padding: 4 }}>
+        <BandCard band={band} onPress={() => p.onOpenBand(band.bandId)} />
+      </View>)}
+    </View>
+  </View>
 }
 
-export default function Main(p: MainProps) {
-  return <ScrollView>
-    <View className="bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
-      <Text className="mx-auto mt-20 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Jam Now!</Text>
-      <View className="pt-2 px-4 pb-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:pb-4 z-10 relative">
-        
+function Section({ title, children }: { title: string, children: React.ReactNode }) {
+  const { colors } = useTheme()
+  return <View style={{ marginTop: 8 }}>
+    <Text style={{ paddingHorizontal: 16, marginBottom: 8, fontSize: 20, fontWeight: '800', color: colors.text }}>{title}</Text>
+    <View style={{ paddingHorizontal: 16 }}>{children}</View>
+  </View>
+}
 
-        <View className="relative overflow-x-auto shadow-md rounded-md sm:rounded-lg mx-5">
-          <View className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <View className="flex flex-row text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <Text className="px-6 py-3 w-6">
-                  #
-              </Text>
-              <Text className="px-6 py-3">
-                  Room ID or Description
-              </Text>
-              <Text className="px-6 py-3 w-20">
-                  Time
-              </Text>
-            </View>
-            <View>
-              { p.sessions.map((a, i) => <View key={i} className="flex flex-row bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                      <ClickableCell onClick={() => p.setJam(a.jamSessionId)} className="font-medium text-gray-900 whitespace-nowrap dark:text-white hidden sm:table-cell">
-                        <Text className="px-6 py-3 w-6">{i+1}</Text>
-                      </ClickableCell>
-                    
-                      <ClickableCell onClick={() => p.setJam(a.jamSessionId)} className="px-6 py-4 text-ellipsis">
-                        <View className="flex-0 m-2 w-36 lg:w-full">
-                          <Text className="text-base dark:text-white text-gray-800 bold truncate">{a.description || a.setList.description }</Text>
-                          <Text className="text-xs text-ellipsis truncate">{a.jamSessionId}</Text>
-                        </View>
-                      </ClickableCell>
-                      <ClickableCell onClick={() => p.setJam(a.jamSessionId)} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
-                        <View className="flex flex-row">
-                          { a.active.map((a, i) => {
-                            if (i < 5) 
-                              return  <View className="m-auto w-16">
-                                        { a && a?.user && a?.user?.imageUrl &&  <Image source={{uri: a!.user!.imageUrl}} alt={""} width={40} height={40} className="w-10 m-2" /> }
-                                      </View>
-                            else return <></>
-                          })}
-                        </View>
-                      </ClickableCell>
-                      <ClickableCell onClick={() => p.setJam(a.jamSessionId)} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
-                        <View className="flex flex-row bg-gray-500 border-gray-300 text-sm px-2 py-1 border text-center rounded-md">
-                          <Svg fill="currentColor" className="w-4 h-4 m-1 mt-1 text-gray-300" viewBox="0 0 20 20">
-                            <Path fillRule="evenodd" clipRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"></Path>
-                          </Svg>
-                          <Text className="flex-1 text-center pt-0.5 text-white">{getTimeDifferenceFromNowToEpoch(a.startDate!)} ago</Text>
-                        </View>
-                      </ClickableCell>
-                    
-                    <View className="px-6 py-4 hidden sm:table-cell">
-                      <View className="flex flex-row">
-                        <Pressable onPress={() => { p.setJam(a.jamSessionId) }}
-                            className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                          <Text className='text-md pt-0.5'>Join</Text>
-                          <Svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="ml-2 w-4 h-4 mt-1">
-                            <Path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
-                          </Svg>
-                        </Pressable>
-                      </View>
-                    </View>
-                </View>)}
-            </View>
-          </View>
+function Header() {
+  const { colors } = useTheme()
+  return <View style={{ flexDirection: 'row', paddingVertical: 8 }}>
+    <Text style={{ width: 28, color: colors.muted, fontSize: 12, fontWeight: '700' }}>#</Text>
+    <Text style={{ flex: 1, color: colors.muted, fontSize: 12, fontWeight: '700' }}>ROOM ID OR DESCRIPTION</Text>
+    <Text style={{ width: 72, color: colors.muted, fontSize: 12, fontWeight: '700', textAlign: 'right' }}>TIME</Text>
+  </View>
+}
+
+function RoomRow({ room, index, onJoin, onDelete }: {
+  room: JamListRow
+  index: number
+  onJoin: (id: string) => void
+  onDelete?: (id: string) => void
+}) {
+  const { colors } = useTheme()
+  const id = room.jamSessionId || ''
+  const faces = (room.active || []).filter((person) => person?.user?.imageUrl).slice(0, 4)
+  return <Card>
+    <Pressable onPress={() => onJoin(id)}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={{ width: 28, color: colors.muted }}>{index + 1}</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: colors.text, fontWeight: '700' }} numberOfLines={1}>{jamLabel(room)}{room.policy ? `  ${room.policy}` : ''}</Text>
+          <Text style={{ color: colors.muted, fontSize: 12 }} numberOfLines={1}>{id}</Text>
         </View>
       </View>
-    </View>
-    
-    <View className="relative z-20">
-      <Text className="pt-8 px-6 text-lg font-bold dark:text-white text-gray-700">Artists and Bands:</Text>
-      <View className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 m-5 gap-2">
-        { p.bands.map((b, i) => <View key={i}>
-              <BandCard band={b} />
-            </View>
-        )}
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+        {faces.map((person, faceIndex) => <Image key={person?.user?.userId || faceIndex} source={{ uri: person!.user!.imageUrl! }} style={{ width: 28, height: 28, borderRadius: 14, marginRight: 4 }} />)}
+        <Text style={{ color: colors.muted, marginLeft: 'auto' }}>{room.startDate ? `${getTimeDifferenceFromNowToEpoch(room.startDate)} ago` : ''}</Text>
       </View>
+    </Pressable>
+    <View style={{ flexDirection: 'row', marginTop: 8 }}>
+      <View style={{ flex: 1, marginRight: 8 }}><Btn label="Join" onPress={() => onJoin(id)} /></View>
+      {onDelete ? <View style={{ flex: 1 }}><Btn label="Delete" tone="danger" onPress={() => onDelete(id)} /></View> : null}
     </View>
-  </ScrollView>
+  </Card>
 }

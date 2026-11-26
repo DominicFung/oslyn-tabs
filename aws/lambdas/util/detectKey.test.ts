@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict'
-import { describe, it } from 'node:test'
 import { detectKey, resolvedChordSheetKey } from './detectKey'
 
 const lines = (chords: string[]) => chords.join(' ')

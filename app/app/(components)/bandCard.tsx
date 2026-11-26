@@ -5,11 +5,12 @@ import { Band } from "../../src/API"
 
 interface BandCardProps {
   band: Band
+  onPress?: () => void
 }
 
 export default function BandCard(p: BandCardProps) {
   return <View className="bg-white border w-full border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <Pressable onPress={() => {  }}>
+    <Pressable onPress={p.onPress}>
         <Image className="p-4 rounded-t-lg w-full" source={{ uri: p.band.imageUrl||"" }} width={500} height={500} alt="product image" />
     </Pressable>
     <View className="px-4 pb-4 w-full">

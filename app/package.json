@@ -7,6 +7,7 @@
     "android": "expo run:android",
     "ios": "./scripts/prebuild.sh && expo run:ios -d",
     "web": "expo start --web",
+    "postinstall": "patch-package",
     "ts:check": "tsc",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
@@ -23,6 +24,8 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "aws-amplify": "^6.0.5",
     "expo": "^52.0.33",
+    "expo-apple-authentication": "~7.1.3",
+    "expo-auth-session": "~6.0.3",
     "expo-camera": "~16.0.16",
     "expo-constants": "~17.0.5",
     "expo-crypto": "~14.0.2",
@@ -32,6 +35,7 @@
     "expo-screen-orientation": "~8.0.4",
     "expo-splash-screen": "^0.29.21",
     "expo-status-bar": "~2.0.1",
+    "expo-web-browser": "~14.0.2",
     "nativewind": "^2.0.11",
     "react": "18.3.1",
     "react-native": "0.76.7",
@@ -49,6 +53,7 @@
     "@babel/core": "^7.20.0",
     "@types/react": "~18.3.12",
     "babel-plugin-module-resolver": "^5.0.0",
+    "patch-package": "^8.0.1",
     "tailwindcss": "3.3.2",
     "typescript": "^5.1.3"
   },
