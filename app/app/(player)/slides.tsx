@@ -1,4 +1,4 @@
-import { chordSheetToSlides } from "../../core/oslyn"
+import { chordSheetToSlides, clampSlideIndex } from "../../core/oslyn"
 import { OslynSlide } from "../../core/types"
 import { Song } from "../../src/API"
 import React, { useEffect, useState } from "react"
@@ -42,7 +42,8 @@ export default function Slides(p: SlidesProps) {
   useKeepAwake()
 
   const [ slides, setSlides ] = useState<OslynSlide>()
-  const [ page, _setPage ] = useState(p.page || 0) // dont use directly in html
+  const [ requestedPage, _setPage ] = useState(p.page || 0) // dont use directly in html
+  const page = clampSlideIndex(requestedPage, slides?.pages.length || 0)
   const [ transposedKey, setTransposedKey ] = useState(p.skey || p.song.chordSheetKey || "C")
 
   const [ loading, setLoading ] = useState(false)

@@ -15,6 +15,12 @@ export interface LineProps {
   decorate?: boolean
 }
 
+const fontPx: { [key: string]: number } = {
+  "text-xs": 12, "text-sm": 14, "text-base": 16, "text-lg": 18, "text-xl": 20,
+  "text-2xl": 24, "text-3xl": 30, "text-4xl": 36, "text-5xl": 48, "text-6xl": 60,
+  "text-7xl": 72, "text-8xl": 96, "text-9xl": 128,
+}
+
 const hs: { [key: string]: { chordTop: number, lineMargin: number } } = {
   "text-xs": { chordTop: -18, lineMargin: 0 },
   "text-sm": { chordTop: -20, lineMargin: 5 },
@@ -32,6 +38,13 @@ const hs: { [key: string]: { chordTop: number, lineMargin: number } } = {
 }
 
 export default function Line(p: LineProps) {
+  const textSize = p.textSize || "text-lg"
+  const metrics = hs[textSize] || hs["text-lg"]
+  // Chords sit above the lyric. The gap keeps the next line's chords off this lyric.
+  const lineBox = {
+    marginTop: Math.abs(metrics.chordTop) + 4,
+    minHeight: metrics.lineMargin + (fontPx[textSize] || 18) + 8,
+  }
   const [ phrase, setPhrase ] = useState<OslynPhrase>()
   
   useEffect(() => {
@@ -108,7 +121,7 @@ export default function Line(p: LineProps) {
   }
 
   return <>
-    { phrase && phrase.lyric.trim() != "" && <div className="relative h-12 tmt-6">
+    { phrase && phrase.lyric.trim() != "" && <div className="relative" style={lineBox}>
       { phrase.chords.map((c, i) => { 
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
         const width = calculateWidth(phrase.lyric.substring(0, c.position), p.textSize  || "text-lg")
@@ -117,7 +130,7 @@ export default function Line(p: LineProps) {
       })}
       <div style={{ marginTop: p.textSize?hs[p.textSize].lineMargin:hs["text-lg"].lineMargin }} className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"} whitespace-nowrap`}>{phrase.lyric}</div>
     </div> }
-    { phrase && phrase.lyric.trim() === "" && <div className="relative h-12 tmt-6">
+    { phrase && phrase.lyric.trim() === "" && <div className="relative" style={lineBox}>
       { phrase.chords.map((c, i) => { 
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
         
