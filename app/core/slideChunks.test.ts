@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { chordSheetToSlides, clampSlideIndex, convertOslynSongToPages, slideChunkSizes } from './oslyn.ts'
+import { chordSheetToSlides, clampSlideIndex, convertOslynSongToPages, getChordByNumber, slideChunkSizes } from './oslyn.ts'
 
 describe('slideChunkSizes', () => {
   it('splits a section into even chunks of 2 or 3', () => {
@@ -109,5 +109,19 @@ describe('chordSheetToSlides', () => {
     assert.equal(slides.pages[0].lines[0].chords.length, 2)
     assert.equal(slides.pages.every((page) => page.lines.length >= 1 && page.lines.length <= 3), true)
     assert.equal(slides.pages.every((page) => page.lines.every((line) => line.section === page.lines[0].section)), true)
+  })
+
+  it('keeps every chord on a chord-only intro, including the last one', () => {
+    const slides = chordSheetToSlides([
+      '[Intro]',
+      'G  C  G/B  C',
+      '[Verse]',
+      'G                C',
+      'Worthy of every song',
+    ].join('\n'), 'G')
+    const intro = slides.pages[0].lines[0]
+    const names = intro.chords.map((chord) => `${getChordByNumber(chord.chord, chord.isMinor, 'G')}${chord.decorator || ''}`)
+    assert.deepEqual(names, ['G', 'C', 'G/B', 'C'])
+    assert.ok(intro.chords[3].position >= intro.lyric.trimEnd().length || intro.lyric.trim() === '')
   })
 })
