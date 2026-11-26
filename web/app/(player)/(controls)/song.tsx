@@ -229,18 +229,18 @@ export default function SongControl(p: SongProps) {
       </button>
     </div>
 
-    <div className="max-h-[calc(100vh-14rem)] overflow-auto w-full">
+    <div className="w-full min-w-0">
       {filteredList.length === 0 && search.trim() === "" && <p className="px-4 text-gray-500 dark:text-gray-300">Search for a song to start</p>}
       <ul className="divide-y divide-gray-200 dark:divide-gray-700 w-full">
         {filteredList.map((row) =>
           <li className="min-w-0 py-3 sm:pb-4 hover:cursor-pointer hover:bg-oslyn-50 dark:hover:bg-oslyn-800" key={`${row.setIndex}-${row.song.song?.songId}`}>
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <div className="shrink-0" onClick={() => p.setSong(row.setIndex)}>
                 {row.song.song?.albumCover && <img className="w-8 h-8 rounded-full" src={row.song.song.albumCover} alt="" />}
               </div>
-              <div className="min-w-0 flex-1" onClick={() => p.setSong(row.setIndex)}>
-                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{row.song.song?.title}</p>
-                <p className="truncate text-sm text-gray-500 dark:text-gray-400">{row.song.song?.artist} | {row.song.song?.album}</p>
+              <div className="min-w-0 flex-1 overflow-hidden" onClick={() => p.setSong(row.setIndex)}>
+                <p className="truncate text-sm font-medium text-gray-900 dark:text-white" title={row.song.song?.title || ""}>{row.song.song?.title}</p>
+                <p className="truncate text-sm text-gray-500 dark:text-gray-400" title={`${row.song.song?.artist || ""} | ${row.song.song?.album || ""}`}>{row.song.song?.artist} | {row.song.song?.album}</p>
               </div>
               <div className="shrink-0 text-base font-semibold text-gray-900 dark:text-white" onClick={() => p.setSong(row.setIndex)}>
                 {row.song.key}
@@ -266,10 +266,10 @@ export default function SongControl(p: SongProps) {
           {library.map((hit) => {
             const inJam = p.songs.some((row) => row.song?.songId === hit.songId)
             return <li key={hit.songId} className="min-w-0 py-3">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
-                <div className="min-w-0 flex-1 basis-40">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">{hit.title}</p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">{hit.artist || "Unknown artist"}{inJam ? " · In this jam" : ""}</p>
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <p className="truncate text-sm font-medium text-gray-900 dark:text-white" title={hit.title}>{hit.title}</p>
+                  <p className="truncate text-sm text-gray-500 dark:text-gray-400" title={hit.artist || "Unknown artist"}>{hit.artist || "Unknown artist"}{inJam ? " · In this jam" : ""}</p>
                 </div>
                 <button type="button" disabled={!!busy} onClick={() => addLibrarySong(hit, true)}
                   className="shrink-0 text-white bg-oslyn-700 hover:bg-oslyn-800 rounded-lg text-xs px-3 py-2 disabled:opacity-60">
