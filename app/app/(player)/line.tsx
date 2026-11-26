@@ -23,26 +23,51 @@ function sum(arr: number[], i: number): number {
   return sum;
 }
 
+function estimateSliceWidth(characters: number, textSize: string) {
+  switch (textSize) {
+    case "text-xs": return characters * 2
+    case "text-sm": return characters * 4
+    case "text-base": return characters * 6
+    case "text-lg": return characters * 8
+    case "text-xl": return characters * 10
+    case "text-2xl": return characters * 12
+    case "text-3xl": return characters * 14
+    default: return characters * 6
+  }
+}
+
+function seedWidths(phrase: OslynPhrase, textSize: string) {
+  return phrase.chords.map((chord, index) => {
+    const start = index === 0 ? 0 : phrase.chords[index - 1].position
+    const lyric = phrase.lyric.slice(start, chord.position)
+    return Math.max(estimateSliceWidth(Math.max(lyric.length, 1), textSize), 8)
+  })
+}
+
 export default function Line(p: LineProps) {
   const [ uuid, _setUuid ] = useState<string>(randomUUID())
 
   const [ phrase, setPhrase ] = useState<OslynPhrase>(p.phrase)
-  const [ widths, setWidths ] = useState<number[]>(new Array(p.phrase.chords.length).fill(-1))
+  const textSize = p.textSize || "text-lg"
+  const [ widths, setWidths ] = useState<number[]>(() => seedWidths(p.phrase, textSize))
   const [ maxWidth, setMaxWidth ] = useState({ lineWidth: 0, lastChordWidth: 0 })
+  const chordsReady = widths.length === 0 || widths.every((width) => width >= 0)
 
   useEffect(() => {
     if (p.phrase) { 
       setPhrase(p.phrase)
-      setWidths(new Array(p.phrase.chords.length).fill(-1))
+      setWidths(seedWidths(p.phrase, p.textSize || "text-lg"))
     }
   }, [p.phrase])
 
   const onLyricLayout = (event: NativeSyntheticEvent<TextLayoutEventData>, i: number) => {
     const w = event.nativeEvent?.lines[0]?.width || 0
+    if (!w) return
     setWidths((prev) => {
-      if (prev.length <= 0) { return [] }
-      prev[i] = w
-      return [...prev]
+      if (prev.length <= i || prev[i] === w) return prev
+      const next = [...prev]
+      next[i] = w
+      return next
     })
   }
 
@@ -104,52 +129,65 @@ export default function Line(p: LineProps) {
   }
 
   return <>
-    {p.loaded && phrase.lyric.trim() === "" && <View className="relative h-12 mt-6">
+    {p.loaded && phrase.lyric.trim() === "" && <View className="relative h-12 mt-6" style={{ alignSelf: 'flex-start' }}>
       { phrase.chords.map((c, i) => { 
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey)
         const width = calculateWidth(c.position, p.textSize  || "text-lg")
 
         if (i < phrase.chords.length - 1)
-          return <Text key={`${uuid}-a${i}`} className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
-                    style={{ marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}}>
+          return <Text key={`${uuid}-a${i}`} className={`${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
+                    style={{ position: 'absolute', marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}}>
                       {chord}{p.decorate && c.decorator}
                   </Text>
         else 
-          return <Text key={`${uuid}-a${i}`} className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
-                    style={{ marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}} onTextLayout={onMaxChordWidth}>
+          return <Text key={`${uuid}-a${i}`} className={`${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
+                    style={{ position: 'absolute', marginLeft: width, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}} onTextLayout={onMaxChordWidth}>
                       {chord}{p.decorate && c.decorator}
                   </Text>
       })}
     </View> }
-    { phrase && phrase.lyric.trim() != "" && <View className="relative h-12 mt-6">
-      <View>
-        {p.loaded && phrase.chords.map((c, i) => { 
-          const chord = getChordByNumber(c.chord, c.isMinor, p.skey) || ""
-          const s = sum(widths, i);
+    { phrase && phrase.lyric.trim() != "" && <View style={{ alignSelf: 'flex-start', position: 'relative', marginTop: 24, minHeight: 48 }}>
+      {p.loaded && chordsReady && phrase.chords.map((c, i) => {
+        const chord = getChordByNumber(c.chord, c.isMinor, p.skey) || ""
+        const s = sum(widths, i)
+        return <Text key={`${uuid}-a${i}`}
+          style={{
+            position: 'absolute', left: s || 0, top: 0, borderRadius: 6, overflow: 'hidden',
+            backgroundColor: p.secondary ? '#374151' : '#6d28d9', color: '#fff',
+            paddingHorizontal: 6, paddingVertical: 2, fontWeight: '700', fontSize: 16,
+          }}
+          className={`${p.textSize || "text-lg"}`}>
+            {chord}{p.decorate && c.decorator}
+          </Text>
+      })}
 
-          return <Text key={`${uuid}-a${i}`} className={`absolute ${p.textSize || "text-lg"} bold ${p.secondary ? "bg-gray-700 text-gray-400" : "bg-oslyn-700 text-white" } px-1`} 
-            style={{ marginLeft: s || 0, left: 0, top: -24, borderRadius: 6, overflow: "hidden"}}>
-              {chord}{p.decorate && c.decorator}
-            </Text>
-        })}
-      </View>
-
-      <View>
-        <Text key={uuid} onTextLayout={onMaxLineWidth}
-          className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"} whitespace-nowrap`}>
+      <View style={{ flexDirection: 'row', alignSelf: 'flex-start', marginTop: 28 }} onLayout={(event) => {
+        const width = event.nativeEvent.layout.width
+        if (width > 0) p.onMaxWidth(Math.ceil(width) + 8)
+      }}>
+        <Text key={uuid} onTextLayout={onMaxLineWidth} numberOfLines={1}
+          className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"}`}>
           {phrase.lyric.trim()}
         </Text>
-        
-        {/** FOR CALCULATIONS ONLY - lyric length */}
-        { phrase.chords.map((c, i) => {
-          const start = i === 0 ? 0 : phrase.chords[i-1].position
-          const lyric = phrase.lyric.slice(start, c.position)
-          return <Text className={`absolute h-0 opacity-0 ${p.textSize || "text-lg"}`} key={`${uuid}-b${i}`} numberOfLines={1} onTextLayout={(e) => { onLyricLayout(e, i) } }>{lyric}</Text>
-        })}
+      </View>
 
-        {/** FOR CALCULATIONS ONLY - last chord length */}
-        <Text className={`absolute h-0 opacity-0 ${p.textSize || "text-lg"}`} key={`${uuid}-bs`} numberOfLines={1} onTextLayout={onMaxChordWidth}>
-          { combineChordLyricForWidthCalculation() }
+      <View pointerEvents="none" style={{ position: 'absolute', opacity: 0, flexDirection: 'row', left: 0, top: 0 }}>
+        {phrase.chords.map((c, i) => {
+          const start = i === 0 ? 0 : phrase.chords[i - 1].position
+          const lyric = phrase.lyric.slice(start, c.position) || ' '
+          return <Text
+            key={`${uuid}-b${i}`}
+            numberOfLines={1}
+            onTextLayout={(e) => { onLyricLayout(e, i) }}
+            onLayout={(event) => {
+              const width = event.nativeEvent.layout.width
+              if (width > 0) onLyricLayout({ nativeEvent: { lines: [{ width, text: lyric }] } } as NativeSyntheticEvent<TextLayoutEventData>, i)
+            }}
+            className={p.textSize || 'text-lg'}
+          >{lyric}</Text>
+        })}
+        <Text key={`${uuid}-bs`} numberOfLines={1} onTextLayout={onMaxChordWidth} className={p.textSize || 'text-lg'}>
+          {combineChordLyricForWidthCalculation()}
         </Text>
       </View>
     </View> }

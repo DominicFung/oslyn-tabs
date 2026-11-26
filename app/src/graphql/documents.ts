@@ -35,6 +35,9 @@ export const listPublicBands = /* GraphQL */ `query ListPublicBands {
 export const getJamSessionForPlayer = /* GraphQL */ `query GetJamSessionForPlayer($jamSessionId: ID!, $userId: ID, $joinToken: String) {
   getJamSession(jamSessionId: $jamSessionId, userId: $userId, joinToken: $joinToken) {
     jamSessionId
+    hostId
+    canEditSongs
+    revision
     description
     policy
     currentSong
@@ -242,4 +245,100 @@ export const importerStatus = /* GraphQL */ `query ImporterStatus {
 
 export const setImporterRunning = /* GraphQL */ `mutation SetImporterRunning($enabled: Boolean!) {
   setImporterRunning(enabled: $enabled) { running desired pending lastStarted }
+}`
+
+export const addSongToLiveJam = /* GraphQL */ `mutation AddSongToLiveJam(
+  $jamSessionId: ID!
+  $songId: ID!
+  $key: String!
+  $userId: ID!
+  $jumpTo: Boolean
+) {
+  addSongToLiveJam(jamSessionId: $jamSessionId, songId: $songId, key: $key, userId: $userId, jumpTo: $jumpTo) {
+    jamSessionId
+    index
+    key
+    jumpTo
+    song { songId title artist album albumCover chordSheet chordSheetKey spotifyId }
+  }
+}`
+
+export const onJamSongsChanged = /* GraphQL */ `subscription OnJamSongsChanged($jamSessionId: ID!) {
+  onJamSongsChanged(jamSessionId: $jamSessionId) {
+    jamSessionId
+    index
+    key
+    jumpTo
+    song { songId title artist album albumCover chordSheet chordSheetKey spotifyId }
+  }
+}`
+
+export const removeSongFromJam = /* GraphQL */ `mutation RemoveSongFromJam(
+  $jamSessionId: ID!
+  $songId: ID!
+  $userId: ID!
+  $index: Int
+) {
+  removeSongFromJam(jamSessionId: $jamSessionId, songId: $songId, userId: $userId, index: $index) {
+    jamSessionId
+    songId
+    title
+    index
+    currentSong
+    queue
+    songIds
+  }
+}`
+
+export const onSongRemovedFromJam = /* GraphQL */ `subscription OnSongRemovedFromJam($jamSessionId: ID!) {
+  onSongRemovedFromJam(jamSessionId: $jamSessionId) {
+    jamSessionId
+    songId
+    title
+    index
+    currentSong
+    queue
+    songIds
+  }
+}`
+
+export const setJamQueue = /* GraphQL */ `mutation SetJamQueue(
+  $jamSessionId: ID!
+  $queue: [Int!]!
+  $expectedRevision: Int
+  $currentSongIndex: Int
+) {
+  setJamQueue(jamSessionId: $jamSessionId, queue: $queue, expectedRevision: $expectedRevision, currentSongIndex: $currentSongIndex) {
+    jamSessionId
+    queue
+    revision
+    currentSongIndex
+  }
+}`
+
+export const onJamQueueUpdate = /* GraphQL */ `subscription OnJamQueueUpdate($jamSessionId: ID!) {
+  onJamQueueUpdate(jamSessionId: $jamSessionId) {
+    jamSessionId
+    queue
+    revision
+    currentSongIndex
+  }
+}`
+
+export const ensureJamJoinToken = /* GraphQL */ `mutation EnsureJamJoinToken($jamSessionId: ID!, $userId: ID!) {
+  ensureJamJoinToken(jamSessionId: $jamSessionId, userId: $userId) {
+    jamSessionId
+    joinToken
+  }
+}`
+
+export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($jamId: ID!) {
+  onImportStatusChanged(jamId: $jamId) {
+    requestId
+    songId
+    jamId
+    status
+    chordSheet
+    error
+  }
 }`

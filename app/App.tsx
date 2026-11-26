@@ -29,9 +29,9 @@ export default function App() {
   const [nonce, setNonce] = useState(0)
 
   useEffect(() => {
-    if (jam && !openController) lockAsync(OrientationLock.LANDSCAPE_LEFT).catch(() => {})
-    else lockAsync(OrientationLock.DEFAULT).catch(() => {})
-  }, [jam, openController])
+    // The jam is used in portrait and landscape. The rest of the app stays portrait.
+    lockAsync(jam ? OrientationLock.ALL : OrientationLock.PORTRAIT_UP).catch(() => {})
+  }, [jam])
 
   return <SafeAreaProvider>
     <ThemeProvider theme={theme}>
