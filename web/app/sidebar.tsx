@@ -56,7 +56,7 @@ export default function Sidebar () {
   }
 
   return <>
-  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-30 w-64 h-screen transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
+  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-30 flex h-[100dvh] max-h-[100dvh] min-h-0 w-64 flex-col transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
     <div className={`relative h-0 w-0 top-4 ${openSidebar?"left-56":"left-72"}`}>
       <button onClick={() => setOpenSidebar(!openSidebar)}
         className="z-90 bg-gray-50 dark:bg-gray-700 w-12 h-12
@@ -67,11 +67,12 @@ export default function Sidebar () {
       </button>
     </div>
    
-    <div className="flex flex-col h-full px-3 py-4 pt-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-      <Link href="/" className="flex items-center pl-2.5 my-5">
+    <div className="flex min-h-0 flex-1 flex-col bg-gray-50 px-3 pt-4 dark:bg-gray-800">
+      <Link href="/" className="my-5 flex shrink-0 items-center pl-2.5">
          <Image src="/logo-wave.png" className="h-6 mr-3 md:h-7" width={50} height={50} alt="Oslyn Logo" unoptimized />
          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Oslyn Tabs</span>
       </Link>
+     <div className="min-h-0 flex-1 overflow-y-auto">
      <ul className="space-y-2 font-medium">
         <li>
           <button onClick={() => router.push("/jam/start")} className={`w-full flex items-center p-2 rounded-lg text-gray-900 dark:text-white ${
@@ -114,7 +115,7 @@ export default function Sidebar () {
         </li>
      </ul>
 
-      {notice && <div id="dropdown-cta" className="p-4 mt-6 rounded-lg bg-oslyn-50 dark:bg-oslyn-900" role="alert">
+      {notice && <div id="dropdown-cta" className="mt-6 rounded-lg bg-oslyn-50 p-4 [@media(max-height:640px)]:hidden dark:bg-oslyn-900" role="alert">
         <div className="flex items-center mb-3">
           <span className="bg-coral-100 text-coral-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-coral-200 dark:text-coral-900">Beta</span>
             <button type="button" onClick={() => setNotice(false)} data-dismiss-target="#dropdown-cta" aria-label="Close"
@@ -129,10 +130,9 @@ export default function Sidebar () {
         </p>
         <a className="text-sm text-oslyn-800 underline font-medium hover:text-oslyn-900 dark:text-oslyn-400 dark:hover:text-oslyn-300" href="https://github.com/DominicFung/oslyn-tabs/issues/new">Give Feedback!</a>
       </div> }
+     </div>
 
-      <div className="flex-1" />
-
-
+      <div className="shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
       { status != "authenticated" &&  <button onClick={() => setOpenLogin(true)} className="w-full flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
         <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd"></path></svg>
         <span className="flex-1 ml-3 whitespace-nowrap text-left">Sign In</span>
@@ -145,6 +145,7 @@ export default function Sidebar () {
           <span className="flex-1 ml-3 whitespace-nowrap text-left">{ session?.user?.name }</span>
         </button>
       </a> }
+      </div>
 
     </div>
   </aside>
