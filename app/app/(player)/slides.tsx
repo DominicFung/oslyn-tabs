@@ -10,7 +10,7 @@ import { useKeepAwake } from 'expo-keep-awake'
 import Svg, { Path } from 'react-native-svg'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { lyricPlacement } from '../../src/jamLayout'
-import { acceptMeasuredWidth } from '../../src/lyricMeasure'
+import { layoutSize, queueMeasuredHeight, acceptMeasuredWidth } from '../../src/lyricMeasure'
 import { ultimateGuitarSearchUrl } from '../../src/jamPlaylist'
 import { useTheme } from '../../src/theme'
 
@@ -109,17 +109,13 @@ export default function Slides(p: SlidesProps) {
     <View
       style={{ flex: 1, marginBottom: insets.bottom }}
       onLayout={(event) => {
-        const next = {
-          width: Math.round(event.nativeEvent.layout.width),
-          height: Math.round(event.nativeEvent.layout.height),
-        }
+        const box = layoutSize(event)
+        const next = { width: Math.round(box.width), height: Math.round(box.height) }
         setStage((prev) => prev.width === next.width && prev.height === next.height ? prev : next)
       }}
     >
       {hasSheet && current && <View
-        onLayout={(event) => {
-          setBlockH((prev) => acceptMeasuredWidth(prev, event.nativeEvent.layout.height))
-        }}
+        onLayout={(event) => { queueMeasuredHeight(event, setBlockH) }}
         style={{
           position: 'absolute',
           width: maxWidth || undefined,
