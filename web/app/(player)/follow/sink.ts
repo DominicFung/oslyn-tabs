@@ -21,15 +21,22 @@ export class DownloadSink implements RecordingSink {
   }
 }
 
+/** Chrome drops sendBeacon and keepalive bodies above about 64KB. Stay under that. */
+export const UNLOAD_UPLOAD_LIMIT = 60_000
+
+export function recordingForm(session: FollowSessionFile, audio: Uint8Array | null): FormData {
+  const body = new FormData()
+  body.set('session', JSON.stringify(session))
+  if (audio && audio.length) body.set('audio', new Blob([audio], { type: 'audio/webm' }), 'audio.webm')
+  return body
+}
+
 /** Uploads through the Next.js route so credentials stay on the server. */
 export class ProjectBucketSink implements RecordingSink {
   async save(session: FollowSessionFile, audio: Uint8Array | null): Promise<SavedRecording> {
-    const body = new FormData()
-    body.set('session', JSON.stringify(session))
-    if (audio && audio.length) body.set('audio', new Blob([audio], { type: 'audio/webm' }), 'audio.webm')
     let response: Response
     try {
-      response = await fetch('/api/follow/recording', { method: 'POST', body })
+      response = await fetch('/api/follow/recording', { method: 'POST', body: recordingForm(session, audio) })
     } catch {
       return { ok: false, message: 'Upload is not available yet. Download the zip instead.' }
     }
@@ -39,4 +46,17 @@ export class ProjectBucketSink implements RecordingSink {
     }
     return payload
   }
+}
+
+/**
+ * Last-chance upload when the tab is closing. session.json always goes out.
+ * Audio is included only when session.json plus audio stay under UNLOAD_UPLOAD_LIMIT.
+ * Larger audio is dropped here; turning Follow me off uploads it normally.
+ */
+export function uploadOnUnload(session: FollowSessionFile, audio: Uint8Array | null) {
+  const sessionBytes = new TextEncoder().encode(JSON.stringify(session))
+  const audioFits = !!audio && audio.length > 0 && sessionBytes.length + audio.length <= UNLOAD_UPLOAD_LIMIT
+  const attempt = () => recordingForm(session, audioFits ? audio : null)
+  if (typeof navigator.sendBeacon === 'function' && navigator.sendBeacon('/api/follow/recording', attempt())) return
+  fetch('/api/follow/recording', { method: 'POST', body: attempt(), keepalive: true }).catch(() => {})
 }

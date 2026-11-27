@@ -18,6 +18,30 @@ describe('follow fixtures', () => {
     }
   })
 
+  it('counts a manual next as an expected turn and a quick prev as a rejected auto turn', () => {
+    const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
+    const base = scoreSession(session)
+    const withoutMark = scoreSession({ ...session, events: session.events.filter((event) => event.type !== 'should-turn') })
+    const manualNext = scoreSession({
+      ...session,
+      events: [
+        ...session.events.filter((event) => event.type !== 'should-turn'),
+        { t: 1900, type: 'manual-correction', direction: 'next', source: 'key', pageBefore: 0, pageAfter: 1 },
+      ],
+    })
+    assert.equal(manualNext.missed, 0)
+    assert.ok(manualNext.score > withoutMark.score)
+    const undone = scoreSession({
+      ...session,
+      events: [
+        ...session.events,
+        { t: 2400, type: 'manual-correction', direction: 'prev', source: 'button', pageBefore: 1, pageAfter: 0 },
+      ],
+    })
+    assert.ok(undone.falseTurns.length > base.falseTurns.length)
+    assert.ok(undone.score < base.score)
+  })
+
   it('treats a missing mark and an extra turn as a lower score', () => {
     const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
     const missed = scoreSession({ ...session, events: [] })

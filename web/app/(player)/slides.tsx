@@ -58,6 +58,12 @@ export default function Slides(p: SlidesProps) {
     else _setPage(n)
   }
 
+  const noteManualPage = (direction: 'prev' | 'next', source: 'key' | 'button', to: number) => {
+    document.body.dispatchEvent(new CustomEvent('follow-manual-page', {
+      detail: { direction, source, pageBefore: page, pageAfter: to },
+    }))
+  }
+
   useEffect(() => { _setPage(p.page || 0) }, [p.page])
 
   useEffect(() => {
@@ -147,13 +153,14 @@ export default function Slides(p: SlidesProps) {
   const keydown = (event: KeyboardEvent) => {
     console.log(event.code)
     if (event.code === "ArrowLeft") {
-      if (page > 0) { setPage(page-1) } 
+      if (page > 0) { noteManualPage('prev', 'key', page - 1); setPage(page-1) }
       else console.log(`cannot turn to previous page using ${event.code}`)
       return
     }
 
     if (event.code === "ArrowRight" || event.code === "Space") {
       if (slides && slides?.pages.length-1 > page) {
+        if (event.code === "ArrowRight") noteManualPage('next', 'key', page + 1)
         setPage(page+1)
         return
       } else { 
@@ -187,14 +194,14 @@ export default function Slides(p: SlidesProps) {
     </div>
     <div className={`absolute bottom-0 left-0 ${openSidebar?"ml-64 w-[calc(100%-16rem)] hidden sm:flex sm:flex-row":"ml-0 w-full flex flex-row"}`}>
       { page > 0 ? <button className={`focus:outline-none flex-1 ${p.pt && "fixed left-0 top-0 mt-24 h-[calc(100%-90px)]"} ${p.pt && openSidebar && "ml-64"}`}
-      onClick={() => setPage(page-1)}>
+      onClick={() => { noteManualPage('prev', 'button', page - 1); setPage(page-1) }}>
         <div className={`w-32 flex justify-center items-center ${p.pt?"h-full":"h-screen"}`} style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0.5), rgba(95,40,212,0))"
         }}>
           <ChevronLeftIcon className="w-16 h-16 p-4 text-white"/>
         </div>
       </button> : <div className="flex-1" /> }
-      { slides && slides?.pages.length-1 > page ? <button className={`focus:outline-none flex-1 flex flex-row-reverse ${p.pt && "fixed right-0 top-0 mt-24 h-[calc(100%-90px)]"}`} onClick={() => setPage(page+1)}>
+      { slides && slides?.pages.length-1 > page ? <button className={`focus:outline-none flex-1 flex flex-row-reverse ${p.pt && "fixed right-0 top-0 mt-24 h-[calc(100%-90px)]"}`} onClick={() => { noteManualPage('next', 'button', page + 1); setPage(page+1) }}>
         <div className={`w-32 flex justify-center items-center ${p.pt?"h-full":"h-screen"}`} style={{
           backgroundImage: "linear-gradient(to right, rgba(95,40,212,0), rgba(95,40,212,0.5))"
         }}>
