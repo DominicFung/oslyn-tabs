@@ -8,6 +8,18 @@ const root = new URL('./follow-fixtures/', import.meta.url)
 describe('follow fixtures', () => {
   const baseline = JSON.parse(readFileSync(new URL('baseline.json', root), 'utf8')) as Record<string, number>
 
+  it('turns on the saved Build My Life takes', () => {
+    const short = JSON.parse(readFileSync(new URL('build-my-life-1/session.json', root), 'utf8')) as FollowSessionFile
+    const full = JSON.parse(readFileSync(new URL('build-my-life-full/session.json', root), 'utf8')) as FollowSessionFile
+    const shortReport = scoreSession(short)
+    const fullReport = scoreSession(full)
+    const matched = (report: { turns: { missed: boolean }[] }) => report.turns.filter((turn) => !turn.missed).length
+    assert.ok(matched(shortReport) >= 3, `short take matched ${matched(shortReport)}`)
+    assert.ok(shortReport.falseTurns.length <= 4)
+    assert.ok(matched(fullReport) >= 10, `full take matched ${matched(fullReport)}`)
+    assert.ok(fullReport.falseTurns.length <= 20)
+  })
+
   it('scores every committed fixture at or above its baseline', () => {
     const names = Object.keys(baseline)
     assert.ok(names.length > 0)
@@ -40,6 +52,19 @@ describe('follow fixtures', () => {
     })
     assert.ok(undone.falseTurns.length > base.falseTurns.length)
     assert.ok(undone.score < base.score)
+  })
+
+  it('counts one expected turn when Space is followed by the same manual next', () => {
+    const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
+    const doubled = scoreSession({
+      ...session,
+      events: [
+        ...session.events,
+        { t: 2800, type: 'manual-correction', direction: 'next', source: 'key', pageBefore: 0, pageAfter: 1 },
+      ],
+    })
+    assert.equal(doubled.turns.length, 1)
+    assert.equal(doubled.missed, 0)
   })
 
   it('treats a missing mark and an extra turn as a lower score', () => {

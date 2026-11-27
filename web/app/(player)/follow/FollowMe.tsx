@@ -1,12 +1,14 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
-import type { FollowChartChord, FollowEstimated, FollowFrame, FollowMark, FollowPageLayout, FollowSessionFile, FollowSnapshot } from '@/core/follow'
+import type { FollowChartChord, FollowEstimated, FollowFrame, FollowManifest, FollowManifestChunk, FollowMark, FollowPageLayout, FollowSnapshot } from '@/core/follow'
+import { compactPart, partFileNames } from '@/core/follow'
 import type { FollowPhase } from './listen'
-import { DownloadSink, ProjectBucketSink, uploadOnUnload, type SavedRecording } from './sink'
+import { chunkUploadFiles, downloadZip, failedChunkZip, uploadFiles, type SavedRecording } from './sink'
 
 const STORAGE_KEY = 'jam/followMe'
 const APP_VERSION = '0.1.0'
+const CHUNK_MS = 120_000
 
 type ManualDetail = {
   direction: 'prev' | 'next'
@@ -17,6 +19,7 @@ type ManualDetail = {
 
 export default function FollowMe(p: {
   chordSheet: string
+  chartKey: string
   songKey: string
   songId: string
   title: string
@@ -40,7 +43,7 @@ export default function FollowMe(p: {
   const frames = useRef<FollowFrame[]>([])
   const events = useRef<FollowMark[]>([])
   const chart = useRef<{ chords: FollowChartChord[], pages: FollowPageLayout[] }>({ chords: [], pages: [] })
-  const songMeta = useRef({ songId: p.songId, title: p.title, key: p.songKey, capo: p.capo })
+  const songMeta = useRef({ songId: p.songId, title: p.title, chartKey: p.chartKey, key: p.songKey, capo: p.capo })
   const pendingAuto = useRef<number | null>(null)
   const pendingManual = useRef<number | null>(null)
   const seenPage = useRef(p.page)
@@ -48,8 +51,16 @@ export default function FollowMe(p: {
   const media = useRef<MediaRecorder | null>(null)
   const audioChunks = useRef<Blob[]>([])
   const lastSnap = useRef<FollowSnapshot | null>(null)
-  const lastSession = useRef<FollowSessionFile | null>(null)
-  const lastAudio = useRef<Uint8Array | null>(null)
+  const takeRef = useRef<{
+    sessionId: string
+    recordedAt: string
+    part: number
+    chunkStart: number
+    chunks: FollowManifestChunk[]
+  } | null>(null)
+  const chunkTimer = useRef<number | null>(null)
+  const failedZip = useRef<{ name: string, bytes: Uint8Array } | null>(null)
+  const flushChain = useRef(Promise.resolve())
   pageRef.current = p.page
   onPageRef.current = p.onPage
   debugRef.current = debug
@@ -73,51 +84,15 @@ export default function FollowMe(p: {
     }
   }
 
-  const buildSession = (): FollowSessionFile => {
-    const meta = songMeta.current
-    return {
-      version: 1,
-      songId: meta.songId || 'unknown',
-      title: meta.title,
-      key: meta.key,
-      capo: Number.isFinite(meta.capo) ? meta.capo : null,
-      userAgent: navigator.userAgent,
-      appVersion: APP_VERSION,
-      commit: process.env.NEXT_PUBLIC_GIT_SHA || 'unknown',
-      recordedAt: new Date().toISOString(),
-      chords: chart.current.chords,
-      pages: chart.current.pages,
-      frames: frames.current,
-      events: events.current,
+  const clearChunkTimer = () => {
+    if (chunkTimer.current != null) {
+      window.clearTimeout(chunkTimer.current)
+      chunkTimer.current = null
     }
   }
 
-  const takeAudio = (recorder: MediaRecorder | null) => new Promise<Uint8Array | null>((resolve) => {
-    if (!recorder || recorder.state === 'inactive') {
-      resolve(chunksToBytes())
-      return
-    }
-    recorder.onstop = () => { resolve(chunksToBytes()) }
-    recorder.stop()
-  })
-
-  const chunksToBytes = async () => {
-    if (!audioChunks.current.length) return null
-    const blob = new Blob(audioChunks.current, { type: 'audio/webm' })
-    return new Uint8Array(await blob.arrayBuffer())
-  }
-
-  const beginRecording = () => {
-    if (!debugRef.current || !streamRef.current || recordingRef.current) return
-    frames.current = []
-    events.current = []
-    audioChunks.current = []
-    songMeta.current = { songId: p.songId, title: p.title, key: p.songKey, capo: p.capo }
-    startedAt.current = performance.now()
-    seenPage.current = pageRef.current
-    recordingRef.current = true
-    setRecording(true)
-    setDownloadReady(false)
+  const startRecorder = () => {
+    if (!streamRef.current) return
     const mime = typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
       ? 'audio/webm;codecs=opus' : ''
     try {
@@ -128,34 +103,189 @@ export default function FollowMe(p: {
     } catch { media.current = null }
   }
 
-  const finishRecording = async (unload: boolean) => {
-    if (!recordingRef.current) return
-    recordingRef.current = false
-    setRecording(false)
-    const recorder = media.current
-    media.current = null
-    const session = buildSession()
-    frames.current = []
-    events.current = []
-    if (unload) {
-      const audio = await chunksToBytes()
-      lastSession.current = session
-      lastAudio.current = audio
-      uploadOnUnload(session, audio)
-      audioChunks.current = []
-      return
-    }
-    const audio = await takeAudio(recorder)
-    audioChunks.current = []
-    lastSession.current = session
-    lastAudio.current = audio
-    const uploaded = await new ProjectBucketSink().save(session, audio)
-    setSaveNote(uploaded)
-    setDownloadReady(!uploaded.ok)
+  const blobsToBytes = async (blobs: Blob[]) => {
+    if (!blobs.length) return null
+    return new Uint8Array(await new Blob(blobs, { type: 'audio/webm' }).arrayBuffer())
   }
 
-  const finishRef = useRef(finishRecording)
-  finishRef.current = finishRecording
+  const headerFor = (chunks: FollowManifestChunk[], finished: boolean): FollowManifest => {
+    const meta = songMeta.current
+    const take = takeRef.current
+    return {
+      version: 1,
+      songId: meta.songId || 'unknown',
+      sessionId: take?.sessionId || 'unknown',
+      title: meta.title,
+      chartKey: meta.chartKey,
+      key: meta.key,
+      capo: Number.isFinite(meta.capo) ? meta.capo : null,
+      userAgent: navigator.userAgent,
+      appVersion: APP_VERSION,
+      commit: process.env.NEXT_PUBLIC_GIT_SHA || 'unknown',
+      recordedAt: take?.recordedAt || new Date().toISOString(),
+      chords: chart.current.chords,
+      pages: chart.current.pages,
+      chunks,
+      finished,
+    }
+  }
+
+  type ChunkCut = {
+    recorder: MediaRecorder | null
+    blobs: Blob[]
+    part: ReturnType<typeof compactPart>
+    manifest: FollowManifest
+    sessionId: string
+  }
+
+  // Cuts the open MediaRecorder session into one part. Timeslice blobs from that
+  // session concatenate to a playable webm. The next part starts a new recorder.
+  const cutChunk = (ending: boolean): ChunkCut | null => {
+    const take = takeRef.current
+    if (!take || !recordingRef.current) return null
+    const recorder = media.current
+    const blobs = audioChunks.current
+    audioChunks.current = []
+    if (recorder) recorder.ondataavailable = (event) => { if (event.data.size) blobs.push(event.data) }
+    media.current = null
+    const framesNow = frames.current
+    const eventsNow = events.current
+    frames.current = []
+    events.current = []
+    const end = stamp()
+    const names = partFileNames(take.part)
+    const part = compactPart({ chunk: take.part, start: take.chunkStart, end, frames: framesNow, events: eventsNow })
+    const listed: FollowManifestChunk = { part: take.part, start: take.chunkStart, end, session: names.json }
+    take.chunks = [...take.chunks, listed]
+    const manifest = headerFor(take.chunks, ending)
+    take.part += 1
+    take.chunkStart = end
+    if (ending) {
+      recordingRef.current = false
+      setRecording(false)
+      clearChunkTimer()
+    } else {
+      startRecorder()
+      clearChunkTimer()
+      chunkTimer.current = window.setTimeout(() => { void flushChunk('timer') }, CHUNK_MS)
+    }
+    return { recorder, blobs, part, manifest, sessionId: take.sessionId }
+  }
+
+  const stopRecorder = (recorder: MediaRecorder | null, blobs: Blob[]) => new Promise<Uint8Array | null>((resolve) => {
+    const done = () => { resolve(blobsToBytes(blobs)) }
+    if (!recorder || recorder.state === 'inactive') { done(); return }
+    recorder.onstop = () => { done() }
+    try { recorder.stop() } catch { done() }
+  })
+
+  const dropEmpty = (cut: ChunkCut) => {
+    if (takeRef.current?.sessionId === cut.sessionId) {
+      takeRef.current.chunks = takeRef.current.chunks.filter((chunk) => chunk.part !== cut.part.chunk)
+    }
+  }
+
+  const publishChunk = async (cut: ChunkCut, keepalive: boolean) => {
+    const audioBlob = cut.blobs.length ? new Blob(cut.blobs, { type: 'audio/webm' }) : null
+    if (!keepalive && cut.recorder && cut.recorder.state === 'recording') {
+      const stopped = await stopRecorder(cut.recorder, cut.blobs)
+      return publishBytes(cut, stopped, false)
+    }
+    if (!cut.part.frames.length && !cut.part.events.length && !(audioBlob && audioBlob.size)) {
+      dropEmpty(cut)
+      return
+    }
+    if (audioBlob && audioBlob.size) {
+      const entry = cut.manifest.chunks.find((chunk) => chunk.part === cut.part.chunk)
+      if (entry) entry.audio = partFileNames(cut.part.chunk).audio
+    }
+    const uploaded = await uploadFiles(
+      cut.manifest.songId,
+      cut.sessionId,
+      cut.manifest.recordedAt,
+      chunkUploadFiles(cut.manifest, cut.part, audioBlob),
+      { keepalive },
+    )
+    if (uploaded.ok) {
+      if (!keepalive) setSaveNote(uploaded)
+      return
+    }
+    if (keepalive) return
+    const bytes = audioBlob ? new Uint8Array(await audioBlob.arrayBuffer()) : null
+    const label = String(cut.part.chunk).padStart(4, '0')
+    failedZip.current = { name: `follow-part-${label}.zip`, bytes: failedChunkZip(cut.manifest, cut.part, bytes) }
+    setDownloadReady(true)
+    setSaveNote({ ok: false, message: `Chunk ${cut.part.chunk} did not upload. Download that chunk.` })
+  }
+
+  const publishBytes = async (cut: ChunkCut, audio: Uint8Array | null, keepalive: boolean) => {
+    if (!cut.part.frames.length && !cut.part.events.length && !(audio && audio.length)) {
+      dropEmpty(cut)
+      return
+    }
+    const audioBlob = audio && audio.length ? new Blob([audio], { type: 'audio/webm' }) : null
+    if (audioBlob) {
+      const entry = cut.manifest.chunks.find((chunk) => chunk.part === cut.part.chunk)
+      if (entry) entry.audio = partFileNames(cut.part.chunk).audio
+    }
+    const uploaded = await uploadFiles(
+      cut.manifest.songId,
+      cut.sessionId,
+      cut.manifest.recordedAt,
+      chunkUploadFiles(cut.manifest, cut.part, audioBlob),
+      { keepalive },
+    )
+    if (uploaded.ok) {
+      setSaveNote(uploaded)
+      return
+    }
+    const label = String(cut.part.chunk).padStart(4, '0')
+    failedZip.current = { name: `follow-part-${label}.zip`, bytes: failedChunkZip(cut.manifest, cut.part, audio) }
+    setDownloadReady(true)
+    setSaveNote({ ok: false, message: `Chunk ${cut.part.chunk} did not upload. Download that chunk.` })
+  }
+
+  const flushChunk = (kind: 'timer' | 'hidden' | 'stop' | 'pagehide') => {
+    if (kind === 'pagehide') {
+      const cut = cutChunk(true)
+      if (cut) void publishChunk(cut, true)
+      return Promise.resolve()
+    }
+    const run = async () => {
+      const cut = cutChunk(kind === 'stop')
+      if (cut) await publishChunk(cut, false)
+    }
+    const next = flushChain.current.then(run, run)
+    flushChain.current = next.then(() => {}, () => {})
+    return next
+  }
+
+  const beginRecording = () => {
+    if (!debugRef.current || !streamRef.current || recordingRef.current) return
+    frames.current = []
+    events.current = []
+    audioChunks.current = []
+    songMeta.current = { songId: p.songId, title: p.title, chartKey: p.chartKey, key: p.songKey, capo: p.capo }
+    startedAt.current = performance.now()
+    seenPage.current = pageRef.current
+    takeRef.current = {
+      sessionId: crypto.randomUUID(),
+      recordedAt: new Date().toISOString(),
+      part: 1,
+      chunkStart: 0,
+      chunks: [],
+    }
+    recordingRef.current = true
+    setRecording(true)
+    setDownloadReady(false)
+    failedZip.current = null
+    startRecorder()
+    clearChunkTimer()
+    chunkTimer.current = window.setTimeout(() => { void flushChunk('timer') }, CHUNK_MS)
+  }
+
+  const finishRef = useRef(flushChunk)
+  finishRef.current = flushChunk
   const beginRef = useRef(beginRecording)
   beginRef.current = beginRecording
 
@@ -163,7 +293,7 @@ export default function FollowMe(p: {
     if (!enabled) {
       setPhase('off')
       setSnap(null)
-      void finishRef.current(false)
+      void finishRef.current('stop')
       streamRef.current = null
       return
     }
@@ -172,6 +302,7 @@ export default function FollowMe(p: {
     setPhase('off')
     import('./listen').then((mod) => mod.startFollow({
       chordSheet: p.chordSheet,
+      chartKey: p.chartKey,
       songKey: p.songKey,
       getPage: () => pageRef.current,
       onPage: (page) => {
@@ -211,13 +342,13 @@ export default function FollowMe(p: {
     }).catch(() => { if (!cancel) setPhase('error') })
     return () => {
       cancel = true
-      const done = finishRef.current(false)
+      const done = finishRef.current('stop')
       done.finally(() => {
         stop()
         streamRef.current = null
       })
     }
-  }, [enabled, p.chordSheet, p.songKey, p.songId])
+  }, [enabled, p.chordSheet, p.chartKey, p.songKey, p.songId])
 
   useEffect(() => {
     if (!recordingRef.current) { seenPage.current = p.page; return }
@@ -276,9 +407,16 @@ export default function FollowMe(p: {
   }, [debug])
 
   useEffect(() => {
-    const onHide = () => { void finishRef.current(true) }
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') void finishRef.current('hidden')
+    }
+    const onHide = () => { void finishRef.current('pagehide') }
+    document.addEventListener('visibilitychange', onVisibility)
     window.addEventListener('pagehide', onHide)
-    return () => window.removeEventListener('pagehide', onHide)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pagehide', onHide)
+    }
   }, [])
 
   const toggle = () => {
@@ -288,7 +426,7 @@ export default function FollowMe(p: {
   }
 
   const download = () => {
-    if (lastSession.current) new DownloadSink().save(lastSession.current, lastAudio.current)
+    if (failedZip.current) downloadZip(failedZip.current.name, failedZip.current.bytes)
   }
 
   const listening = phase === 'listening'
@@ -315,6 +453,9 @@ export default function FollowMe(p: {
           <div className="flex justify-between gap-3"><dt>Chart</dt><dd>{snap?.matched || '—'}</dd></div>
           <div className="flex justify-between gap-3"><dt>Confidence</dt><dd>{snap ? snap.confidence.toFixed(2) : '—'}</dd></div>
           <div className="flex justify-between gap-3"><dt>Transposition</dt><dd>{snap ? `${snap.transpositionLocked ? '' : '~'}+${snap.transposition}` : '—'}</dd></div>
+          <div className="flex justify-between gap-3"><dt>Chart key</dt><dd>{p.chartKey}</dd></div>
+          <div className="flex justify-between gap-3"><dt>Jam key</dt><dd>{p.songKey}</dd></div>
+          <div className="flex justify-between gap-3"><dt>Capo</dt><dd>{Number.isFinite(p.capo) ? p.capo : '—'}</dd></div>
           <div className="flex justify-between gap-3"><dt>State</dt><dd>{recording ? 'Recording…' : snap?.state || '—'}</dd></div>
         </dl>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -330,7 +471,7 @@ export default function FollowMe(p: {
           {downloadReady && <button type="button" onClick={download} className="rounded bg-gray-700 px-2 py-1 font-semibold">Download</button>}
         </div>
         {saveNote && <p className="mt-2 text-gray-200">{saveNote.message}</p>}
-        {recording && <p className="mt-2 text-gray-400">Space marks a turn without changing the page. Arrow keys and the side taps still turn the page, and are saved as corrections.</p>}
+        {recording && <p className="mt-2 text-gray-400">Space marks a turn without changing the page. Arrow keys and the side taps still turn the page, and are saved as corrections. About every two minutes the take uploads a part that plays on its own.</p>}
       </>}
     </div>}
   </>

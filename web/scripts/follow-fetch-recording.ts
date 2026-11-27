@@ -3,7 +3,7 @@ import { join } from 'path'
 import { GetObjectCommand, ListObjectsV2Command, S3Client, type S3ClientConfig } from '@aws-sdk/client-s3'
 // Node's type stripper needs the .ts specifier. The app tsconfig does not allow it.
 // @ts-expect-error TS5097
-import { scoreSession, type FollowSessionFile } from '../core/follow.ts'
+import { scoreSession, stitchParts, type FollowChunkPart, type FollowManifest, type FollowSessionFile } from '../core/follow.ts'
 
 function arg(name: string): string | undefined {
   const index = process.argv.indexOf(name)
@@ -57,21 +57,36 @@ async function main() {
   const { client, bucket } = clientAndBucket()
   const listed = await client.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix }))
   const keys = (listed.Contents || []).map((item) => item.Key || '').filter(Boolean)
-  const sessionKey = keys.find((key) => key.endsWith('session.json'))
-  if (!sessionKey) {
-    console.error(`No session.json under ${prefix}`)
-    process.exit(1)
-  }
-  const sessionObject = await client.send(new GetObjectCommand({ Bucket: bucket, Key: sessionKey }))
-  const session = JSON.parse(new TextDecoder().decode(await bodyBytes(sessionObject.Body))) as FollowSessionFile
   const dir = join(process.cwd(), 'core', 'follow-fixtures', name)
   mkdirSync(dir, { recursive: true })
-  writeFileSync(join(dir, 'session.json'), JSON.stringify(session, null, 2))
-  const audioKey = keys.find((key) => key.endsWith('audio.webm'))
-  if (audioKey) {
-    const audioObject = await client.send(new GetObjectCommand({ Bucket: bucket, Key: audioKey }))
-    writeFileSync(join(dir, 'audio.webm'), await bodyBytes(audioObject.Body))
+  const textOf = async (key: string) => new TextDecoder().decode(await bodyBytes((await client.send(new GetObjectCommand({ Bucket: bucket, Key: key }))).Body))
+  const manifestKey = keys.find((key) => key.endsWith('/manifest.json') || key.endsWith('manifest.json'))
+  let session: FollowSessionFile
+  if (manifestKey) {
+    const manifest = JSON.parse(await textOf(manifestKey)) as FollowManifest
+    const partKeys = keys.filter((key) => /part-\d{4}\.json$/.test(key))
+    const parts: FollowChunkPart[] = []
+    for (const key of partKeys) parts.push(JSON.parse(await textOf(key)) as FollowChunkPart)
+    if (parts.length === 0) {
+      console.error(`No part-NNNN.json under ${prefix}`)
+      process.exit(1)
+    }
+    session = stitchParts(manifest, parts)
+    writeFileSync(join(dir, 'manifest.json'), JSON.stringify(manifest, null, 2))
+  } else {
+    const sessionKey = keys.find((key) => key.endsWith('session.json'))
+    if (!sessionKey) {
+      console.error(`No session.json or manifest.json under ${prefix}`)
+      process.exit(1)
+    }
+    session = JSON.parse(await textOf(sessionKey)) as FollowSessionFile
+    const audioKey = keys.find((key) => key.endsWith('audio.webm'))
+    if (audioKey) {
+      const audioObject = await client.send(new GetObjectCommand({ Bucket: bucket, Key: audioKey }))
+      writeFileSync(join(dir, 'audio.webm'), await bodyBytes(audioObject.Body))
+    }
   }
+  writeFileSync(join(dir, 'session.json'), JSON.stringify(session, null, 2))
   const report = scoreSession(session)
   const baselinePath = join(process.cwd(), 'core', 'follow-fixtures', 'baseline.json')
   const baseline = existsSync(baselinePath) ? JSON.parse(readFileSync(baselinePath, 'utf8')) as Record<string, number> : {}

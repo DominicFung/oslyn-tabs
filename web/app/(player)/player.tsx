@@ -28,6 +28,7 @@ import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
 import FollowMe from './follow/FollowMe'
+import { capoForSong, parseCapoPrefs, withSongCapo, type CapoPrefs } from './capoPrefs'
 import { JamSongChange, onJamDeleted, onJamQueueUpdate, onJamSongsChanged, onSetJamsDeleted, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
 import ImportToasts, { ImportEvent } from '../importToasts'
 import { deletedToast, songDeletedEventName, SongDeletedEvent } from '../songDeleted'
@@ -156,7 +157,20 @@ export default function Player(p: PlayerProps) {
   const [ isLastPage, setLastPage ] = useState(false)
 
   const [transpose, setTranspose] = useState(0)
-  const setCapo = (c: string) => { setTranspose(0-Number(c)) }
+  const capoPrefsRef = useRef<CapoPrefs>({ default: '0', bySong: {} })
+  const currentSongId = songs[song]?.song?.songId
+  useEffect(() => {
+    const prefs = parseCapoPrefs(localStorage.getItem('jam/capo'))
+    capoPrefsRef.current = prefs
+    setTranspose(0 - Number(capoForSong(prefs, currentSongId)))
+  }, [currentSongId])
+  const setCapo = (c: string) => {
+    const next = withSongCapo(capoPrefsRef.current, currentSongId, c)
+    if (next === capoPrefsRef.current) return
+    capoPrefsRef.current = next
+    localStorage.setItem('jam/capo', JSON.stringify(next))
+    setTranspose(0 - Number(c))
+  }
 
   const [ textSize, setTextSize ] = useState("text-lg")
   useEffect(() => { const a = localStorage.getItem('jam/textSize') || "text-lg"; if (a && a != "false") { setTextSize(a) } }, [])
@@ -782,7 +796,8 @@ export default function Player(p: PlayerProps) {
     </button> }
     { !p.isSlideShow && songs[song]?.song?.chordSheet?.trim() && <FollowMe
       chordSheet={songs[song]!.song!.chordSheet || ''}
-      songKey={songs[song]!.song!.chordSheetKey || sKey || 'C'}
+      chartKey={songs[song]!.song!.chordSheetKey || sKey || 'C'}
+      songKey={sKey || songs[song]!.song!.chordSheetKey || 'C'}
       songId={songs[song]!.song!.songId || 'unknown'}
       title={songs[song]!.song!.title || ''}
       capo={-transpose}

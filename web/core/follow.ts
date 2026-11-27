@@ -13,7 +13,7 @@ export type FollowSnapshot = {
   detected: string
   matched: string
   confidence: number
-  /** Semitones the sounding audio sits above the chart. Capo 2 locks to 2. */
+  /** Residual semitones from the 12-way search. Templates are already in the jam key, so this is not the capo. */
   transposition: number
   transpositionLocked: boolean
   /** Next jam page to request, or null when the estimate should not turn. */
@@ -81,6 +81,33 @@ export function sequenceFromSlides(
     })
   })
   return out
+}
+
+/** Shortest signed distance from `fromKey` up to `toKey`, in -6..6. */
+export function semitonesBetween(fromKey: string, toKey: string): number {
+  const from = pitchClass(fromKey)
+  const to = pitchClass(toKey)
+  if (from == null || to == null) return 0
+  let delta = (to - from + 12) % 12
+  if (delta > 6) delta -= 12
+  return delta
+}
+
+export function transposeSymbol(symbol: string, semitones: number): string {
+  if (!semitones) return symbol
+  const match = /^([A-G](?:#|b|♯|♭)?)(.*)$/i.exec(symbol.trim())
+  if (!match) return symbol
+  const root = shiftNote(match[1], semitones)
+  const rest = match[2]
+  const slash = rest.indexOf('/')
+  if (slash < 0) return root + rest
+  return `${root}${rest.slice(0, slash)}/${shiftNote(rest.slice(slash + 1), semitones)}`
+}
+
+function shiftNote(name: string, semitones: number): string {
+  const pc = pitchClass(name)
+  if (pc == null) return name
+  return NAMES[(pc + semitones + 120) % 12]
 }
 
 export function pitchClass(root: string): number | null {
@@ -200,9 +227,9 @@ function lineOrdinals(chords: FollowChord[]): number[] {
 }
 
 /**
- * Left-to-right score follower. A step can stay, move along the current line,
- * or enter the next line. It cannot skip a line, and it cannot see past the
- * opening line of the next page, so a sung melody cannot run pages ahead.
+ * Left-to-right score follower. A step stays put unless a later chord explains
+ * the frame better, and it cannot see past the next page's opening line.
+ * An equal copy of the current chord does not pull the estimate forward.
  */
 export class ScoreFollower {
   private readonly chords: FollowChord[]
@@ -233,8 +260,8 @@ export class ScoreFollower {
     this.ordinal = lineOrdinals(chords)
     this.calibrationMs = options.calibrationMs ?? 8000
     this.turnConfidence = options.turnConfidence ?? 0.72
-    this.matchFloor = options.matchFloor ?? 0.84
-    this.turnHold = options.turnHold ?? 8
+    this.matchFloor = options.matchFloor ?? 0.60
+    this.turnHold = options.turnHold ?? 4
     this.cooldownMs = options.cooldownMs ?? 7000
     this.silenceRms = options.silenceRms ?? 0.01
     this.opening = chords.slice(0, Math.min(8, chords.length))
@@ -296,26 +323,34 @@ export class ScoreFollower {
 
   private advance(aligned: number[]): void {
     const n = this.chords.length
+    const match = new Array(n).fill(0)
+    for (let i = 0; i < n; i++) match[i] = cosine(aligned, this.chords[i].template)
     const predicted = new Array(n).fill(0)
     for (let i = 0; i < n; i++) {
       const mass = this.pi[i]
       if (mass === 0) continue
       const limit = this.reachable(i)
-      if (limit <= i) { predicted[i] += mass; continue }
-      predicted[i] += mass * 0.66
-      predicted[i + 1] += mass * 0.24
-      const rest = limit - (i + 1)
-      const share = rest > 0 ? 0.10 / rest : 0
-      if (rest > 0) {
-        for (let j = i + 2; j <= limit; j++) predicted[j] += mass * share
+      let bestJ = i
+      for (let j = i + 1; j <= limit; j++) {
+        if (match[j] > match[i] + 0.03) { bestJ = j; break }
+      }
+      // Move only toward a chord that explains this frame better. An equal
+      // later copy, including the next page's opening, does not count.
+      if (bestJ === i + 1) {
+        predicted[i] += mass * 0.15
+        predicted[i + 1] += mass * 0.85
+      } else if (bestJ > i + 1) {
+        predicted[i] += mass * 0.1
+        predicted[bestJ] += mass * 0.9
+      } else if (limit > i) {
+        predicted[i] += mass * 0.8
+        predicted[i + 1] += mass * 0.2
       } else {
-        predicted[i + 1] += mass * 0.10
+        predicted[i] += mass
       }
     }
     let total = 0
-    const match = new Array(n).fill(0)
     for (let i = 0; i < n; i++) {
-      match[i] = cosine(aligned, this.chords[i].template)
       predicted[i] *= Math.exp(8 * (Math.max(0, match[i]) - 1))
       total += predicted[i]
     }
@@ -348,15 +383,20 @@ export class ScoreFollower {
 
   private decide(elapsedMs: number): number | null {
     const page = this.syncedPage ?? 0
-    if (this.locked == null) { this.held = 0; return null }
     const index = argmax(this.pi)
     const confidence = this.pi[index] || 0
     const strong = this.observe >= this.matchFloor && confidence >= this.turnConfidence
+    // Count current-page hits during calibration too. place() still clears them after a turn.
     if (strong && this.chords[index]?.page === page) this.matched.add(index)
-    const need = this.lastTurnAt == null ? 1 : Math.min(2, this.chords.filter((chord) => chord.page === page).length || 1)
+    if (this.locked == null) return null
     const cooled = this.lastTurnAt == null || elapsedMs - this.lastTurnAt >= this.cooldownMs
-    const opening = this.chords[index] && this.chords[index].page === page + 1 && this.onOpeningLine(this.chords[index])
-    if (!(strong && cooled && opening && this.matched.size >= need)) { this.held = 0; return null }
+    const opening = !!(this.chords[index] && this.chords[index].page === page + 1 && this.onOpeningLine(this.chords[index]))
+    // Landing on the next page's opening line is the turn signal. Don't also require
+    // a prior match on the page we are leaving.
+    if (!(strong && cooled && opening)) {
+      if (this.held > 0) this.held -= 1
+      return null
+    }
     this.held += 1
     if (this.held < this.turnHold) return null
     const turnTo = page + 1
@@ -432,6 +472,9 @@ export type FollowSessionFile = {
   version: 1
   songId: string
   title: string
+  /** Written chart key. */
+  chartKey?: string
+  /** Sounding jam key. Templates are built in this key. Capo is not applied. */
   key: string
   capo: number | null
   userAgent: string
@@ -463,6 +506,28 @@ export type ReplayReport = {
 const MATCH_WINDOW_MS = 5000
 /** A manual previous-page tap this soon after an automatic turn rejects that turn. */
 const EARLY_REJECT_MS = 8000
+/** Space, then the same next a moment later, is one expected turn. */
+const DEDUPE_MS = 4000
+
+function expectedMarks(events: FollowMark[]): FollowMark[] {
+  const raw = events.filter((event) =>
+    event.type === 'should-turn' || (event.type === 'manual-correction' && event.direction === 'next')
+  )
+  const kept: FollowMark[] = []
+  for (const event of raw) {
+    const prev = kept[kept.length - 1]
+    const duplicate = prev
+      && prev.type === 'should-turn'
+      && event.type === 'manual-correction'
+      && event.direction === 'next'
+      && event.t >= prev.t
+      && event.t - prev.t <= DEDUPE_MS
+      && (event.pageBefore == null || prev.page == null || event.pageBefore === prev.page)
+    if (duplicate) continue
+    kept.push(event)
+  }
+  return kept
+}
 
 export function scoreSession(session: FollowSessionFile): ReplayReport {
   const chords: FollowChord[] = []
@@ -472,18 +537,26 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     chords.push({ ...chord, template })
   }
   const follower = new ScoreFollower(chords, session.options || {})
+  const anchors = session.events.filter((event) =>
+    (event.type === 'manual-correction' || event.type === 'page-change')
+    && (event.pageAfter != null || event.page != null)
+  )
   let page = 0
+  let anchorAt = 0
   const predicted: number[] = []
   for (const frame of session.frames) {
+    while (anchorAt < anchors.length && anchors[anchorAt].t < frame.t) {
+      const anchor = anchors[anchorAt]
+      page = anchor.pageAfter ?? anchor.page ?? page
+      anchorAt += 1
+    }
     const snap = follower.push(frame.chroma, frame.energy, frame.t, page)
     if (snap.turnTo != null) {
       predicted.push(frame.t)
       page = snap.turnTo
     }
   }
-  const expected = session.events.filter((event) =>
-    event.type === 'should-turn' || (event.type === 'manual-correction' && event.direction === 'next')
-  ).map((event) => event.t)
+  const expected = expectedMarks(session.events).map((event) => event.t)
   const used = new Set<number>()
   const turns: TurnReport[] = expected.map((expectedT) => {
     let best = -1
@@ -611,5 +684,112 @@ export function zipStore(files: { name: string, data: Uint8Array }[]): Uint8Arra
 export function sessionZip(session: FollowSessionFile, audio: Uint8Array | null): Uint8Array {
   const files = [{ name: 'session.json', data: new TextEncoder().encode(JSON.stringify(session)) }]
   if (audio && audio.length) files.push({ name: 'audio.webm', data: audio })
+  return zipStore(files)
+}
+
+function round3(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  return Math.round(value * 1000) / 1000
+}
+
+/** Chroma and confidence are what make session.json large. Three decimals is enough to replay. */
+export function compactSession(session: FollowSessionFile): FollowSessionFile {
+  return {
+    ...session,
+    frames: session.frames.map((frame) => ({
+      ...frame,
+      chroma: frame.chroma.map(round3),
+      confidence: round3(frame.confidence),
+    })),
+    events: session.events.map((event) => event.estimated
+      ? { ...event, estimated: { ...event.estimated, confidence: round3(event.estimated.confidence) } }
+      : event),
+  }
+}
+
+export type FollowChunkPart = {
+  chunk: number
+  start: number
+  end: number
+  frames: FollowFrame[]
+  events: FollowMark[]
+}
+
+export type FollowManifestChunk = {
+  part: number
+  start: number
+  end: number
+  audio?: string
+  session: string
+}
+
+/** Header for one take. `chunks` grows as parts are uploaded. Audio parts are separate files. */
+export type FollowManifest = {
+  version: 1
+  songId: string
+  sessionId: string
+  title: string
+  chartKey?: string
+  key: string
+  capo: number | null
+  userAgent: string
+  appVersion: string
+  commit: string
+  recordedAt: string
+  chords: FollowChartChord[]
+  pages: FollowPageLayout[]
+  chunks: FollowManifestChunk[]
+  finished: boolean
+}
+
+export function partFileNames(part: number): { audio: string, json: string } {
+  const label = String(Math.max(0, Math.floor(part))).padStart(4, '0')
+  return { audio: `part-${label}.webm`, json: `part-${label}.json` }
+}
+
+export function compactPart(part: FollowChunkPart): FollowChunkPart {
+  return {
+    ...part,
+    frames: part.frames.map((frame) => ({
+      ...frame,
+      chroma: frame.chroma.map(round3),
+      confidence: round3(frame.confidence),
+    })),
+    events: part.events.map((event) => event.estimated
+      ? { ...event, estimated: { ...event.estimated, confidence: round3(event.estimated.confidence) } }
+      : event),
+  }
+}
+
+/** Parts are ordered by chunk index. A repeated index keeps the later copy. */
+export function stitchParts(manifest: FollowManifest, parts: FollowChunkPart[]): FollowSessionFile {
+  const byChunk = new Map<number, FollowChunkPart>()
+  for (const part of parts) byChunk.set(part.chunk, part)
+  const ordered = [...byChunk.values()].sort((a, b) => a.chunk - b.chunk)
+  return {
+    version: 1,
+    songId: manifest.songId,
+    title: manifest.title,
+    chartKey: manifest.chartKey,
+    key: manifest.key,
+    capo: manifest.capo,
+    userAgent: manifest.userAgent,
+    appVersion: manifest.appVersion,
+    commit: manifest.commit,
+    recordedAt: manifest.recordedAt,
+    chords: manifest.chords,
+    pages: manifest.pages,
+    frames: ordered.flatMap((part) => part.frames),
+    events: ordered.flatMap((part) => part.events),
+  }
+}
+
+export function chunkZip(manifest: FollowManifest, part: FollowChunkPart, audio: Uint8Array | null): Uint8Array {
+  const names = partFileNames(part.chunk)
+  const files = [
+    { name: 'manifest.json', data: new TextEncoder().encode(JSON.stringify(manifest)) },
+    { name: names.json, data: new TextEncoder().encode(JSON.stringify(part)) },
+  ]
+  if (audio && audio.length) files.push({ name: names.audio, data: audio })
   return zipStore(files)
 }

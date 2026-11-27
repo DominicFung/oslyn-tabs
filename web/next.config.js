@@ -5,6 +5,9 @@ const path = require("path")
 const withMDX = require('@next/mdx')()
 
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_GIT_SHA: process.env.AWS_COMMIT_ID || process.env.NEXT_PUBLIC_GIT_SHA || '',
+  },
   webpack: (config, options) => {
     config.resolve.alias['aws-crt'] = path.resolve(__dirname, 'node_modules/aws-crt')
     return config

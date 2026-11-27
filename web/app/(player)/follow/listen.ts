@@ -1,5 +1,5 @@
 import { chordSheetToSlides, getChordByNumber } from '@/core/oslyn'
-import { ScoreFollower, sequenceFromSlides, type FollowChartChord, type FollowPageLayout, type FollowSnapshot } from '@/core/follow'
+import { ScoreFollower, chordTemplate, semitonesBetween, sequenceFromSlides, transposeSymbol, type FollowChartChord, type FollowPageLayout, type FollowSnapshot } from '@/core/follow'
 
 export type FollowPhase = 'listening' | 'denied' | 'no-chords' | 'error'
 
@@ -9,6 +9,9 @@ export type FollowPhase = 'listening' | 'denied' | 'no-chords' | 'error'
  */
 export async function startFollow(options: {
   chordSheet: string
+  /** Written chart key. */
+  chartKey: string
+  /** Sounding jam key. Capo is not applied. */
   songKey: string
   getPage: () => number
   onPage: (page: number) => void
@@ -17,8 +20,15 @@ export async function startFollow(options: {
   onChart?: (chart: { chords: FollowChartChord[], pages: FollowPageLayout[] }) => void
   onFrame?: (snapshot: FollowSnapshot, chroma: number[], energy: number) => void
 }): Promise<{ stop: () => void, stream: MediaStream | null }> {
-  const slides = chordSheetToSlides(options.chordSheet, options.songKey)
-  const chords = sequenceFromSlides(slides, options.songKey, getChordByNumber)
+  const chartKey = options.chartKey || options.songKey
+  const slides = chordSheetToSlides(options.chordSheet, chartKey)
+  const written = sequenceFromSlides(slides, chartKey, getChordByNumber)
+  const shift = semitonesBetween(chartKey, options.songKey || chartKey)
+  const chords = written.map((chord) => {
+    const symbol = transposeSymbol(chord.symbol, shift)
+    const template = chordTemplate(symbol) || chord.template
+    return { ...chord, symbol, template }
+  })
   options.onChart?.({
     chords: chords.map(({ symbol, page, line }) => ({ symbol, page, line })),
     pages: slides.pages.map((page, index) => ({ page: index, lines: page.lines.map((line) => line.lyric || line.section || '') })),
