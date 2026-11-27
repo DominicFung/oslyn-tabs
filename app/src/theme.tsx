@@ -2,8 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Appearance, ColorSchemeName } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { resolveScheme, type Scheme, type ThemeMode } from './themeColors'
+
 const KEY = 'oslyn.theme.v1'
-export type ThemeMode = 'light' | 'dark' | 'system'
+export type { ThemeMode } from './themeColors'
 
 export type Palette = {
   text: string
@@ -43,7 +45,7 @@ const dark: Palette = {
 
 type ThemeValue = {
   mode: ThemeMode
-  scheme: 'light' | 'dark'
+  scheme: Scheme
   colors: Palette
   setMode: (mode: ThemeMode) => void
 }
@@ -54,11 +56,6 @@ const ThemeContext = createContext<ThemeValue>({
   colors: light,
   setMode: () => {},
 })
-
-function resolve(mode: ThemeMode, system: ColorSchemeName): 'light' | 'dark' {
-  if (mode === 'light' || mode === 'dark') return mode
-  return system === 'dark' ? 'dark' : 'light'
-}
 
 export function AppearanceProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>('system')
@@ -77,7 +74,7 @@ export function AppearanceProvider({ children }: { children: React.ReactNode }) 
     AsyncStorage.setItem(KEY, next).catch(() => {})
   }
 
-  const scheme = resolve(mode, system)
+  const scheme = resolveScheme(mode, system)
   const colors = scheme === 'dark' ? dark : light
   return <ThemeContext.Provider value={{ mode, scheme, colors, setMode }}>{children}</ThemeContext.Provider>
 }

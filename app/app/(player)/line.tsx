@@ -5,6 +5,8 @@ import React, { memo, useEffect, useRef, useState } from "react"
 import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'
 import { randomUUID } from "expo-crypto"
 import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, ChordLineWidths, layoutSize, placeChordLine, slideLyricText, textLayoutWidth } from "../../src/lyricMeasure"
+import { useTheme } from "../../src/theme"
+import { lyricInk } from "../../src/themeColors"
 
 export interface LineProps {
   phrase: OslynPhrase
@@ -40,6 +42,8 @@ function seedWidths(phrase: OslynPhrase, textSize: string) {
 }
 
 function Line(p: LineProps) {
+  const { scheme } = useTheme()
+  const ink = lyricInk(scheme, !!p.secondary)
   const [ uuid, _setUuid ] = useState<string>(randomUUID())
 
   const [ phrase, setPhrase ] = useState<OslynPhrase>(p.phrase)
@@ -179,8 +183,7 @@ function Line(p: LineProps) {
       })}
 
       <View style={{ flexDirection: 'row', flexWrap: 'nowrap', alignSelf: 'flex-start', marginTop: 28, marginLeft: placed.lyricIndent }}>
-        <Text key={uuid} style={{ flexShrink: 0 }}
-          className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"}`}>
+        <Text key={uuid} style={{ flexShrink: 0, color: ink }} className={p.textSize || "text-lg"}>
           {slideLyricText(phrase.lyric)}
         </Text>
       </View>

@@ -2,6 +2,7 @@ import ZenObservable from "zen-observable-ts"
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
+import { lockAsync, OrientationLock } from 'expo-screen-orientation'
 
 import { default as PlayerSlides } from "./slides"
 
@@ -23,6 +24,7 @@ import Controls from "./controls"
 import { useSession } from '../../src/session'
 import * as docs from '../../src/graphql/documents'
 import { appendQueue, JamSongChange, mergeSongChange, orderSongs, PlaylistUpdate, withImportedSheet } from '../../src/jamPlaylist'
+import { useTheme } from '../../src/theme'
 Amplify.configure(amplifyconfig)
 
 export interface PlayerProps {
@@ -38,6 +40,12 @@ export interface PlayerProps {
 export default function Player(p: PlayerProps){
   const client = generateClient()
   const { account } = useSession()
+  const { colors } = useTheme()
+
+  useEffect(() => {
+    lockAsync(OrientationLock.LANDSCAPE).catch(() => {})
+    return () => { lockAsync(OrientationLock.PORTRAIT_UP).catch(() => {}) }
+  }, [])
   const live = p.jam as JamSession & { hostId?: string | null, canEditSongs?: boolean | null, revision?: number | null }
   const canEdit = !!live.canEditSongs && !!account?.userId
 
@@ -405,7 +413,7 @@ export default function Player(p: PlayerProps){
 
   return <View style={{ flex: 1 }} id="player">
     {songs.length === 0 && <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <Text style={{ fontSize: 22, fontWeight: '700', color: '#1f2937', textAlign: 'center' }}>Search for a song to start</Text>
+      <Text style={{ fontSize: 22, fontWeight: '700', color: colors.text, textAlign: 'center' }}>Search for a song to start</Text>
     </View>}
     { songs[song]?.song && 
       <PlayerSlides
