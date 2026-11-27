@@ -1,5 +1,39 @@
 export type ChordLineWidths = { line: number, chord: number }
 
+export type LayoutEvent = {
+  nativeEvent: { layout?: { width: number, height: number } | null } | null
+}
+
+export type TextLayoutEvent = {
+  nativeEvent: { lines?: Array<{ width: number }> | null } | null
+}
+
+/** Copy the layout box before React Native nulls the synthetic event. */
+export function layoutSize(event: LayoutEvent | null | undefined): { width: number, height: number } {
+  const layout = event?.nativeEvent?.layout
+  return {
+    width: layout?.width || 0,
+    height: layout?.height || 0,
+  }
+}
+
+/** Copy the first text-line width before the synthetic event is released. */
+export function textLayoutWidth(event: TextLayoutEvent | null | undefined): number {
+  return event?.nativeEvent?.lines?.[0]?.width || 0
+}
+
+/**
+ * Read the height now, then hand a plain number to the state updater.
+ * The updater must not touch the event: it runs after the event is null.
+ */
+export function queueMeasuredHeight(
+  event: LayoutEvent | null | undefined,
+  setHeight: (update: (previous: number) => number) => void,
+) {
+  const height = layoutSize(event).height
+  setHeight((previous) => acceptMeasuredWidth(previous, height))
+}
+
 /** Round a layout width. Zero and non-numbers are ignored so a later event can still fill it in. */
 export function acceptMeasuredWidth(previous: number, measured: number): number {
   if (!Number.isFinite(measured) || measured <= 0) return previous

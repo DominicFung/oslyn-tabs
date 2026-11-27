@@ -4,7 +4,7 @@ import React, { memo, useEffect, useRef, useState } from "react"
 
 import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'
 import { randomUUID } from "expo-crypto"
-import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, ChordLineWidths } from "../../src/lyricMeasure"
+import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, ChordLineWidths, layoutSize, textLayoutWidth } from "../../src/lyricMeasure"
 
 export interface LineProps {
   phrase: OslynPhrase
@@ -85,10 +85,12 @@ function Line(p: LineProps) {
   }
 
   const onMaxLineWidth = (event: NativeSyntheticEvent<TextLayoutEventData>) => {
-    onMaxWidth(event.nativeEvent?.lines?.[0]?.width || 0, 'line')
+    const width = textLayoutWidth(event)
+    onMaxWidth(width, 'line')
   }
   const onMaxChordWidth = (event: NativeSyntheticEvent<TextLayoutEventData>) => {
-    onMaxWidth(event.nativeEvent?.lines?.[0]?.width || 0, 'chord')
+    const width = textLayoutWidth(event)
+    onMaxWidth(width, 'chord')
   }
 
   const charWidth = estimateSliceWidth(1, textSize)
@@ -129,8 +131,9 @@ function Line(p: LineProps) {
     {phrase.lyric.trim() === "" && <View
       style={{ alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', minHeight: 48, minWidth: chordSpan }}
       onLayout={(event) => {
+        const width = layoutSize(event).width
         if (maxWidth.line > 0) return
-        onMaxWidth(event.nativeEvent.layout.width, 'line')
+        onMaxWidth(width, 'line')
       }}
     >
       {phrase.chords.map((c, i) => {
@@ -182,8 +185,14 @@ function Line(p: LineProps) {
           return <Text
             key={`${uuid}-b${i}`}
             numberOfLines={1}
-            onTextLayout={(event) => onLyricLayout(event.nativeEvent?.lines?.[0]?.width || 0, i)}
-            onLayout={(event) => onLyricLayout(event.nativeEvent.layout.width, i)}
+            onTextLayout={(event) => {
+              const width = textLayoutWidth(event)
+              onLyricLayout(width, i)
+            }}
+            onLayout={(event) => {
+              const width = layoutSize(event).width
+              onLyricLayout(width, i)
+            }}
             className={p.textSize || 'text-lg'}
           >{lyric}</Text>
         })}

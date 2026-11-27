@@ -1,6 +1,29 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount } from './lyricMeasure.ts'
+import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount, queueMeasuredHeight, textLayoutWidth } from './lyricMeasure.ts'
+
+describe('pooled layout events', () => {
+  it('reads the height before the event is nulled', () => {
+    const event: { nativeEvent: { layout: { width: number, height: number } | null } } = {
+      nativeEvent: { layout: { width: 360, height: 240 } },
+    }
+    let apply: ((previous: number) => number) | undefined
+    queueMeasuredHeight(event, (update) => { apply = update })
+    event.nativeEvent.layout = null
+    assert.equal(apply!(0), 240)
+    assert.equal(apply!(240), 240)
+  })
+
+  it('reads the text width before the event is nulled', () => {
+    const event: { nativeEvent: { lines: Array<{ width: number }> | null } } = {
+      nativeEvent: { lines: [{ width: 128.4 }] },
+    }
+    const width = textLayoutWidth(event)
+    event.nativeEvent.lines = null
+    assert.equal(Math.round(width), 128)
+    assert.equal(textLayoutWidth(event), 0)
+  })
+})
 
 describe('lyric measurement', () => {
   it('ignores a repeated or empty layout width', () => {
