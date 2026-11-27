@@ -18,6 +18,8 @@ export type FollowSnapshot = {
   transpositionLocked: boolean
   /** Next jam page to request, or null when the estimate should not turn. */
   turnTo: number | null
+  /** calibrating, follow, or cooldown. */
+  state: 'calibrating' | 'follow' | 'cooldown'
 }
 
 export type ScoreFollowerOptions = {
@@ -370,6 +372,8 @@ export class ScoreFollower {
     const chord = this.chords[index]
     const transposition = this.locked ?? (this.voiced > 0 ? argmax(this.scores) : 0)
     const detected = aligned ? bestSymbol(aligned, detectionCatalog()).symbol : ''
+    const cooling = this.lastTurnAt != null && this.elapsed - this.lastTurnAt < this.cooldownMs
+    const state = this.locked == null ? 'calibrating' : cooling ? 'cooldown' : 'follow'
     return {
       index,
       page: chord?.page ?? currentPage,
@@ -380,6 +384,158 @@ export class ScoreFollower {
       transposition,
       transpositionLocked: this.locked != null,
       turnTo,
+      state,
     }
   }
+}
+
+export type FollowFrame = {
+  t: number
+  chroma: number[]
+  energy: number
+  detected: string
+  index: number
+  line: number
+  page: number
+  matched: string
+  confidence: number
+  transposition: number
+  transpositionLocked: boolean
+  state: string
+}
+
+export type FollowMark = {
+  t: number
+  type: 'auto-turn' | 'page-change' | 'should-turn'
+  page?: number
+}
+
+export type FollowChartChord = { symbol: string, page: number, line: number }
+export type FollowPageLayout = { page: number, lines: string[] }
+
+/** One debug recording. Replay uses `frames` and does not decode audio. */
+export type FollowSessionFile = {
+  version: 1
+  songId: string
+  title: string
+  key: string
+  capo: number | null
+  userAgent: string
+  appVersion: string
+  commit: string
+  recordedAt: string
+  options?: ScoreFollowerOptions
+  chords: FollowChartChord[]
+  pages: FollowPageLayout[]
+  frames: FollowFrame[]
+  events: FollowMark[]
+}
+
+export type TurnReport = {
+  expectedT: number
+  predictedT: number | null
+  /** Predicted minus expected, in seconds. Negative means the follower was early. */
+  deltaSec: number | null
+  missed: boolean
+}
+
+export type ReplayReport = {
+  turns: TurnReport[]
+  falseTurns: number[]
+  missed: number
+  score: number
+}
+
+const MATCH_WINDOW_MS = 5000
+
+export function scoreSession(session: FollowSessionFile): ReplayReport {
+  const chords: FollowChord[] = []
+  for (const chord of session.chords) {
+    const template = chordTemplate(chord.symbol)
+    if (!template) continue
+    chords.push({ ...chord, template })
+  }
+  const follower = new ScoreFollower(chords, session.options || {})
+  let page = 0
+  const predicted: number[] = []
+  for (const frame of session.frames) {
+    const snap = follower.push(frame.chroma, frame.energy, frame.t, page)
+    if (snap.turnTo != null) {
+      predicted.push(frame.t)
+      page = snap.turnTo
+    }
+  }
+  const expected = session.events.filter((event) => event.type === 'should-turn').map((event) => event.t)
+  const used = new Set<number>()
+  const turns: TurnReport[] = expected.map((expectedT) => {
+    let best = -1
+    let bestGap = Infinity
+    predicted.forEach((time, index) => {
+      if (used.has(index)) return
+      const gap = Math.abs(time - expectedT)
+      if (gap < bestGap) { bestGap = gap; best = index }
+    })
+    if (best < 0 || bestGap > MATCH_WINDOW_MS) {
+      return { expectedT, predictedT: null, deltaSec: null, missed: true }
+    }
+    used.add(best)
+    return { expectedT, predictedT: predicted[best], deltaSec: (predicted[best] - expectedT) / 1000, missed: false }
+  })
+  const falseTurns = predicted.filter((_, index) => !used.has(index))
+  const missed = turns.filter((turn) => turn.missed).length
+  let score = 1
+  for (const turn of turns) {
+    if (turn.missed) score -= 0.4
+    else score -= Math.min(0.3, Math.abs(turn.deltaSec || 0) / 10)
+  }
+  score -= Math.min(0.5, falseTurns.length * 0.25)
+  if (expected.length === 0 && predicted.length === 0) score = 1
+  return { turns, falseTurns, missed, score: Math.max(0, Math.min(1, score)) }
+}
+
+function crc32(data: Uint8Array): number {
+  let crc = 0xffffffff
+  for (let i = 0; i < data.length; i++) {
+    crc ^= data[i]
+    for (let bit = 0; bit < 8; bit++) crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0)
+  }
+  return (crc ^ 0xffffffff) >>> 0
+}
+
+function u16(value: number) { return [value & 255, (value >> 8) & 255] }
+function u32(value: number) { return [value & 255, (value >> 8) & 255, (value >> 16) & 255, (value >> 24) & 255] }
+
+/** Uncompressed zip so a recording can be saved without an extra dependency. */
+export function zipStore(files: { name: string, data: Uint8Array }[]): Uint8Array {
+  const locals: number[] = []
+  const central: number[] = []
+  let offset = 0
+  for (const file of files) {
+    const name = Array.from(new TextEncoder().encode(file.name))
+    const crc = crc32(file.data)
+    const local = [
+      ...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
+      ...u32(crc), ...u32(file.data.length), ...u32(file.data.length),
+      ...u16(name.length), ...u16(0), ...name,
+    ]
+    locals.push(...local, ...file.data)
+    central.push(
+      ...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
+      ...u32(crc), ...u32(file.data.length), ...u32(file.data.length),
+      ...u16(name.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0),
+      ...u32(offset), ...name,
+    )
+    offset += local.length + file.data.length
+  }
+  const end = [
+    ...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length),
+    ...u32(central.length), ...u32(offset), ...u16(0),
+  ]
+  return Uint8Array.from([...locals, ...central, ...end])
+}
+
+export function sessionZip(session: FollowSessionFile, audio: Uint8Array | null): Uint8Array {
+  const files = [{ name: 'session.json', data: new TextEncoder().encode(JSON.stringify(session)) }]
+  if (audio && audio.length) files.push({ name: 'audio.webm', data: audio })
+  return zipStore(files)
 }
