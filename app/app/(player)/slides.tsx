@@ -13,6 +13,7 @@ import { lyricPlacement } from '../../src/jamLayout'
 import { layoutSize, queueMeasuredHeight, acceptMeasuredWidth } from '../../src/lyricMeasure'
 import { ultimateGuitarSearchUrl } from '../../src/jamPlaylist'
 import { useTheme } from '../../src/theme'
+import { jamIconInk, jamSectionInk, jamTitleInk } from '../../src/themeColors'
 
 interface SlidesProps {
   song: Song
@@ -32,7 +33,9 @@ interface SlidesProps {
 
 export default function Slides(p: SlidesProps) {
   useKeepAwake()
-  const { colors } = useTheme()
+  const { colors, scheme } = useTheme()
+  const titleInk = jamTitleInk(scheme)
+  const sectionInk = jamSectionInk(scheme)
   const insets = useSafeAreaInsets()
   const { width: w, height: h } = useWindowDimensions()
 
@@ -95,14 +98,14 @@ export default function Slides(p: SlidesProps) {
       }}
     >
       <Pressable accessibilityLabel="Close jam" onPress={p.resetJam} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
-        <Svg width={28} height={28} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="#4c1d95">
+        <Svg width={28} height={28} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke={jamIconInk(scheme)}>
           <Path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
         </Svg>
       </Pressable>
       {p.song.albumCover ? <Image source={{ uri: p.song.albumCover }} style={{ width: 72, height: 72, borderRadius: 8, marginRight: 12 }} /> : null}
       <View style={{ flex: 1 }}>
-        <Text numberOfLines={2} style={{ color: '#4b5563', fontWeight: '700', fontSize: 16 }}>{p.song.title}</Text>
-        <Text numberOfLines={1} style={{ color: '#4b5563', fontSize: 12, marginTop: 2 }}>{p.song.artist}</Text>
+        <Text numberOfLines={2} style={{ color: titleInk, fontWeight: '700', fontSize: 16 }}>{p.song.title}</Text>
+        <Text numberOfLines={1} style={{ color: titleInk, fontSize: 12, marginTop: 2 }}>{p.song.artist}</Text>
       </View>
     </View>
 
@@ -126,13 +129,13 @@ export default function Slides(p: SlidesProps) {
           transform: [{ scale: place.scale }],
         }}
       >
-        {current.lines[0] && <Text style={{ color: '#6b7280', fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.lines[0].section}</Text>}
+        {current.lines[0] && <Text style={{ color: sectionInk, fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.lines[0].section}</Text>}
         {current.lines.map((line, index) => (
           <Line key={index} onMaxWidth={onMaxWidth} phrase={line} skey={transposedKey} transpose={0} textSize={p.textSize || 'text-lg'} decorate={p.complex || false} loaded />
         ))}
         {p.headsUp && <View style={{ height: 24 }} />}
         {p.headsUp && current.extra && current.extra.section !== current.lines[0]?.section && (
-          <Text style={{ color: '#6b7280', fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.extra.section}</Text>
+          <Text style={{ color: sectionInk, fontSize: 13, fontStyle: 'italic', fontWeight: '700' }}>{current.extra.section}</Text>
         )}
         {p.headsUp && current.extra && (
           <Line onMaxWidth={onMaxWidth} phrase={current.extra} skey={transposedKey} transpose={0} secondary textSize={p.textSize || 'text-lg'} decorate={p.complex || false} loaded />
