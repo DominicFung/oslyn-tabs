@@ -69,13 +69,13 @@ export default function FollowMe(p: {
       type="button"
       aria-pressed={enabled}
       onClick={toggle}
-      className={`fixed z-30 left-3 top-4 flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold shadow ${enabled ? 'bg-oslyn-700 text-white' : 'bg-white/90 text-gray-800 dark:bg-gray-800 dark:text-gray-100'}`}
+      className={`fixed z-40 top-4 right-16 flex max-w-[calc(100vw-9.5rem)] items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow sm:right-28 sm:max-w-[calc(100vw-13rem)] sm:text-sm ${enabled ? 'bg-oslyn-700 text-white' : 'bg-white/90 text-gray-800 dark:bg-gray-800 dark:text-gray-100'}`}
     >
-      <span className={`h-2.5 w-2.5 rounded-full ${listening ? 'bg-emerald-400' : 'bg-gray-400'}`} />
-      Follow me (beta)
-      {note ? <span className="font-medium opacity-80">{note}</span> : null}
+      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${listening ? 'bg-emerald-400' : 'bg-gray-400'}`} />
+      <span className="truncate">Follow me (beta)</span>
+      {note ? <span className="hidden font-medium opacity-80 sm:inline">{note}</span> : null}
     </button>
-    {debug && <div className="fixed z-30 bottom-4 left-3 w-64 rounded-lg bg-gray-900/90 p-3 text-xs text-white shadow">
+    {debug && <div className="fixed z-40 bottom-20 right-4 w-64 max-w-[calc(100vw-2rem)] rounded-lg bg-gray-900/90 p-3 text-xs text-white shadow">
       <button type="button" className="font-semibold" onClick={() => setDebugOpen((open) => !open)}>
         {debugOpen ? 'Hide follow debug' : 'Follow debug'}
       </button>
