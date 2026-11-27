@@ -437,7 +437,7 @@ export default function FollowMe(p: {
       type="button"
       aria-pressed={enabled}
       onClick={toggle}
-      className={`fixed z-40 top-4 right-16 flex max-w-[calc(100vw-9.5rem)] items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow sm:right-28 sm:max-w-[calc(100vw-13rem)] sm:text-sm ${enabled ? 'bg-oslyn-700 text-white' : 'bg-white/90 text-gray-800 dark:bg-gray-800 dark:text-gray-100'}`}
+      className={`fixed right-2 top-24 z-40 flex max-w-[calc(100vw-1rem)] items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold shadow sm:right-28 sm:top-4 sm:max-w-[calc(100vw-13rem)] sm:text-sm ${enabled ? 'bg-oslyn-700 text-white' : 'bg-white/90 text-gray-800 dark:bg-gray-800 dark:text-gray-100'}`}
     >
       <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${listening ? 'bg-emerald-400' : 'bg-gray-400'}`} />
       <span className="truncate">Follow me (beta)</span>

@@ -14,15 +14,15 @@ import { getTimeDifferenceFromNowToEpoch } from "@/core/utils/frontend"
 function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy?: boolean }) {
   const router = useRouter()
   return (
-    <div className="relative overflow-x-auto shadow-md rounded-md sm:rounded-lg mx-5">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <div className="relative mx-5 max-w-full overflow-hidden rounded-md shadow-md sm:rounded-lg">
+      <table className="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" className="px-6 py-3 hidden sm:table-cell">#</th>
-                <th scope="col" className="px-6 py-3">Room ID or Description</th>
-                <th scope="col" className="px-6 py-3 hidden sm:table-cell">Active Users</th>
-                <th scope="col" className="px-6 py-3 hidden sm:table-cell">Time</th>
-                <th scope="col" className="px-6 py-3">Action</th>
+                <th scope="col" className="hidden px-6 py-3 sm:table-cell sm:w-12">#</th>
+                <th scope="col" className="px-3 py-3 sm:px-6">Room ID or Description</th>
+                <th scope="col" className="hidden px-6 py-3 sm:table-cell">Active Users</th>
+                <th scope="col" className="hidden px-6 py-3 sm:table-cell">Time</th>
+                <th scope="col" className="w-20 px-2 py-3 sm:w-56 sm:px-6">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -33,13 +33,13 @@ function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy
                   <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white hidden sm:table-cell">
                     {i+1}
                   </ClickableCell>
-                  <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 text-ellipsis">
-                    <div className="flex-0 m-2 w-36 lg:w-full">
-                      <div className="text-base dark:text-white text-gray-800 bold truncate">
-                        {a.description || a.setList?.description}
-                        {showPolicy && a.policy ? <span className="ml-2 text-xs uppercase text-gray-400">{a.policy}</span> : null}
+                  <ClickableCell href={`/jam/${a.jamSessionId}`} className="min-w-0 px-3 py-3 sm:px-6 sm:py-4">
+                    <div className="min-w-0">
+                      <div className="truncate text-base font-bold text-gray-800 dark:text-white">
+                        {a.description || a.setList?.description || "Jam room"}
+                        {showPolicy && a.policy ? <span className="ml-2 text-xs font-medium uppercase text-gray-400">{a.policy}</span> : null}
                       </div>
-                      <div className="text-xs text-ellipsis truncate">{a.jamSessionId}</div>
+                      <div className="truncate text-xs">{a.jamSessionId}</div>
                     </div>
                   </ClickableCell>
                   <ClickableCell href={`/jam/${a.jamSessionId}`} className="px-6 py-4 hidden sm:table-cell text-ellipsis">
@@ -61,12 +61,12 @@ function JamTable({ sessions, showPolicy }: { sessions: JamSession[], showPolicy
                     <span className="flex-1 text-center pt-0.5 text-white">{a.startDate ? `${getTimeDifferenceFromNowToEpoch(a.startDate)} ago` : ""}</span>
                     </div>
                   </ClickableCell>
-                <td className="px-6 py-4">
-                  <div className="flex flex-row">
-                    <a href={`/jam/${a.jamSessionId}`}>
-                      <button type="button" className="flex flex-row text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                        <span className='text-md pt-0.5'>Join</span>
-                        <ArrowRightOnRectangleIcon className="ml-2 w-4 h-4 mt-1" />
+                <td className="px-2 py-3 sm:px-6 sm:py-4">
+                  <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+                    <a href={`/jam/${a.jamSessionId}`} className="inline-flex justify-center">
+                      <button type="button" aria-label="Join" className="inline-flex items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-2 py-2 text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 sm:px-5 sm:py-2.5">
+                        <span className="hidden sm:inline sm:pt-0.5">Join</span>
+                        <ArrowRightOnRectangleIcon className="h-5 w-5 sm:ml-2 sm:h-4 sm:w-4" />
                       </button>
                     </a>
                     {showPolicy && <DeleteJamButton jamSessionId={a.jamSessionId} description={a.description || a.setList?.description} onDeleted={() => router.refresh()} />}

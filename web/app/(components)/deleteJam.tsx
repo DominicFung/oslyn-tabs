@@ -29,8 +29,9 @@ export default function DeleteJamButton(p: {
 
   return <>
     <button type="button" onClick={() => { setError(""); setOpen(true) }}
-      className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2">
-      Delete jam
+      className="rounded-lg bg-red-700 px-2 py-2 text-xs font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 sm:px-4 sm:py-2 sm:text-sm">
+      <span className="sm:hidden">Delete</span>
+      <span className="hidden sm:inline">Delete jam</span>
     </button>
     {open && <div role="dialog" aria-modal="true" aria-labelledby="delete-jam-title"
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/75 p-4">
