@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import toast, { type Toast } from "react-hot-toast"
+import { isUpdateDismissed, updateBuildId, UPDATE_DISMISS_KEY } from "@/core/updateToast"
 
 /**
  * Registers the production service worker and asks before reloading, so a
@@ -15,11 +16,27 @@ export default function RegisterServiceWorker() {
     let sawController = Boolean(navigator.serviceWorker.controller)
     let prompted = false
 
+    const buildIdFor = (registration?: ServiceWorkerRegistration) => updateBuildId(
+      process.env.NEXT_PUBLIC_GIT_SHA,
+      registration?.waiting?.scriptURL || navigator.serviceWorker.controller?.scriptURL,
+    )
+
     const promptReload = (registration?: ServiceWorkerRegistration) => {
       if (prompted) return
+      const buildId = buildIdFor(registration)
+      let dismissed = false
+      try { dismissed = isUpdateDismissed(buildId, localStorage.getItem(UPDATE_DISMISS_KEY)) } catch { /* private mode */ }
+      if (dismissed) {
+        prompted = true
+        return
+      }
       prompted = true
+      const dismiss = (id: string) => {
+        try { localStorage.setItem(UPDATE_DISMISS_KEY, buildId) } catch { /* private mode */ }
+        toast.dismiss(id)
+      }
       toast.custom((t: Toast) => (
-        <div className="flex items-center gap-3 rounded-lg bg-oslyn-900 px-4 py-3 text-sm text-white shadow-lg">
+        <div className="mb-[env(safe-area-inset-bottom)] flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-lg bg-oslyn-900 px-4 py-3 text-sm text-white shadow-lg">
           <span>A new version of Oslyn Tabs is ready.</span>
           <button
             type="button"
@@ -38,6 +55,14 @@ export default function RegisterServiceWorker() {
             }}
           >
             Reload
+          </button>
+          <button
+            type="button"
+            aria-label="Dismiss"
+            className="ml-auto rounded-full p-1 text-lg leading-none text-white/80 hover:bg-white/10 hover:text-white"
+            onClick={() => dismiss(t.id)}
+          >
+            <span aria-hidden="true">×</span>
           </button>
         </div>
       ), { duration: Infinity, id: "oslyn-sw-update" })

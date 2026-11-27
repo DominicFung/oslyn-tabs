@@ -57,8 +57,8 @@ export default function Sidebar () {
 
   return <>
   {openSidebar && <button type="button" aria-label="Close sidebar" onClick={() => setOpenSidebar(false)}
-    className="fixed inset-0 z-20 bg-black/20 md:hidden" />}
-  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-30 flex h-[100dvh] max-h-[100dvh] min-h-0 w-64 flex-col transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
+    className="fixed inset-0 z-[10000] bg-black/20 md:hidden" />}
+  <aside id="cta-button-sidebar" className={`fixed top-0 left-0 z-[10001] flex h-[100dvh] max-h-[100dvh] min-h-0 w-64 flex-col transition-transform ${openSidebar?"translate-x-0":"-translate-x-full"}`} aria-label="Sidebar">
     <div className={`relative h-0 w-0 top-4 ${openSidebar?"left-56":"left-72"}`}>
       <button onClick={() => setOpenSidebar(!openSidebar)}
         className="z-90 bg-gray-50 dark:bg-gray-700 w-12 h-12
