@@ -265,6 +265,8 @@ type ChordImportRequest {
   chosenUrl: String
   error: String
   chordSheet: String
+  # Key heard from the imported chart. Absent on servers that have not deployed this field yet.
+  detectedKey: String
   createdAt: AWSTimestamp
   updatedAt: AWSTimestamp
 }

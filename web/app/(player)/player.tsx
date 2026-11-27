@@ -29,6 +29,9 @@ import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
 import FollowMe from './follow/FollowMe'
 import { capoForSong, parseCapoPrefs, withSongCapo, type CapoPrefs } from './capoPrefs'
+import { resolveImportedKeys } from '@/core/importChords'
+import { detectKey } from '../../../aws/lambdas/util/detectKey'
+import { getSongForSheet } from '@/core/graphql/lists'
 import { JamSongChange, onJamDeleted, onJamQueueUpdate, onJamSongsChanged, onSetJamsDeleted, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
 import ImportToasts, { ImportEvent } from '../importToasts'
 import { deletedToast, songDeletedEventName, SongDeletedEvent } from '../songDeleted'
@@ -105,8 +108,9 @@ export default function Player(p: PlayerProps) {
       setActive(p.jam.active as Participant[])
       const nextSongs = ((p.jam.setList?.songs || []) as JamSong[]).map((row) => {
         const pending = row?.song?.songId ? importedSheets.current[row.song.songId] : ""
+        const pendingKey = row?.song?.songId ? importedChartKeys.current[row.song.songId] : ""
         if (!pending || row.song?.chordSheet?.trim()) return row
-        return { ...row, song: { ...row.song, chordSheet: pending, chordSheetKey: row.song?.chordSheetKey || "C" } }
+        return { ...row, song: { ...row.song, chordSheet: pending, chordSheetKey: pendingKey || row.song?.chordSheetKey || "C" } }
       })
       setSongs(nextSongs)
       songsRef.current = nextSongs
@@ -137,6 +141,8 @@ export default function Player(p: PlayerProps) {
   // these are being SUBSCRIBED to, so needs to be moved out of the main JAM object.
   const [ song, setSong ] = useState(p.jam.currentSong || 0)
   const [ sKey, setSKey ] = useState(p.jam.setList?.songs?.[p.jam.currentSong || 0]?.key || "C")
+  const sKeyRef = useRef(sKey)
+  sKeyRef.current = sKey
   const [ page, setPage ] = useState(p.jam.currentPage || 0)
   const [ queue, setQueue ] = useState((p.jam.queue || []))
   const [ queueRevision, setQueueRevision ] = useState((p.jam as { revision?: number | null }).revision ?? 0)
@@ -147,6 +153,8 @@ export default function Player(p: PlayerProps) {
   const [ active, setActive ] = useState<Participant[]>([])
   const [ songs, setSongs ] = useState<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
   const importedSheets = useRef<Record<string, string>>({})
+  const importedChartKeys = useRef<Record<string, string>>({})
+  const chosenJamKeys = useRef(new Set<string>())
   const songsRef = useRef<JamSong[]>((p.jam.setList?.songs || []) as JamSong[])
   const songRef = useRef(song)
   useEffect(() => { songsRef.current = songs }, [songs])
@@ -278,8 +286,12 @@ export default function Player(p: PlayerProps) {
         const song = data?.onSongKey?.song
         const key = data?.onSongKey?.key
 
-        if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
+        if (!song && song !== 0) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!key) { console.log(`No page value found, this can be OK. ${page}`) }
+        if (typeof song === 'number') {
+          const id = songsRef.current[song]?.song?.songId
+          if (id) chosenJamKeys.current.add(id)
+        }
 
         // its possible for song to not equal the current song ..
         // however, we cannot access the STATE of song here .. so theres no way to know ..
@@ -453,14 +465,47 @@ export default function Player(p: PlayerProps) {
     }
   }, [p.jam.jamSessionId])
 
+  const refetchChartKey = async (songId: string) => {
+    const userId = p.user?.userId || guestIdentity[p.jam.jamSessionId] || ''
+    if (!userId) return ''
+    try {
+      const result = await client.graphql({
+        query: getSongForSheet,
+        variables: { songId, userId, bandId: null },
+      }) as GraphQLResult<{ getSong?: { chordSheetKey?: string | null } | null }>
+      return result.data?.getSong?.chordSheetKey?.trim() || ''
+    } catch (error) {
+      console.error(error)
+      return ''
+    }
+  }
+
   const applyImportedChords = (event: ImportEvent) => {
     if (event.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
     const songId = event.songId
     const chordSheet = event.chordSheet
-    importedSheets.current[songId] = chordSheet
-    setSongs((prev) => prev.map((row) => row?.song?.songId === songId
-      ? { ...row, song: { ...row.song, chordSheet, chordSheetKey: row.song.chordSheetKey || "C" } }
-      : row))
+    void (async () => {
+      const row = songsRef.current.find((item) => item?.song?.songId === songId)
+      const isCurrent = songsRef.current[songRef.current]?.song?.songId === songId
+      const slotKey = isCurrent ? (sKeyRef.current || row?.key || '') : (row?.key || '')
+      const refetchedKey = event.detectedKey?.trim() ? '' : await refetchChartKey(songId)
+      const choice = resolveImportedKeys({
+        slotKey,
+        previousChartKey: row?.song?.chordSheetKey,
+        previousChart: row?.song?.chordSheet,
+        chordSheet,
+        detectedKey: event.detectedKey,
+        refetchedKey,
+        userChoseKey: chosenJamKeys.current.has(songId),
+        detect: (sheet) => detectKey(sheet)?.key || null,
+      })
+      importedSheets.current[songId] = chordSheet
+      importedChartKeys.current[songId] = choice.chordSheetKey
+      if (isCurrent) setSKey(choice.jamKey)
+      setSongs((prev) => prev.map((item) => item?.song?.songId === songId
+        ? { ...item, key: choice.jamKey, song: { ...item.song, chordSheet, chordSheetKey: choice.chordSheetKey } }
+        : item))
+    })()
   }
 
   const subscribeQueueUpdate = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
@@ -573,6 +618,8 @@ export default function Player(p: PlayerProps) {
 
 
   const setKey = async (key: string) => {
+    const id = songsRef.current[songRef.current]?.song?.songId
+    if (id) chosenJamKeys.current.add(id)
     console.error(`setKey Fired ${key}`)
     const d = await client.graphql({ query: m.setSongKey, variables: {
       jamSessionId: p.jam.jamSessionId, song, key
