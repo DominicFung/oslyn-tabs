@@ -1,4 +1,4 @@
-import { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
+import type { _Section, _Song, _Chord, OslynPhrase, OslynSong, OslynChord, OslynSlide } from './types'
 
 const CHORD_BODY = "(?:[A-G](?:#|b|♯|♭)?(?:maj|min|dim|aug|sus|add|m|M|\\+|ø|°)?(?:6\\/9|\\d+)?(?:(?:(?:add|sus|maj|min|dim|aug|m|M)?(?:#|b|♯|♭)?\\d+|\\((?:#|b|♯|♭)?\\d+\\)|6\\/9))*(?:\\/[A-G](?:#|b|♯|♭)?)?)"
 export const chordRegexForTextBlock = `(^| |\\n)(${CHORD_BODY})(\\n| |$)`
