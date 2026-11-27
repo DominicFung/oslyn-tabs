@@ -27,4 +27,4 @@ jobs:
           npm test
       - name: Follow-me score follower
         working-directory: web
-        run: node --experimental-strip-types --test core/follow.test.ts core/follow-fixtures.test.ts core/slideChunks.test.ts "app/(player)/capoPrefs.test.ts" app/api/follow/recording/plan.test.ts
+        run: node --experimental-strip-types --test core/follow.test.ts core/follow-fixtures.test.ts core/slideChunks.test.ts core/importChords.test.ts "app/(player)/capoPrefs.test.ts" app/api/follow/recording/plan.test.ts
