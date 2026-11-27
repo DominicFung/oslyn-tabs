@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { getChordByNumber } from './oslyn.ts'
-import { ScoreFollower, chordTemplate, cosine, sequenceFromSlides, templateChroma, rotateChroma, type FollowChord } from './follow.ts'
+import { ScoreFollower, chordTemplate, compactSession, cosine, partFileNames, semitonesBetween, sequenceFromSlides, stitchParts, templateChroma, transposeSymbol, rotateChroma, type FollowChord, type FollowChunkPart, type FollowManifest, type FollowSessionFile } from './follow.ts'
 
 function chord(symbol: string, page: number, line = 0): FollowChord {
   const template = chordTemplate(symbol)
@@ -24,6 +24,68 @@ function play(follower: ScoreFollower, symbol: string, frames: number, page: num
   }
   return { last, turns, page, elapsed }
 }
+
+describe('chunk stitching', () => {
+  const manifest = (chunks: FollowManifest['chunks']): FollowManifest => ({
+    version: 1,
+    songId: '5618be0c-13c8-4ed3-8adf-bcba7ee88429',
+    sessionId: '2aaed060-5512-42cf-bb74-5be8a2db073e',
+    title: 'Build My Life',
+    chartKey: 'G',
+    key: 'E',
+    capo: 2,
+    userAgent: 'test',
+    appVersion: '0.1.0',
+    commit: 'abc',
+    recordedAt: '2026-11-27T19:30:42.574Z',
+    chords: [{ symbol: 'G', page: 0, line: 0 }],
+    pages: [{ page: 0, lines: ['verse'] }],
+    chunks,
+    finished: true,
+  })
+
+  const part = (chunk: number, frameT: number, eventT: number): FollowChunkPart => ({
+    chunk,
+    start: frameT,
+    end: frameT + 1000,
+    frames: [{
+      t: frameT, chroma: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], energy: 0.2,
+      detected: 'G', index: 0, line: 0, page: 0, matched: 'G', confidence: 1,
+      transposition: 0, transpositionLocked: true, state: 'follow',
+    }],
+    events: [{ t: eventT, type: 'manual-correction', direction: 'next', pageBefore: chunk - 1, pageAfter: chunk }],
+  })
+
+  it('orders parts, keeps the later copy of a chunk, and uses the manifest header', () => {
+    assert.deepEqual(partFileNames(1), { audio: 'part-0001.webm', json: 'part-0001.json' })
+    const session = stitchParts(manifest([
+      { part: 1, start: 0, end: 1000, session: 'part-0001.json' },
+      { part: 2, start: 1000, end: 2000, session: 'part-0002.json', audio: 'part-0002.webm' },
+    ]), [part(2, 1500, 1600), part(1, 100, 200), part(2, 9999, 9999)])
+    assert.equal(session.key, 'E')
+    assert.equal(session.chartKey, 'G')
+    assert.equal(session.capo, 2)
+    assert.deepEqual(session.frames.map((frame) => frame.t), [100, 9999])
+    assert.deepEqual(session.events.map((event) => event.t), [200, 9999])
+  })
+
+  it('rounds chroma and confidence to three decimals', () => {
+    const session = {
+      version: 1, songId: 's', title: 't', key: 'E', capo: 2, userAgent: '', appVersion: '',
+      commit: '', recordedAt: '2026-11-27T19:30:42.574Z', chords: [], pages: [],
+      frames: [{
+        t: 1, chroma: [0.123456, 0.5], energy: 0.2, detected: 'G', index: 0, line: 0, page: 0,
+        matched: 'G', confidence: 0.55555, transposition: 0, transpositionLocked: true, state: 'follow',
+      }],
+      events: [{ t: 1, type: 'should-turn', page: 0, estimated: { index: 0, line: 0, page: 0, matched: 'G', confidence: 0.55555 } }],
+    } as FollowSessionFile
+    const compact = compactSession(session)
+    assert.equal(compact.frames[0].chroma[0], 0.123)
+    assert.equal(compact.frames[0].confidence, 0.556)
+    assert.equal(compact.events[0].estimated?.confidence, 0.556)
+    assert.equal(compact.frames[0].energy, 0.2)
+  })
+})
 
 describe('chord templates', () => {
   it('weights slash bass and falls back to root plus fifth', () => {
@@ -181,6 +243,57 @@ describe('score following', () => {
       if (snap.turnTo != null) turns.push(snap.turnTo)
     }
     assert.deepEqual(turns, [])
+  })
+
+  it('does not skip ahead to the next page while the same chord is still held', () => {
+    const follower = new ScoreFollower(
+      [chord('G', 0, 0), chord('C', 0, 0), chord('G', 1, 0), chord('C', 1, 0)],
+      { calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
+    )
+    const played = play(follower, 'G', 40, 0)
+    assert.deepEqual(played.turns, [])
+    assert.equal(played.last.page, 0)
+    assert.equal(played.last.matched, 'G')
+  })
+
+  it('turns on the next page opening without a prior match on the current page', () => {
+    const follower = new ScoreFollower(
+      [chord('C', 0, 0), chord('Am', 1, 0)],
+      { calibrationMs: 0, turnHold: 4, cooldownMs: 7000, matchFloor: 0.6 },
+    )
+    const played = play(follower, 'Am', 6, 0)
+    assert.deepEqual(played.turns, [1])
+  })
+
+  it('keeps a nearly complete hold across one weak frame', () => {
+    const follower = new ScoreFollower(
+      [chord('C', 0, 0), chord('Am', 1, 0)],
+      { calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
+    )
+    let t = 0
+    let turned = false
+    const weak = new Array(12).fill(0)
+    weak[6] = 1
+    for (let i = 0; i < 3; i++) {
+      t += 100
+      const snap = follower.push(templateChroma('Am'), 0.2, t, 0)
+      if (snap.turnTo != null) turned = true
+    }
+    assert.equal(turned, false)
+    t += 100
+    follower.push(weak, 0.2, t, 0)
+    for (let i = 0; i < 2; i++) {
+      t += 100
+      const snap = follower.push(templateChroma('Am'), 0.2, t, 0)
+      if (snap.turnTo != null) turned = true
+    }
+    assert.equal(turned, true)
+  })
+
+  it('transposes a chart into the sounding jam key and leaves capo out of that shift', () => {
+    assert.equal(semitonesBetween('G', 'E'), -3)
+    assert.equal(transposeSymbol('G', -3), 'E')
+    assert.equal(transposeSymbol('C/E', -3), 'A/C#')
   })
 
   it('ignores silent frames', () => {
