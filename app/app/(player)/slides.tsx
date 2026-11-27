@@ -80,7 +80,7 @@ export default function Slides(p: SlidesProps) {
     : { scale: 1, left: 0, top: 0 }
   const hasSheet = !!p.song.chordSheet?.trim()
 
-  return <View style={{ width: w, height: h }}>
+  return <View style={{ width: w, height: h, overflow: 'visible' }}>
     <View
       pointerEvents="box-none"
       style={{
@@ -107,7 +107,7 @@ export default function Slides(p: SlidesProps) {
     </View>
 
     <View
-      style={{ flex: 1, marginBottom: insets.bottom }}
+      style={{ flex: 1, marginBottom: insets.bottom, overflow: 'visible' }}
       onLayout={(event) => {
         const box = layoutSize(event)
         const next = { width: Math.round(box.width), height: Math.round(box.height) }
@@ -119,6 +119,7 @@ export default function Slides(p: SlidesProps) {
         style={{
           position: 'absolute',
           width: maxWidth || undefined,
+          overflow: 'visible',
           left: place.left,
           top: place.top,
           opacity: maxWidth > 0 && blockH > 0 && stage.width > 0 ? 1 : 0,

@@ -34,6 +34,11 @@ export function queueMeasuredHeight(
   setHeight((previous) => acceptMeasuredWidth(previous, height))
 }
 
+/** The words drawn on a slide. The whole lyric, never cut down to an ellipsis. */
+export function slideLyricText(lyric: string): string {
+  return (lyric || '').trim()
+}
+
 /** Round a layout width. Zero and non-numbers are ignored so a later event can still fill it in. */
 export function acceptMeasuredWidth(previous: number, measured: number): number {
   if (!Number.isFinite(measured) || measured <= 0) return previous

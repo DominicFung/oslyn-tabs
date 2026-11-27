@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount, queueMeasuredHeight, textLayoutWidth } from './lyricMeasure.ts'
+import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount, queueMeasuredHeight, slideLyricText, textLayoutWidth } from './lyricMeasure.ts'
 
 describe('pooled layout events', () => {
   it('reads the height before the event is nulled', () => {
@@ -12,6 +12,17 @@ describe('pooled layout events', () => {
     event.nativeEvent.layout = null
     assert.equal(apply!(0), 240)
     assert.equal(apply!(240), 240)
+  })
+
+  it('keeps a long lyric whole, with chords on the same columns past the screen', () => {
+    const lyric = 'Worthy of every breath we could ever breathe'
+    const shown = slideLyricText(`  ${lyric}  `)
+    assert.equal(shown, lyric)
+    assert.equal(shown.includes('...'), false)
+    assert.equal(shown.includes('…'), false)
+    const columns = [0, 11, 21, 30]
+    assert.deepEqual(chordOffsets(shown, columns, 8), columns.map((column) => column * 8))
+    assert.ok(columns[3] < shown.length)
   })
 
   it('reads the text width before the event is nulled', () => {
