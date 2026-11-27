@@ -27,6 +27,7 @@ import { useTheme } from 'next-themes'
 import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
+import FollowMe from './follow/FollowMe'
 import { JamSongChange, onJamDeleted, onJamQueueUpdate, onJamSongsChanged, onSetJamsDeleted, onSongRemovedFromJam, setJamQueue } from '@/core/graphql/jam'
 import ImportToasts, { ImportEvent } from '../importToasts'
 import { deletedToast, songDeletedEventName, SongDeletedEvent } from '../songDeleted'
@@ -779,6 +780,12 @@ export default function Player(p: PlayerProps) {
       >
         <ChevronDoubleRightIcon className="w-6 h-6 text-white" />
     </button> }
+    { !p.isSlideShow && songs[song]?.song?.chordSheet?.trim() && <FollowMe
+      chordSheet={songs[song]!.song!.chordSheet || ''}
+      songKey={songs[song]!.song!.chordSheetKey || sKey || 'C'}
+      page={page}
+      onPage={setNextPage}
+    />}
     { songs && !p.isSlideShow &&
       <Controls 
         open={openController}

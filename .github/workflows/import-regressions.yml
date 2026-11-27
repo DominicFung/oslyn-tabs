@@ -25,3 +25,6 @@ jobs:
         run: |
           npm install
           npm test
+      - name: Follow-me score follower
+        working-directory: web
+        run: node --experimental-strip-types --test core/follow.test.ts core/slideChunks.test.ts
