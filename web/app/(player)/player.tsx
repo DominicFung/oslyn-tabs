@@ -783,6 +783,9 @@ export default function Player(p: PlayerProps) {
     { !p.isSlideShow && songs[song]?.song?.chordSheet?.trim() && <FollowMe
       chordSheet={songs[song]!.song!.chordSheet || ''}
       songKey={songs[song]!.song!.chordSheetKey || sKey || 'C'}
+      songId={songs[song]!.song!.songId || 'unknown'}
+      title={songs[song]!.song!.title || ''}
+      capo={-transpose}
       page={page}
       onPage={setNextPage}
     />}
