@@ -24,8 +24,12 @@ export type ScoreFollowerOptions = {
   /** Voiced time before the transposition search locks. Tests use 0. */
   calibrationMs?: number
   turnConfidence?: number
+  /** Cosine of the winning chord. Solo voice sits under a full chord template. */
+  matchFloor?: number
   /** Consecutive voiced frames that must agree before a page turn. */
   turnHold?: number
+  /** Quiet time after an automatic turn before another one is allowed. */
+  cooldownMs?: number
   silenceRms?: number
 }
 
@@ -183,15 +187,29 @@ function argmax(scores: number[]): number {
   return index
 }
 
+function lineOrdinals(chords: FollowChord[]): number[] {
+  let ordinal = -1
+  let previous = ''
+  return chords.map((chord) => {
+    const key = `${chord.page}:${chord.line}`
+    if (key !== previous) { ordinal += 1; previous = key }
+    return ordinal
+  })
+}
+
 /**
- * Left-to-right score follower. Self-loop, one-chord advance, and a small skip.
- * No backward transitions, so a repeated chorus stays on the later copy.
+ * Left-to-right score follower. A step can stay, move along the current line,
+ * or enter the next line. It cannot skip a line, and it cannot see past the
+ * opening line of the next page, so a sung melody cannot run pages ahead.
  */
 export class ScoreFollower {
   private readonly chords: FollowChord[]
+  private readonly ordinal: number[]
   private readonly calibrationMs: number
   private readonly turnConfidence: number
+  private readonly matchFloor: number
   private readonly turnHold: number
+  private readonly cooldownMs: number
   private readonly silenceRms: number
   private readonly opening: FollowChord[]
   private pi: number[]
@@ -200,21 +218,29 @@ export class ScoreFollower {
   private originMs: number | null = null
   private locked: number | null = null
   private held = 0
-  private lastTurn: number | null = null
-  private lastTurnAt = 0
+  private observe = 0
+  private syncedPage: number | null = null
+  private leftPage: number | null = null
+  private awaiting: number | null = null
+  private lastTurnAt: number | null = null
+  private matched = new Set<number>()
+  private elapsed = 0
 
   constructor(chords: FollowChord[], options: ScoreFollowerOptions = {}) {
     this.chords = chords
+    this.ordinal = lineOrdinals(chords)
     this.calibrationMs = options.calibrationMs ?? 8000
-    this.turnConfidence = options.turnConfidence ?? 0.55
-    this.turnHold = options.turnHold ?? 4
+    this.turnConfidence = options.turnConfidence ?? 0.72
+    this.matchFloor = options.matchFloor ?? 0.84
+    this.turnHold = options.turnHold ?? 8
+    this.cooldownMs = options.cooldownMs ?? 7000
     this.silenceRms = options.silenceRms ?? 0.01
     this.opening = chords.slice(0, Math.min(8, chords.length))
     this.pi = chords.map((_, index) => index === 0 ? 1 : 0)
   }
 
   push(chroma: number[], rms: number, elapsedMs: number, currentPage: number): FollowSnapshot {
-    if (this.lastTurn != null && currentPage >= this.lastTurn) this.lastTurn = null
+    this.notePage(currentPage)
     if (!(rms >= this.silenceRms) || this.chords.length === 0) {
       return this.view(currentPage, null)
     }
@@ -233,9 +259,37 @@ export class ScoreFollower {
 
     const transposition = this.locked ?? argmax(this.scores)
     const aligned = rotateChroma(heard, -transposition)
+    this.elapsed = elapsedMs
     this.advance(aligned)
-    const turnTo = this.decide(currentPage, elapsedMs)
+    const turnTo = this.decide(elapsedMs)
     return this.view(currentPage, turnTo, aligned)
+  }
+
+  /** Manual or remote page change. Listening continues from the start of `page`. */
+  anchorToPage(page: number) {
+    this.awaiting = null
+    this.leftPage = null
+    this.place(page)
+  }
+
+  private notePage(currentPage: number) {
+    if (this.syncedPage == null) { this.place(currentPage); return }
+    if (currentPage === this.syncedPage) { this.awaiting = null; return }
+    if (this.awaiting != null && currentPage === this.leftPage) return
+    this.awaiting = null
+    this.leftPage = null
+    this.place(currentPage)
+  }
+
+  private place(page: number) {
+    let at = this.chords.findIndex((chord) => chord.page === page)
+    if (at < 0) at = this.chords.findIndex((chord) => chord.page > page)
+    if (at < 0) at = Math.max(0, this.chords.length - 1)
+    this.pi = this.chords.map((_, index) => index === at ? 1 : 0)
+    this.syncedPage = page
+    this.held = 0
+    this.observe = 0
+    this.matched = new Set()
   }
 
   private advance(aligned: number[]): void {
@@ -244,40 +298,70 @@ export class ScoreFollower {
     for (let i = 0; i < n; i++) {
       const mass = this.pi[i]
       if (mass === 0) continue
-      if (i >= n - 1) {
-        predicted[i] += mass
-      } else if (i === n - 2) {
-        predicted[i] += mass * 0.64
-        predicted[i + 1] += mass * 0.36
+      const limit = this.reachable(i)
+      if (limit <= i) { predicted[i] += mass; continue }
+      predicted[i] += mass * 0.66
+      predicted[i + 1] += mass * 0.24
+      const rest = limit - (i + 1)
+      const share = rest > 0 ? 0.10 / rest : 0
+      if (rest > 0) {
+        for (let j = i + 2; j <= limit; j++) predicted[j] += mass * share
       } else {
-        predicted[i] += mass * 0.62
-        predicted[i + 1] += mass * 0.28
-        predicted[i + 2] += mass * 0.10
+        predicted[i + 1] += mass * 0.10
       }
     }
     let total = 0
+    const match = new Array(n).fill(0)
     for (let i = 0; i < n; i++) {
-      const match = cosine(aligned, this.chords[i].template)
-      predicted[i] *= Math.exp(8 * (Math.max(0, match) - 1))
+      match[i] = cosine(aligned, this.chords[i].template)
+      predicted[i] *= Math.exp(8 * (Math.max(0, match[i]) - 1))
       total += predicted[i]
     }
     if (total <= 0) return
     for (let i = 0; i < n; i++) this.pi[i] = predicted[i] / total
+    const index = argmax(this.pi)
+    this.observe = match[index] || 0
   }
 
-  private decide(currentPage: number, elapsedMs: number): number | null {
+  /** Furthest chord still on this line or the next one, and not past the next page's first line. */
+  private reachable(index: number): number {
+    const page = this.syncedPage ?? this.chords[index]?.page ?? 0
+    const origin = this.ordinal[index] ?? 0
+    let limit = index
+    for (let j = index; j < this.chords.length; j++) {
+      if ((this.ordinal[j] ?? 0) > origin + 1) break
+      const chord = this.chords[j]
+      if (chord.page > page + 1) break
+      const cooling = this.lastTurnAt != null && this.elapsed - this.lastTurnAt < this.cooldownMs
+      if (chord.page === page + 1 && (cooling || !this.onOpeningLine(chord))) break
+      limit = j
+    }
+    return limit
+  }
+
+  private onOpeningLine(chord: FollowChord): boolean {
+    const first = this.chords.find((item) => item.page === chord.page)
+    return !!first && chord.line === first.line
+  }
+
+  private decide(elapsedMs: number): number | null {
+    const page = this.syncedPage ?? 0
     if (this.locked == null) { this.held = 0; return null }
-    const estimated = this.chords[argmax(this.pi)]?.page ?? 0
-    const confidence = this.pi[argmax(this.pi)] || 0
-    const forward = estimated > currentPage && confidence >= this.turnConfidence
-    if (!forward) { this.held = 0; return null }
+    const index = argmax(this.pi)
+    const confidence = this.pi[index] || 0
+    const strong = this.observe >= this.matchFloor && confidence >= this.turnConfidence
+    if (strong && this.chords[index]?.page === page) this.matched.add(index)
+    const need = this.lastTurnAt == null ? 1 : Math.min(2, this.chords.filter((chord) => chord.page === page).length || 1)
+    const cooled = this.lastTurnAt == null || elapsedMs - this.lastTurnAt >= this.cooldownMs
+    const opening = this.chords[index] && this.chords[index].page === page + 1 && this.onOpeningLine(this.chords[index])
+    if (!(strong && cooled && opening && this.matched.size >= need)) { this.held = 0; return null }
     this.held += 1
     if (this.held < this.turnHold) return null
-    const turnTo = currentPage + 1
-    if (this.lastTurn === turnTo && elapsedMs < this.lastTurnAt + 1500) return null
-    this.lastTurn = turnTo
+    const turnTo = page + 1
+    this.leftPage = page
+    this.awaiting = turnTo
     this.lastTurnAt = elapsedMs
-    this.held = 0
+    this.place(turnTo)
     return turnTo
   }
 

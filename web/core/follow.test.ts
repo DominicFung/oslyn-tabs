@@ -59,7 +59,7 @@ describe('score following', () => {
   const chorusAgain = [chord('C', 2, 0), chord('G', 2, 0), chord('Am', 2, 1), chord('F', 2, 1)]
 
   it('follows a repeated chorus forward instead of jumping back to the first copy', () => {
-    const follower = new ScoreFollower([...verse, ...chorus, ...chorusAgain], { calibrationMs: 0, turnHold: 3 })
+    const follower = new ScoreFollower([...verse, ...chorus, ...chorusAgain], { calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
     let page = 0
     let clock = 0
     for (const group of [verse, chorus, chorusAgain]) {
@@ -117,6 +117,70 @@ describe('score following', () => {
     assert.equal(snap.transposition, 2)
     assert.equal(snap.matched, 'F')
     assert.ok(snap.page >= 1)
+  })
+
+  it('does not turn again on rapid false matches during the cooldown', () => {
+    const chart = [chord('C', 0), chord('G', 0), chord('Am', 1), chord('F', 1), chord('C', 2), chord('G', 2)]
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
+    let played = play(follower, 'C', 6, 0)
+    played = play(follower, 'G', 6, played.page, 0, played.elapsed)
+    played = play(follower, 'Am', 8, played.page, 0, played.elapsed)
+    assert.deepEqual(played.turns, [1])
+    const spam = play(follower, 'C', 30, played.page, 0, played.elapsed)
+    assert.deepEqual(spam.turns, [])
+    assert.equal(spam.page, 1)
+  })
+
+  it('re-anchors when the page changes by hand and does not turn backwards', () => {
+    const chart = [chord('C', 0), chord('G', 0), chord('Am', 1, 0), chord('F', 1, 1), chord('C', 2)]
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
+    let played = play(follower, 'C', 6, 0)
+    played = play(follower, 'G', 6, played.page, 0, played.elapsed)
+    const jumped = follower.push(templateChroma('Am'), 0.2, played.elapsed + 100, 1)
+    assert.equal(jumped.turnTo, null)
+    assert.equal(jumped.page, 1)
+    assert.equal(jumped.matched, 'Am')
+    assert.equal(jumped.index, 2)
+    const back = follower.push(templateChroma('C'), 0.2, played.elapsed + 200, 0)
+    assert.equal(back.turnTo, null)
+    assert.equal(back.page, 0)
+    assert.equal(back.matched, 'C')
+    assert.equal(back.index, 0)
+  })
+
+  it('waits out the cooldown and hears the new page before the next turn', () => {
+    const chart = [chord('C', 0), chord('G', 0), chord('Am', 1), chord('F', 1), chord('C', 2), chord('D', 2)]
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
+    let played = play(follower, 'C', 6, 0)
+    played = play(follower, 'G', 6, played.page, 0, played.elapsed)
+    played = play(follower, 'Am', 8, played.page, 0, played.elapsed)
+    assert.deepEqual(played.turns, [1])
+    const early = play(follower, 'C', 10, played.page, 0, played.elapsed)
+    assert.deepEqual(early.turns, [])
+    let clock = played.elapsed + 7000
+    let page = played.page
+    const settled = play(follower, 'Am', 4, page, 0, clock)
+    clock = settled.elapsed
+    page = settled.page
+    const second = play(follower, 'F', 6, page, 0, clock)
+    clock = second.elapsed
+    page = second.page
+    const next = play(follower, 'C', 8, page, 0, clock)
+    assert.deepEqual(settled.turns, [])
+    assert.deepEqual(second.turns, [])
+    assert.deepEqual(next.turns, [2])
+  })
+
+  it('does not turn on a single sung pitch', () => {
+    const follower = new ScoreFollower([chord('C', 0), chord('G', 0), chord('Am', 1)], { calibrationMs: 0, turnHold: 3 })
+    const sung = new Array(12).fill(0)
+    sung[0] = 1
+    const turns: number[] = []
+    for (let t = 0; t < 40; t++) {
+      const snap = follower.push(sung, 0.2, t * 100, 0)
+      if (snap.turnTo != null) turns.push(snap.turnTo)
+    }
+    assert.deepEqual(turns, [])
   })
 
   it('ignores silent frames', () => {
