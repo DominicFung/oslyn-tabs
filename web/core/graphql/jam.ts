@@ -254,9 +254,7 @@ export const createChordImport = /* GraphQL */ `mutation CreateChordImport(
   }
 }`
 
-// Only jamId is an argument. A null userId would tell AppSync to match imports with no user.
-export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($jamId: ID!) {
-  onImportStatusChanged(jamId: $jamId) {
+const importStatusFields = `
     requestId
     userId
     songId
@@ -266,7 +264,18 @@ export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusC
     status
     chosenUrl
     error
-    chordSheet
+    chordSheet`
+
+// Only jamId is an argument. A null userId would tell AppSync to match imports with no user.
+export const onImportStatusChanged = /* GraphQL */ `subscription OnImportStatusChanged($jamId: ID!) {
+  onImportStatusChanged(jamId: $jamId) {${importStatusFields}
+  }
+}`
+
+/** Asks for the detected key. Old AppSync schemas reject this field, so the client falls back. */
+export const onImportStatusChangedWithKey = /* GraphQL */ `subscription OnImportStatusChanged($jamId: ID!) {
+  onImportStatusChanged(jamId: $jamId) {${importStatusFields}
+    detectedKey
   }
 }`
 

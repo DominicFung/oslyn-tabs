@@ -33,5 +33,5 @@ export const handler = async (event: AppSyncResolverEvent<{
     chordSheet: b.chordSheet,
   })
   if (!saved) return
-  return saved
+  return { ...saved, detectedKey: written.song?.chordSheetKey || written.key }
 }

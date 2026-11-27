@@ -62,7 +62,12 @@ const claimMutation = `mutation ClaimImport($requestId: ID!) {
   claimImport(requestId: $requestId) { ${importSelection} }
 }`
 
+const completeSelection = `${importSelection}  detectedKey
+`
 const completeMutation = `mutation CompleteImport($requestId: ID!, $chordSheet: String!, $sourceUrl: String!) {
+  completeImport(requestId: $requestId, chordSheet: $chordSheet, sourceUrl: $sourceUrl) { ${completeSelection} }
+}`
+const completeMutationWithoutKey = `mutation CompleteImport($requestId: ID!, $chordSheet: String!, $sourceUrl: String!) {
   completeImport(requestId: $requestId, chordSheet: $chordSheet, sourceUrl: $sourceUrl) { ${importSelection} }
 }`
 
@@ -96,7 +101,14 @@ export function completionFailure(result: ImportCompletion): string | null {
 }
 
 export async function complete(requestId: string, chordSheet: string, sourceUrl: string) {
-  const data = await gql<{ completeImport: ImportCompletion }>(completeMutation, { requestId, chordSheet, sourceUrl })
+  let data: { completeImport: ImportCompletion }
+  try {
+    data = await gql<{ completeImport: ImportCompletion }>(completeMutation, { requestId, chordSheet, sourceUrl })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : ''
+    if (!/detectedKey|FieldUndefined/i.test(message)) throw error
+    data = await gql<{ completeImport: ImportCompletion }>(completeMutationWithoutKey, { requestId, chordSheet, sourceUrl })
+  }
   const failure = completionFailure(data.completeImport)
   if (failure) throw new Error(failure)
 }

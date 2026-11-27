@@ -1,15 +1,33 @@
 import { AppSyncResolverEvent } from 'aws-lambda'
 import { DynamoDBClient, GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import { _JamSession, _SetList, _Song } from '../../type'
 import { canEditJamSongs } from '../../util/jamAccess'
 import { findLiveJamSong } from '../../util/liveJamSong'
 import { resolvedChordSheetKey } from '../../util/detectKey'
 import { updateDynamoUtil } from '../../util/dynamo'
+import { asPlaylist } from '../../util/songIndex'
 
 const JAM_TABLE_NAME = process.env.JAM_TABLE_NAME || ''
 const SETLIST_TABLE_NAME = process.env.SETLIST_TABLE_NAME || ''
 const SONG_TABLE_NAME = process.env.SONG_TABLE_NAME || ''
+
+/**
+ * Spotify import stamps C on both the empty chart and the jam slot.
+ * A slot that still matches that placeholder can take the detected key.
+ * A different slot key was chosen in the jam and stays put.
+ */
+export function slotKeepsPlaceholder(input: {
+  slotKey?: string | null
+  previousKey?: string | null
+  previousChart?: string | null
+}): boolean {
+  if ((input.previousChart || '').trim()) return false
+  const slot = (input.slotKey || '').trim()
+  const previous = (input.previousKey || '').trim()
+  if (!slot) return true
+  return !previous || slot === previous
+}
 
 export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
   jamSessionId: string
@@ -79,13 +97,42 @@ export async function writeOwnedChordSheet(dynamo: DynamoDBClient, b: {
     item: update,
   })))
 
+  const adopt = slotKeepsPlaceholder({
+    slotKey: live.key,
+    previousKey: song.chordSheetKey,
+    previousChart: song.chordSheet,
+  })
+  const jamKey = adopt ? chordSheetKey : (live.key || chordSheetKey)
+  if (adopt && jamKey && jamKey !== (live.key || '').trim()) {
+    if (Array.isArray(jam.playlist)) {
+      const playlist = asPlaylist(jam.playlist)
+      if (playlist[live.index]) {
+        playlist[live.index] = { ...playlist[live.index], key: jamKey }
+        await dynamo.send(new UpdateItemCommand({
+          TableName: JAM_TABLE_NAME,
+          Key: { jamSessionId: { S: jam.jamSessionId } },
+          UpdateExpression: 'SET playlist = :playlist',
+          ExpressionAttributeValues: marshall({ ':playlist': playlist }),
+        }))
+      }
+    } else {
+      await dynamo.send(new UpdateItemCommand({
+        TableName: SETLIST_TABLE_NAME,
+        Key: { setListId: { S: jam.setListId } },
+        UpdateExpression: `SET songs[${live.index}].#k = :k`,
+        ExpressionAttributeNames: { '#k': 'key' },
+        ExpressionAttributeValues: { ':k': { S: jamKey } },
+      }))
+    }
+  }
+
   const next = { ...song, ...update }
   if (next.isApproved == null) next.isApproved = false
   if (next.version == null) next.version = 1
   return {
     jamSessionId: jam.jamSessionId,
     index: live.index,
-    key: live.key || chordSheetKey,
+    key: jamKey,
     jumpTo: false,
     song: next,
   }

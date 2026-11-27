@@ -118,4 +118,29 @@ describe('writeOwnedChordSheet', () => {
     expect(written).toBeUndefined()
     expect(updates).toEqual([])
   })
+
+  // You Cannot Be Stopped: the Spotify slot is still C, and the chart is in A.
+  it('replaces a placeholder jam key with the detected key', async () => {
+    const { dynamo, updates } = world({
+      playlist: [{ songId: SONG, key: 'C' }],
+    })
+    const written = await writeOwnedChordSheet(dynamo, {
+      jamSessionId: JAM, songId: SONG, userId: HOST, chordSheet: 'D A F#m E',
+    })
+    expect(written?.key).toBe('A')
+    expect(written?.song.chordSheetKey).toBe('A')
+    expect(updates.some((expression) => expression.includes('playlist'))).toBe(true)
+  })
+
+  it('leaves a jam key the player already chose', async () => {
+    const { dynamo, updates } = world({
+      setSongs: [{ songId: SONG, key: 'D' }],
+    })
+    const written = await writeOwnedChordSheet(dynamo, {
+      jamSessionId: JAM, songId: SONG, userId: HOST, chordSheet: 'D A F#m E',
+    })
+    expect(written?.key).toBe('D')
+    expect(written?.song.chordSheetKey).toBe('A')
+    expect(updates.some((expression) => expression.includes('songs['))).toBe(false)
+  })
 })

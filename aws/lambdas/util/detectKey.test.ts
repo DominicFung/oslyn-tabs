@@ -17,6 +17,22 @@ describe('detectKey', () => {
     assert.equal(detectKey('[ch]E[/ch] [ch]B[/ch] [ch]C#m[/ch] [ch]A[/ch]')?.key, 'E')
   })
 
+  // You Cannot Be Stopped starts on IV (D) but the V (E) makes the key A: IV–I–vi–V.
+  it('hears a loop that starts on IV when the V is present', () => {
+    const sheet = [
+      '[Intro]',
+      'D  A  F#m  E',
+      '[Verse]',
+      'D  A  F#m  E',
+      '[Chorus]',
+      'D  A  F#m  E',
+    ].join('\n')
+    assert.equal(detectKey('D A F#m E')?.key, 'A')
+    assert.equal(detectKey(sheet)?.key, 'A')
+    assert.equal(detectKey('D A Bm G')?.key, 'D')
+    assert.equal(detectKey('Am F C G')?.key, 'Am')
+  })
+
   it('separates relative major and minor by the opening chord', () => {
     assert.equal(detectKey('Am F C G')?.key, 'Am')
     assert.equal(detectKey('Em C G D')?.key, 'Em')

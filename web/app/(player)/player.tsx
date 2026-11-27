@@ -457,10 +457,26 @@ export default function Player(p: PlayerProps) {
     if (event.status !== "DONE" || !event.songId || !event.chordSheet?.trim()) return
     const songId = event.songId
     const chordSheet = event.chordSheet
+    const detected = event.detectedKey?.trim() || ""
     importedSheets.current[songId] = chordSheet
-    setSongs((prev) => prev.map((row) => row?.song?.songId === songId
-      ? { ...row, song: { ...row.song, chordSheet, chordSheetKey: row.song.chordSheetKey || "C" } }
-      : row))
+    const current = songsRef.current.find((row) => row?.song?.songId === songId)
+    const previousKey = current?.song?.chordSheetKey || ""
+    const slot = current?.key || ""
+    const chartWasEmpty = !current?.song?.chordSheet?.trim()
+    const placeholder = !!detected && chartWasEmpty && (!slot || !previousKey || slot === previousKey)
+    if (placeholder && songsRef.current[songRef.current]?.song?.songId === songId) setSKey(detected)
+    setSongs((prev) => prev.map((row) => {
+      if (row?.song?.songId !== songId) return row
+      const rowPrevious = row.song.chordSheetKey || ""
+      const rowSlot = row.key || ""
+      const rowEmpty = !row.song.chordSheet?.trim()
+      const adopt = !!detected && rowEmpty && (!rowSlot || !rowPrevious || rowSlot === rowPrevious)
+      return {
+        ...row,
+        ...(adopt ? { key: detected } : {}),
+        song: { ...row.song, chordSheet, chordSheetKey: adopt ? detected : (row.song.chordSheetKey || "C") },
+      }
+    }))
   }
 
   const subscribeQueueUpdate = async (jamSessionId: string): Promise<ZenObservable.Subscription> => {
