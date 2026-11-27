@@ -404,10 +404,24 @@ export type FollowFrame = {
   state: string
 }
 
+export type FollowEstimated = {
+  index: number
+  line: number
+  page: number
+  matched: string
+  confidence: number
+}
+
 export type FollowMark = {
   t: number
-  type: 'auto-turn' | 'page-change' | 'should-turn'
+  type: 'auto-turn' | 'page-change' | 'should-turn' | 'manual-correction'
   page?: number
+  /** prev goes back a page, next goes forward. Space marks stay should-turn. */
+  direction?: 'prev' | 'next'
+  source?: 'key' | 'button'
+  pageBefore?: number
+  pageAfter?: number
+  estimated?: FollowEstimated
 }
 
 export type FollowChartChord = { symbol: string, page: number, line: number }
@@ -447,6 +461,8 @@ export type ReplayReport = {
 }
 
 const MATCH_WINDOW_MS = 5000
+/** A manual previous-page tap this soon after an automatic turn rejects that turn. */
+const EARLY_REJECT_MS = 8000
 
 export function scoreSession(session: FollowSessionFile): ReplayReport {
   const chords: FollowChord[] = []
@@ -465,7 +481,9 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
       page = snap.turnTo
     }
   }
-  const expected = session.events.filter((event) => event.type === 'should-turn').map((event) => event.t)
+  const expected = session.events.filter((event) =>
+    event.type === 'should-turn' || (event.type === 'manual-correction' && event.direction === 'next')
+  ).map((event) => event.t)
   const used = new Set<number>()
   const turns: TurnReport[] = expected.map((expectedT) => {
     let best = -1
@@ -481,7 +499,29 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     used.add(best)
     return { expectedT, predictedT: predicted[best], deltaSec: (predicted[best] - expectedT) / 1000, missed: false }
   })
-  const falseTurns = predicted.filter((_, index) => !used.has(index))
+  const rejected = new Set<number>()
+  for (const mark of session.events) {
+    if (mark.type !== 'manual-correction' || mark.direction !== 'prev') continue
+    const auto = session.events.filter((event) => event.type === 'auto-turn' && event.t <= mark.t).pop()
+    if (!auto || mark.t - auto.t > EARLY_REJECT_MS) continue
+    let best = -1
+    let bestGap = Infinity
+    predicted.forEach((time, index) => {
+      const gap = Math.abs(time - auto.t)
+      if (gap < bestGap) { bestGap = gap; best = index }
+    })
+    if (best >= 0 && bestGap <= EARLY_REJECT_MS) rejected.add(best)
+  }
+  rejected.forEach((index) => used.delete(index))
+  for (let i = 0; i < turns.length; i++) {
+    const turn = turns[i]
+    if (turn.predictedT == null) continue
+    const index = predicted.indexOf(turn.predictedT)
+    if (index >= 0 && rejected.has(index)) {
+      turns[i] = { expectedT: turn.expectedT, predictedT: null, deltaSec: null, missed: true }
+    }
+  }
+  const falseTurns = predicted.filter((_, index) => !used.has(index) || rejected.has(index))
   const missed = turns.filter((turn) => turn.missed).length
   let score = 1
   for (const turn of turns) {
@@ -489,7 +529,7 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     else score -= Math.min(0.3, Math.abs(turn.deltaSec || 0) / 10)
   }
   score -= Math.min(0.5, falseTurns.length * 0.25)
-  if (expected.length === 0 && predicted.length === 0) score = 1
+  if (expected.length === 0 && predicted.length === 0 && falseTurns.length === 0) score = 1
   return { turns, falseTurns, missed, score: Math.max(0, Math.min(1, score)) }
 }
 
