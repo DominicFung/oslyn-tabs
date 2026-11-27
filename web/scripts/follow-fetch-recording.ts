@@ -1,6 +1,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join } from 'path'
 import { GetObjectCommand, ListObjectsV2Command, S3Client, type S3ClientConfig } from '@aws-sdk/client-s3'
+// Node's type stripper needs the .ts specifier. The app tsconfig does not allow it.
+// @ts-expect-error TS5097
 import { scoreSession, type FollowSessionFile } from '../core/follow.ts'
 
 function arg(name: string): string | undefined {

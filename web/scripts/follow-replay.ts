@@ -1,4 +1,6 @@
 import { readFileSync } from 'fs'
+// Node's type stripper needs the .ts specifier. The app tsconfig does not allow it.
+// @ts-expect-error TS5097
 import { scoreSession, type FollowSessionFile } from '../core/follow.ts'
 
 const path = process.argv[2]
