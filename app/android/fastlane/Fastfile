@@ -27,6 +27,7 @@ platform :android do
     upload_to_play_store(
       track: "internal",
       aab: aab,
+      skip_upload_apk: true,
       release_status: "draft",
       json_key: File.expand_path("play-store-key.json", __dir__),
       skip_upload_metadata: true,
