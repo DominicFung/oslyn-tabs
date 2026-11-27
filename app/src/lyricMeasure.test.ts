@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount, queueMeasuredHeight, slideLyricText, textLayoutWidth } from './lyricMeasure.ts'
+import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, commitCount, placeChordLine, queueMeasuredHeight, slideLyricText, textLayoutWidth } from './lyricMeasure.ts'
 
 describe('pooled layout events', () => {
   it('reads the height before the event is nulled', () => {
@@ -33,6 +33,47 @@ describe('pooled layout events', () => {
     event.nativeEvent.lines = null
     assert.equal(Math.round(width), 128)
     assert.equal(textLayoutWidth(event), 0)
+  })
+})
+
+describe('chords before the lyric', () => {
+  const labels = ['E', 'A', 'E/B', 'A']
+  const chip = (label: string) => Math.max(1, label.length) * 8 + 12 + 8
+
+  it('spaces E A E/B A in front of Worthy without overlap', () => {
+    const placed = placeChordLine({
+      lyric: 'Worthy of every song we could ever sing',
+      positions: [0, 2, 5, 10],
+      labels,
+      charWidth: 8,
+    })
+    assert.equal(placed.offsets.length, 4)
+    for (let i = 1; i < placed.offsets.length; i++) {
+      assert.ok(placed.offsets[i] >= placed.offsets[i - 1] + chip(labels[i - 1]))
+    }
+    assert.ok(placed.lyricIndent >= placed.offsets[3] + chip(labels[3]))
+  })
+
+  it('separates chords that share column 0 or sit closer than their chips', () => {
+    const columnZero = placeChordLine({
+      lyric: 'Worthy',
+      positions: [0, 0, 0, 0],
+      labels,
+      charWidth: 8,
+    })
+    for (let i = 1; i < columnZero.offsets.length; i++) {
+      assert.ok(columnZero.offsets[i] >= columnZero.offsets[i - 1] + chip(labels[i - 1]))
+    }
+    assert.ok(columnZero.lyricIndent >= columnZero.offsets[3] + chip('A'))
+
+    const tight = placeChordLine({
+      lyric: 'Worthy',
+      positions: [0, 1],
+      labels: ['E/B', 'A'],
+      charWidth: 8,
+    })
+    assert.ok(tight.offsets[1] >= tight.offsets[0] + chip('E/B'))
+    assert.ok(tight.lyricIndent >= tight.offsets[1] + chip('A'))
   })
 })
 

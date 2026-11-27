@@ -4,7 +4,7 @@ import React, { memo, useEffect, useRef, useState } from "react"
 
 import { TextLayoutEventData, NativeSyntheticEvent, Text, View } from 'react-native'
 import { randomUUID } from "expo-crypto"
-import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, ChordLineWidths, layoutSize, slideLyricText, textLayoutWidth } from "../../src/lyricMeasure"
+import { acceptChordLineWidth, acceptMeasuredWidth, chordOffsets, ChordLineWidths, layoutSize, placeChordLine, slideLyricText, textLayoutWidth } from "../../src/lyricMeasure"
 
 export interface LineProps {
   phrase: OslynPhrase
@@ -16,12 +16,6 @@ export interface LineProps {
   secondary?: boolean
   textSize?: string
   decorate?: boolean
-}
-
-function sum(arr: number[], i: number): number {
-  if (i < 0 || i >= arr.length) { throw new Error('Index out of bounds'); }
-  const sum = arr.slice(0, i+1).reduce((acc, num) => acc + num, 0);
-  return sum;
 }
 
 function estimateSliceWidth(characters: number, textSize: string) {
@@ -99,8 +93,17 @@ function Line(p: LineProps) {
   }
 
   const charWidth = estimateSliceWidth(1, textSize)
-  const offsets = chordOffsets(phrase.lyric, phrase.chords.map((chord) => chord.position), charWidth)
-  const chordSpan = offsets.length ? offsets[offsets.length - 1] + charWidth * 4 : 0
+  const labels = phrase.chords.map((chord) => `${getChordByNumber(chord.chord, chord.isMinor, p.skey) || ''}${p.decorate ? chord.decorator || '' : ''}`)
+  const placed = placeChordLine({
+    lyric: phrase.lyric,
+    positions: phrase.chords.map((chord) => chord.position),
+    labels,
+    charWidth,
+  })
+  const offsets = placed.offsets.length
+    ? placed.offsets
+    : chordOffsets(phrase.lyric, phrase.chords.map((chord) => chord.position), charWidth)
+  const chordSpan = offsets.length ? offsets[offsets.length - 1] + charWidth * 4 + placed.lyricIndent : 0
 
   useEffect(() => {
     const width = Math.max(maxWidth.line, maxWidth.chord)
@@ -143,7 +146,7 @@ function Line(p: LineProps) {
     >
       {phrase.chords.map((c, i) => {
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey) || ''
-        const gap = i === 0 ? 0 : Math.max(charWidth, offsets[i] - offsets[i - 1])
+        const gap = i === 0 ? 0 : 8
         return <Text key={`${uuid}-a${i}`}
           style={{
             marginLeft: gap,
@@ -163,8 +166,7 @@ function Line(p: LineProps) {
     {phrase.lyric.trim() !== "" && <View style={{ alignSelf: 'flex-start', position: 'relative', marginTop: 24, minHeight: 48, minWidth: chordSpan, overflow: 'visible' }}>
       {p.loaded && chordsReady && phrase.chords.map((c, i) => {
         const chord = getChordByNumber(c.chord, c.isMinor, p.skey) || ""
-        const pastLyric = c.position >= phrase.lyric.length
-        const left = pastLyric ? offsets[i] : sum(widths, i)
+        const left = offsets[i] || 0
         return <Text key={`${uuid}-a${i}`}
           style={{
             position: 'absolute', left: left || 0, top: 0, borderRadius: 6, overflow: 'visible',
@@ -176,7 +178,7 @@ function Line(p: LineProps) {
           </Text>
       })}
 
-      <View style={{ flexDirection: 'row', flexWrap: 'nowrap', alignSelf: 'flex-start', marginTop: 28 }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'nowrap', alignSelf: 'flex-start', marginTop: 28, marginLeft: placed.lyricIndent }}>
         <Text key={uuid} style={{ flexShrink: 0 }}
           className={`${p.textSize || "text-lg"} ${p.secondary ? "text-gray-700 dark:text-gray-400": "text-oslyn-700 dark:text-oslyn-200"}`}>
           {slideLyricText(phrase.lyric)}

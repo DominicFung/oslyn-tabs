@@ -85,6 +85,49 @@ export function chordOffsets(lyric: string, positions: number[], charWidth: numb
   return offsets
 }
 
+/**
+ * Place chords so chips never overlap, mirroring the website spacer.
+ * Chords packed at or before the first lyric letter are laid out in a row,
+ * and the lyric is indented to start after that row.
+ */
+export function placeChordLine(input: {
+  lyric: string
+  positions: number[]
+  labels: string[]
+  charWidth: number
+  gap?: number
+}): { offsets: number[], lyricIndent: number } {
+  const step = Math.max(1, input.charWidth)
+  const gap = input.gap ?? 8
+  const chip = (label: string) => Math.max(1, (label || '').length) * step + 12 + gap
+  const firstLetter = input.lyric.search(/\S/)
+  const firstLetterPx = (firstLetter < 0 ? 0 : firstLetter) * step
+  const offsets: number[] = []
+  let cursor = 0
+  let pushed = false
+  for (let i = 0; i < input.positions.length; i++) {
+    const natural = Math.max(0, input.positions[i] || 0) * step
+    const at = i === 0 ? natural : Math.max(natural, cursor)
+    if (at > natural) pushed = true
+    offsets.push(at)
+    cursor = at + chip(input.labels[i] || '')
+  }
+  let lead = -1
+  if (pushed) {
+    for (let i = 0; i < offsets.length; i++) {
+      const natural = Math.max(0, input.positions[i] || 0) * step
+      if (i === 0 && natural > firstLetterPx) break
+      if (offsets[i] > natural || natural <= firstLetterPx) lead = i
+      else break
+    }
+  }
+  const lyricIndent = lead >= 0
+    ? Math.max(0, offsets[lead] + chip(input.labels[lead] || '') - firstLetterPx)
+    : 0
+  for (let i = lead + 1; i < offsets.length; i++) offsets[i] += lyricIndent
+  return { offsets, lyricIndent }
+}
+
 /** How many commits a stream of layout events would cause. Used to prove the loop is closed. */
 export function commitCount(events: Array<['line' | 'chord', number]>): number {
   let state: ChordLineWidths = { line: 0, chord: 0 }
