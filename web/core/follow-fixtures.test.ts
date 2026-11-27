@@ -32,4 +32,19 @@ describe('follow fixtures', () => {
     assert.equal(zip[1], 0x4b)
     assert.ok(new TextDecoder().decode(zip).includes('session.json'))
   })
+
+  it('zips a 5MB buffer by copying into one array', () => {
+    const data = new Uint8Array(5 * 1024 * 1024)
+    data[0] = 0x11
+    data[data.length - 1] = 0x22
+    const zip = zipStore([{ name: 'audio.webm', data }])
+    const nameLength = zip[26] | (zip[27] << 8)
+    const dataStart = 30 + nameLength
+    assert.equal(zip[0], 0x50)
+    assert.equal(zip[1], 0x4b)
+    assert.equal(nameLength, 'audio.webm'.length)
+    assert.equal(zip[dataStart], 0x11)
+    assert.equal(zip[dataStart + data.length - 1], 0x22)
+    assert.equal(zip.length, 30 + nameLength + data.length + 46 + nameLength + 22)
+  })
 })

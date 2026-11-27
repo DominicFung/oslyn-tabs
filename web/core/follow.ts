@@ -502,36 +502,70 @@ function crc32(data: Uint8Array): number {
   return (crc ^ 0xffffffff) >>> 0
 }
 
-function u16(value: number) { return [value & 255, (value >> 8) & 255] }
-function u32(value: number) { return [value & 255, (value >> 8) & 255, (value >> 16) & 255, (value >> 24) & 255] }
-
-/** Uncompressed zip so a recording can be saved without an extra dependency. */
+/** Uncompressed zip. Bytes are copied with set(); nothing is spread. */
 export function zipStore(files: { name: string, data: Uint8Array }[]): Uint8Array {
-  const locals: number[] = []
-  const central: number[] = []
-  let offset = 0
-  for (const file of files) {
-    const name = Array.from(new TextEncoder().encode(file.name))
-    const crc = crc32(file.data)
-    const local = [
-      ...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
-      ...u32(crc), ...u32(file.data.length), ...u32(file.data.length),
-      ...u16(name.length), ...u16(0), ...name,
-    ]
-    locals.push(...local, ...file.data)
-    central.push(
-      ...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0),
-      ...u32(crc), ...u32(file.data.length), ...u32(file.data.length),
-      ...u16(name.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0),
-      ...u32(offset), ...name,
-    )
-    offset += local.length + file.data.length
+  const encoded = files.map((file) => ({
+    name: new TextEncoder().encode(file.name),
+    data: file.data,
+    crc: crc32(file.data),
+  }))
+  let total = 22
+  for (let i = 0; i < encoded.length; i++) {
+    total += 30 + encoded[i].name.length + encoded[i].data.length + 46 + encoded[i].name.length
   }
-  const end = [
-    ...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length),
-    ...u32(central.length), ...u32(offset), ...u16(0),
-  ]
-  return Uint8Array.from([...locals, ...central, ...end])
+  const out = new Uint8Array(total)
+  const view = new DataView(out.buffer)
+  let offset = 0
+  const localAt: number[] = []
+  for (let i = 0; i < encoded.length; i++) {
+    const file = encoded[i]
+    localAt.push(offset)
+    view.setUint32(offset, 0x04034b50, true); offset += 4
+    view.setUint16(offset, 20, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint32(offset, file.crc, true); offset += 4
+    view.setUint32(offset, file.data.length, true); offset += 4
+    view.setUint32(offset, file.data.length, true); offset += 4
+    view.setUint16(offset, file.name.length, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    out.set(file.name, offset); offset += file.name.length
+    out.set(file.data, offset); offset += file.data.length
+  }
+  const centralStart = offset
+  for (let i = 0; i < encoded.length; i++) {
+    const file = encoded[i]
+    view.setUint32(offset, 0x02014b50, true); offset += 4
+    view.setUint16(offset, 20, true); offset += 2
+    view.setUint16(offset, 20, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint32(offset, file.crc, true); offset += 4
+    view.setUint32(offset, file.data.length, true); offset += 4
+    view.setUint32(offset, file.data.length, true); offset += 4
+    view.setUint16(offset, file.name.length, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint16(offset, 0, true); offset += 2
+    view.setUint32(offset, 0, true); offset += 4
+    view.setUint32(offset, localAt[i], true); offset += 4
+    out.set(file.name, offset); offset += file.name.length
+  }
+  const centralSize = offset - centralStart
+  view.setUint32(offset, 0x06054b50, true); offset += 4
+  view.setUint16(offset, 0, true); offset += 2
+  view.setUint16(offset, 0, true); offset += 2
+  view.setUint16(offset, encoded.length, true); offset += 2
+  view.setUint16(offset, encoded.length, true); offset += 2
+  view.setUint32(offset, centralSize, true); offset += 4
+  view.setUint32(offset, centralStart, true); offset += 4
+  view.setUint16(offset, 0, true); offset += 2
+  return out
 }
 
 export function sessionZip(session: FollowSessionFile, audio: Uint8Array | null): Uint8Array {
