@@ -765,7 +765,7 @@ export function compactPart(part: FollowChunkPart): FollowChunkPart {
 export function stitchParts(manifest: FollowManifest, parts: FollowChunkPart[]): FollowSessionFile {
   const byChunk = new Map<number, FollowChunkPart>()
   for (const part of parts) byChunk.set(part.chunk, part)
-  const ordered = [...byChunk.values()].sort((a, b) => a.chunk - b.chunk)
+  const ordered = Array.from(byChunk.values()).sort((a, b) => a.chunk - b.chunk)
   return {
     version: 1,
     songId: manifest.songId,
