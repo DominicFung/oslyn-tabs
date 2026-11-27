@@ -5,6 +5,7 @@ import { DynamoStack } from './stacks/dynamo-stack'
 import { AppsyncStack } from './stacks/appsync-stack'
 import { IamStack } from './stacks/iam-stack'
 import { ImporterStack } from './stacks/importer-stack'
+import { AmplifyComputeRoleStack } from './stacks/amplify-compute-role-stack'
 
 const PROJECT_NAME = 'oslynstudio'
 
@@ -23,5 +24,8 @@ appsyncStack.addDependency(importerStack)
 
 const iamStack = new IamStack(app, `${PROJECT_NAME}-IamStack`, { name: PROJECT_NAME})
 iamStack.addDependency(s3Stack)
+
+const amplifyComputeRoleStack = new AmplifyComputeRoleStack(app, `${PROJECT_NAME}-AmplifyComputeRoleStack`, { name: PROJECT_NAME })
+amplifyComputeRoleStack.addDependency(s3Stack)
 
 app.synth()
