@@ -18,7 +18,14 @@ Switching away from the tab flushes the open chunk with a normal request. Closin
 ## Scoring
 
 - **Space** marks and manual **next** corrections are expected turns. A follower turn near that time is on time. No follower turn within 5 seconds is a miss (the follower was late or never moved).
-- A manual **prev** within 8 seconds after an automatic turn rejects that turn. It counts as a false, early turn.
+- A manual **prev** within 8 seconds after an automatic turn rejects that turn. It counts as a false, early turn. When the log says which page that turn left, only the replayed turn off the same page, before the prev, is rejected.
+- A recorded automatic turn that nobody took back within 8 seconds is an expected turn too.
+- A manual **next** taken back by a **prev** within 3 seconds is a slip, not an expected turn.
+- Replay starts on the page the take started on (the first logged page change's `pageBefore`), not always page 0.
+
+## Page length gate
+
+Most Build My Life pages repeat one progression (D G D/F# G), so the chord match can't tell the top of a page from its end. The follower also times pages: a page is expected to take its chord count times the time per chord. It learns that pace from your own next-page taps (median of the last five, default 3.5 s per chord). An automatic turn waits for 90% of that, and past 100% being on the page's last line is enough. Tapping back right after an automatic turn keeps the page's original start time and resumes listening from its last line.
 
 ## Turn a recording into a fixture
 

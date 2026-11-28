@@ -20,6 +20,32 @@ describe('follow fixtures', () => {
     assert.ok(fullReport.falseTurns.length <= 20)
   })
 
+  it('holds the page on the takes where Follow me turned early on repeated chords', () => {
+    // Nov 27 takes in D, capo 0. Live, nearly every automatic turn was taken back within a second or two.
+    const live3 = JSON.parse(readFileSync(new URL('build-my-life-3/session.json', root), 'utf8')) as FollowSessionFile
+    const live4 = JSON.parse(readFileSync(new URL('build-my-life-4/session.json', root), 'utf8')) as FollowSessionFile
+    const report3 = scoreSession(live3)
+    const report4 = scoreSession(live4)
+    assert.ok(report3.falseTurns.length <= 2, `take 3 false turns ${report3.falseTurns.length}`)
+    assert.ok(report4.falseTurns.length <= 5, `take 4 false turns ${report4.falseTurns.length}`)
+    assert.ok(report4.turns.filter((turn) => !turn.missed).length >= 5)
+  })
+
+  it('treats a recorded auto turn nobody took back as expected, and a next undone at once as a slip', () => {
+    const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
+    const plain = session.events.filter((event) => event.type !== 'should-turn')
+    assert.equal(scoreSession({ ...session, events: plain }).turns.length, 1)
+    const slip = scoreSession({
+      ...session,
+      events: [
+        { t: 900, type: 'manual-correction', direction: 'next', source: 'key', pageBefore: 0, pageAfter: 1 },
+        { t: 1200, type: 'manual-correction', direction: 'prev', source: 'key', pageBefore: 1, pageAfter: 0 },
+        ...plain,
+      ],
+    })
+    assert.equal(slip.turns.length, 1)
+  })
+
   it('scores every committed fixture at or above its baseline', () => {
     const names = Object.keys(baseline)
     assert.ok(names.length > 0)
@@ -33,11 +59,13 @@ describe('follow fixtures', () => {
   it('counts a manual next as an expected turn and a quick prev as a rejected auto turn', () => {
     const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
     const base = scoreSession(session)
-    const withoutMark = scoreSession({ ...session, events: session.events.filter((event) => event.type !== 'should-turn') })
+    // An automatic turn nobody took back also counts as expected, so drop it to isolate the manual next.
+    const plain = session.events.filter((event) => event.type !== 'should-turn' && event.type !== 'auto-turn')
+    const withoutMark = scoreSession({ ...session, events: plain })
     const manualNext = scoreSession({
       ...session,
       events: [
-        ...session.events.filter((event) => event.type !== 'should-turn'),
+        ...plain,
         { t: 1900, type: 'manual-correction', direction: 'next', source: 'key', pageBefore: 0, pageAfter: 1 },
       ],
     })
