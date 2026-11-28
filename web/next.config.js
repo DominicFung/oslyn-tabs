@@ -10,6 +10,9 @@ const nextConfig = {
   },
   webpack: (config, options) => {
     config.resolve.alias['aws-crt'] = path.resolve(__dirname, 'node_modules/aws-crt')
+    // Moonshine runs in the browser. Keep the Node ONNX build and sharp out of the bundle.
+    config.resolve.alias['onnxruntime-node$'] = false
+    config.resolve.alias['sharp$'] = false
     return config
   },
   async headers() {

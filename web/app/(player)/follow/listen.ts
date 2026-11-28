@@ -19,6 +19,12 @@ export async function startFollow(options: {
   onDebug: (snapshot: FollowSnapshot) => void
   onChart?: (chart: { chords: FollowChartChord[], pages: FollowPageLayout[] }) => void
   onFrame?: (snapshot: FollowSnapshot, chroma: number[], energy: number) => void
+  /** Opt-in. Off leaves the chord follower as the only page-turn signal. */
+  smarter?: boolean
+  songId?: string
+  asrModel?: 'tiny' | 'base'
+  onVoice?: (direction: 'prev' | 'next') => void
+  onAsr?: (status: 'loading' | 'ready' | 'error') => void
 }): Promise<{ stop: () => void, stream: MediaStream | null }> {
   const chartKey = options.chartKey || options.songKey
   const slides = chordSheetToSlides(options.chordSheet, chartKey)
@@ -38,6 +44,10 @@ export async function startFollow(options: {
     return { stop: () => {}, stream: null }
   }
   const follower = new ScoreFollower(chords)
+  const lyricPages = slides.pages.map((page, index) => ({
+    page: index,
+    lines: page.lines.map((line) => line.lyric || line.section || ''),
+  }))
 
   let stream: MediaStream
   try {
@@ -64,14 +74,40 @@ export async function startFollow(options: {
   source.connect(processor)
   processor.connect(mute)
   mute.connect(context.destination)
+  let stopSmarter = () => {}
+  let smarter: {
+    frame: (input: { chroma: number[], energy: number, t: number, page: number, chordTurn: number | null }) => number | null
+    audio: (samples: Float32Array, sampleRate: number, nowMs: number) => void
+  } | null = null
+  if (options.smarter) {
+    const mod = await import('./smarter')
+    const handle = mod.attachSmarter({
+      songId: options.songId || '',
+      pages: lyricPages,
+      model: options.asrModel === 'base' ? 'base' : 'tiny',
+      onVoice: (direction) => options.onVoice?.(direction),
+      onAsr: (status) => options.onAsr?.(status),
+    })
+    smarter = handle
+    stopSmarter = handle.stop
+  }
   processor.onaudioprocess = (event) => {
     const signal = event.inputBuffer.getChannelData(0)
     const features = meyda.extract(['chroma', 'rms'], signal)
     const chroma = features?.chroma
     if (!chroma || chroma.length < 12) return
     const energy = features.rms ?? 0
-    const snapshot = follower.push(chroma, energy, context.currentTime * 1000, options.getPage())
-    if (snapshot.turnTo != null) options.onPage(snapshot.turnTo)
+    const now = context.currentTime * 1000
+    const page = options.getPage()
+    const snapshot = follower.push(chroma, energy, now, page)
+    if (smarter) {
+      smarter.audio(signal, context.sampleRate, now)
+      const turn = smarter.frame({ chroma, energy, t: now, page, chordTurn: snapshot.turnTo })
+      if (snapshot.turnTo != null && turn == null) follower.anchorToPage(page)
+      if (turn != null) options.onPage(turn)
+    } else if (snapshot.turnTo != null) {
+      options.onPage(snapshot.turnTo)
+    }
     options.onFrame?.(snapshot, chroma, energy)
     options.onDebug(snapshot)
   }
@@ -80,6 +116,7 @@ export async function startFollow(options: {
   return {
     stream,
     stop: () => {
+      stopSmarter()
       processor.onaudioprocess = null
       processor.disconnect()
       source.disconnect()
