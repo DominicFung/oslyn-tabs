@@ -28,6 +28,7 @@ import { useSession } from 'next-auth/react'
 import SignInAsGuest from './signInAsGuest'
 import MissingChords from './missingChords'
 import FollowMe from './follow/FollowMe'
+import TrainMe from './follow/TrainMe'
 import { capoForSong, parseCapoPrefs, withSongCapo, type CapoPrefs } from './capoPrefs'
 import { resolveImportedKeys } from '@/core/importChords'
 import { detectKey } from '../../../aws/lambdas/util/detectKey'
@@ -850,6 +851,15 @@ export default function Player(p: PlayerProps) {
       capo={-transpose}
       page={page}
       onPage={setNextPage}
+    />}
+    { !p.isSlideShow && songs[song]?.song?.chordSheet?.trim() && <TrainMe
+      chordSheet={songs[song]!.song!.chordSheet || ''}
+      chartKey={songs[song]!.song!.chordSheetKey || sKey || 'C'}
+      songKey={sKey || songs[song]!.song!.chordSheetKey || 'C'}
+      songId={songs[song]!.song!.songId || 'unknown'}
+      title={songs[song]!.song!.title || ''}
+      capo={-transpose}
+      page={page}
     />}
     { songs && !p.isSlideShow &&
       <Controls 

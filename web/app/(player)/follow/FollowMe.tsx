@@ -1,14 +1,14 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
-import type { FollowChartChord, FollowEstimated, FollowFrame, FollowManifest, FollowManifestChunk, FollowMark, FollowPageLayout, FollowSnapshot } from '@/core/follow'
-import { compactPart, partFileNames } from '@/core/follow'
+import type { FollowEstimated, FollowSnapshot } from '@/core/follow'
 import type { FollowPhase } from './listen'
-import { chunkUploadFiles, downloadZip, failedChunkZip, uploadFiles, type SavedRecording } from './sink'
+import { downloadZip, type SavedRecording } from './sink'
+import { ChunkTake } from './chunkTake'
 
 const STORAGE_KEY = 'jam/followMe'
-const APP_VERSION = '0.1.0'
-const CHUNK_MS = 120_000
+const SMARTER_KEY = 'jam/followSmarter'
+const ASR_MODEL_KEY = 'jam/followAsr'
 
 type ManualDetail = {
   direction: 'prev' | 'next'
@@ -16,9 +16,6 @@ type ManualDetail = {
   pageBefore: number
   pageAfter: number
 }
-
-const SMARTER_KEY = 'jam/followSmarter'
-const ASR_MODEL_KEY = 'jam/followAsr'
 
 export default function FollowMe(p: {
   chordSheet: string
@@ -44,29 +41,19 @@ export default function FollowMe(p: {
   const pageRef = useRef(p.page)
   const onPageRef = useRef(p.onPage)
   const debugRef = useRef(false)
-  const recordingRef = useRef(false)
-  const startedAt = useRef(0)
-  const frames = useRef<FollowFrame[]>([])
-  const events = useRef<FollowMark[]>([])
-  const chart = useRef<{ chords: FollowChartChord[], pages: FollowPageLayout[] }>({ chords: [], pages: [] })
-  const songMeta = useRef({ songId: p.songId, title: p.title, chartKey: p.chartKey, key: p.songKey, capo: p.capo })
-  const pendingAuto = useRef<number | null>(null)
-  const pendingManual = useRef<number | null>(null)
-  const seenPage = useRef(p.page)
   const streamRef = useRef<MediaStream | null>(null)
-  const media = useRef<MediaRecorder | null>(null)
-  const audioChunks = useRef<Blob[]>([])
   const lastSnap = useRef<FollowSnapshot | null>(null)
-  const takeRef = useRef<{
-    sessionId: string
-    recordedAt: string
-    part: number
-    chunkStart: number
-    chunks: FollowManifestChunk[]
-  } | null>(null)
-  const chunkTimer = useRef<number | null>(null)
-  const failedZip = useRef<{ name: string, bytes: Uint8Array } | null>(null)
-  const flushChain = useRef(Promise.resolve())
+  const takeRef = useRef<ChunkTake | null>(null)
+  if (takeRef.current == null) {
+    takeRef.current = new ChunkTake(() => {
+      const current = takeRef.current
+      if (!current) return
+      setRecording(current.recording)
+      setSaveNote(current.lastNote)
+      setDownloadReady(current.downloadReady)
+    })
+  }
+  const take = takeRef.current
   pageRef.current = p.page
   onPageRef.current = p.onPage
   debugRef.current = debug
@@ -87,8 +74,6 @@ export default function FollowMe(p: {
     }
   }, [])
 
-  const stamp = () => Math.round(performance.now() - startedAt.current)
-
   const estimatedNow = (): FollowEstimated | undefined => {
     const snapNow = lastSnap.current
     if (!snapNow) return undefined
@@ -101,208 +86,14 @@ export default function FollowMe(p: {
     }
   }
 
-  const clearChunkTimer = () => {
-    if (chunkTimer.current != null) {
-      window.clearTimeout(chunkTimer.current)
-      chunkTimer.current = null
-    }
-  }
-
-  const startRecorder = () => {
-    if (!streamRef.current) return
-    const mime = typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-      ? 'audio/webm;codecs=opus' : ''
-    try {
-      const recorder = mime ? new MediaRecorder(streamRef.current, { mimeType: mime }) : new MediaRecorder(streamRef.current)
-      recorder.ondataavailable = (event) => { if (event.data.size) audioChunks.current.push(event.data) }
-      media.current = recorder
-      recorder.start(1000)
-    } catch { media.current = null }
-  }
-
-  const blobsToBytes = async (blobs: Blob[]) => {
-    if (!blobs.length) return null
-    return new Uint8Array(await new Blob(blobs, { type: 'audio/webm' }).arrayBuffer())
-  }
-
-  const headerFor = (chunks: FollowManifestChunk[], finished: boolean): FollowManifest => {
-    const meta = songMeta.current
-    const take = takeRef.current
-    return {
-      version: 1,
-      songId: meta.songId || 'unknown',
-      sessionId: take?.sessionId || 'unknown',
-      title: meta.title,
-      chartKey: meta.chartKey,
-      key: meta.key,
-      capo: Number.isFinite(meta.capo) ? meta.capo : null,
-      userAgent: navigator.userAgent,
-      appVersion: APP_VERSION,
-      commit: process.env.NEXT_PUBLIC_GIT_SHA || 'unknown',
-      recordedAt: take?.recordedAt || new Date().toISOString(),
-      chords: chart.current.chords,
-      pages: chart.current.pages,
-      chunks,
-      finished,
-    }
-  }
-
-  type ChunkCut = {
-    recorder: MediaRecorder | null
-    blobs: Blob[]
-    part: ReturnType<typeof compactPart>
-    manifest: FollowManifest
-    sessionId: string
-  }
-
-  // Cuts the open MediaRecorder session into one part. Timeslice blobs from that
-  // session concatenate to a playable webm. The next part starts a new recorder.
-  const cutChunk = (ending: boolean): ChunkCut | null => {
-    const take = takeRef.current
-    if (!take || !recordingRef.current) return null
-    const recorder = media.current
-    const blobs = audioChunks.current
-    audioChunks.current = []
-    if (recorder) recorder.ondataavailable = (event) => { if (event.data.size) blobs.push(event.data) }
-    media.current = null
-    const framesNow = frames.current
-    const eventsNow = events.current
-    frames.current = []
-    events.current = []
-    const end = stamp()
-    const names = partFileNames(take.part)
-    const part = compactPart({ chunk: take.part, start: take.chunkStart, end, frames: framesNow, events: eventsNow })
-    const listed: FollowManifestChunk = { part: take.part, start: take.chunkStart, end, session: names.json }
-    take.chunks = [...take.chunks, listed]
-    const manifest = headerFor(take.chunks, ending)
-    take.part += 1
-    take.chunkStart = end
-    if (ending) {
-      recordingRef.current = false
-      setRecording(false)
-      clearChunkTimer()
-    } else {
-      startRecorder()
-      clearChunkTimer()
-      chunkTimer.current = window.setTimeout(() => { void flushChunk('timer') }, CHUNK_MS)
-    }
-    return { recorder, blobs, part, manifest, sessionId: take.sessionId }
-  }
-
-  const stopRecorder = (recorder: MediaRecorder | null, blobs: Blob[]) => new Promise<Uint8Array | null>((resolve) => {
-    const done = () => { resolve(blobsToBytes(blobs)) }
-    if (!recorder || recorder.state === 'inactive') { done(); return }
-    recorder.onstop = () => { done() }
-    try { recorder.stop() } catch { done() }
-  })
-
-  const dropEmpty = (cut: ChunkCut) => {
-    if (takeRef.current?.sessionId === cut.sessionId) {
-      takeRef.current.chunks = takeRef.current.chunks.filter((chunk) => chunk.part !== cut.part.chunk)
-    }
-  }
-
-  const publishChunk = async (cut: ChunkCut, keepalive: boolean) => {
-    const audioBlob = cut.blobs.length ? new Blob(cut.blobs, { type: 'audio/webm' }) : null
-    if (!keepalive && cut.recorder && cut.recorder.state === 'recording') {
-      const stopped = await stopRecorder(cut.recorder, cut.blobs)
-      return publishBytes(cut, stopped, false)
-    }
-    if (!cut.part.frames.length && !cut.part.events.length && !(audioBlob && audioBlob.size)) {
-      dropEmpty(cut)
-      return
-    }
-    if (audioBlob && audioBlob.size) {
-      const entry = cut.manifest.chunks.find((chunk) => chunk.part === cut.part.chunk)
-      if (entry) entry.audio = partFileNames(cut.part.chunk).audio
-    }
-    const uploaded = await uploadFiles(
-      cut.manifest.songId,
-      cut.sessionId,
-      cut.manifest.recordedAt,
-      chunkUploadFiles(cut.manifest, cut.part, audioBlob),
-      { keepalive },
-    )
-    if (uploaded.ok) {
-      if (!keepalive) setSaveNote(uploaded)
-      return
-    }
-    if (keepalive) return
-    const bytes = audioBlob ? new Uint8Array(await audioBlob.arrayBuffer()) : null
-    const label = String(cut.part.chunk).padStart(4, '0')
-    failedZip.current = { name: `follow-part-${label}.zip`, bytes: failedChunkZip(cut.manifest, cut.part, bytes) }
-    setDownloadReady(true)
-    setSaveNote({ ok: false, message: `Chunk ${cut.part.chunk} did not upload. Download that chunk.` })
-  }
-
-  const publishBytes = async (cut: ChunkCut, audio: Uint8Array | null, keepalive: boolean) => {
-    if (!cut.part.frames.length && !cut.part.events.length && !(audio && audio.length)) {
-      dropEmpty(cut)
-      return
-    }
-    const audioBlob = audio && audio.length ? new Blob([audio], { type: 'audio/webm' }) : null
-    if (audioBlob) {
-      const entry = cut.manifest.chunks.find((chunk) => chunk.part === cut.part.chunk)
-      if (entry) entry.audio = partFileNames(cut.part.chunk).audio
-    }
-    const uploaded = await uploadFiles(
-      cut.manifest.songId,
-      cut.sessionId,
-      cut.manifest.recordedAt,
-      chunkUploadFiles(cut.manifest, cut.part, audioBlob),
-      { keepalive },
-    )
-    if (uploaded.ok) {
-      setSaveNote(uploaded)
-      return
-    }
-    const label = String(cut.part.chunk).padStart(4, '0')
-    failedZip.current = { name: `follow-part-${label}.zip`, bytes: failedChunkZip(cut.manifest, cut.part, audio) }
-    setDownloadReady(true)
-    setSaveNote({ ok: false, message: `Chunk ${cut.part.chunk} did not upload. Download that chunk.` })
-  }
-
-  const flushChunk = (kind: 'timer' | 'hidden' | 'stop' | 'pagehide') => {
-    if (kind === 'pagehide') {
-      const cut = cutChunk(true)
-      if (cut) void publishChunk(cut, true)
-      return Promise.resolve()
-    }
-    const run = async () => {
-      const cut = cutChunk(kind === 'stop')
-      if (cut) await publishChunk(cut, false)
-    }
-    const next = flushChain.current.then(run, run)
-    flushChain.current = next.then(() => {}, () => {})
-    return next
-  }
-
   const beginRecording = () => {
-    if (!debugRef.current || !streamRef.current || recordingRef.current) return
-    frames.current = []
-    events.current = []
-    audioChunks.current = []
-    songMeta.current = { songId: p.songId, title: p.title, chartKey: p.chartKey, key: p.songKey, capo: p.capo }
-    startedAt.current = performance.now()
-    seenPage.current = pageRef.current
-    takeRef.current = {
-      sessionId: crypto.randomUUID(),
-      recordedAt: new Date().toISOString(),
-      part: 1,
-      chunkStart: 0,
-      chunks: [],
-    }
-    recordingRef.current = true
-    setRecording(true)
-    setDownloadReady(false)
-    failedZip.current = null
-    startRecorder()
-    clearChunkTimer()
-    chunkTimer.current = window.setTimeout(() => { void flushChunk('timer') }, CHUNK_MS)
+    if (!debugRef.current || !streamRef.current || take.recording) return
+    take.meta = { songId: p.songId, title: p.title, chartKey: p.chartKey, key: p.songKey, capo: p.capo, mode: 'follow' }
+    take.start(streamRef.current, pageRef.current, false)
   }
 
-  const finishRef = useRef(flushChunk)
-  finishRef.current = flushChunk
+  const finishRef = useRef(take.flush.bind(take))
+  finishRef.current = (kind) => take.flush(kind)
   const beginRef = useRef(beginRecording)
   beginRef.current = beginRecording
 
@@ -324,7 +115,7 @@ export default function FollowMe(p: {
       songKey: p.songKey,
       getPage: () => pageRef.current,
       onPage: (page) => {
-        pendingAuto.current = page
+        take.armAuto(page)
         onPageRef.current(page)
       },
       smarter,
@@ -335,29 +126,22 @@ export default function FollowMe(p: {
         const before = pageRef.current
         const after = direction === 'next' ? before + 1 : Math.max(0, before - 1)
         if (after === before) return
-        if (recordingRef.current) {
-          pendingManual.current = after
-          events.current.push({
-            t: Math.round(performance.now() - startedAt.current),
-            type: 'manual-correction',
-            direction,
-            source: 'voice',
-            pageBefore: before,
-            pageAfter: after,
-            page: after,
-            estimated: estimatedNow(),
-          })
-        }
+        take.noteManual({
+          direction,
+          source: 'voice',
+          pageBefore: before,
+          pageAfter: after,
+        }, estimatedNow())
         onPageRef.current(after)
       },
       onPhase: (next) => { if (!cancel) setPhase(next) },
-      onChart: (next) => { chart.current = next },
+      onChart: (next) => { take.chart = next },
       onFrame: (snapshot, chroma, energy) => {
         lastSnap.current = snapshot
         if (!cancel && debugRef.current) setSnap(snapshot)
-        if (!recordingRef.current) return
-        frames.current.push({
-          t: Math.round(performance.now() - startedAt.current),
+        if (!take.recording) return
+        take.pushFrame({
+          t: take.stamp(),
           chroma,
           energy,
           detected: snapshot.detected,
@@ -389,63 +173,34 @@ export default function FollowMe(p: {
         streamRef.current = null
       })
     }
-  }, [enabled, smarter, asrModel, p.chordSheet, p.chartKey, p.songKey, p.songId])
+  }, [enabled, smarter, asrModel, p.chordSheet, p.chartKey, p.songKey, p.songId, take])
 
-  useEffect(() => {
-    if (!recordingRef.current) { seenPage.current = p.page; return }
-    if (p.page === seenPage.current) return
-    const t = Math.round(performance.now() - startedAt.current)
-    if (pendingManual.current === p.page) {
-      pendingManual.current = null
-      pendingAuto.current = null
-    } else if (pendingAuto.current === p.page) {
-      events.current.push({ t, type: 'auto-turn', page: p.page, pageBefore: seenPage.current, pageAfter: p.page })
-      pendingAuto.current = null
-    } else {
-      events.current.push({ t, type: 'page-change', page: p.page, pageBefore: seenPage.current, pageAfter: p.page })
-    }
-    seenPage.current = p.page
-  }, [p.page])
+  useEffect(() => { take.onPage(p.page) }, [p.page, take])
 
   useEffect(() => {
     const onManual = (event: Event) => {
-      if (!debugRef.current || !recordingRef.current) return
+      if (!debugRef.current) return
       const detail = (event as CustomEvent<ManualDetail>).detail
       if (!detail) return
-      pendingManual.current = detail.pageAfter
-      events.current.push({
-        t: Math.round(performance.now() - startedAt.current),
-        type: 'manual-correction',
-        direction: detail.direction,
-        source: detail.source,
-        pageBefore: detail.pageBefore,
-        pageAfter: detail.pageAfter,
-        page: detail.pageAfter,
-        estimated: estimatedNow(),
-      })
+      take.noteManual(detail, estimatedNow())
     }
     document.body.addEventListener('follow-manual-page', onManual)
     return () => document.body.removeEventListener('follow-manual-page', onManual)
-  }, [])
+  }, [take])
 
   useEffect(() => {
     if (!debug) return
     const onKey = (event: KeyboardEvent) => {
-      if (event.code !== 'Space' || !recordingRef.current) return
+      if (event.code !== 'Space') return
       const target = event.target as HTMLElement | null
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return
       event.preventDefault()
       event.stopImmediatePropagation()
-      events.current.push({
-        t: Math.round(performance.now() - startedAt.current),
-        type: 'should-turn',
-        page: pageRef.current,
-        estimated: estimatedNow(),
-      })
+      take.mark({ type: 'should-turn', page: pageRef.current, estimated: estimatedNow() })
     }
     window.addEventListener('keydown', onKey, true)
     return () => window.removeEventListener('keydown', onKey, true)
-  }, [debug])
+  }, [debug, take])
 
   useEffect(() => {
     const onVisibility = () => {
@@ -467,7 +222,7 @@ export default function FollowMe(p: {
   }
 
   const download = () => {
-    if (failedZip.current) downloadZip(failedZip.current.name, failedZip.current.bytes)
+    if (take.failedZip) downloadZip(take.failedZip.name, take.failedZip.bytes)
   }
 
   const listening = phase === 'listening'
@@ -502,13 +257,7 @@ export default function FollowMe(p: {
         </dl>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" disabled={!recording} onClick={() => {
-            if (!recordingRef.current) return
-            events.current.push({
-              t: Math.round(performance.now() - startedAt.current),
-              type: 'should-turn',
-              page: pageRef.current,
-              estimated: estimatedNow(),
-            })
+            take.mark({ type: 'should-turn', page: pageRef.current, estimated: estimatedNow() })
           }} className="rounded bg-oslyn-700 px-2 py-1 font-semibold disabled:opacity-40">Should turn now</button>
           {downloadReady && <button type="button" onClick={download} className="rounded bg-gray-700 px-2 py-1 font-semibold">Download</button>}
         </div>
