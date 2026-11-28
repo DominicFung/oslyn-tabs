@@ -11,6 +11,7 @@ import QrCode from "./(controls)/qrcode"
 import Slides from "./(controls)/slides"
 import Users from "./(controls)/users"
 import Queue from "./(controls)/queue"
+import FollowListening from "./(controls)/follow"
 
 export interface ControlsProp {
   jamSessionId: string
@@ -80,7 +81,8 @@ export default function Controls(p: ControlsProp) {
     { name: "QR", disabled: false },
     { name: "Slides", disabled: false },
     { name: "Users", disabled: false },
-    { name: "Queue", disabled: false }
+    { name: "Queue", disabled: false },
+    { name: "Follow", disabled: false }
   ])
 
   useEffect(() => {
@@ -91,7 +93,8 @@ export default function Controls(p: ControlsProp) {
       { name: "QR", disabled: p.qrCode ? false : true },
       { name: "Slides", disabled: p.users ? false : true },
       { name: "Users", disabled: !p.users },
-      { name: "Queue", disabled: !p.queue || !p.queue.songs || !p.queue.removeFromQueue }
+      { name: "Queue", disabled: !p.queue || !p.queue.songs || !p.queue.removeFromQueue },
+      { name: "Follow", disabled: false }
     ]
     setOptions(ops)
 
@@ -149,6 +152,7 @@ export default function Controls(p: ControlsProp) {
               { option === 4 && p.slides && <Slides textSize={p.slides!.textSize} setTextSize={p.slides!.setTextSize}  /> }
               { option === 5 && p.users && <Users users={p.users!.active} removeUser={p.users!.removeActive} /> }
               { option === 6 && p.queue && <Queue songs={p.queue.songs} queue={p.queue.queueOrder} removeFromQueue={p.queue.removeFromQueue}/> }
+              { option === 7 && <FollowListening /> }
               </div>
             </div>
             <button type="button" className="hidden sm:inline-block fixed right-12 top-7 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-0 sm:p-1.5 hover:bg-gray-100 h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close"

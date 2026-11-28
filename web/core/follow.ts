@@ -662,7 +662,7 @@ export type FollowMark = {
   page?: number
   /** prev goes back a page, next goes forward. Space marks stay should-turn. */
   direction?: 'prev' | 'next'
-  source?: 'key' | 'button'
+  source?: 'key' | 'button' | 'voice'
   pageBefore?: number
   pageAfter?: number
   estimated?: FollowEstimated
@@ -779,6 +779,11 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
       page = snap.turnTo
     }
   }
+  return scorePredicted(session, predicted, predictedFrom)
+}
+
+/** Score a list of predicted turn times the same way a chord replay is scored. */
+export function scorePredicted(session: FollowSessionFile, predicted: number[], predictedFrom: number[]): ReplayReport {
   const expected = expectedMarks(session.events).map((event) => event.t)
   const used = new Set<number>()
   const turns: TurnReport[] = expected.map((expectedT) => {

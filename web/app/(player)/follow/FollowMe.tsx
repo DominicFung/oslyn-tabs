@@ -12,10 +12,13 @@ const CHUNK_MS = 120_000
 
 type ManualDetail = {
   direction: 'prev' | 'next'
-  source: 'key' | 'button'
+  source: 'key' | 'button' | 'voice'
   pageBefore: number
   pageAfter: number
 }
+
+const SMARTER_KEY = 'jam/followSmarter'
+const ASR_MODEL_KEY = 'jam/followAsr'
 
 export default function FollowMe(p: {
   chordSheet: string
@@ -28,6 +31,9 @@ export default function FollowMe(p: {
   onPage: (page: number) => void
 }) {
   const [enabled, setEnabled] = useState(false)
+  const [smarter, setSmarter] = useState(false)
+  const [asrModel, setAsrModel] = useState<'tiny' | 'base'>('tiny')
+  const [asr, setAsr] = useState<'off' | 'loading' | 'ready' | 'error'>('off')
   const [phase, setPhase] = useState<FollowPhase | 'off'>('off')
   const [debug, setDebug] = useState(false)
   const [debugOpen, setDebugOpen] = useState(true)
@@ -66,8 +72,19 @@ export default function FollowMe(p: {
   debugRef.current = debug
 
   useEffect(() => {
+    const read = () => {
+      setSmarter(localStorage.getItem(SMARTER_KEY) === 'true')
+      setAsrModel(localStorage.getItem(ASR_MODEL_KEY) === 'base' ? 'base' : 'tiny')
+    }
     setEnabled(localStorage.getItem(STORAGE_KEY) === 'true')
     setDebug(new URLSearchParams(window.location.search).get('followDebug') === '1')
+    read()
+    window.addEventListener('follow-smarter', read)
+    window.addEventListener('storage', read)
+    return () => {
+      window.removeEventListener('follow-smarter', read)
+      window.removeEventListener('storage', read)
+    }
   }, [])
 
   const stamp = () => Math.round(performance.now() - startedAt.current)
@@ -300,6 +317,7 @@ export default function FollowMe(p: {
     let cancel = false
     let stop = () => {}
     setPhase('off')
+    if (!smarter) setAsr('off')
     import('./listen').then((mod) => mod.startFollow({
       chordSheet: p.chordSheet,
       chartKey: p.chartKey,
@@ -308,6 +326,29 @@ export default function FollowMe(p: {
       onPage: (page) => {
         pendingAuto.current = page
         onPageRef.current(page)
+      },
+      smarter,
+      songId: p.songId,
+      asrModel,
+      onAsr: (status) => { if (!cancel) setAsr(status) },
+      onVoice: (direction) => {
+        const before = pageRef.current
+        const after = direction === 'next' ? before + 1 : Math.max(0, before - 1)
+        if (after === before) return
+        if (recordingRef.current) {
+          pendingManual.current = after
+          events.current.push({
+            t: Math.round(performance.now() - startedAt.current),
+            type: 'manual-correction',
+            direction,
+            source: 'voice',
+            pageBefore: before,
+            pageAfter: after,
+            page: after,
+            estimated: estimatedNow(),
+          })
+        }
+        onPageRef.current(after)
       },
       onPhase: (next) => { if (!cancel) setPhase(next) },
       onChart: (next) => { chart.current = next },
@@ -348,7 +389,7 @@ export default function FollowMe(p: {
         streamRef.current = null
       })
     }
-  }, [enabled, p.chordSheet, p.chartKey, p.songKey, p.songId])
+  }, [enabled, smarter, asrModel, p.chordSheet, p.chartKey, p.songKey, p.songId])
 
   useEffect(() => {
     if (!recordingRef.current) { seenPage.current = p.page; return }
@@ -430,7 +471,8 @@ export default function FollowMe(p: {
   }
 
   const listening = phase === 'listening'
-  const note = phase === 'denied' ? 'Mic blocked' : phase === 'no-chords' ? 'No chords to follow' : phase === 'error' ? 'Mic unavailable' : listening ? 'Listening' : enabled ? 'Starting mic…' : ''
+  const asrNote = smarter && asr === 'loading' ? 'Loading lyrics…' : smarter && asr === 'error' ? 'Lyrics unavailable' : ''
+  const note = asrNote || (phase === 'denied' ? 'Mic blocked' : phase === 'no-chords' ? 'No chords to follow' : phase === 'error' ? 'Mic unavailable' : listening ? 'Listening' : enabled ? 'Starting mic…' : '')
 
   return <>
     <button
