@@ -24,7 +24,8 @@ interface ImporterProps {
 
 /**
  * One Fargate Spot task for the Ultimate Guitar import worker.
- * Public subnets and a public IP, no NAT gateway. desiredCount starts at 0.
+ * Public subnets and a public IP, no NAT gateway.
+ * DesiredCount is left unset so a deploy does not turn a running worker off.
  * 0.25 vCPU and 1 GB: Chromium does not fit in 512 MB. About $0.01/hr on demand
  * while a task is running, less on Spot, and $0 while the service is off.
  */
@@ -113,11 +114,15 @@ export class ImporterStack extends Stack {
       allowAllOutbound: true,
     })
 
+    // Do not set desiredCount. A literal 0 is written on every deploy, which
+    // turns the worker off even when importerControl has scaled it up.
+    // With the property omitted, CloudFormation keeps the live count on update.
+    // A brand-new service starts at 1, the minimum ECS uses when DesiredCount
+    // is absent. importerControl still scales it back to 0 when the importer is off.
     const service = new ecs.FargateService(this, 'Service', {
       cluster,
       serviceName: IMPORTER_SERVICE_NAME,
       taskDefinition,
-      desiredCount: 0,
       assignPublicIp: true,
       vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
       securityGroups: [tasks],
