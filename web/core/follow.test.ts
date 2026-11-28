@@ -4,7 +4,7 @@ import { getChordByNumber } from './oslyn.ts'
 import { ScoreFollower, chordTemplate, compactSession, cosine, partFileNames, semitonesBetween, sequenceFromSlides, stitchParts, templateChroma, transposeSymbol, rotateChroma, type FollowChord, type FollowChunkPart, type FollowManifest, type FollowSessionFile } from './follow.ts'
 
 /** These cases test chord logic at 100ms frames. The page-length gate is covered on its own below. */
-const chordOnly = { minDwell: 0, lateDwell: 0 }
+const chordOnly = { minDwell: 0, lateDwell: 0, orderMode: 'off' as const }
 
 function chord(symbol: string, page: number, line = 0): FollowChord {
   const template = chordTemplate(symbol)
@@ -329,13 +329,13 @@ describe('page length gate', () => {
   }
 
   it('does not turn while the repeated progression is still on its first pass', () => {
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000, orderMode: 'off' as const })
     const played = strum(follower, ['D', 'G', 'D/F#'], 3000, 0, 0)
     assert.deepEqual(played.turns, [])
   })
 
   it('turns near the end of the page once its expected length has passed', () => {
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000, orderMode: 'off' as const })
     const played = strum(follower, ['D', 'G', 'D/F#', 'G', 'D', 'G'], 3000, 0, 0)
     assert.equal(played.turns.length, 1)
     assert.equal(played.turns[0].page, 1)
@@ -343,9 +343,20 @@ describe('page length gate', () => {
   })
 
   it('learns the time per chord from manual next taps', () => {
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000, orderMode: 'off' as const })
     follower.push(templateChroma('D'), 0.2, 0, 0)
     follower.push(templateChroma('D'), 0.2, 16000, 1)
     assert.equal(follower.chordMs(), 4000)
+  })
+
+  it('with the page-order check, waits for the last chord before turning', () => {
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 1000, minDwell: 0, lateDwell: 0, orderMode: 'and', orderChordMs: 0 })
+    // First three chords of a four-chord page: the opening of the next page shows up, but the page isn't played through.
+    const early = strum(follower, ['D', 'G', 'D/F#'], 1000, 0, 0)
+    assert.deepEqual(early.turns, [])
+    const later = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 1000, minDwell: 0, lateDwell: 0, orderMode: 'and', orderChordMs: 0 })
+    const played = strum(later, ['D', 'G', 'D/F#', 'G', 'D', 'G'], 1000, 0, 0)
+    assert.equal(played.turns.length, 1)
+    assert.equal(played.turns[0].page, 1)
   })
 })

@@ -53,3 +53,7 @@ node --experimental-strip-types scripts/follow-replay.ts core/follow-fixtures/my
 ```
 
 Commit the fixture directory and the baseline change.
+
+## Page order check
+
+Besides the page length gate, the follower tracks which of the current page's chords it has heard, in order. A chord counts once it holds a few frames and scores close to the best chord on the page. It may skip up to three chords at a time (a skipped chord still has to have had time, 1.2 s each). The page turns only after the last chord is heard and at least half of the page's chords were heard in order. Set `orderMode: 'off'` to ignore the check, or `'only'` to turn on the last chord without the next page's opening.

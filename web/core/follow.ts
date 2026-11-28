@@ -51,6 +51,28 @@ export type ScoreFollowerOptions = {
   undoResume?: boolean
   /** Ignore a timed page more than this factor off the current pace, once two are known. */
   learnBand?: number
+  /**
+   * off: no page-order check. and: besides the usual turn signal, the page's chords must
+   * have been heard in order up to its last chord. only: turning on the last chord is
+   * the signal (the next page's opening is not needed).
+   */
+  orderMode?: 'off' | 'and' | 'only'
+  /** Cosine a chord needs to count as heard on the page. */
+  orderFloor?: number
+  /** A heard chord must also be within this of the best chord on the page. */
+  orderMargin?: number
+  /** Voiced frames a chord has to hold before it counts as heard. */
+  orderConfirm?: number
+  /** Chords that may be skipped in a row when the next one isn't heard. */
+  orderSkip?: number
+  /** Total chords a page may have missed and still count as played through. */
+  orderMiss?: number
+  /** How long the last chord has to sound before the page turns, ms. */
+  orderHoldMs?: number
+  /** Least time a chord must sound after the previous one was heard, ms. Stops a flickering frame run from racing down the page. */
+  orderChordMs?: number
+  /** Share of the page's chords that must have been heard in order, last chord included. */
+  orderCoverage?: number
 }
 
 const NOTE: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }
@@ -278,6 +300,23 @@ export class ScoreFollower {
   private readonly lateDwell: number
   private readonly undoResume: boolean
   private readonly learnBand: number
+  private readonly orderMode: 'off' | 'and' | 'only'
+  private readonly orderFloor: number
+  private readonly orderMargin: number
+  private readonly orderConfirm: number
+  private readonly orderSkip: number
+  private readonly orderMiss: number
+  private readonly orderHoldMs: number
+  private readonly orderChordMs: number
+  private progressAt = 0
+  private readonly orderCoverage: number
+  private heard = 0
+  private readonly pageChords = new Map<number, FollowChord[]>()
+  private progress = -1
+  private missed = 0
+  private candidate = -1
+  private candidateFrames = 0
+  private lastHeardAt: number | null = null
   private readonly lastLine = new Map<number, number>()
   private readonly chordsOnPage = new Map<number, number>()
   private pageEnteredAt: number | null = null
@@ -301,6 +340,20 @@ export class ScoreFollower {
     this.lateDwell = options.lateDwell ?? 1
     this.undoResume = options.undoResume ?? true
     this.learnBand = options.learnBand ?? 1.4
+    this.orderMode = options.orderMode ?? 'and'
+    this.orderFloor = options.orderFloor ?? 0.55
+    this.orderMargin = options.orderMargin ?? 0.1
+    this.orderConfirm = options.orderConfirm ?? 3
+    this.orderSkip = options.orderSkip ?? 3
+    this.orderMiss = options.orderMiss ?? 99
+    this.orderHoldMs = options.orderHoldMs ?? 0
+    this.orderChordMs = options.orderChordMs ?? 1200
+    this.orderCoverage = options.orderCoverage ?? 0.5
+    for (const chord of chords) {
+      const list = this.pageChords.get(chord.page) || []
+      list.push(chord)
+      this.pageChords.set(chord.page, list)
+    }
     for (const chord of chords) this.lastLine.set(chord.page, Math.max(this.lastLine.get(chord.page) ?? 0, chord.line))
     for (const chord of chords) this.chordsOnPage.set(chord.page, (this.chordsOnPage.get(chord.page) || 0) + 1)
   }
@@ -328,6 +381,7 @@ export class ScoreFollower {
     const transposition = this.locked ?? argmax(this.scores)
     const aligned = rotateChroma(heard, -transposition)
     this.advance(aligned)
+    this.trackOrder(aligned)
     const turnTo = this.decide(elapsedMs)
     return this.view(currentPage, turnTo, aligned)
   }
@@ -353,6 +407,12 @@ export class ScoreFollower {
     if (this.chordSamples.length === 0) return this.defaultChordMs
     const sorted = this.chordSamples.slice().sort((a, b) => a - b)
     return sorted[Math.floor(sorted.length / 2)]
+  }
+
+  /** Chords that count toward a page's expected length. */
+  private paceChords(page: number): number {
+    const count = this.chordsOnPage.get(page) || 0
+    return count
   }
 
   private learn(sample: number) {
@@ -382,10 +442,50 @@ export class ScoreFollower {
     this.autoLeft = null
     if (before != null && entered != null && page === before + 1) {
       if (auto) this.autoLeft = { page: before, enteredAt: entered, at: now }
-      else this.learn((now - entered) / Math.max(1, this.chordsOnPage.get(before) || 1))
+      else this.learn((now - entered) / Math.max(1, this.paceChords(before)))
     }
     this.pageEnteredAt = now
     return false
+  }
+
+  /**
+   * Ordered progress through the current page's chords. A chord counts once it has held for a few
+   * frames and is close to the best match on the page. It may skip a chord that was not heard.
+   */
+  private trackOrder(aligned: number[]) {
+    if (this.orderMode === 'off' || this.syncedPage == null) return
+    const seq = this.pageChords.get(this.syncedPage)
+    if (!seq || seq.length === 0) return
+    const scores = seq.map((chord) => cosine(aligned, chord.template))
+    const best = Math.max(...scores)
+    let found = -1
+    for (let step = 1; step <= 1 + this.orderSkip; step++) {
+      const k = this.progress + step
+      if (k >= seq.length) break
+      if (scores[k] >= this.orderFloor && scores[k] >= best - this.orderMargin) { found = k; break }
+    }
+    if (found < 0) { this.candidateFrames = Math.max(0, this.candidateFrames - 1); return }
+    if (found === this.candidate) this.candidateFrames += 1
+    else { this.candidate = found; this.candidateFrames = 1 }
+    if (this.candidateFrames < this.orderConfirm) return
+    const skipped = found - this.progress - 1
+    // A skipped chord still took time. Don't let a run of flicker race down the page.
+    if (this.elapsed - this.progressAt < this.orderChordMs * (1 + skipped)) return
+    if (this.missed + skipped > this.orderMiss) return
+    this.missed += skipped
+    this.heard += 1
+    this.progress = found
+    this.progressAt = this.elapsed
+    this.candidate = -1
+    this.candidateFrames = 0
+    if (found === seq.length - 1) this.lastHeardAt = this.elapsed
+  }
+
+  private playedThrough(elapsedMs: number): boolean {
+    if (this.orderMode === 'off') return true
+    const seq = this.pageChords.get(this.syncedPage ?? 0)
+    if (!seq || seq.length === 0) return true
+    return this.progress >= seq.length - 1 && this.heard >= Math.ceil(this.orderCoverage * seq.length - 1e-9) && this.lastHeardAt != null && elapsedMs - this.lastHeardAt >= this.orderHoldMs
   }
 
   private place(page: number, auto = false) {
@@ -400,6 +500,14 @@ export class ScoreFollower {
     if (at < 0) at = this.chords.findIndex((chord) => chord.page > page)
     if (at < 0) at = Math.max(0, this.chords.length - 1)
     this.pi = this.chords.map((_, index) => index === at ? 1 : 0)
+    const seq = this.pageChords.get(page) || []
+    this.progress = undo ? Math.max(-1, seq.length - 2) : -1
+    this.missed = 0
+    this.heard = 0
+    this.candidate = -1
+    this.candidateFrames = 0
+    this.lastHeardAt = null
+    this.progressAt = this.elapsed
     this.syncedPage = page
     this.held = 0
     this.observe = 0
@@ -478,8 +586,7 @@ export class ScoreFollower {
     const opening = !!(this.chords[index] && this.chords[index].page === page + 1 && this.onOpeningLine(this.chords[index]))
     // Landing on the next page's opening line is the turn signal. Don't also require
     // a prior match on the page we are leaving.
-    const chords = this.chordsOnPage.get(page) || 0
-    const expectedMs = chords * this.chordMs()
+    const expectedMs = this.paceChords(page) * this.chordMs()
     const onPage = this.pageEnteredAt == null ? Infinity : elapsedMs - this.pageEnteredAt
     const dwelt = this.minDwell <= 0 || onPage >= this.minDwell * expectedMs
     const current = this.chords[index]
@@ -488,7 +595,9 @@ export class ScoreFollower {
     const late = this.lateDwell > 0 && onPage >= this.lateDwell * expectedMs
       && !!current && (opening || (current.page === page && current.line === (this.lastLine.get(page) ?? 0)))
       && confidence >= this.turnConfidence
-    if (!(cooled && dwelt && ((strong && opening) || late))) {
+    const through = this.playedThrough(elapsedMs)
+    const signal = this.orderMode === 'only' ? true : ((strong && opening) || late)
+    if (!(cooled && dwelt && through && signal)) {
       if (this.held > 0) this.held -= 1
       return null
     }
