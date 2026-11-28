@@ -1,5 +1,5 @@
-import { chordSheetToSlides, getChordByNumber } from '@/core/oslyn'
-import { ScoreFollower, chordTemplate, semitonesBetween, sequenceFromSlides, transposeSymbol, type FollowChartChord, type FollowPageLayout, type FollowSnapshot } from '@/core/follow'
+import { captureChart, chartSymbols } from '@/core/captureChart'
+import { ScoreFollower, type FollowChartChord, type FollowPageLayout, type FollowSnapshot } from '@/core/follow'
 
 export type FollowPhase = 'listening' | 'denied' | 'no-chords' | 'error'
 
@@ -26,28 +26,15 @@ export async function startFollow(options: {
   onVoice?: (direction: 'prev' | 'next') => void
   onAsr?: (status: 'loading' | 'ready' | 'error') => void
 }): Promise<{ stop: () => void, stream: MediaStream | null }> {
-  const chartKey = options.chartKey || options.songKey
-  const slides = chordSheetToSlides(options.chordSheet, chartKey)
-  const written = sequenceFromSlides(slides, chartKey, getChordByNumber)
-  const shift = semitonesBetween(chartKey, options.songKey || chartKey)
-  const chords = written.map((chord) => {
-    const symbol = transposeSymbol(chord.symbol, shift)
-    const template = chordTemplate(symbol) || chord.template
-    return { ...chord, symbol, template }
-  })
-  options.onChart?.({
-    chords: chords.map(({ symbol, page, line }) => ({ symbol, page, line })),
-    pages: slides.pages.map((page, index) => ({ page: index, lines: page.lines.map((line) => line.lyric || line.section || '') })),
-  })
+  const captured = captureChart(options.chordSheet, options.chartKey || options.songKey, options.songKey)
+  const chords = captured.chords
+  options.onChart?.({ chords: chartSymbols(chords), pages: captured.pages })
   if (chords.length === 0) {
     options.onPhase('no-chords')
     return { stop: () => {}, stream: null }
   }
   const follower = new ScoreFollower(chords)
-  const lyricPages = slides.pages.map((page, index) => ({
-    page: index,
-    lines: page.lines.map((line) => line.lyric || line.section || ''),
-  }))
+  const lyricPages = captured.pages
 
   let stream: MediaStream
   try {

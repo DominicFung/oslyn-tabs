@@ -972,6 +972,8 @@ export type FollowManifest = {
   pages: FollowPageLayout[]
   chunks: FollowManifestChunk[]
   finished: boolean
+  /** follow is the score follower. train is mic and page taps only. */
+  mode?: 'follow' | 'train'
 }
 
 export function partFileNames(part: number): { audio: string, json: string } {
