@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { captureChart, chartSymbols } from '@/core/captureChart'
 import { ChunkTake } from './chunkTake'
-import { formatElapsed } from '@/core/takeManifest'
+import { estimateClockOffset, formatElapsed } from '@/core/takeManifest'
 
 type ManualDetail = {
   direction: 'prev' | 'next'
@@ -23,6 +23,8 @@ export default function TrainMe(p: {
   title: string
   capo: number
   page: number
+  jamId: string
+  userId: string
 }) {
   const [recording, setRecording] = useState(false)
   const [elapsed, setElapsed] = useState(0)
@@ -49,10 +51,35 @@ export default function TrainMe(p: {
       key: p.songKey,
       capo: p.capo,
       mode: 'train',
+      jamId: p.jamId,
+      userId: p.userId,
+      clockOffsetMs: take.meta.clockOffsetMs,
     }
   }
 
+  const sampleClock = async () => {
+    const before = Date.now()
+    try {
+      const response = await fetch('/api/follow/clock')
+      const after = Date.now()
+      if (!response.ok) return
+      const body = await response.json() as { now?: number }
+      if (typeof body.now !== 'number') return
+      take.meta.clockOffsetMs = estimateClockOffset(body.now, before, after)
+    } catch { /* the take still records; alignment falls back to each device clock */ }
+  }
+
   useEffect(() => { take.onPage(p.page) }, [p.page, take])
+
+  useEffect(() => {
+    const onJamPage = (event: Event) => {
+      const detail = (event as CustomEvent<{ page?: number, receivedAt?: number }>).detail
+      if (!detail || typeof detail.page !== 'number') return
+      take.noteRemote(detail.page, detail.receivedAt || Date.now())
+    }
+    document.body.addEventListener('jam-page', onJamPage)
+    return () => document.body.removeEventListener('jam-page', onJamPage)
+  }, [take])
 
   useEffect(() => {
     const onManual = (event: Event) => {
@@ -87,6 +114,8 @@ export default function TrainMe(p: {
       return
     }
     setError('')
+    applyChart()
+    await sampleClock()
     applyChart()
     let stream: MediaStream
     try {

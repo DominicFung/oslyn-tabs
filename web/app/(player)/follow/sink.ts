@@ -50,6 +50,7 @@ async function putOnce(
   recordedAt: string,
   files: UploadFile[],
   keepalive: boolean,
+  jamId?: string,
 ): Promise<SavedRecording & { retry?: boolean }> {
   let response: Response
   try {
@@ -61,6 +62,7 @@ async function putOnce(
         songId,
         sessionId,
         recordedAt,
+        jamId,
         objects: files.map((file) => ({ name: file.name, contentType: file.contentType, bytes: file.body.size })),
       }),
     })
@@ -95,7 +97,7 @@ export async function uploadFiles(
   sessionId: string,
   recordedAt: string,
   files: UploadFile[],
-  options: { keepalive?: boolean, attempts?: number } = {},
+  options: { keepalive?: boolean, attempts?: number, jamId?: string } = {},
 ): Promise<SavedRecording> {
   const keepalive = options.keepalive === true
   const fitting = keepalive ? files.filter((file) => file.body.size <= UNLOAD_UPLOAD_LIMIT) : files
@@ -105,7 +107,7 @@ export async function uploadFiles(
   const attempts = keepalive ? 1 : options.attempts ?? UPLOAD_ATTEMPTS
   let last: SavedRecording = { ok: false, message: FALLBACK }
   for (let attempt = 0; attempt < attempts; attempt++) {
-    const result = await putOnce(songId, sessionId, recordedAt, fitting, keepalive)
+    const result = await putOnce(songId, sessionId, recordedAt, fitting, keepalive, options.jamId)
     if (result.ok) return { ok: true, message: result.message, prefix: result.prefix }
     last = { ok: false, message: result.message }
     if (!result.retry) break

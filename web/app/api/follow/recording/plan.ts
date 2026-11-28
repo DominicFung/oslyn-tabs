@@ -27,7 +27,7 @@ export function planRecordingUpload(input: unknown): UploadPlan {
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
     return { ok: false, status: 400, message: 'Expected a recording request.' }
   }
-  const body = input as { songId?: unknown, sessionId?: unknown, recordedAt?: unknown, objects?: unknown }
+  const body = input as { songId?: unknown, sessionId?: unknown, recordedAt?: unknown, jamId?: unknown, objects?: unknown }
   if (typeof body.songId !== 'string' || !UUID.test(body.songId)) {
     return { ok: false, status: 400, message: 'songId must be a UUID.' }
   }
@@ -40,8 +40,12 @@ export function planRecordingUpload(input: unknown): UploadPlan {
   if (!Array.isArray(body.objects) || body.objects.length === 0 || body.objects.length > 6) {
     return { ok: false, status: 400, message: 'Expected the files to upload.' }
   }
+  if (body.jamId != null && (typeof body.jamId !== 'string' || !UUID.test(body.jamId))) {
+    return { ok: false, status: 400, message: 'jamId must be a UUID.' }
+  }
   const stamp = body.recordedAt.replace(/[:.]/g, '')
-  const prefix = `follow-recordings/${body.songId}/${stamp}-${body.sessionId}/`
+  const jamFolder = typeof body.jamId === 'string' ? `${body.jamId}/` : ''
+  const prefix = `follow-recordings/${body.songId}/${jamFolder}${stamp}-${body.sessionId}/`
   const seen = new Set<string>()
   const objects: PlannedObject[] = []
   for (const entry of body.objects) {
