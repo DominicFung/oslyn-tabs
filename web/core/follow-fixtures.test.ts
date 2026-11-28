@@ -31,6 +31,14 @@ describe('follow fixtures', () => {
     assert.ok(report4.turns.filter((turn) => !turn.missed).length >= 5)
   })
 
+  it('turns on Christ Be Magnified with at most one early turn', () => {
+    // Take recorded on the page-length-gate build (8fd95c6). Pages there run 2 to 4 s per chord.
+    const cbm = JSON.parse(readFileSync(new URL('christ-be-magnified-1/session.json', root), 'utf8')) as FollowSessionFile
+    const report = scoreSession(cbm)
+    assert.ok(report.falseTurns.length <= 2, `false turns ${report.falseTurns.length}`)
+    assert.ok(report.turns.filter((turn) => !turn.missed).length >= 6)
+  })
+
   it('treats a recorded auto turn nobody took back as expected, and a next undone at once as a slip', () => {
     const session = JSON.parse(readFileSync(new URL('synthetic-turn/session.json', root), 'utf8')) as FollowSessionFile
     const plain = session.events.filter((event) => event.type !== 'should-turn')
