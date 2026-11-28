@@ -2,7 +2,7 @@ import {
   compactPart, partFileNames,
   type FollowChartChord, type FollowEstimated, type FollowFrame, type FollowManifest, type FollowManifestChunk, type FollowMark, type FollowPageLayout,
 } from '@/core/follow'
-import { pageChangeMark, recordingManifest, type TakeMeta } from '@/core/takeManifest'
+import { pageChangeMark, recordingManifest, remoteTurnMark, type TakeMeta } from '@/core/takeManifest'
 import { chunkUploadFiles, failedChunkZip, uploadFiles, type SavedRecording } from './sink'
 
 const CHUNK_MS = 120_000
@@ -127,6 +127,7 @@ export class ChunkTake {
     pageAfter: number
   }, estimated?: FollowEstimated) {
     if (!this.recording) return
+    const now = Date.now()
     this.pendingManual = detail.pageAfter
     this.mark({
       type: 'manual-correction',
@@ -136,7 +137,26 @@ export class ChunkTake {
       pageAfter: detail.pageAfter,
       page: detail.pageAfter,
       estimated,
+      receivedAt: now,
+      sentAt: now,
     })
+  }
+
+  /** A page change from the jam channel. Skips the echo of a turn this recorder just stored. */
+  noteRemote(page: number, receivedAt: number, sentAt?: number, userId?: string) {
+    if (!this.recording) return
+    const mark = remoteTurnMark({
+      page,
+      seen: this.seenPage,
+      t: this.stamp(),
+      receivedAt,
+      sentAt,
+      userId,
+      recent: this.events,
+    })
+    if (!mark) return
+    this.pendingManual = page
+    this.events.push(mark)
   }
 
   onPage(page: number) {
@@ -258,7 +278,7 @@ export class ChunkTake {
       cut.sessionId,
       cut.manifest.recordedAt,
       chunkUploadFiles(cut.manifest, cut.part, audioBlob),
-      { keepalive },
+      { keepalive, jamId: this.meta.jamId },
     )
     if (uploaded.ok) {
       if (!keepalive) {
@@ -287,7 +307,7 @@ export class ChunkTake {
       cut.sessionId,
       cut.manifest.recordedAt,
       chunkUploadFiles(cut.manifest, cut.part, audioBlob),
-      { keepalive },
+      { keepalive, jamId: this.meta.jamId },
     )
     if (uploaded.ok) {
       this.lastNote = uploaded

@@ -33,6 +33,15 @@ describe('recording upload plan', () => {
     assert.ok(plan.objects.every((object) => object.key.startsWith(plan.prefix)))
   })
 
+  it('nests a jam id under the song so one room stays listable together', () => {
+    const jamId = 'ad387cad-4c88-483e-a70a-fae729dc346b'
+    const plan = planRecordingUpload(request({ jamId }))
+    assert.equal(plan.ok, true)
+    if (!plan.ok) return
+    assert.equal(plan.prefix, `follow-recordings/${songId}/${jamId}/2026-11-27T193042574Z-${sessionId}/`)
+    assert.equal(planRecordingUpload(request({ jamId: 'not-a-jam' })).ok, false)
+  })
+
   it('rejects a bad id, a mismatched type, a huge webm, and a stray name', () => {
     assert.equal(planRecordingUpload(request({ songId: 'unknown' })).ok, false)
     assert.equal(planRecordingUpload(request({ sessionId: '../etc' })).ok, false)

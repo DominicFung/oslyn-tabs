@@ -662,10 +662,16 @@ export type FollowMark = {
   page?: number
   /** prev goes back a page, next goes forward. Space marks stay should-turn. */
   direction?: 'prev' | 'next'
-  source?: 'key' | 'button' | 'voice'
+  source?: 'key' | 'button' | 'voice' | 'remote'
   pageBefore?: number
   pageAfter?: number
   estimated?: FollowEstimated
+  /** Wall clock when this recorder saw the turn. */
+  receivedAt?: number
+  /** Wall clock on the device that turned the page. Absent when the jam event has no sender time. */
+  sentAt?: number
+  /** Person who turned the page, when the jam event names them. */
+  userId?: string
 }
 
 export type FollowChartChord = { symbol: string, page: number, line: number }
@@ -974,6 +980,12 @@ export type FollowManifest = {
   finished: boolean
   /** follow is the score follower. train is mic and page taps only. */
   mode?: 'follow' | 'train'
+  /** Jam room these Train me takes share. */
+  jamId?: string
+  /** Participant who recorded this take. */
+  userId?: string
+  /** Add to a local Date.now() to estimate server time. */
+  clockOffsetMs?: number
 }
 
 export function partFileNames(part: number): { audio: string, json: string } {

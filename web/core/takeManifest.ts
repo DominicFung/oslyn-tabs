@@ -11,6 +11,51 @@ export type TakeMeta = {
   key: string
   capo: number
   mode: TakeMode
+  jamId?: string
+  userId?: string
+  clockOffsetMs?: number
+}
+
+/** serverNow minus the midpoint of the local samples around the request. */
+export function estimateClockOffset(serverNow: number, localBefore: number, localAfter: number): number {
+  return Math.round(serverNow - (localBefore + localAfter) / 2)
+}
+
+export const REMOTE_ECHO_MS = 3000
+
+/**
+ * A page change that arrived on the jam channel. The tapper's own recorder
+ * already stored that turn, so the echo within a few seconds is dropped.
+ */
+export function remoteTurnMark(input: {
+  page: number
+  seen: number
+  t: number
+  receivedAt: number
+  sentAt?: number
+  userId?: string
+  recent: FollowMark[]
+}): FollowMark | null {
+  if (input.page === input.seen) return null
+  const echo = input.recent.some((mark) =>
+    mark.source !== 'remote'
+    && mark.pageAfter === input.page
+    && input.t - mark.t >= 0
+    && input.t - mark.t <= REMOTE_ECHO_MS
+  )
+  if (echo) return null
+  return {
+    t: input.t,
+    type: 'manual-correction',
+    direction: input.page > input.seen ? 'next' : 'prev',
+    source: 'remote',
+    pageBefore: input.seen,
+    pageAfter: input.page,
+    page: input.page,
+    receivedAt: input.receivedAt,
+    sentAt: input.sentAt,
+    userId: input.userId,
+  }
 }
 
 export function formatElapsed(ms: number): string {
@@ -49,6 +94,9 @@ export function recordingManifest(input: {
     chunks: input.chunks,
     finished: input.finished,
     mode: input.meta.mode,
+    jamId: input.meta.jamId || undefined,
+    userId: input.meta.userId || undefined,
+    clockOffsetMs: input.meta.clockOffsetMs,
   }
 }
 

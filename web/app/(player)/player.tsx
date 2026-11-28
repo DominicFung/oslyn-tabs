@@ -242,6 +242,11 @@ export default function Player(p: PlayerProps) {
       next: ({ data }) => {
         console.log("=== On NextPage Change ===")
         const page = data?.onNextPage?.page
+        if (typeof page === 'number') {
+          document.body.dispatchEvent(new CustomEvent('jam-page', {
+            detail: { page, receivedAt: Date.now() },
+          }))
+        }
         setPage(page||0)
       },
       error: (error) => console.error(error)
@@ -264,6 +269,11 @@ export default function Player(p: PlayerProps) {
 
         if (!song) { console.log(`No song index value found, this can be OK. ${song}`) }
         if (!page) { console.log(`No page value found, this can be OK. ${page}`) }
+        if (typeof page === 'number') {
+          document.body.dispatchEvent(new CustomEvent('jam-page', {
+            detail: { page, receivedAt: Date.now() },
+          }))
+        }
 
         // needs to be fixed to add key!
         setSong(song||0); setPage(page||0); setKey(key||"C")
@@ -860,6 +870,8 @@ export default function Player(p: PlayerProps) {
       title={songs[song]!.song!.title || ''}
       capo={-transpose}
       page={page}
+      jamId={p.jam.jamSessionId}
+      userId={p.user?.userId || guestIdentity[p.jam.jamSessionId] || ''}
     />}
     { songs && !p.isSlideShow &&
       <Controls 
