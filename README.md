@@ -79,7 +79,7 @@ npm run deploy -- oslynstudio-AppsyncStack --exclusively --profile a1
 
 ### Ultimate Guitar importer (Fargate)
 
-`worker/ug-import` can run as one Fargate Spot task in us-east-1 (`oslynstudio-ImporterStack`). The service is created with **desired count 0**. Only `mission.possibleforsure@gmail.com` sees the Importer card on https://tabs.oslyn.io/profile, and the Next route and the AppSync Lambda both reject every other caller. This repo change does not deploy or merge anything.
+`worker/ug-import` can run as one Fargate Spot task in us-east-1 (`oslynstudio-ImporterStack`). The template does not set a desired count, so a later deploy leaves the live count alone. A brand-new service starts at 1, and the profile control scales it to 0 when the importer is off. Only `mission.possibleforsure@gmail.com` sees the Importer card on https://tabs.oslyn.io/profile, and the Next route and the AppSync Lambda both reject every other caller. This repo change does not deploy or merge anything.
 
 **Cost.** Off is $0 for compute (no NAT gateway, no task). On is one task at 0.25 vCPU and 1 GB, about **$0.01–$0.02 per hour** on demand and usually less on Spot, plus a small amount for the image in the CDK bootstrap ECR repository and for CloudWatch logs kept for 14 days. Spot may stop the task; the process handles that signal, and ECS starts another task while the service is left on.
 

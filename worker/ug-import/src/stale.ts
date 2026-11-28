@@ -16,7 +16,7 @@ export function isStaleImport(row: ImportStamp, now: number, maxAgeMs = STALE_IM
 }
 
 /** Abandoned IMPORTING rows first, then a normal pending row. A fresh IMPORTING claim is left alone. */
-export function nextImport(rows: ImportStamp[], now: number, maxAgeMs = STALE_IMPORT_MS): ImportStamp | null {
+export function nextImport<T extends ImportStamp>(rows: T[], now: number, maxAgeMs = STALE_IMPORT_MS): T | null {
   const stale = rows.find((row) => isStaleImport(row, now, maxAgeMs))
   if (stale) return stale
   return rows.find((row) => row.status === 'PENDING') || null

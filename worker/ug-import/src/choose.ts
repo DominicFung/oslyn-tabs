@@ -116,10 +116,42 @@ export function quotedWorks(title: string): string[] {
   return works
 }
 
-/** Title sent to Ultimate Guitar. Apostrophes are removed and accents are folded. */
+/**
+ * Characters that stay in a UG search query. Commas and hyphens stay:
+ * dropping the comma in "I Knew It, I Knew You" makes UG return a different song.
+ * Brackets and other punctuation become spaces so "(Sing Hallelujah)" is searchable.
+ */
+function searchQueryText(value: string): string {
+  return foldAccents(value || '')
+    .replace(APOSTROPHES, '')
+    .replace(/[()[\]{}]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s,-]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/** Title sent to Ultimate Guitar. Apostrophes, brackets, and punctuation are removed. Accents are folded. */
 export function titleSearchValue(title: string): string {
-  const base = foldAccents(baseSongTitle(title)).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
-  return base || foldAccents(title || '').replace(APOSTROPHES, '').trim()
+  const base = searchQueryText(baseSongTitle(title))
+  return base || searchQueryText(title || '')
+}
+
+/** Same title with parenthetical and bracketed parts removed, for example "(Sing Hallelujah)" or "(feat. X)". */
+export function titleWithoutAsides(title: string): string {
+  const stripped = baseSongTitle(title).replace(/\s*[([][^)\]]*[\])]\s*/g, ' ')
+  return searchQueryText(stripped)
+}
+
+/**
+ * `query` plus the primary artist. Used when a title search returns no Chords match.
+ * The artist text is not punctuated away; only the title half is a search query.
+ */
+export function titleWithArtist(query: string, artist: string): string {
+  const name = primaryArtist(artist).replace(/\s+/g, ' ').trim()
+  const base = searchQueryText(query)
+  if (!name) return base
+  if (base.toLowerCase().endsWith(` ${name.toLowerCase()}`)) return base
+  return `${base} ${name}`.replace(/\s+/g, ' ').trim()
 }
 
 /**
@@ -131,13 +163,33 @@ export function titleSearchValues(title: string): string[] {
   const base = titleSearchValue(title)
   const values: string[] = []
   const add = (value: string) => {
-    const folded = value.replace(/\s+/g, ' ').trim()
+    const folded = searchQueryText(value)
     if (folded && !values.some((item) => item.toLowerCase() === folded.toLowerCase())) values.push(folded)
   }
   for (const work of quotedWorks(title)) add(`${work} - ${base}`)
   add(base)
-  const bare = foldAccents(bareSongTitle(title)).replace(APOSTROPHES, '').replace(/\s+/g, ' ').trim()
+  // "(Sing Hallelujah)" is part of the title, not a Spotify suffix. If the full
+  // query has no Chords match, search again with that aside removed.
+  const dropped = titleWithoutAsides(title)
+  if (dropped.toLowerCase() !== base.toLowerCase()) add(dropped)
+  const bare = searchQueryText(bareSongTitle(title))
   if (bare.toLowerCase() !== base.toLowerCase()) add(bare)
+  return values
+}
+
+/**
+ * Title queries first, then each of those with the primary artist appended.
+ * The artist queries are fallbacks for when the title search has no Chords match.
+ */
+export function chordSearchQueries(title: string, artist: string): string[] {
+  const titles = titleSearchValues(title)
+  const values = [...titles]
+  for (const query of titles) {
+    const withArtist = titleWithArtist(query, artist)
+    if (withArtist.toLowerCase() !== query.toLowerCase() && !values.some((item) => item.toLowerCase() === withArtist.toLowerCase())) {
+      values.push(withArtist)
+    }
+  }
   return values
 }
 

@@ -1,6 +1,6 @@
 import { chromium, Page } from 'playwright'
 import { chromiumLaunchOptions } from './browser'
-import { chooseResult, coversQuotedWork, primaryArtist, quotedWorks, soundtrackSearchValues, titleSearchValues, UgResult, ChosenResult } from './choose'
+import { chooseResult, chordSearchQueries, coversQuotedWork, primaryArtist, quotedWorks, soundtrackSearchValues, titleWithArtist, UgResult, ChosenResult } from './choose'
 import { withTimeout } from './timeout'
 import { resultsFromStore, storeJsonFromHtml, wikiFromStore, wikiToChart } from './ug'
 
@@ -70,13 +70,15 @@ export async function importChords(title: string, artist: string): Promise<Impor
     page.setDefaultTimeout(NAV_TIMEOUT_MS)
     page.setDefaultNavigationTimeout(NAV_TIMEOUT_MS)
     const primary = primaryArtist(artist)
-    let chosen: ChosenResult | null = null
+    // Held on an object so TypeScript does not narrow the closed-over binding to null.
+    const selection: { chosen: ChosenResult | null } = { chosen: null }
     const consider = async (queryTitle: string) => {
       let rows = resultsFromStore(await readStore(page, searchUrl(queryTitle))) as UgResult[]
       let pick = chooseResult(rows, title, artist)
       const keepWork = pick && coversQuotedWork(pick.songName, title) && !pick.fallback
-      if (primary && !keepWork && (rows.length >= TOO_MANY_RESULTS || !pick || pick.fallback)) {
-        const narrowed = resultsFromStore(await readStore(page, searchUrl(`${queryTitle} ${primary}`))) as UgResult[]
+      const narrowedQuery = titleWithArtist(queryTitle, artist)
+      if (primary && narrowedQuery.toLowerCase() !== queryTitle.toLowerCase() && !keepWork && (rows.length >= TOO_MANY_RESULTS || !pick || pick.fallback)) {
+        const narrowed = resultsFromStore(await readStore(page, searchUrl(narrowedQuery))) as UgResult[]
         const second = narrowed.length ? chooseResult(narrowed, title, artist) : null
         if (second && (!pick || pick.fallback || !second.fallback)) {
           if (!pick || !coversQuotedWork(pick.songName, title) || coversQuotedWork(second.songName, title)) {
@@ -85,18 +87,19 @@ export async function importChords(title: string, artist: string): Promise<Impor
         }
       }
       if (!pick) return
-      if (!chosen || preferPick(pick, chosen, title)) chosen = pick
+      if (!selection.chosen || preferPick(pick, selection.chosen, title)) selection.chosen = pick
     }
-    for (const queryTitle of titleSearchValues(title)) {
+    for (const queryTitle of chordSearchQueries(title, artist)) {
       await consider(queryTitle)
-      if (chosen && !chosen.fallback && (quotedWorks(title).length === 0 || coversQuotedWork(chosen.songName, title))) break
+      if (selection.chosen && !selection.chosen.fallback && (quotedWorks(title).length === 0 || coversQuotedWork(selection.chosen.songName, title))) break
     }
-    if (!chosen || chosen.fallback) {
+    if (!selection.chosen || selection.chosen.fallback) {
       for (const queryTitle of soundtrackSearchValues(title)) {
         await consider(queryTitle)
-        if (chosen && !chosen.fallback) break
+        if (selection.chosen && !selection.chosen.fallback) break
       }
     }
+    const chosen = selection.chosen
     if (!chosen) throw new Error(`no Chords result matched ${title} by ${artist}`)
     if (chosen.fallback) {
       console.warn(`artist fallback for "${title}" by "${artist}": ${chosen.artistName} (${chosen.votes} ratings) ${chosen.tabUrl}`)

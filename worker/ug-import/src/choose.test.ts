@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { artistsOverlap, baseSongTitle, chooseResult, quotedWorks, songTitleKey, soundtrackSearchValues, titleSearchValue, titleSearchValues, UgResult } from './choose'
+import { artistsOverlap, baseSongTitle, chooseResult, chordSearchQueries, quotedWorks, songTitleKey, soundtrackSearchValues, titleSearchValue, titleSearchValues, titleWithArtist, UgResult } from './choose'
 
 describe('baseSongTitle', () => {
   const base = 'No Other Name'
@@ -98,7 +98,7 @@ describe('baseSongTitle', () => {
     assert.equal(songTitleKey(full), songTitleKey('All Too Well 10 Minute Version'))
     assert.deepEqual(quotedWorks(full), [])
     assert.deepEqual(titleSearchValues(full), [
-      'All Too Well (10 Minute Version)',
+      'All Too Well 10 Minute Version',
       'All Too Well',
     ])
     assert.deepEqual(quotedWorks('I Knew It, I Knew You - From "Toy Story 5"'), ['Toy Story 5'])
@@ -149,6 +149,52 @@ describe('baseSongTitle', () => {
       assert.equal(baseSongTitle(`Mon Soleil${suffix}`), 'Mon Soleil')
     })
   }
+})
+
+describe('Light Of The World search query', () => {
+  const title = 'Light Of The World (Sing Hallelujah)'
+  const tab = 'https://tabs.ultimate-guitar.com/tab/we-the-kingdom/light-of-the-world-sing-hallelujah-chords-3399296'
+
+  it('drops brackets and punctuation, and keeps a parenthetical-free fallback', () => {
+    assert.equal(titleSearchValue(title), 'Light Of The World Sing Hallelujah')
+    assert.equal(titleSearchValue('Light Of The World! (Sing Hallelujah)?'), 'Light Of The World Sing Hallelujah')
+    assert.deepEqual(titleSearchValues(title), [
+      'Light Of The World Sing Hallelujah',
+      'Light Of The World',
+    ])
+    assert.equal(titleWithArtist('Light Of The World Sing Hallelujah', 'We The Kingdom'), 'Light Of The World Sing Hallelujah We The Kingdom')
+    assert.deepEqual(chordSearchQueries(title, 'We The Kingdom'), [
+      'Light Of The World Sing Hallelujah',
+      'Light Of The World',
+      'Light Of The World Sing Hallelujah We The Kingdom',
+      'Light Of The World We The Kingdom',
+    ])
+  })
+
+  it('strips live, radio edit, and featured-artist suffixes before searching', () => {
+    assert.equal(titleSearchValue(`${title} - Live`), 'Light Of The World Sing Hallelujah')
+    assert.equal(titleSearchValue('Light Of The World - Radio Edit'), 'Light Of The World')
+    assert.equal(titleSearchValue('Light Of The World (Radio Edit)'), 'Light Of The World')
+    assert.equal(titleSearchValue('Light Of The World (feat. We The Kingdom)'), 'Light Of The World')
+    assert.equal(titleSearchValue('Light Of The World (Sing Hallelujah) (feat. Someone)'), 'Light Of The World Sing Hallelujah')
+    assert.equal(titleSearchValue('Light Of The World - Live (feat. Someone)'), 'Light Of The World')
+    assert.deepEqual(titleSearchValues('No Other Name - Live'), ['No Other Name'])
+    assert.deepEqual(titleSearchValues('No Other Name (feat. Gloria Kull)'), ['No Other Name'])
+  })
+
+  it('still requires the We The Kingdom artist when another Light Of The World chart has more ratings', () => {
+    const rows: UgResult[] = [
+      { songName: 'Light Of The World', artistName: 'Hillsong Worship', type: 'Chords', votes: 8000, rating: 4.9, tabUrl: 'https://tabs.example/hillsong-light', version: 1 },
+      { songName: 'Light Of The World (Sing Hallelujah)', artistName: 'We The Kingdom', type: 'Chords', votes: 120, rating: 4.6, tabUrl: tab, version: 1 },
+      { songName: 'Sing Hallelujah', artistName: 'We The Kingdom', type: 'Chords', votes: 40, rating: 4.2, tabUrl: 'https://tabs.example/other', version: 1 },
+    ]
+    const chosen = chooseResult(rows, title, 'We The Kingdom')
+    assert.equal(chosen?.tabUrl, tab)
+    assert.equal(chosen?.fallback, false)
+    const otherArtist = chooseResult(rows, title, 'Hillsong Worship')
+    assert.equal(otherArtist?.tabUrl, tab)
+    assert.equal(otherArtist?.fallback, true)
+  })
 })
 
 describe('chooseResult', () => {
