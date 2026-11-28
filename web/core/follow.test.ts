@@ -3,6 +3,9 @@ import { describe, it } from 'node:test'
 import { getChordByNumber } from './oslyn.ts'
 import { ScoreFollower, chordTemplate, compactSession, cosine, partFileNames, semitonesBetween, sequenceFromSlides, stitchParts, templateChroma, transposeSymbol, rotateChroma, type FollowChord, type FollowChunkPart, type FollowManifest, type FollowSessionFile } from './follow.ts'
 
+/** These cases test chord logic at 100ms frames. The page-length gate is covered on its own below. */
+const chordOnly = { minDwell: 0, lateDwell: 0 }
+
 function chord(symbol: string, page: number, line = 0): FollowChord {
   const template = chordTemplate(symbol)
   if (!template) throw new Error(`bad chord ${symbol}`)
@@ -121,7 +124,7 @@ describe('score following', () => {
   const chorusAgain = [chord('C', 2, 0), chord('G', 2, 0), chord('Am', 2, 1), chord('F', 2, 1)]
 
   it('follows a repeated chorus forward instead of jumping back to the first copy', () => {
-    const follower = new ScoreFollower([...verse, ...chorus, ...chorusAgain], { calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
+    const follower = new ScoreFollower([...verse, ...chorus, ...chorusAgain], { ...chordOnly, calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
     let page = 0
     let clock = 0
     for (const group of [verse, chorus, chorusAgain]) {
@@ -139,7 +142,7 @@ describe('score following', () => {
   })
 
   it('stays on a held chord', () => {
-    const follower = new ScoreFollower([chord('C', 0), chord('G', 0), chord('Am', 1)], { calibrationMs: 0 })
+    const follower = new ScoreFollower([chord('C', 0), chord('G', 0), chord('Am', 1)], { ...chordOnly, calibrationMs: 0 })
     const played = play(follower, 'C', 25, 0)
     assert.equal(played.last.index, 0)
     assert.equal(played.last.matched, 'C')
@@ -150,7 +153,7 @@ describe('score following', () => {
   it('catches up after a missed chord and turns one page forward', () => {
     const follower = new ScoreFollower(
       [chord('C', 0, 0), chord('G', 0, 1), chord('Am', 1, 0), chord('F', 1, 1)],
-      { calibrationMs: 0, turnHold: 3, turnConfidence: 0.45 },
+      { ...chordOnly, calibrationMs: 0, turnHold: 3, turnConfidence: 0.45 },
     )
     let played = play(follower, 'C', 8, 0)
     played = play(follower, 'Am', 12, played.page, 0, played.elapsed)
@@ -164,7 +167,7 @@ describe('score following', () => {
 
   it('locks a capo of +2 during the opening and still tracks the written chart', () => {
     const chart = [chord('C', 0), chord('G', 0), chord('Am', 1), chord('F', 1)]
-    const follower = new ScoreFollower(chart, { calibrationMs: 8000, turnHold: 3 })
+    const follower = new ScoreFollower(chart, { ...chordOnly, calibrationMs: 8000, turnHold: 3 })
     let page = 0
     let clock = 0
     let locked = false
@@ -183,7 +186,7 @@ describe('score following', () => {
 
   it('does not turn again on rapid false matches during the cooldown', () => {
     const chart = [chord('C', 0), chord('G', 0), chord('Am', 1), chord('F', 1), chord('C', 2), chord('G', 2)]
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
+    const follower = new ScoreFollower(chart, { ...chordOnly, calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
     let played = play(follower, 'C', 6, 0)
     played = play(follower, 'G', 6, played.page, 0, played.elapsed)
     played = play(follower, 'Am', 8, played.page, 0, played.elapsed)
@@ -195,7 +198,7 @@ describe('score following', () => {
 
   it('re-anchors when the page changes by hand and does not turn backwards', () => {
     const chart = [chord('C', 0), chord('G', 0), chord('Am', 1, 0), chord('F', 1, 1), chord('C', 2)]
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
+    const follower = new ScoreFollower(chart, { ...chordOnly, calibrationMs: 0, turnHold: 3, cooldownMs: 0 })
     let played = play(follower, 'C', 6, 0)
     played = play(follower, 'G', 6, played.page, 0, played.elapsed)
     const jumped = follower.push(templateChroma('Am'), 0.2, played.elapsed + 100, 1)
@@ -212,7 +215,7 @@ describe('score following', () => {
 
   it('waits out the cooldown and hears the new page before the next turn', () => {
     const chart = [chord('C', 0), chord('G', 0), chord('Am', 1), chord('F', 1), chord('C', 2), chord('D', 2)]
-    const follower = new ScoreFollower(chart, { calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
+    const follower = new ScoreFollower(chart, { ...chordOnly, calibrationMs: 0, turnHold: 3, cooldownMs: 7000 })
     let played = play(follower, 'C', 6, 0)
     played = play(follower, 'G', 6, played.page, 0, played.elapsed)
     played = play(follower, 'Am', 8, played.page, 0, played.elapsed)
@@ -234,7 +237,7 @@ describe('score following', () => {
   })
 
   it('does not turn on a single sung pitch', () => {
-    const follower = new ScoreFollower([chord('C', 0), chord('G', 0), chord('Am', 1)], { calibrationMs: 0, turnHold: 3 })
+    const follower = new ScoreFollower([chord('C', 0), chord('G', 0), chord('Am', 1)], { ...chordOnly, calibrationMs: 0, turnHold: 3 })
     const sung = new Array(12).fill(0)
     sung[0] = 1
     const turns: number[] = []
@@ -248,7 +251,7 @@ describe('score following', () => {
   it('does not skip ahead to the next page while the same chord is still held', () => {
     const follower = new ScoreFollower(
       [chord('G', 0, 0), chord('C', 0, 0), chord('G', 1, 0), chord('C', 1, 0)],
-      { calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
+      { ...chordOnly, calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
     )
     const played = play(follower, 'G', 40, 0)
     assert.deepEqual(played.turns, [])
@@ -259,7 +262,7 @@ describe('score following', () => {
   it('turns on the next page opening without a prior match on the current page', () => {
     const follower = new ScoreFollower(
       [chord('C', 0, 0), chord('Am', 1, 0)],
-      { calibrationMs: 0, turnHold: 4, cooldownMs: 7000, matchFloor: 0.6 },
+      { ...chordOnly, calibrationMs: 0, turnHold: 4, cooldownMs: 7000, matchFloor: 0.6 },
     )
     const played = play(follower, 'Am', 6, 0)
     assert.deepEqual(played.turns, [1])
@@ -268,7 +271,7 @@ describe('score following', () => {
   it('keeps a nearly complete hold across one weak frame', () => {
     const follower = new ScoreFollower(
       [chord('C', 0, 0), chord('Am', 1, 0)],
-      { calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
+      { ...chordOnly, calibrationMs: 0, turnHold: 4, cooldownMs: 0, matchFloor: 0.6 },
     )
     let t = 0
     let turned = false
@@ -297,12 +300,52 @@ describe('score following', () => {
   })
 
   it('ignores silent frames', () => {
-    const follower = new ScoreFollower([chord('C', 0), chord('G', 1)], { calibrationMs: 0 })
+    const follower = new ScoreFollower([chord('C', 0), chord('G', 1)], { ...chordOnly, calibrationMs: 0 })
     for (let t = 0; t < 30; t++) {
       const snap = follower.push(templateChroma('G'), 0, t * 100, 0)
       assert.equal(snap.index, 0)
       assert.equal(snap.turnTo, null)
       assert.equal(snap.transpositionLocked, false)
     }
+  })
+})
+
+describe('page length gate', () => {
+  // One progression repeated on every page, like the Build My Life verses.
+  const loop = (page: number) => [chord('D', page, 0), chord('G', page, 0), chord('D/F#', page, 1), chord('G', page, 1)]
+  const chart = [...loop(0), ...loop(1), ...loop(2)]
+
+  function strum(follower: ScoreFollower, symbols: string[], chordMs: number, page: number, t0: number) {
+    const turns: Array<{ t: number, page: number }> = []
+    let t = t0
+    for (const symbol of symbols) {
+      for (let i = 0; i < chordMs / 100; i++) {
+        t += 100
+        const snap = follower.push(templateChroma(symbol), 0.2, t, page)
+        if (snap.turnTo != null) { page = snap.turnTo; turns.push({ t, page }) }
+      }
+    }
+    return { turns, page, t }
+  }
+
+  it('does not turn while the repeated progression is still on its first pass', () => {
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    const played = strum(follower, ['D', 'G', 'D/F#'], 3000, 0, 0)
+    assert.deepEqual(played.turns, [])
+  })
+
+  it('turns near the end of the page once its expected length has passed', () => {
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    const played = strum(follower, ['D', 'G', 'D/F#', 'G', 'D', 'G'], 3000, 0, 0)
+    assert.equal(played.turns.length, 1)
+    assert.equal(played.turns[0].page, 1)
+    assert.ok(played.turns[0].t >= 0.9 * 4 * 3000, `turned at ${played.turns[0].t}`)
+  })
+
+  it('learns the time per chord from manual next taps', () => {
+    const follower = new ScoreFollower(chart, { calibrationMs: 0, defaultChordMs: 3000 })
+    follower.push(templateChroma('D'), 0.2, 0, 0)
+    follower.push(templateChroma('D'), 0.2, 16000, 1)
+    assert.equal(follower.chordMs(), 4000)
   })
 })

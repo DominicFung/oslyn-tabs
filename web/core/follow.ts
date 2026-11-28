@@ -33,6 +33,24 @@ export type ScoreFollowerOptions = {
   /** Quiet time after an automatic turn before another one is allowed. */
   cooldownMs?: number
   silenceRms?: number
+  /**
+   * Share of a page's expected length (chords on the page times the learned
+   * time per chord) that must pass before an automatic turn. 0 turns it off.
+   */
+  minDwell?: number
+  /** Time per chord to assume until a few page turns have been timed. */
+  defaultChordMs?: number
+  /** A manual previous-page tap this soon after an automatic turn undoes it. */
+  undoMs?: number
+  /**
+   * Share of the expected length after which being on the page's last line (or
+   * the next page's opening) is enough to turn without a strong chord match. 0 turns it off.
+   */
+  lateDwell?: number
+  /** After an undone turn, resume from the page's last line instead of its top. */
+  undoResume?: boolean
+  /** Ignore a timed page more than this factor off the current pace, once two are known. */
+  learnBand?: number
 }
 
 const NOTE: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }
@@ -254,6 +272,17 @@ export class ScoreFollower {
   private lastTurnAt: number | null = null
   private matched = new Set<number>()
   private elapsed = 0
+  private readonly minDwell: number
+  private readonly defaultChordMs: number
+  private readonly undoMs: number
+  private readonly lateDwell: number
+  private readonly undoResume: boolean
+  private readonly learnBand: number
+  private readonly lastLine = new Map<number, number>()
+  private readonly chordsOnPage = new Map<number, number>()
+  private pageEnteredAt: number | null = null
+  private chordSamples: number[] = []
+  private autoLeft: { page: number, enteredAt: number, at: number } | null = null
 
   constructor(chords: FollowChord[], options: ScoreFollowerOptions = {}) {
     this.chords = chords
@@ -266,9 +295,19 @@ export class ScoreFollower {
     this.silenceRms = options.silenceRms ?? 0.01
     this.opening = chords.slice(0, Math.min(8, chords.length))
     this.pi = chords.map((_, index) => index === 0 ? 1 : 0)
+    this.minDwell = options.minDwell ?? 0.9
+    this.defaultChordMs = options.defaultChordMs ?? 3500
+    this.undoMs = options.undoMs ?? 8000
+    this.lateDwell = options.lateDwell ?? 1
+    this.undoResume = options.undoResume ?? true
+    this.learnBand = options.learnBand ?? 1.4
+    for (const chord of chords) this.lastLine.set(chord.page, Math.max(this.lastLine.get(chord.page) ?? 0, chord.line))
+    for (const chord of chords) this.chordsOnPage.set(chord.page, (this.chordsOnPage.get(chord.page) || 0) + 1)
   }
 
   push(chroma: number[], rms: number, elapsedMs: number, currentPage: number): FollowSnapshot {
+    this.elapsed = elapsedMs
+    if (this.autoLeft && elapsedMs - this.autoLeft.at > this.undoMs) this.autoLeft = null
     this.notePage(currentPage)
     if (!(rms >= this.silenceRms) || this.chords.length === 0) {
       return this.view(currentPage, null)
@@ -288,7 +327,6 @@ export class ScoreFollower {
 
     const transposition = this.locked ?? argmax(this.scores)
     const aligned = rotateChroma(heard, -transposition)
-    this.elapsed = elapsedMs
     this.advance(aligned)
     const turnTo = this.decide(elapsedMs)
     return this.view(currentPage, turnTo, aligned)
@@ -310,8 +348,55 @@ export class ScoreFollower {
     this.place(currentPage)
   }
 
-  private place(page: number) {
+  /** Time per chord, from how long confirmed pages took. Median of the last few. */
+  chordMs(): number {
+    if (this.chordSamples.length === 0) return this.defaultChordMs
+    const sorted = this.chordSamples.slice().sort((a, b) => a - b)
+    return sorted[Math.floor(sorted.length / 2)]
+  }
+
+  private learn(sample: number) {
+    if (!(sample >= 800 && sample <= 10000)) return
+    if (this.learnBand > 0 && this.chordSamples.length >= 2) {
+      const current = this.chordMs()
+      if (sample < current / this.learnBand || sample > current * this.learnBand) return
+    }
+    this.chordSamples.push(sample)
+    if (this.chordSamples.length > 5) this.chordSamples.shift()
+  }
+
+  /**
+   * Track when the shown page started. The pace is learned from the player's own
+   * next-page taps only. Automatic turns would teach the follower its own timing.
+   */
+  private notePageTiming(page: number, auto: boolean): boolean {
+    const now = this.elapsed
+    const before = this.syncedPage
+    const entered = this.pageEnteredAt
+    if (!auto && this.autoLeft && page === this.autoLeft.page && now - this.autoLeft.at <= this.undoMs) {
+      // Back to the page the follower just left. That turn was early; keep the original start time.
+      this.pageEnteredAt = this.autoLeft.enteredAt
+      this.autoLeft = null
+      return true
+    }
+    this.autoLeft = null
+    if (before != null && entered != null && page === before + 1) {
+      if (auto) this.autoLeft = { page: before, enteredAt: entered, at: now }
+      else this.learn((now - entered) / Math.max(1, this.chordsOnPage.get(before) || 1))
+    }
+    this.pageEnteredAt = now
+    return false
+  }
+
+  private place(page: number, auto = false) {
+    const undo = page !== this.syncedPage && this.notePageTiming(page, auto)
     let at = this.chords.findIndex((chord) => chord.page === page)
+    // Taken back from an early turn: the player was near the end of this page, not its top.
+    if (undo && at >= 0 && this.undoResume) {
+      const last = this.lastLine.get(page) ?? 0
+      const tail = this.chords.findIndex((chord) => chord.page === page && chord.line === last)
+      if (tail >= 0) at = tail
+    }
     if (at < 0) at = this.chords.findIndex((chord) => chord.page > page)
     if (at < 0) at = Math.max(0, this.chords.length - 1)
     this.pi = this.chords.map((_, index) => index === at ? 1 : 0)
@@ -393,7 +478,17 @@ export class ScoreFollower {
     const opening = !!(this.chords[index] && this.chords[index].page === page + 1 && this.onOpeningLine(this.chords[index]))
     // Landing on the next page's opening line is the turn signal. Don't also require
     // a prior match on the page we are leaving.
-    if (!(strong && cooled && opening)) {
+    const chords = this.chordsOnPage.get(page) || 0
+    const expectedMs = chords * this.chordMs()
+    const onPage = this.pageEnteredAt == null ? Infinity : elapsedMs - this.pageEnteredAt
+    const dwelt = this.minDwell <= 0 || onPage >= this.minDwell * expectedMs
+    const current = this.chords[index]
+    // Past the page's usual length, being on its last line or the next opening is enough.
+    // On a chart that repeats one progression, the chord match alone can't place the page end.
+    const late = this.lateDwell > 0 && onPage >= this.lateDwell * expectedMs
+      && !!current && (opening || (current.page === page && current.line === (this.lastLine.get(page) ?? 0)))
+      && confidence >= this.turnConfidence
+    if (!(cooled && dwelt && ((strong && opening) || late))) {
       if (this.held > 0) this.held -= 1
       return null
     }
@@ -403,7 +498,7 @@ export class ScoreFollower {
     this.leftPage = page
     this.awaiting = turnTo
     this.lastTurnAt = elapsedMs
-    this.place(turnTo)
+    this.place(turnTo, true)
     return turnTo
   }
 
@@ -509,14 +604,29 @@ const EARLY_REJECT_MS = 8000
 /** Space, then the same next a moment later, is one expected turn. */
 const DEDUPE_MS = 4000
 
+/** A manual next taken back by a prev this soon was a slip, not a turn. */
+const SLIP_MS = 3000
+
+function undoneWithin(events: FollowMark[], event: FollowMark, windowMs: number): boolean {
+  const after = events.find((other) => other.t > event.t && (other.type === 'manual-correction' || other.type === 'auto-turn'))
+  return !!after && after.type === 'manual-correction' && after.direction === 'prev' && after.t - event.t <= windowMs
+}
+
 function expectedMarks(events: FollowMark[]): FollowMark[] {
+  // A recorded automatic turn that nobody took back was a turn the player wanted.
   const raw = events.filter((event) =>
-    event.type === 'should-turn' || (event.type === 'manual-correction' && event.direction === 'next')
+    event.type === 'should-turn'
+    || (event.type === 'manual-correction' && event.direction === 'next' && !undoneWithin(events, event, SLIP_MS))
+    || (event.type === 'auto-turn' && !undoneWithin(events, event, EARLY_REJECT_MS))
   )
   const kept: FollowMark[] = []
   for (const event of raw) {
     const prev = kept[kept.length - 1]
-    const duplicate = prev
+    const autoPair = prev
+      && (prev.type === 'auto-turn' || event.type === 'auto-turn')
+      && event.t >= prev.t
+      && event.t - prev.t <= DEDUPE_MS
+    const duplicate = autoPair || prev
       && prev.type === 'should-turn'
       && event.type === 'manual-correction'
       && event.direction === 'next'
@@ -541,9 +651,12 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     (event.type === 'manual-correction' || event.type === 'page-change')
     && (event.pageAfter != null || event.page != null)
   )
-  let page = 0
+  // A take can start on any page. The first logged page change says where.
+  const first = session.events.find((event) => event.type !== 'should-turn')
+  let page = first?.pageBefore ?? (first?.type === 'auto-turn' && first.page != null ? Math.max(0, first.page - 1) : 0)
   let anchorAt = 0
   const predicted: number[] = []
+  const predictedFrom: number[] = []
   for (const frame of session.frames) {
     while (anchorAt < anchors.length && anchors[anchorAt].t < frame.t) {
       const anchor = anchors[anchorAt]
@@ -553,6 +666,7 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     const snap = follower.push(frame.chroma, frame.energy, frame.t, page)
     if (snap.turnTo != null) {
       predicted.push(frame.t)
+      predictedFrom.push(page)
       page = snap.turnTo
     }
   }
@@ -577,9 +691,13 @@ export function scoreSession(session: FollowSessionFile): ReplayReport {
     if (mark.type !== 'manual-correction' || mark.direction !== 'prev') continue
     const auto = session.events.filter((event) => event.type === 'auto-turn' && event.t <= mark.t).pop()
     if (!auto || mark.t - auto.t > EARLY_REJECT_MS) continue
+    // Only a replayed turn before the tap back is the same early turn. Later ones were made from a different page.
     let best = -1
     let bestGap = Infinity
     predicted.forEach((time, index) => {
+      if (time > mark.t) return
+      // When the log says which page the early turn left, only the replayed turn off that page is the same turn.
+      if (auto.pageBefore != null && predictedFrom[index] !== auto.pageBefore) return
       const gap = Math.abs(time - auto.t)
       if (gap < bestGap) { bestGap = gap; best = index }
     })
